@@ -37,6 +37,7 @@ for (const mode of [false, true]) {
     if (!mode) races++;
   }
 }
-for (const id of ['rhead', 'ubody', 'ai', 'box', 'points', 'memo', 'src']) { const e = store.get(id); if (!e || (e.innerHTML || '').length + (e.textContent || '').length < 3) { console.log(`  ! #${id} が空`); bad++; } }
+/* 開催の谷間（出馬表なし）は要素が空で正常 */
+if (races) for (const id of ['rhead', 'ubody', 'ai', 'box', 'points', 'memo', 'src']) { const e = store.get(id); if (!e || (e.innerHTML || '').length + (e.textContent || '').length < 3) { console.log(`  ! #${id} が空`); bad++; } }
 console.log(`jra: ${races} レース（PC・スマホ）をレンダリング、問題 ${bad} 件`);
 process.exit(bad ? 1 : 0);
