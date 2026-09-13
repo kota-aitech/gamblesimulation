@@ -52,6 +52,7 @@ if (!changed && !hasUpcoming()) { process.exit(0); }
 if (!changed && prev.builtAt && Date.now() - prev.builtAt < 6 * 3600000) process.exit(0);   // 変化なしなら6時間に1回だけ作り直す
 
 const t0 = Date.now();
+run('jra_build_results.mjs');                                   // 記録済みの予想 × 最新の結果（preds が無い初日は何もしない）
 if (!run('jra_build_races.mjs')) process.exit(1);
 if (!run('embed_db.mjs', { NK_EMBED_ONLY: 'jra' })) process.exit(1);
 prev.builtAt = Date.now(); fs.writeFileSync(stampFile, JSON.stringify(prev));
@@ -59,7 +60,8 @@ const secs = ((Date.now() - t0) / 1000).toFixed(0);
 if (process.env.NK_REFRESH_NOPUSH) { console.error(`${stamp()} 反映完了（${secs}秒・push なし）`); process.exit(0); }
 
 const git = (args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
-const TARGETS = ['jra.html', 'top.html', 'data/jra/races.json', 'data/jra/top.json', 'data/jra/index.json', 'data/jra/model.json', 'data/jra/backtest.json'];
+const TARGETS = ['jra.html', 'top.html', 'data/jra/races.json', 'data/jra/top.json', 'data/jra/index.json', 'data/jra/model.json', 'data/jra/backtest.json',
+  'data/jra/preds.jsonl', 'data/jra/results.json', 'data/jra/horses.jsonl'];
 try {
   if (git(['rev-parse', '--abbrev-ref', 'HEAD']) !== 'main') { console.error(`${stamp()} main ではないので push しない`); process.exit(0); }
   git(['add', '--', ...TARGETS.filter(f => fs.existsSync(path.join(ROOT, f)))]);

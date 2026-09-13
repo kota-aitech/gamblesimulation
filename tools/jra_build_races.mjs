@@ -34,8 +34,32 @@ const RI = buildRaceIndex(results), H = buildHistory(results), ASOF = buildAsOf(
 console.error(`  血統・馬主 ${PED.size} 頭`);
 const featurize = makeFeaturizer(DB, RI, ASOF);
 
+/* 発走が過ぎたレースの予想を記録する（回収率の算出用。jra_build_results.mjs が読む）。
+   ボートと同じで後から作り直さない。JRA_RECORD_PAST=1 のときだけ過去日の出馬表からも「再現」として記録する
+   （この週末は記録の仕組みが無かったので、同じ入力で作り直したものを late=9999 で入れる） */
+const PREDS = path.join(ROOT, 'data/jra/preds.jsonl');
+const recorded = new Set();
+if (fs.existsSync(PREDS)) for (const l of fs.readFileSync(PREDS, 'utf8').split('\n')) if (l) { try { recorded.add(JSON.parse(l).raceId); } catch { } }
+const nowJ = new Date();
+const RECORD_PAST = !!process.env.JRA_RECORD_PAST;
+function recordPred(race, date, venue) {
+  if (recorded.has(race.raceId) || !race.gates) return;
+  const start = race.start ? new Date(`${date}T${race.start.padStart(5, '0')}:00`) : null;
+  const late = start ? (nowJ - start) / 60000 : null;
+  if (!RECORD_PAST) { if (process.env.JRA_TODAY || !start || late < -1) return; }
+  else if (date >= TODAY) return;
+  const top = race.horses.slice().sort((a, b) => b.p1 - a.p1);
+  const pop1 = race.horses.find(h => h.pop === 1)?.no || null;
+  fs.appendFileSync(PREDS, JSON.stringify({
+    raceId: race.raceId, date, venue, r: race.r, at: nowJ.toISOString(), late: RECORD_PAST ? 9999 : Math.round(late), level: race.level,
+    top: top.map(h => h.no), p1: Object.fromEntries(top.map(h => [h.no, h.p1])), pop1,
+    ai: { umaren3: race.umaren.slice(0, 3).map(x => x.k), sanpuku3: race.sanpuku.slice(0, 3).map(x => x.k), santan5: race.santan.slice(0, 5).map(x => x.k) },
+  }) + '\n');
+  recorded.add(race.raceId);
+}
+
 const cards = [];
-for (const l of fs.readFileSync(path.join(ROOT, 'data/jra/cards.jsonl'), 'utf8').split('\n')) if (l) { const c = JSON.parse(l); if (c.date >= TODAY && c.surface !== '障') cards.push(c); }
+for (const l of fs.readFileSync(path.join(ROOT, 'data/jra/cards.jsonl'), 'utf8').split('\n')) if (l) { const c = JSON.parse(l); if ((c.date >= TODAY || RECORD_PAST) && c.surface !== '障') cards.push(c); }
 cards.sort((a, b) => a.date.localeCompare(b.date) || a.raceId.localeCompare(b.raceId));
 
 /* 係数×特徴量を読める単位に束ねる */
@@ -120,6 +144,8 @@ for (const c of cards) {
     conf: round(1 - (-C.p1.reduce((a, p) => a + (p > 0 ? p * Math.log(p) : 0), 0)) / Math.log(C.p1.length), 3),
     points: pts,
   };
+  recordPred(race1, c.date, c.venue);
+  if (c.date < TODAY) continue;                       // 過去日は記録だけ（ページには載せない）
   const D = days.get(c.date) || days.set(c.date, new Map()).get(c.date);
   (D.get(c.venue) || D.set(c.venue, []).get(c.venue)).push(race1);
   nR++;

@@ -22,6 +22,8 @@ function embedJra() {
   catch (e) { console.error('  (jra.html はスキップ: ' + e.message + ')'); }
   try { inject('top.html', 'NKJRATOP', 'NKJT', readJSON('data/jra/top.json')); }
   catch (e) { console.error('  (top.html の中央競馬面はスキップ: ' + e.message + ')'); }
+  try { inject('top.html', 'NKJRAREC', 'NKJR2', readJSON('data/jra/results.json')); }
+  catch (e) { console.error('  (top.html の中央競馬の成績はスキップ: ' + e.message + ')'); }
 }
 if (process.env.NK_EMBED_ONLY === 'boat') { embedBoat(); process.exit(0); }
 if (process.env.NK_EMBED_ONLY === 'jra') { embedJra(); process.exit(0); }
