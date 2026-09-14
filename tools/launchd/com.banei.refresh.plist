@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  ばんえい版の反映（tools/refresh_banei.mjs）。15分おき。出馬表の取り直し→予想→banei.html/TOP へ埋め込み→push。
+  21:30 以降に1日1回 結果と指数、月曜夜にモデルの当てはめ直し。
+  導入は tools/launchd/install.sh。ログ: __REPO__/data/banei/refresh.log
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.banei.refresh</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__NODE__</string>
+    <string>__REPO__/tools/refresh_banei.mjs</string>
+  </array>
+  <key>WorkingDirectory</key><string>__REPO__</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key><string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin</string>
+    <key>BN_WAIT</key><string>2000</string>
+  </dict>
+  <key>StartInterval</key><integer>900</integer>
+  <key>StandardOutPath</key><string>__REPO__/data/banei/refresh.log</string>
+  <key>StandardErrorPath</key><string>__REPO__/data/banei/refresh.log</string>
+  <key>RunAtLoad</key><false/>
+</dict>
+</plist>

@@ -25,8 +25,18 @@ function embedJra() {
   try { inject('top.html', 'NKJRAREC', 'NKJR2', readJSON('data/jra/results.json')); }
   catch (e) { console.error('  (top.html の中央競馬の成績はスキップ: ' + e.message + ')'); }
 }
+/* ばんえい版（banei.html）。tools/banei_build_races.mjs の races.json を NKBANEI に埋める */
+function embedBanei() {
+  try { inject('banei.html', 'NKBANEI', 'NKBANEI', readJSON('data/banei/races.json')); }
+  catch (e) { console.error('  (banei.html はスキップ: ' + e.message + ')'); }
+  try { inject('top.html', 'NKBANEITOP', 'NKBNT', readJSON('data/banei/top.json')); }
+  catch (e) { console.error('  (top.html のばんえい面はスキップ: ' + e.message + ')'); }
+  try { inject('top.html', 'NKBANEIREC', 'NKBNR', readJSON('data/banei/results.json')); }
+  catch (e) { console.error('  (top.html のばんえい成績はスキップ: ' + e.message + ')'); }
+}
 if (process.env.NK_EMBED_ONLY === 'boat') { embedBoat(); process.exit(0); }
 if (process.env.NK_EMBED_ONLY === 'jra') { embedJra(); process.exit(0); }
+if (process.env.NK_EMBED_ONLY === 'banei') { embedBanei(); process.exit(0); }
 
 const TRACKS = (process.env.NK_RACE_TRACKS || '大井:oi,川崎:kawasaki').split(',').map(s => s.split(':')[1]);
 const out = {};
@@ -75,3 +85,4 @@ try {
 } catch (e) { console.error('  (バックテストはスキップ: ' + e.message + ')'); }
 embedBoat();
 embedJra();
+embedBanei();

@@ -88,9 +88,11 @@ export function parseResult(html, ymd, r) {
   }
   /* 払戻：「単勝 1 380円 2人気 複勝 1 150円 4人気 4 120円 1人気 …」 */
   const KIND = { '単勝': 'win', '複勝': 'place', '枠連複': 'wakuren', '馬連複': 'umaren', '馬連単': 'umatan', 'ワイド': 'wide', '三連複': 'sanpuku', '三連単': 'santan' };
-  const ps = html.indexOf('払戻金');
-  if (ps >= 0) {
-    const pt = text(html.slice(ps, html.indexOf('優勝馬情報', ps) > 0 ? html.indexOf('優勝馬情報', ps) : ps + 6000));
+  /* 払戻は <section class="newRefundTable">。ページ先頭のメニューにも「当日払戻金」があるので、文字列検索ではなく節で取る */
+  const sec = html.match(/<section class="newRefundTable">([\s\S]*?)<\/section>/);
+  const ps = sec ? -1 : html.indexOf('払戻金');
+  if (sec || ps >= 0) {
+    const pt = sec ? text(sec[1]) : text(html.slice(ps, html.indexOf('優勝馬情報', ps) > 0 ? html.indexOf('優勝馬情報', ps) : ps + 6000));
     for (const m of pt.matchAll(/(単勝|複勝|枠連複|馬連複|馬連単|ワイド|三連複|三連単)((?:\s*[\d\-]+\s*[\d,]+円(?:\s*\d+人気)?)+)/g)) {
       const rowsP = [...m[2].matchAll(/([\d\-]+)\s*([\d,]+)円(?:\s*(\d+)人気)?/g)].map(x => ({ c: x[1], y: num(x[2]), pop: x[3] ? Number(x[3]) : null }));
       if (rowsP.length) out.pay[KIND[m[1]]] = rowsP;
