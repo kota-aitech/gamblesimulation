@@ -3,6 +3,8 @@
 <!--
   ボートレースの直前情報と締切8分前のオッズを自動で拾う launchd 設定。
   1分おきに tools/fetch_live.mjs を1周回だけ動かす（BT_LIVE_ONCE）。
+  締切60分前以内の暫定オッズは15分おきに取り直す（BT_ODDS_REFRESH / BT_ODDS_WINDOW）。
+  1周回の上限 20 ページ（0.9秒間隔なので約20秒。次の周回までに終わる）。
   開催がない日・時間帯は「本日のレース」を見て何もせずに終わるので、常に登録したままでよい。
   多重起動は fetch_live.mjs 側の .live.lock が防ぐ。
 
@@ -25,7 +27,9 @@
   <dict>
     <key>BT_LIVE_ONCE</key><string>1</string>
     <key>BT_LEAD</key><string>8</string>
-    <key>BT_LIVE_MAX</key><string>12</string>
+    <key>BT_LIVE_MAX</key><string>20</string>
+    <key>BT_ODDS_REFRESH</key><string>15</string>
+    <key>BT_ODDS_WINDOW</key><string>60</string>
   </dict>
   <key>StartInterval</key><integer>60</integer>
   <key>StandardOutPath</key><string>__REPO__/data/boat/live.log</string>

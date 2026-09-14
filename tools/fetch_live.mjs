@@ -5,7 +5,8 @@
    叩きすぎると 200 のまま「システムエラー」ページが返るので、必ず間隔をあけて少しずつ。
      BT_DATE      … 対象日（既定 今日）
      BT_LEAD      … 締切の何分前からオッズを取るか（既定 8）
-     BT_LIVE_MAX  … 1周回で取るレース数の上限（既定 12）
+     BT_LIVE_MAX  … 1周回で取るページ数の上限（既定 12）
+     BT_ODDS_REFRESH … 暫定オッズを取り直す間隔（分。既定 15）。締切 BT_ODDS_WINDOW 分前（既定 60）以内のレースだけ
      BT_LIVE_ONCE … 1周回で終了（既定。空にすると締切まで見張り続ける）
    出力: data/boat/live.<date>.json（直前情報・最新オッズ）と odds_live.jsonl（締切前の記録） */
 import fs from 'node:fs';
@@ -16,6 +17,8 @@ import { parseBefore, parseOddsTF, parseOdds3T, parseRaceIndex } from './lib/web
 const DATE = process.env.BT_DATE || ymdOf(new Date());
 const LEAD = Number(process.env.BT_LEAD || 8);
 const MAX = Number(process.env.BT_LIVE_MAX || 12);
+const REFRESH = Number(process.env.BT_ODDS_REFRESH || 15);
+const WINDOW = Number(process.env.BT_ODDS_WINDOW || 60);
 const OUT = path.join(ROOT, 'data', 'boat');
 const LIVE = path.join(OUT, `live.${DATE}.json`);
 const JL = path.join(OUT, 'odds_live.jsonl');
@@ -88,10 +91,13 @@ for (const t of todo) {
   }
 
   /* オッズは締切 LEAD 分前に「締切前スナップショット」として残す。
-     それ以外の時間帯も、まだ取っていなければ暫定として1回だけ取る */
+     それ以外の時間帯も、まだ取っていなければ暫定として取り、締切 WINDOW 分前に入ったら
+     REFRESH 分より古い暫定は取り直す（南関の NK_ODDS_REFRESH と同じ。深夜に取った値で
+     昼まで止まっていた）。スナップショットを取ったあとは取り直さない */
   const snap = t.left <= LEAD && !st.snapAt;
   const first = !st.odds;
-  if (snap || first) {
+  const stale = !!st.odds && !st.snapAt && t.left > LEAD && t.left <= WINDOW && Date.now() - Date.parse(st.odds.at) > REFRESH * 60000;
+  if (snap || first || stale) {
     try {
       const tf = parseOddsTF(await get(`${B}oddstf?${q}`, { ttlDays: 0.002 }));
       const t3 = parseOdds3T(await get(`${B}odds3t?${q}`, { ttlDays: 0.002 }));
@@ -101,7 +107,7 @@ for (const t of todo) {
         st.snapAt = st.odds.at;
         fs.appendFileSync(JL, JSON.stringify({ date: DATE, jcd: t.jcd, r: t.r, kind: 'T-' + LEAD, ...st.odds }) + '\n');
         console.error(`  締切${LEAD}分前 ${VNAME[t.jcd]}${t.r}R 単勝 ${Object.values(tf.win).join('/')}`);
-      }
+      } else if (stale) console.error(`  暫定を更新 ${VNAME[t.jcd]}${t.r}R（締切${Math.round(t.left)}分前）`);
     } catch (e) { console.error(`  ! オッズ ${VNAME[t.jcd]}${t.r}R ${e.message}`); }
   }
 }

@@ -972,7 +972,9 @@ NK_REFRESH_NOPUSH=1 NK_REFRESH_FORCE=1 node tools/refresh_boat.mjs   # 上の3�
 ```
 
 **当日ぶんは launchd で自動化してある**（`sh tools/launchd/install.sh` が南関の2つと一緒に登録する）。
-- `com.boat.live` … 1分おきに `fetch_live.mjs` を1周回。開催のない日・時間帯は「本日のレース」を見て何もせず終わる
+- `com.boat.live` … 1分おきに `fetch_live.mjs` を1周回（上限20ページ）。開催のない日・時間帯は「本日のレース」を見て何もせず終わる。
+  暫定オッズは最初に1回取ったあと、**締切60分前に入ったら15分おきに取り直す**（`BT_ODDS_REFRESH` / `BT_ODDS_WINDOW`）。
+  以前はこれが無く、深夜に取った暫定が締切8分前まで止まっていた。締切8分前のスナップショットを取ったあとは取り直さない
 - `com.boat.refresh` … 3分おきに `refresh_boat.mjs`。直前情報・オッズ・番組表が変わっていれば
   `build_boat_results → build_boat → embed_db(boat) → commit / push`。1時間に1回、昨日〜明日の K・B を od2 から取り直す
   （B は前日夕方に順次公開されるので、明日の番組表はここで入ってくる。K は開催中に途中まで公開される）
@@ -1005,7 +1007,8 @@ NK_REFRESH_NOPUSH=1 NK_REFRESH_FORCE=1 node tools/refresh_boat.mjs   # 上の3�
 | `BT_DB_SD` | 0.55 | 選手指数の事前分布の広さ（対数オッズ） |
 | `BT_FIT_SPLIT` | 20260601 | 学習と検証を切る日付 |
 | `BT_LEAD` | 8 | 締切の何分前にオッズを残すか |
-| `BT_LIVE_MAX` | 12 | 1周回で取るレース数の上限 |
+| `BT_LIVE_MAX` | 12（launchd は 20） | 1周回で取るページ数の上限 |
+| `BT_ODDS_REFRESH` / `BT_ODDS_WINDOW` | 15 / 60 | 締切 WINDOW 分前以内の暫定オッズを REFRESH 分おきに取り直す |
 
 ### 指数（`data/boat/index.json`）
 3年ぶん（2023-09〜2026-09、167,009レース・1,738選手）が母集団。
