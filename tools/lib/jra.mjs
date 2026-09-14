@@ -19,6 +19,11 @@ export const CACHE = path.join(ROOT, 'data', 'cache', 'jra');
    10分休んでからやり直す（何度も叩くと解除が遅れる）。 */
 const WAIT = Number(process.env.JRA_WAIT || 3000);
 const BLOCK_WAIT = Number(process.env.JRA_BLOCK_WAIT || 600000);
+/* ネットが切れている（移動中・スリープ明け）ときは、レースを飛ばさずに復帰まで待つ。
+   60秒おきに試し、JRA_NET_MAX 分（既定 6時間）を超えたらあきらめる */
+const NET_WAIT = Number(process.env.JRA_NET_WAIT || 60000);
+const NET_MAX = Number(process.env.JRA_NET_MAX || 360) * 60000;
+const isNetError = e => /fetch failed|ENOTFOUND|ECONNRESET|ETIMEDOUT|ECONNREFUSED|EAI_AGAIN|ENETUNREACH|EHOSTUNREACH|aborted|TimeoutError/i.test(String(e && (e.cause?.code || e.cause?.message || e.name + ' ' + e.message)));
 export const stats = { blocked: 0 };
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -48,9 +53,10 @@ export async function get(url, { ttlDays = 3650, tries = 3, referer = RACE + '/'
   if (gap < WAIT) await sleep(WAIT - gap);
   last = Date.now();
   let body = null;
+  let offlineSince = 0;
   for (let a = 0; a < tries; a++) {
     try {
-      const res = await fetch(url, { headers: { 'User-Agent': UA, 'Accept-Language': 'ja', Referer: referer, ...headers } });
+      const res = await fetch(url, { headers: { 'User-Agent': UA, 'Accept-Language': 'ja', Referer: referer, ...headers }, signal: AbortSignal.timeout(30000) });
       if ([400, 403, 429, 503].includes(res.status)) {
         stats.blocked++;
         console.error(`  ! HTTP ${res.status}（規制）。${BLOCK_WAIT / 60000}分休む（${a + 1}/${tries}）`);
@@ -62,10 +68,18 @@ export async function get(url, { ttlDays = 3650, tries = 3, referer = RACE + '/'
       if (body.length < 200 && !url.includes('api_get')) throw new Error('空ページ（規制の可能性）');
       break;
     } catch (e) {
+      if (isNetError(e)) {
+        /* 圏外・スリープ明け：試行回数に数えず、復帰するまで同じ URL を待つ */
+        if (!offlineSince) { offlineSince = Date.now(); console.error(`  ! ネットに届かない（${(e.cause?.code || e.name)}）。復帰まで ${NET_WAIT / 1000}秒おきに待つ`); }
+        if (Date.now() - offlineSince > NET_MAX) throw e;
+        await sleep(NET_WAIT); a--; continue;
+      }
+      if (offlineSince) { console.error(`  ネット復帰（${Math.round((Date.now() - offlineSince) / 60000)}分）`); offlineSince = 0; }
       if (a === tries - 1) throw e;
       if (!/HTTP (400|403|429|503)/.test(e.message)) await sleep(3000 * (a + 1));
     }
   }
+  if (offlineSince) console.error(`  ネット復帰（${Math.round((Date.now() - offlineSince) / 60000)}分）`);
   fs.writeFileSync(f, body);
   return body;
 }
