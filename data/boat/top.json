@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-09-14T05:28:14.592Z",
+ "builtAt": "2026-09-14T05:31:32.584Z",
  "today": "20260914",
  "nat1": 0.5498,
  "model": {
@@ -52,7 +52,7 @@
      "name": "戸田",
      "title": "９月１４日",
      "day": "第５回漫画アクション第４日",
-     "exCount": 8,
+     "exCount": 9,
      "win1": 0.4276,
      "band": "day",
      "trend": {
@@ -61,6 +61,14 @@
       "src": "model"
      },
      "rec": null,
+     "meet": {
+      "days": 4,
+      "dayIdx": 4,
+      "lastPrelim": false,
+      "hasSemi": false,
+      "hasFinal": true,
+      "adv": 18
+     },
      "races": [
       {
        "r": 1,
@@ -524,34 +532,34 @@
        "r": 9,
        "close": "14:48",
        "cls": "戸田特選",
-       "level": "pre",
+       "level": "ex",
        "oddsKind": "pre",
        "top": [
         {
          "lane": 4,
          "name": "是澤孝宏",
          "grade": "A2",
-         "p": 0.344,
+         "p": 0.362,
          "o": null
         },
         {
          "lane": 2,
          "name": "金子賢志",
          "grade": "A1",
-         "p": 0.241,
+         "p": 0.249,
          "o": null
         },
         {
          "lane": 1,
          "name": "橋本英一",
          "grade": "B1",
-         "p": 0.191,
+         "p": 0.213,
          "o": null
         }
        ],
        "tri": {
         "k": "4-2-1",
-        "p": 0.0359,
+        "p": 0.0438,
         "o": null,
         "ev": null
        },
@@ -567,7 +575,7 @@
          "4-1",
          "2-4"
         ],
-        "cum3": 0.099,
+        "cum3": 0.12,
         "ev": []
        }
       },
@@ -582,27 +590,27 @@
          "lane": 1,
          "name": "金田智博",
          "grade": "A2",
-         "p": 0.752,
+         "p": 0.75,
          "o": null
         },
         {
          "lane": 3,
          "name": "江本真治",
          "grade": "A2",
-         "p": 0.075,
+         "p": 0.076,
          "o": null
         },
         {
          "lane": 2,
          "name": "大野芳顕",
          "grade": "A2",
-         "p": 0.062,
+         "p": 0.063,
          "o": null
         }
        ],
        "tri": {
         "k": "1-3-2",
-        "p": 0.0614,
+        "p": 0.061,
         "o": null,
         "ev": null
        },
@@ -618,7 +626,7 @@
          "1-2",
          "1-5"
         ],
-        "cum3": 0.18,
+        "cum3": 0.179,
         "ev": []
        }
       },
@@ -633,14 +641,14 @@
          "lane": 1,
          "name": "松崎祐太",
          "grade": "A2",
-         "p": 0.722,
+         "p": 0.72,
          "o": null
         },
         {
          "lane": 4,
          "name": "山下大輝",
          "grade": "A1",
-         "p": 0.162,
+         "p": 0.164,
          "o": null
         },
         {
@@ -653,7 +661,7 @@
        ],
        "tri": {
         "k": "1-4-2",
-        "p": 0.0908,
+        "p": 0.0904,
         "o": null,
         "ev": null
        },
@@ -669,7 +677,7 @@
          "1-2",
          "1-3"
         ],
-        "cum3": 0.237,
+        "cum3": 0.236,
         "ev": []
        }
       },
@@ -684,7 +692,7 @@
          "lane": 1,
          "name": "山口達也",
          "grade": "A1",
-         "p": 0.435,
+         "p": 0.433,
          "o": null
         },
         {
@@ -698,13 +706,13 @@
          "lane": 4,
          "name": "青木蓮",
          "grade": "A2",
-         "p": 0.177,
+         "p": 0.178,
          "o": null
         }
        ],
        "tri": {
         "k": "1-3-4",
-        "p": 0.0452,
+        "p": 0.045,
         "o": null,
         "ev": null
        },
@@ -720,7 +728,7 @@
          "1-4",
          "1-2"
         ],
-        "cum3": 0.132,
+        "cum3": 0.131,
         "ev": []
        }
       }
@@ -740,6 +748,14 @@
       "src": "model"
      },
      "rec": null,
+     "meet": {
+      "days": 6,
+      "dayIdx": 1,
+      "lastPrelim": false,
+      "hasSemi": false,
+      "hasFinal": false,
+      "adv": 18
+     },
      "races": [
       {
        "r": 1,
@@ -1418,6 +1434,14 @@
       "src": "model"
      },
      "rec": null,
+     "meet": {
+      "days": 5,
+      "dayIdx": 4,
+      "lastPrelim": false,
+      "hasSemi": true,
+      "hasFinal": true,
+      "adv": 18
+     },
      "races": [
       {
        "r": 1,
@@ -2087,6 +2111,14 @@
       "src": "model"
      },
      "rec": null,
+     "meet": {
+      "days": 6,
+      "dayIdx": 2,
+      "lastPrelim": false,
+      "hasSemi": false,
+      "hasFinal": false,
+      "adv": 18
+     },
      "races": [
       {
        "r": 1,
@@ -2716,6 +2748,14 @@
       "src": "model"
      },
      "rec": null,
+     "meet": {
+      "days": 6,
+      "dayIdx": 3,
+      "lastPrelim": false,
+      "hasSemi": false,
+      "hasFinal": false,
+      "adv": 18
+     },
      "races": [
       {
        "r": 1,
@@ -3173,35 +3213,35 @@
        "close": "14:38",
        "cls": "予選特賞",
        "level": "ex",
-       "oddsKind": "pre",
+       "oddsKind": "snap",
        "top": [
         {
          "lane": 6,
          "name": "川野芽唯",
          "grade": "A1",
          "p": 0.339,
-         "o": null
+         "o": 10.3
         },
         {
          "lane": 2,
          "name": "松田真実",
          "grade": "B1",
          "p": 0.289,
-         "o": null
+         "o": 1.2
         },
         {
          "lane": 1,
          "name": "南彩寧",
          "grade": "B1",
          "p": 0.219,
-         "o": null
+         "o": 10.3
         }
        ],
        "tri": {
         "k": "6-2-1",
         "p": 0.05,
-        "o": null,
-        "ev": null
+        "o": 49,
+        "ev": 2.45
        },
        "box3": "1-2-6",
        "ai": {
@@ -3216,7 +3256,14 @@
          "6-1"
         ],
         "cum3": 0.142,
-        "ev": []
+        "ev": [
+         "6-2-1",
+         "6-1-2",
+         "2-6-1",
+         "2-1-6",
+         "1-6-2",
+         "1-2-6"
+        ]
        }
       },
       {
@@ -3388,6 +3435,14 @@
       "src": "model"
      },
      "rec": null,
+     "meet": {
+      "days": 6,
+      "dayIdx": 3,
+      "lastPrelim": false,
+      "hasSemi": false,
+      "hasFinal": false,
+      "adv": 18
+     },
      "races": [
       {
        "r": 1,
@@ -4074,6 +4129,14 @@
       "src": "model"
      },
      "rec": null,
+     "meet": {
+      "days": 4,
+      "dayIdx": 3,
+      "lastPrelim": true,
+      "hasSemi": true,
+      "hasFinal": true,
+      "adv": 18
+     },
      "races": [
       {
        "r": 1,
@@ -4752,6 +4815,14 @@
       "src": "model"
      },
      "rec": null,
+     "meet": {
+      "days": 6,
+      "dayIdx": 2,
+      "lastPrelim": false,
+      "hasSemi": false,
+      "hasFinal": false,
+      "adv": 18
+     },
      "races": [
       {
        "r": 1,
@@ -5441,6 +5512,14 @@
       "src": "model"
      },
      "rec": null,
+     "meet": {
+      "days": 6,
+      "dayIdx": 4,
+      "lastPrelim": true,
+      "hasSemi": false,
+      "hasFinal": false,
+      "adv": 18
+     },
      "races": [
       {
        "r": 1,
@@ -6061,15 +6140,23 @@
      "name": "徳山",
      "title": "９月１４日ダイヤモンドカップ",
      "day": "第３日",
-     "exCount": 8,
+     "exCount": 9,
      "win1": 0.6288,
      "band": "day",
      "trend": {
       "label": "堅め",
-      "text": "予想の本命勝率の平均 63% → 堅め",
+      "text": "予想の本命勝率の平均 64% → 堅め",
       "src": "model"
      },
      "rec": null,
+     "meet": {
+      "days": 6,
+      "dayIdx": 3,
+      "lastPrelim": false,
+      "hasSemi": false,
+      "hasFinal": false,
+      "adv": 18
+     },
      "races": [
       {
        "r": 1,
@@ -6531,50 +6618,50 @@
        "r": 9,
        "close": "14:50",
        "cls": "予選",
-       "level": "pre",
+       "level": "ex",
        "oddsKind": "pre",
        "top": [
         {
-         "lane": 3,
-         "name": "白井英治",
+         "lane": 1,
+         "name": "栗城匠",
          "grade": "A1",
          "p": 0.424,
          "o": null
         },
         {
-         "lane": 1,
-         "name": "栗城匠",
+         "lane": 3,
+         "name": "白井英治",
          "grade": "A1",
-         "p": 0.306,
+         "p": 0.323,
          "o": null
         },
         {
          "lane": 4,
          "name": "坪井康晴",
          "grade": "A1",
-         "p": 0.142,
+         "p": 0.114,
          "o": null
         }
        ],
        "tri": {
-        "k": "3-1-4",
-        "p": 0.0599,
+        "k": "1-3-4",
+        "p": 0.0558,
         "o": null,
         "ev": null
        },
        "box3": "1-3-4",
        "ai": {
         "tri3": [
-         "3-1-4",
-         "3-4-1",
-         "1-3-4"
+         "1-3-4",
+         "1-3-2",
+         "3-1-4"
         ],
         "ex3": [
-         "3-1",
          "1-3",
-         "3-4"
+         "3-1",
+         "1-4"
         ],
-        "cum3": 0.158,
+        "cum3": 0.149,
         "ev": []
        }
       },
@@ -6589,27 +6676,27 @@
          "lane": 1,
          "name": "菊地孝平",
          "grade": "A1",
-         "p": 0.707,
+         "p": 0.744,
          "o": null
         },
         {
          "lane": 3,
          "name": "佐々木完",
          "grade": "A1",
-         "p": 0.115,
+         "p": 0.092,
          "o": null
         },
         {
          "lane": 2,
          "name": "金子拓矢",
          "grade": "A1",
-         "p": 0.076,
+         "p": 0.072,
          "o": null
         }
        ],
        "tri": {
         "k": "1-3-2",
-        "p": 0.0709,
+        "p": 0.0718,
         "o": null,
         "ev": null
        },
@@ -6625,7 +6712,7 @@
          "1-2",
          "1-5"
         ],
-        "cum3": 0.195,
+        "cum3": 0.199,
         "ev": []
        }
       },
@@ -6640,27 +6727,27 @@
          "lane": 1,
          "name": "今泉友吾",
          "grade": "A1",
-         "p": 0.758,
+         "p": 0.785,
          "o": null
         },
         {
          "lane": 2,
          "name": "池田浩二",
          "grade": "A1",
-         "p": 0.117,
+         "p": 0.109,
          "o": null
         },
         {
          "lane": 4,
          "name": "新田雄史",
          "grade": "A1",
-         "p": 0.044,
+         "p": 0.037,
          "o": null
         }
        ],
        "tri": {
         "k": "1-2-4",
-        "p": 0.077,
+        "p": 0.0818,
         "o": null,
         "ev": null
        },
@@ -6676,7 +6763,7 @@
          "1-4",
          "1-3"
         ],
-        "cum3": 0.216,
+        "cum3": 0.225,
         "ev": []
        }
       },
@@ -6691,43 +6778,43 @@
          "lane": 1,
          "name": "桐生順平",
          "grade": "A1",
-         "p": 0.908,
+         "p": 0.921,
          "o": null
         },
         {
          "lane": 5,
          "name": "川原祐明",
          "grade": "A1",
-         "p": 0.024,
+         "p": 0.021,
          "o": null
         },
         {
-         "lane": 4,
-         "name": "井口佳典",
+         "lane": 2,
+         "name": "寺田祥",
          "grade": "A1",
-         "p": 0.02,
+         "p": 0.017,
          "o": null
         }
        ],
        "tri": {
-        "k": "1-5-4",
-        "p": 0.0568,
+        "k": "1-5-2",
+        "p": 0.0591,
         "o": null,
         "ev": null
        },
-       "box3": "1-4-5",
+       "box3": "1-2-5",
        "ai": {
         "tri3": [
+         "1-5-2",
          "1-5-4",
-         "1-5-3",
-         "1-4-5"
+         "1-2-5"
         ],
         "ex3": [
          "1-5",
-         "1-4",
-         "1-3"
+         "1-2",
+         "1-4"
         ],
-        "cum3": 0.168,
+        "cum3": 0.175,
         "ev": []
        }
       }
@@ -6747,6 +6834,14 @@
       "src": "model"
      },
      "rec": null,
+     "meet": {
+      "days": 5,
+      "dayIdx": 2,
+      "lastPrelim": false,
+      "hasSemi": false,
+      "hasFinal": false,
+      "adv": 18
+     },
      "races": [
       {
        "r": 1,
@@ -7376,6 +7471,14 @@
       "src": "model"
      },
      "rec": null,
+     "meet": {
+      "days": 7,
+      "dayIdx": 6,
+      "lastPrelim": false,
+      "hasSemi": true,
+      "hasFinal": true,
+      "adv": 18
+     },
      "races": [
       {
        "r": 1,
@@ -8005,6 +8108,14 @@
       "src": "model"
      },
      "rec": null,
+     "meet": {
+      "days": 6,
+      "dayIdx": 6,
+      "lastPrelim": false,
+      "hasSemi": false,
+      "hasFinal": true,
+      "adv": 18
+     },
      "races": [
       {
        "r": 1,
@@ -8686,6 +8797,14 @@
       "src": "model"
      },
      "rec": null,
+     "meet": {
+      "days": 6,
+      "dayIdx": 2,
+      "lastPrelim": false,
+      "hasSemi": false,
+      "hasFinal": false,
+      "adv": 18
+     },
      "races": [
       {
        "r": 1,
