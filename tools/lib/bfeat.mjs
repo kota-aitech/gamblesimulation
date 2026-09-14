@@ -35,6 +35,7 @@ export const FEATS = [
   'form', 'formN',             // 直近90日の調子（そのレースより前だけで計算）
   'mForm',                     // モーターの直近45日の調子
   'setuST', 'setuEx', 'setuRuns',  // 今節のここまでのST・展示タイム
+  'ptRate', 'ptGap', 'ptRank',     // 節間の競走得点率・準優ボーダーとの差・節内順位（lib/bload.mjs の attachPoints）
   'exDev', 'exRank',           // ex レベルのみ（pre では 0）
 ];
 export const NF = FEATS.length;
@@ -145,6 +146,10 @@ export function raceFeatures(race, boats, DB, ST, { level = 'pre' } = {}) {
     set('setuST', b.setuST != null && r?.st != null ? (r.st - b.setuST) * 10 : 0);
     set('setuEx', b.setuEx != null ? b.setuEx * 20 : 0);
     set('setuRuns', Math.min(1, (b.setuRuns ?? 0) / 6));
+    /* 競走得点。初日（今節の成績なし）は 0。得点率は 5.5 を中心に、ボーダー差は ±2点で ±1 に */
+    set('ptRate', b.ptRate != null ? (b.ptRate - 5.5) / 2 : 0);
+    set('ptGap', b.ptGap != null ? clamp(b.ptGap / 2, -2, 2) : 0);
+    set('ptRank', b.ptRank != null && b.ptTot > 1 ? 0.5 - (b.ptRank - 1) / (b.ptTot - 1) : 0);
 
     if (level === 'ex' && b.ex != null && exMean != null) {
       set('exDev', (exMean - b.ex) * 20);                          // 速いほど +

@@ -53,7 +53,39 @@ function* jsonl(rel, from, to) {
   }
 }
 
-/* B（番組表）を読み、モーターの世代と2連率の伸びを付けて返す */
+/* ---- 競走得点（節間の得点率）----
+   公式サイトの出走表・開催情報ページには得点の表が無いので、番組表の「今節成績」（着順の並び。例 "2 163354"）から
+   自前で計算する。得点は一般戦の表（1着10・2着8・3着6・4着4・5着2・6着1、F/L/S/K など事故は0）。
+   G1・SG や準優の加点は入れていないが、同じ節の全員に同じ加点が乗るので節内の順位は変わらない。
+   節内順位と準優進出ボーダー（出場42人前後なら18位、少人数の開催は12位）との差も出す。 */
+const PT = { '1': 10, '2': 8, '3': 6, '4': 4, '5': 2, '6': 1 };
+export function setuPoints(s) {
+  let pt = 0, n = 0;
+  for (const c of String(s || '')) { if (/[1-6]/.test(c)) { pt += PT[c]; n++; } else if (/[FLSK]/.test(c)) { n++; } }
+  return { pt: n ? pt / n : null, n };
+}
+/* その日・その場の出走選手全員の得点率を並べ、各選手に順位とボーダー差を付ける */
+function attachPoints(map) {
+  const byDay = new Map();                       // date|jcd -> Map(toban -> {pt, n})
+  for (const o of map.values()) {
+    const k = `${o.date}|${o.jcd}`;
+    let d = byDay.get(k); if (!d) byDay.set(k, d = new Map());
+    for (const b of o.boats) { if (b.toban && !d.has(b.toban)) d.set(b.toban, setuPoints(b.setu)); }
+  }
+  const rankOf = new Map();
+  for (const [k, d] of byDay) {
+    const rs = [...d.entries()].filter(([, v]) => v.n > 0).sort((a, b) => b[1].pt - a[1].pt);
+    const tot = d.size, adv = tot >= 36 ? 18 : 12;
+    const border = rs[adv - 1] ? rs[adv - 1][1].pt : null;
+    rs.forEach(([toban, v], i) => rankOf.set(`${k}|${toban}`, { ptRate: v.pt, ptN: v.n, ptRank: i + 1, ptTot: tot, ptGap: border != null ? v.pt - border : null }));
+  }
+  for (const o of map.values()) for (const b of o.boats) {
+    const r = rankOf.get(`${o.date}|${o.jcd}|${b.toban}`);
+    Object.assign(b, r || { ptRate: null, ptN: 0, ptRank: null, ptTot: null, ptGap: null });
+  }
+}
+
+/* B（番組表）を読み、モーターの世代と2連率の伸び、節間の得点率を付けて返す */
 export function loadPrograms({ from = '', to = '' } = {}) {
   const gen = makeGen(), trend = makeTrend();
   const map = new Map();
@@ -64,6 +96,7 @@ export function loadPrograms({ from = '', to = '' } = {}) {
     }
     map.set(`${o.date}|${o.jcd}|${o.r}`, o);
   }
+  attachPoints(map);
   return map;
 }
 

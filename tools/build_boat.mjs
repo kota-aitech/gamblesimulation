@@ -206,6 +206,9 @@ function buildRace(date, jcd, prog, live, venueWeather) {
   const reason = b => Object.entries(use.c[boats.indexOf(b)]).filter(([k]) => k !== 'コース').sort((a, b2) => b2[1] - a[1]).slice(0, 2).filter(([, v]) => v > 0.05).map(([k, v]) => `${k} +${v.toFixed(2)}`).join('・');
   pts.push(`本命 <b>${top.lane} ${top.name}</b>（1着 ${(use.p1[order[0]] * 100).toFixed(1)}%${reason(top) ? `。強み：${reason(top)}` : ''}）、対抗 <b>${sec.lane} ${sec.name}</b>（${(use.p1[order[1]] * 100).toFixed(1)}%）。`);
   if (tri[0]) pts.push(`3連単の本線は ${tri[0].k}（${(tri[0].p * 100).toFixed(1)}%${tri[0].o ? `・${odds.kind === 'snap' ? '締切前' : '暫定'}オッズ ${tri[0].o}倍・期待値 ${tri[0].ev}` : ''}）。`);
+  /* 節間の得点率：準優ボーダー付近の艇は勝負気配。初日は成績が無いので出さない */
+  const near = boats.filter(b => b.ptGap != null && Math.abs(b.ptGap) <= 1.0).sort((a, b) => b.ptRate - a.ptRate);
+  if (near.length) pts.push(`準優ボーダー争い：${near.map(b => `${b.lane} ${b.name}（得点率 ${b.ptRate.toFixed(2)}・${b.ptRank}位/${b.ptTot}人・ボーダー${b.ptGap >= 0 ? '+' : ''}${b.ptGap.toFixed(2)}）`).join('、')}。`);
   const fs_ = boats.filter(b => (b.racer?.fRate ?? 0) >= 0.02);
   if (fs_.length) pts.push(`F率が高い：${fs_.map(b => `${b.lane} ${b.name}（${(b.racer.fRate * 100).toFixed(1)}%）`).join('、')}。スタートを控えると勢いが削がれる。`);
 
@@ -219,6 +222,7 @@ function buildRace(date, jcd, prog, live, venueWeather) {
       natWin: b.natWin, nat2: b.nat2, locWin: b.locWin, loc2: b.loc2, motor: b.motor, motor2: b.motor2, boat: b.boat, boat2: b.boat2, setu: b.setu,
       course: b.course, ex: b.ex, exST: b.exST, exF: b.exF, tilt: b.tilt, prop: b.prop, parts: b.parts, adjust: b.adjust,
       form: round(b.form), formN: b.formN, mForm: round(b.mForm), setuST: round(b.setuST), setuEx: round(b.setuEx), setuRuns: b.setuRuns, mUp: round(b.mUp, 1),
+      ptRate: round(b.ptRate, 2), ptN: b.ptN, ptRank: b.ptRank, ptTot: b.ptTot, ptGap: round(b.ptGap, 2),
       racer: b.racer, motorIdx: b.motorIdx,
     })),
     pre: stripTri(pre), ex: ex ? stripTri(ex) : null,
@@ -398,6 +402,7 @@ console.error(`-> data/boat/top.json (${(fs.statSync(path.join(ROOT, 'data/boat/
    1日ぶんで 3MB → 1MB 台。蓄積するのは data/ 側であって、ページは常に今日・明日だけ */
 const BOAT_COLS = ['lane', 'toban', 'name', 'age', 'branch', 'weight', 'grade', 'natWin', 'nat2', 'locWin', 'loc2', 'motor', 'motor2', 'setu',
   'course', 'ex', 'exST', 'exF', 'tilt', 'prop', 'parts', 'adjust', 'form', 'formN', 'mForm', 'setuST', 'setuEx', 'setuRuns', 'mUp',
+  'ptRate', 'ptN', 'ptRank', 'ptTot', 'ptGap',
   'r_idx', 'r_byC', 'r_byJ', 'r_st', 'r_stDev', 'r_fRate', 'r_inGain', 'r_tune', 'r_n', 'm_idx', 'm_n'];
 const r2 = v => v == null ? null : Number(v.toFixed(2)), r3 = v => v == null ? null : Number(v.toFixed(3));
 const packPred = P => P && ({ U: P.U.map(r2), tau: P.tau, p1: P.p1.map(r3), top2: P.top2.map(r3), top3: P.top3.map(r3), c: P.c.map(g => GROUPS.map(k => g[k] || 0)) });
