@@ -28,6 +28,23 @@ export function windCompass(jcd, code) {
   return COMPASS8[Math.round(c16 / 2) % 8];
 }
 
+/* 開催情報ページ（raceindex?jcd=&hd=）の日程タブ「9月12日 初日 / 9月13日 ２日目 / … / 9月15日 最終日」から
+   節の日数と今日が何日目かを取る。勝ち上がり条件（予選最終日・準優・優勝戦）の判定に使う */
+export function parseRaceIndex(html, hd) {
+  const t = html.replace(/<[^>]+>/g, '|').replace(/\s+/g, '');
+  const year = hd.slice(0, 4);
+  const dates = [];
+  for (const m of t.matchAll(/(\d{1,2})月(\d{1,2})日\|+(初日|[０-９0-9]+日目|最終日)/g)) {
+    dates.push(`${year}${m[1].padStart(2, '0')}${m[2].padStart(2, '0')}`);
+  }
+  const uniq = [...new Set(dates)];
+  if (!uniq.length) return null;
+  /* 年またぎ（12月→1月）は前の日付より小さくなったら翌年扱い */
+  for (let i = 1; i < uniq.length; i++) if (uniq[i] < uniq[i - 1]) uniq[i] = String(Number(year) + 1) + uniq[i].slice(4);
+  const dayIdx = uniq.indexOf(hd) + 1;
+  return { days: uniq.length, dayIdx: dayIdx || null, dates: uniq };
+}
+
 export function stNum(s) {
   const m = String(s).trim().match(/^([FL])?\.?(\d{1,2})$|^([FL])?(\d\.\d\d)$/);
   if (!m) return { st: null, f: null, l: null };

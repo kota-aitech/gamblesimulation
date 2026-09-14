@@ -11,7 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, get, freshTtl, VNAME, ymdOf } from './lib/bt.mjs';
-import { parseBefore, parseOddsTF, parseOdds3T } from './lib/web.mjs';
+import { parseBefore, parseOddsTF, parseOdds3T, parseRaceIndex } from './lib/web.mjs';
 
 const DATE = process.env.BT_DATE || ymdOf(new Date());
 const LEAD = Number(process.env.BT_LEAD || 8);
@@ -47,6 +47,13 @@ const minsTo = hhmm => {
 
 const todo = [];
 for (const jcd of jcds) {
+  /* 節の日数と今日が何日目か（開催情報ページ。1日1回で足りる） */
+  if (!state.meet?.[jcd]) {
+    try {
+      const mi = parseRaceIndex(await get(`${B}raceindex?jcd=${jcd}&hd=${DATE}`, { ttlDays: 0.5 }), DATE);
+      if (mi) ((state.meet ||= {})[jcd] = mi);
+    } catch (e) { console.error(`  ! ${VNAME[jcd]} 開催情報が取れない: ${e.message}`); }
+  }
   let closes = state.closes?.[jcd];
   if (!closes) {
     try {

@@ -222,7 +222,7 @@ function buildRace(date, jcd, prog, live, venueWeather) {
       natWin: b.natWin, nat2: b.nat2, locWin: b.locWin, loc2: b.loc2, motor: b.motor, motor2: b.motor2, boat: b.boat, boat2: b.boat2, setu: b.setu,
       course: b.course, ex: b.ex, exST: b.exST, exF: b.exF, tilt: b.tilt, prop: b.prop, parts: b.parts, adjust: b.adjust,
       form: round(b.form), formN: b.formN, mForm: round(b.mForm), setuST: round(b.setuST), setuEx: round(b.setuEx), setuRuns: b.setuRuns, mUp: round(b.mUp, 1),
-      ptRate: round(b.ptRate, 2), ptN: b.ptN, ptRank: b.ptRank, ptTot: b.ptTot, ptGap: round(b.ptGap, 2),
+      ptRate: round(b.ptRate, 2), ptN: b.ptN, ptRank: b.ptRank, ptTot: b.ptTot, ptGap: round(b.ptGap, 2), shobu: b.shobu || null,
       racer: b.racer, motorIdx: b.motorIdx,
     })),
     pre: stripTri(pre), ex: ex ? stripTri(ex) : null,
@@ -352,10 +352,62 @@ for (const date of dates) {
     const V = DB.venues?.[jcd] || {}, S = ST[jcd] || {};
     const vinfo = VENUES.find(v => v.jcd === jcd) || {};
     const closes0 = live?.closes?.[jcd] || rs.map(p => p.close);
+    /* 勝ち上がり条件と勝負駆け（節の日数は live の開催情報、無ければ番組表の「第n日」だけ） */
+    const meet = live?.meet?.[jcd] || null;
+    const dayIdx = meet?.dayIdx || Number((rs[0].day || '').replace(/[^０-９0-9]/g, '').replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0))) || null;
+    const days = meet?.days || null;
+    const hasSemi = rs.some(p => /準優/.test(p.cls || '')), hasFinal = rs.some(p => /優勝戦/.test(p.cls || '') && !/準優/.test(p.cls || ''));
+    /* 準優勝戦は最終日の前日（4日間なら3日目、6日間なら5日目）。予選最終日はその前日 */
+    const lastPrelim = days && dayIdx && days >= 4 ? dayIdx === days - 2 : false;
+    const afterPrelim = hasSemi || hasFinal || (days && dayIdx ? dayIdx > days - 2 : false);
+    const adv = rs.reduce((s, p) => s + p.boats.length, 0) >= 36 ? 18 : 12;
+    /* 選手ごとの残り走数（この日）と、ボーダー到達に必要な平均点。
+       予選最終日より前は「残りの予選日 × 1日の走数」も残り走数に足す（今日中に届く必要はない） */
+    const restOf = new Map();
+    for (const p of rs) for (const b of p.boats) if (b.toban) (restOf.get(b.toban) || restOf.set(b.toban, []).get(b.toban)).push(p.r);
+    const prelimDaysLeft = days && dayIdx ? Math.max(0, days - 2 - dayIdx) : 0;
+    for (const race of races) {
+      const p = rs.find(x => x.r === race.r);
+      const cls = p?.cls || '';
+      /* 準優・優勝戦がある日（＝予選が終わった日）の残りのレースは、名前が何であれ勝ち上がりに関係ない一般戦 */
+      const phase = /優勝戦/.test(cls) && !/準優/.test(cls) ? '優勝戦' : /準優/.test(cls) ? '準優勝戦' : afterPrelim ? '一般' : '予選';
+      let text = '';
+      if (phase === '優勝戦') text = '優勝戦。';
+      else if (phase === '準優勝戦') text = '準優勝戦：上位2着までが優勝戦へ（開催によっては1着のみ）。';
+      else if (phase === '一般') text = hasFinal && !hasSemi ? '一般戦（優勝戦に進めなかった選手同士。勝ち上がりなし）。' : '一般戦（準優・優勝戦に進めなかった選手同士。勝ち上がりなし）。';
+      else if (lastPrelim) text = `予選最終日（${dayIdx}日目／${days}日間）。この日の結果で得点率上位${adv}人が準優勝戦へ。`;
+      else if (days && dayIdx) text = `予選（${dayIdx}日目／${days}日間、準優進出は上位${adv}人）。`;
+      race.stage = { phase, dayIdx, days, lastPrelim, adv, text };
+      if (phase === '予選' && dayIdx && dayIdx >= 2) {
+        const border = p.boats.map(b => b.ptGap != null && b.ptRate != null ? b.ptRate - b.ptGap : null).find(v => v != null);
+        for (const b of race.boats) {
+          const pb = p.boats.find(x => x.lane === b.lane);
+          if (!pb || pb.ptRate == null || border == null) continue;
+          const today = restOf.get(pb.toban) || [];
+          const remain = today.filter(r => r >= race.r).length + today.length * prelimDaysLeft;   // この走を含む残りの予選走数
+          const S0 = pb.ptRate * pb.ptN;
+          const need = remain ? (border * (pb.ptN + remain) - S0) / remain : null;     // 残りの平均で何点要るか
+          const worst = (S0 + remain * 1) / (pb.ptN + remain) - border;                  // 全部6着でもボーダーに届くか
+          /* 10-8-6-4-2-1 点なので、平均 6 点超＝2着以上が必要、4〜6 点＝3着前後が必要 */
+          let label = null;
+          if (need != null) label = worst >= 0 ? '当確圏' : need > 10 ? '厳しい' : need > 6 ? '勝負駆け' : need > 4 ? '要好走' : null;
+          b.shobu = { remain, need: need != null ? round(need, 1) : null, worst: round(worst, 2), label, lastPrelim };
+        }
+      }
+    }
+    /* 読みのポイントに勝ち上がり条件と勝負駆けを足す */
+    for (const race of races) {
+      if (race.stage?.text) race.points.unshift(race.stage.text);
+      const sb = race.boats.filter(b => b.shobu?.label && b.shobu.label !== '当確圏');
+      if (sb.length) race.points.push(`勝負駆け：${sb.map(b => `${b.lane} ${b.name}（${b.shobu.label}・残り${b.shobu.remain}走で平均${b.shobu.need}点${b.shobu.need > 8 ? '＝ほぼ1着' : b.shobu.need > 6 ? '＝2着以上' : ''}）`).join('、')}。`);
+      const safe = race.boats.filter(b => b.shobu?.label === '当確圏');
+      if (safe.length && race.stage?.lastPrelim) race.points.push(`準優進出が濃厚：${safe.map(b => `${b.lane} ${b.name}`).join('、')}（全部6着でもボーダー以上）。`);
+    }
     venues.push({
       jcd, name: VNAME[jcd], pref: vinfo.pref || V.pref || '', area: vinfo.area || V.area || '',
       title: rs[0].title, day: rs[0].day,
       band: bandOf(closes0?.[0]),
+      meet: { days, dayIdx, lastPrelim, hasSemi, hasFinal, adv },
       trend: trendOf(date, jcd, races, V.course?.[0]?.win ?? NAT1),
       rec: recV ? { races: recV.races, hit1: recV.hit1, in3: recV.in3, bets: recV.bets } : null,   // 本日ここまでの成績
       course: (V.course || []).map(c => ({ n: c.n, win: round(c.win, 4), top2: round(c.top2, 4), top3: round(c.top3, 4), st: c.st, kim: c.kim })),
@@ -378,12 +430,13 @@ const top = {
     date: d.date,
     venues: d.venues.map(v => ({
       jcd: v.jcd, name: v.name, title: v.title, day: v.day, exCount: v.exCount, win1: v.course?.[0]?.win ?? null,
-      band: v.band, trend: { label: v.trend.label, text: v.trend.text, src: v.trend.src }, rec: v.rec,
+      band: v.band, trend: { label: v.trend.label, text: v.trend.text, src: v.trend.src }, rec: v.rec, meet: v.meet,
       races: v.races.map(r => {
         const P = r.ex || r.pre;
         const ord = P.p1.map((p, i) => [p, i]).sort((a, b) => b[0] - a[0]).slice(0, 3);
         return {
           r: r.r, close: r.close, cls: r.cls, level: r.level, oddsKind: r.odds?.kind || null,
+          phase: r.stage?.phase || null, lastPrelim: !!r.stage?.lastPrelim, shobu: r.boats.filter(b => b.shobu?.label === '勝負駆け').map(b => b.lane),
           top: ord.map(([p, i]) => ({ lane: r.boats[i].lane, name: r.boats[i].name, grade: r.boats[i].grade, p: round(p, 3), o: r.odds?.win?.[r.boats[i].lane] ?? null })),
           tri: r.tri[0] ? { k: r.tri[0].k, p: r.tri[0].p, o: r.tri[0].o, ev: r.tri[0].ev } : null,
           box3: ord.map(([, i]) => r.boats[i].lane).sort().join('-'),
@@ -402,7 +455,7 @@ console.error(`-> data/boat/top.json (${(fs.statSync(path.join(ROOT, 'data/boat/
    1日ぶんで 3MB → 1MB 台。蓄積するのは data/ 側であって、ページは常に今日・明日だけ */
 const BOAT_COLS = ['lane', 'toban', 'name', 'age', 'branch', 'weight', 'grade', 'natWin', 'nat2', 'locWin', 'loc2', 'motor', 'motor2', 'setu',
   'course', 'ex', 'exST', 'exF', 'tilt', 'prop', 'parts', 'adjust', 'form', 'formN', 'mForm', 'setuST', 'setuEx', 'setuRuns', 'mUp',
-  'ptRate', 'ptN', 'ptRank', 'ptTot', 'ptGap',
+  'ptRate', 'ptN', 'ptRank', 'ptTot', 'ptGap', 'shobu',
   'r_idx', 'r_byC', 'r_byJ', 'r_st', 'r_stDev', 'r_fRate', 'r_inGain', 'r_tune', 'r_n', 'm_idx', 'm_n'];
 const r2 = v => v == null ? null : Number(v.toFixed(2)), r3 = v => v == null ? null : Number(v.toFixed(3));
 const packPred = P => P && ({ U: P.U.map(r2), tau: P.tau, p1: P.p1.map(r3), top2: P.top2.map(r3), top3: P.top3.map(r3), c: P.c.map(g => GROUPS.map(k => g[k] || 0)) });
