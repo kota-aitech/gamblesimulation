@@ -41,13 +41,45 @@ export const FEATURES = [
   'bwFit', 'bwEdge',
   /* 走破時計（スピード指数の素朴版）：そのコースの平均勝ち時計との差を 200m あたりの秒に直したもの。近走の加重平均と最良 */
   'spdIdx', 'spdBest',
+  /* レースレベル（そのレースの出走馬が「次走」でどう走ったか。lib/jfeat.mjs の buildRaceIndex が
+     次走の相対着順を貯め、featurize のときに「今回のレース日より前に走った次走」だけで集計する＝先読みなし）
+       raceLvl … 前5走で相手にした相手関係の強さ（加重平均）
+       lvlX    … 強い相手関係で好走したか（(相対着順−0.5)×レベル の加重平均）
+       lastLvl … 前走のレースレベル */
+  'raceLvl', 'lvlX', 'lastLvl',
+  /* 市場（単勝オッズ）の対数確率。レース内で中心化。オッズが無いレースは 0。
+     base モデルではこの列を必ず 0 にして当てはめ、joint モデルだけが使う（jra_fit.mjs） */
+  'mktLog',
 ];
 export const NF = FEATURES.length;
+export const MKT = FEATURES.indexOf('mktLog');
 
 /* ---- レースの索引：過去走のレースの上がり平均・テン3F・勝ち時計（agariRel / paceExp 用）---- */
 export function buildRaceIndex(results) {
   const idx = new Map();
   const tenAcc = new Map();                          // 場|芝ダ|距離 -> [sum, n]
+  /* レースレベル用：各馬の出走を日付順に並べ、「そのレース → 次走の相対着順」を raceId ごとに貯める */
+  const byHorse = new Map();
+  for (const r of results) for (const e of r.entries) {
+    if (!e.horseId || typeof e.pos !== 'number' || !(r.n > 1)) continue;
+    (byHorse.get(e.horseId) || byHorse.set(e.horseId, []).get(e.horseId)).push({ date: r.date, raceId: r.raceId, rel: 1 - (e.pos - 1) / (r.n - 1) });
+  }
+  const next = new Map();                            // raceId -> [{date(次走), rel(次走の相対着順)}] 日付順
+  for (const runs of byHorse.values()) {
+    runs.sort((a, b) => a.date.localeCompare(b.date));
+    for (let i = 0; i + 1 < runs.length; i++) {
+      if (days(runs[i + 1].date, runs[i].date) > 180) continue;        // 長期休養明けは相手関係の証拠にしない
+      (next.get(runs[i].raceId) || next.set(runs[i].raceId, []).get(runs[i].raceId)).push({ date: runs[i + 1].date, rel: runs[i + 1].rel });
+    }
+  }
+  for (const a of next.values()) a.sort((x, y) => x.date.localeCompare(y.date));
+  /* before より前に走った次走だけで、平均相対着順の 0.5 からのズレを縮小（k=6）。−0.5〜+0.5 */
+  const levelOf = (raceId, before) => {
+    const a = next.get(raceId); if (!a) return { lvl: 0, n: 0 };
+    let s = 0, n = 0;
+    for (const x of a) { if (x.date >= before) break; s += x.rel - 0.5; n++; }
+    return { lvl: n ? s / (n + 6) : 0, n };
+  };
   for (const r of results) {
     const ag = r.entries.map(e => e.agari).filter(v => v > 0);
     const ten3 = r.laps && r.laps.length >= 3 ? r.laps[0] + r.laps[1] + r.laps[2] : null;
@@ -56,7 +88,37 @@ export function buildRaceIndex(results) {
     if (ten3) { const k = `${r.venue}|${r.surface}|${r.dist}`; const a = tenAcc.get(k) || [0, 0]; a[0] += ten3; a[1]++; tenAcc.set(k, a); }
   }
   const tenBase = new Map([...tenAcc].map(([k, a]) => [k, a[0] / a[1]]));
-  return { idx, tenBase };
+
+  /* ---- 基準タイム（速度指数用）----
+     勝ち時計を 場×芝ダ×距離 の平均で見るだけでは、馬場状態（重・不良で遅い）とクラス（上のクラスほど速い）が
+     混ざる。ここでは 200m あたりの秒に直したうえで
+       基準 = コース平均 + 馬場の補正（芝ダ別・状態別） + クラスの補正（芝ダ別・クラス別）
+     を、残差の平均で順に求める（2回まわして安定させる）。補正は標本の少ない組を 0 に縮小（k=30）。 */
+  const per200 = r => { const win = r.entries.find(e => e.pos === 1); const t = win ? timeSec(win.time) : null; return t && r.dist ? t / (r.dist / 200) : null; };
+  const babaOf = r => (r.baba || '良').replace('稍重', '稍').replace('不良', '不');
+  const rows = [];
+  for (const r of results) { const v = per200(r); if (v) rows.push({ k: `${r.venue}|${r.surface}|${r.dist}`, bk: `${r.surface}|${babaOf(r)}`, ck: `${r.surface}|${clsOfRace(r)}`, v }); }
+  const courseM = new Map(), babaOff = new Map(), clsOff = new Map();
+  const meanBy = (key, resid, k) => {
+    const acc = new Map();
+    for (const x of rows) { const a = acc.get(key(x)) || [0, 0]; a[0] += resid(x); a[1]++; acc.set(key(x), a); }
+    return new Map([...acc].map(([kk, a]) => [kk, a[0] / (a[1] + k)]));
+  };
+  for (let it = 0; it < 2; it++) {
+    const cm = meanBy(x => x.k, x => x.v - (babaOff.get(x.bk) || 0) - (clsOff.get(x.ck) || 0), 0);
+    courseM.clear(); for (const [kk, v] of cm) courseM.set(kk, v);
+    const bo = meanBy(x => x.bk, x => x.v - (courseM.get(x.k) || 0) - (clsOff.get(x.ck) || 0), 30);
+    babaOff.clear(); for (const [kk, v] of bo) babaOff.set(kk, v);
+    const co = meanBy(x => x.ck, x => x.v - (courseM.get(x.k) || 0) - (babaOff.get(x.bk) || 0), 30);
+    clsOff.clear(); for (const [kk, v] of co) clsOff.set(kk, v);
+  }
+  /* 200m あたりの基準タイム。コースの標本が無ければ null */
+  const stdTime = (venue, surface, dist, baba, cls) => {
+    const c = courseM.get(`${venue}|${surface}|${dist}`); if (c == null) return null;
+    const bk = `${surface}|${String(baba || '良').replace('稍重', '稍').replace('不良', '不')}`;
+    return c + (babaOff.get(bk) || 0) + (cls != null ? (clsOff.get(`${surface}|${cls}`) || 0) : 0);
+  };
+  return { idx, tenBase, levelOf, stdTime, babaOff: Object.fromEntries(babaOff), clsOff: Object.fromEntries(clsOff) };
 }
 
 /* ---- 人的要因の「そのレース時点」の指数 ----
@@ -170,22 +232,38 @@ export function raceFromCard(c, H) {
 function derive(h, race, RI, COURSE) {
   const past = h.past || [];
   let abS = 0, abW = 0, clS = 0, agS = 0, agW = 0, epS = 0, epW = 0;
-  /* 走破時計：コース平均の勝ち時計との差（速いほど＋）。馬場（重・不良）は 200m あたり 0.15秒ぶん割り引く */
+  /* 走破時計（速度指数）：200m あたりの基準タイム（コース＋馬場状態＋クラス。RI.stdTime）との差、速いほど＋。
+     さらにペース補正：そのレースのテン3F がコース平均より遅ければ（前半スロー）、全体の時計が遅くなるぶんを半分戻す。
+     RI が無い（古い呼び方）ときはコース平均の勝ち時計と固定の馬場補正で代用 */
   let spS = 0, spW = 0, spBest = null;
   for (let i = 0; i < past.length; i++) {
     const p = past[i]; if (!p.time || !p.dist || !p.venue || !p.surface) continue;
-    const K = COURSE && COURSE[`${p.venue}|${p.surface}|${p.dist}`]; if (!K || !K.winTime) continue;
     const hal = p.dist / 200;
-    const babaAdj = p.baba === '重' ? 0.1 : p.baba === '不' || p.baba === '不良' ? 0.15 : p.baba === '稍' || p.baba === '稍重' ? 0.05 : 0;
-    const v = clamp((K.winTime - p.time) / hal + babaAdj, -1.5, 1.0);
+    let v = null;
+    const std = RI && RI.stdTime ? RI.stdTime(p.venue, p.surface, p.dist, p.baba, p.cls) : null;
+    if (std != null) {
+      v = std - p.time / hal;
+      const L = RI.idx.get(p.raceId), base = L && L.ten3 ? RI.tenBase.get(`${p.venue}|${p.surface}|${p.dist}`) : null;
+      if (base) v += 0.5 * (L.ten3 - base) / 3;                     // テン3F（600m）の遅れを 200m あたりに直して半分
+    } else {
+      const K = COURSE && COURSE[`${p.venue}|${p.surface}|${p.dist}`]; if (!K || !K.winTime) continue;
+      const babaAdj = p.baba === '重' ? 0.1 : p.baba === '不' || p.baba === '不良' ? 0.15 : p.baba === '稍' || p.baba === '稍重' ? 0.05 : 0;
+      v = (K.winTime - p.time) / hal + babaAdj;
+    }
+    v = clamp(v, -1.5, 1.0);
     const w = W[i] ?? 0.4; spS += v * w; spW += w; if (spBest == null || v > spBest) spBest = v;
   }
   let same = [0, 0], other = [0, 0], surfSame = [0, 0], surfOther = [0, 0], wet = [0, 0], venue = [0, 0];
   let tS = 0, tW = 0, fastRel = [0, 0], slowRel = [0, 0];
+  let lvS = 0, lvX = 0, lvW = 0, lastLvl = 0;
   past.forEach((p, i) => {
     const w = W[i] ?? 0.4;
     const rel = p.n > 1 ? 1 - (p.pos - 1) / (p.n - 1) : 0.5;
     abS += rel * w; abW += w;
+    if (RI && RI.levelOf && p.raceId) {
+      const lv = RI.levelOf(p.raceId, race.date);
+      if (lv.n) { lvS += lv.lvl * w; lvX += (rel - 0.5) * lv.lvl * w; lvW += w; if (i === 0) lastLvl = lv.lvl; }
+    }
     clS += (rel - 0.5 + 0.12 * ((p.cls ?? race.cls) - race.cls)) * w;      // 上のクラスでの好走は重く
     const L = RI && RI.idx.get(p.raceId);
     if (L && p.agari && L.avgAgari) { agS += (p.agari - L.avgAgari) * w; agW += w; }
@@ -212,6 +290,7 @@ function derive(h, race, RI, COURSE) {
   }
   const mean = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
   return {
+    raceLvl: lvW ? lvS / lvW * 4 : 0, lvlX: lvW ? lvX / lvW * 8 : 0, lastLvl: lastLvl * 4,
     spdIdx: spW ? spS / spW : 0, spdBest: spBest ?? 0,
     styleHist, bwGood: mean(good), bwGoodN: good.length, bwPast: mean(all), bwMin: all.length ? Math.min(...all) : null, bwMax: all.length ? Math.max(...all) : null,
     ability, clsAbility: abW ? clS / abW : 0,
@@ -240,6 +319,9 @@ export function makeFeaturizer(DB, RI, ASOF) {
     const bws = live.map(h => h.bw).filter(x => x > 0);
     const bwAvg = bws.length ? bws.reduce((a, b) => a + b, 0) / bws.length : 470;
     const ds = live.map(h => derive(h, race, RI, COURSE));
+    /* 市場の対数確率（控除は正規化で消える）。全頭のオッズが揃ったレースだけ */
+    const lq = live.every(h => h.odds > 0) ? live.map(h => -Math.log(h.odds)) : null;
+    const lqm = lq ? lq.reduce((a, b) => a + b, 0) / lq.length : 0;
     const cnt = {}; ds.forEach(d => cnt[d.style] = (cnt[d.style] || 0) + 1);
     const rows = live.map((h, hi) => {
       const d = ds[hi];
@@ -281,6 +363,8 @@ export function makeFeaturizer(DB, RI, ASOF) {
         /* コースの大型有利度 × 出走平均との差 */
         bwEdge: h.bw && K && K.bwAvg ? bwLean * clamp((h.bw - K.bwAvg) / 25, -2, 2) : 0,
         spdIdx: d.spdIdx, spdBest: d.spdBest,
+        raceLvl: d.raceLvl, lvlX: d.lvlX, lastLvl: d.lastLvl,
+        mktLog: lq ? lq[hi] - lqm : 0,
       };
       const v = new Float64Array(NF);
       FEATURES.forEach((k, i) => { v[i] = Number.isFinite(x[k]) ? x[k] : 0; });

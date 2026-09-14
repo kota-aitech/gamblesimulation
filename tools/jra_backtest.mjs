@@ -1,7 +1,7 @@
 /* JRA の買い方ごとの的中率・回収率 → data/jra/backtest.json
    予想は jra_fit.mjs の model.json（第1段＋温度、オッズがあれば第2段）、払戻は results.jsonl の pay。
      JRA_BT_FROM / JRA_BT_TO … 検証期間（既定は model.json の検証期間）
-     JRA_BT_LEVEL … base | mix（既定 mix。results の単勝オッズは確定値なので実戦よりやや有利に出る）
+     JRA_BT_LEVEL … base | mix | joint（既定 joint があれば joint、無ければ mix。results の単勝オッズは確定値なので実戦よりやや有利に出る）
    1点100円。買い方は南関・ボートと同じ考え方：本命BOX（3〜5頭）、◎の単複、◎○の馬連・馬単、AIの確率上位N点。 */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -13,12 +13,12 @@ import { combosOf } from './lib/jbets.mjs';
 const M = readJSON('data/jra/model.json');
 const DB = readJSON(M.meta.db || 'data/jra/index.json');
 const FROM = process.env.JRA_BT_FROM || M.meta.split, TO = process.env.JRA_BT_TO || '9999-12-31';
-const LEVEL = process.env.JRA_BT_LEVEL || 'mix';
+const LEVEL = process.env.JRA_BT_LEVEL || (M.joint ? 'joint' : 'mix');
 const tau = M.base.tau, mix = M.mix;
-const beta = new Float64Array(NF);
+const beta = new Float64Array(NF), betaJ = new Float64Array(NF), tauJ = M.joint?.tau || tau;
 {
   const F = M.meta.feats, { FEATURES } = await import('./lib/jfeat.mjs');
-  FEATURES.forEach((k, i) => { const j = F.indexOf(k); if (j >= 0) beta[i] = M.base.beta[j]; });
+  FEATURES.forEach((k, i) => { const j = F.indexOf(k); if (j >= 0) { beta[i] = M.base.beta[j]; if (M.joint) betaJ[i] = M.joint.beta[j]; } });
   const extra = F.filter(k => !FEATURES.includes(k)); if (extra.length) throw new Error(`model.json に jfeat.mjs に無い特徴量がある（${extra.join(',')}）`);
 }
 
@@ -43,14 +43,15 @@ for (const r of results) {
   const f = featurize(race);
   if (!f) continue;
   const U = utilities(f.rows.map(x => x.x), beta);
-  let Um = U;
-  if (LEVEL === 'mix' && mix && f.rows.every(x => x.odds > 0)) {
+  let Um = U, tauR = tau;
+  if (LEVEL === 'joint' && M.joint && f.rows.every(x => x.odds > 0)) { Um = utilities(f.rows.map(x => x.x), betaJ); tauR = tauJ; }
+  else if (LEVEL === 'mix' && mix && f.rows.every(x => x.odds > 0)) {
     /* 第2段：a·τ1·U + b·log q を「1着の効用」に。2着以降は同じ比率で扱う */
     const inv = f.rows.map(x => 1 / x.odds), s = inv.reduce((a, b) => a + b, 0);
     Um = U.map((u, i) => (mix.a * tau[0] * u + mix.b * Math.log(inv[i] / s)) / tau[0]);
   }
   const lanes = f.rows.map(x => x.no);
-  const C = combosOf(Um, tau, lanes);
+  const C = combosOf(Um, tauR, lanes);
   const ord = C.p1.map((p, i) => [p, i]).sort((a, b) => b[0] - a[0]).map(x => lanes[x[1]]);
   const [f1, f2, f3] = race.order.map(i => race.horses[i].no);
   const w1 = f1, e2k = `${f1}-${f2}`, q2 = sortKey([f1, f2]), s3 = sortKey([f1, f2, f3]), e3k = `${f1}-${f2}-${f3}`;
@@ -80,7 +81,7 @@ for (const r of results) {
   const b4 = ord.slice(0, 4), h4 = b4.includes(f1) && b4.includes(f2) && b4.includes(f3); mo.box4.bet += 400; mo.box4.ret += h4 ? payOf(r, 'sanpuku', s3) : 0;
 }
 const table = Object.fromEntries(Object.entries(P).map(([k, v]) => [k, { races: v.races, hit: +(100 * v.hit / v.races).toFixed(1), roi: +(100 * v.ret / v.bet).toFixed(1), bet: v.bet, ret: v.ret }]));
-const out = { meta: { level: LEVEL, from: FROM, to: TO, races: nR, hit1: +(hit1 / nR).toFixed(4), in3: +(in3 / nR).toFixed(4), note: LEVEL === 'mix' ? '単勝オッズは結果ページの確定値。締切前の値ではないので実戦よりやや有利' : '' }, table, byMonth };
+const out = { meta: { level: LEVEL, from: FROM, to: TO, races: nR, hit1: +(hit1 / nR).toFixed(4), in3: +(in3 / nR).toFixed(4), note: LEVEL !== 'base' ? '単勝オッズは結果ページの確定値。締切前の値ではないので実戦よりやや有利' : '' }, table, byMonth };
 writeJSON('data/jra/backtest.json', out);
 console.error(`検証 ${nR}R（${LEVEL}）1着的中 ${(100 * hit1 / nR).toFixed(1)}%／上位3頭に勝ち馬 ${(100 * in3 / nR).toFixed(1)}%`);
 for (const [k, v] of Object.entries(table)) console.error(`  ${k.padEnd(16)} 的中 ${String(v.hit).padStart(5)}%  回収 ${String(v.roi).padStart(6)}%`);

@@ -18,9 +18,11 @@ let BT = null; try { BT = readJSON('data/jra/backtest.json'); } catch { }
 /* 係数は名前で合わせる。モデルに無い特徴量（当てはめ直し前に足したもの）は 0＝効かせない。
    モデルにあって jfeat に無いものは止める（位置ずれで別の係数が当たるのを防ぐ） */
 const beta = new Float64Array(NF), tau = M.base.tau, mix = M.mix;
+/* joint（市場＋全特徴量）があればオッズの出たレースはそちら。無ければ第2段の合成 */
+const betaJ = M.joint ? new Float64Array(NF) : null, tauJ = M.joint?.tau || tau;
 {
   const missing = [];
-  FEATURES.forEach((k, i) => { const j = M.meta.feats.indexOf(k); if (j < 0) missing.push(k); else beta[i] = M.base.beta[j]; });
+  FEATURES.forEach((k, i) => { const j = M.meta.feats.indexOf(k); if (j < 0) missing.push(k); else { beta[i] = M.base.beta[j]; if (betaJ) betaJ[i] = M.joint.beta[j]; } });
   const extra = M.meta.feats.filter(k => !FEATURES.includes(k));
   if (extra.length) throw new Error(`model.json に jfeat.mjs に無い特徴量がある（${extra.join(',')}）。jra_fit.mjs を回し直す`);
   if (missing.length) console.error(`  (モデルに無い特徴量は 0 で扱う: ${missing.join(',')}。jra_fit.mjs を回すと効く)`);
@@ -83,19 +85,21 @@ for (const c of cards) {
   if (!f) continue;
   const U = utilities(f.rows.map(x => x.x), beta);
   const hasOdds = f.rows.every(x => x.odds > 0);
-  let Um = U, level = 'base';
-  if (hasOdds && mix) { const inv = f.rows.map(x => 1 / x.odds), s = inv.reduce((a, b) => a + b, 0); Um = U.map((u, i) => (mix.a * tau[0] * u + mix.b * Math.log(inv[i] / s)) / tau[0]); level = 'mix'; nMix++; }
+  let Um = U, level = 'base', tauR = tau;
+  if (hasOdds && betaJ) { Um = utilities(f.rows.map(x => x.x), betaJ); tauR = tauJ; level = 'joint'; nMix++; }
+  else if (hasOdds && mix) { const inv = f.rows.map(x => 1 / x.odds), s = inv.reduce((a, b) => a + b, 0); Um = U.map((u, i) => (mix.a * tau[0] * u + mix.b * Math.log(inv[i] / s)) / tau[0]); level = 'mix'; nMix++; }
   /* 枠順確定前（木〜金）は馬番が無い。その間は組の確率と BOX は出さず、順位と確率だけ載せる */
   const gates = f.rows.every(x => x.no > 0);
   const lanes = f.rows.map((x, i) => gates ? x.no : i + 1);
-  const C = combosOf(Um, tau, lanes);
+  const C = combosOf(Um, tauR, lanes);
   if (!gates) for (const k of ['umatan', 'umaren', 'santan', 'sanpuku', 'wide']) C[k] = [];
   const order = C.p1.map((p, i) => [p, i]).sort((a, b) => b[0] - a[0]).map(x => x[1]);
   const marks = {}; ['◎', '○', '▲', '△', '△', '☆'].forEach((m, i) => { if (order[i] != null) marks[order[i]] = m; });
   const horses = f.rows.map((x, i) => {
     const e = c.entries.find(en => en.no === x.no) || {};
     const d = x.d;
-    const past = (race.horses[i].past || []).slice(0, 5).map(p => ({ date: p.date, venue: p.venue, pos: p.pos, name: p.name, cls: p.cls, surface: p.surface, dist: p.dist, time: p.time, baba: p.baba, n: p.n, no: p.no, pop: p.pop, jockey: p.jockey, kin: p.kin, pass: p.pass, agari: p.agari, bw: p.bw, bwDiff: p.bwDiff, winner: p.winner, margin: p.margin }));
+    /* レースレベル：その前走の出走馬が次走でどう走ったか（今日より前に走った次走だけ。lvl は −0.5〜+0.5、n は次走の数） */
+    const past = (race.horses[i].past || []).slice(0, 5).map(p => ({ lvl: p.raceId && RI.levelOf ? (l => l.n ? { v: round(l.lvl, 3), n: l.n } : null)(RI.levelOf(p.raceId, c.date)) : null, date: p.date, venue: p.venue, pos: p.pos, name: p.name, cls: p.cls, surface: p.surface, dist: p.dist, time: p.time, baba: p.baba, n: p.n, no: p.no, pop: p.pop, jockey: p.jockey, kin: p.kin, pass: p.pass, agari: p.agari, bw: p.bw, bwDiff: p.bwDiff, winner: p.winner, margin: p.margin }));
     const p0 = past[0];
     const note = [];
     note.push(p0 ? `前走 ${p0.venue}${p0.surface || ''}${p0.dist || ''} ${p0.pop ? p0.pop + '人気' : ''}${p0.pos}着／近${past.length}走 ${past.map(p => p.pos).join('-')}` : 'JRA の前走なし（新馬・転入）');
@@ -107,6 +111,13 @@ for (const c of cards) {
     const sh = d.styleHist || {}; const shTxt = Object.entries(sh).filter(([, v]) => v).map(([k, v]) => `${k[0]}${v}`).join('');
     if (e.bw || d.bwPast) note.push(`馬体 今回 ${e.bw ? `${e.bw}kg（${e.bwDiff > 0 ? '+' : ''}${e.bwDiff ?? '±0'}）` : '未発表'}${d.bwGoodN ? `／好走時 ${Math.round(d.bwGood)}kg（${d.bwGoodN}走）` : ''}${d.bwPast ? `／普段 ${Math.round(d.bwPast)}kg（${d.bwMin}〜${d.bwMax}）` : ''}${e.bw && d.bwGoodN >= 2 ? `　→ 好走時より ${e.bw - Math.round(d.bwGood) >= 0 ? '+' : ''}${e.bw - Math.round(d.bwGood)}kg` : ''}`);
     if (shTxt) note.push(`脚質 ${d.style}（近走の内訳 ${shTxt}）${e.color ? `／毛色 ${e.color}` : ''}`);
+    /* 相手関係：前走のレベルと、レベルの高いレースでの好走 */
+    const lvRuns = past.filter(p => p.lvl);
+    if (lvRuns.length) {
+      const strong = lvRuns.filter(p => p.lvl.v >= 0.06 && p.pos <= 3).map(p => `${p.venue}${p.dist || ''} ${p.pos}着（Lv${p.lvl.v >= 0 ? '+' : ''}${(p.lvl.v * 100).toFixed(0)}）`);
+      const weak = lvRuns.filter(p => p.lvl.v <= -0.06 && p.pos <= 3).length;
+      note.push(`相手関係 前走のレベル ${p0?.lvl ? `${p0.lvl.v >= 0 ? '+' : ''}${(p0.lvl.v * 100).toFixed(0)}（出走馬の次走 ${p0.lvl.n}件）` : '不明'}／近走の平均 ${d.raceLvl >= 0 ? '+' : ''}${(d.raceLvl / 4 * 100).toFixed(0)}${strong.length ? `／強い相手で好走：${strong.join('、')}` : weak && lvRuns.filter(p => p.pos <= 3).length === weak ? '／好走は相手の弱いレースだけ' : ''}`);
+    }
     if (hf.sire || hf.owner) note.push(`血統 ${hf.sire || e.sire || '—'}${hf.sN ? `（産駒 ${hf.sN}走・指数 ${hf.sIdx >= 0 ? '+' : ''}${hf.sIdx.toFixed(2)}${hf.sSurf ? `・${c.surface} ${hf.sSurf >= 0 ? '+' : ''}${hf.sSurf.toFixed(2)}` : ''}）` : ''}／母父 ${hf.damsire || e.damsire || '—'}${hf.bN ? `（${hf.bmsIdx >= 0 ? '+' : ''}${hf.bmsIdx.toFixed(2)}）` : ''}${hf.owner ? `／馬主 ${hf.owner}${hf.oN ? `（${hf.oN}走・${hf.oIdx >= 0 ? '+' : ''}${hf.oIdx.toFixed(2)}）` : ''}` : ''}`);
     return {
       owner: hf.owner || null,
@@ -114,6 +125,7 @@ for (const c of cards) {
       sire: e.sire, dam: e.dam, damsire: e.damsire, bw: e.bw, bwDiff: e.bwDiff, odds: e.odds, pop: e.pop,
       mark: marks[i] || '', p1: round(C.p1[i], 4), top2: round(C.top2[i], 3), top3: round(C.top3[i], 3), U: round(Um[i], 2), style: d.style,
       styleHist: d.styleHist, bwGood: d.bwGood != null ? Math.round(d.bwGood) : null, bwGoodN: d.bwGoodN, bwPast: d.bwPast != null ? Math.round(d.bwPast) : null, bwMin: d.bwMin, bwMax: d.bwMax,
+      raceLvl: round(d.raceLvl / 4, 3), lastLvl: round(d.lastLvl / 4, 3),
       c: contrib(x.x), jIdx: round(x.jIdx, 2), tIdx: round(x.tIdx, 2), cIdx: round(x.cIdx, 2), note, past,
     };
   });
@@ -133,6 +145,11 @@ for (const c of cards) {
   if (heavy.length && K?.bwDiff3 >= 4) pts.push(`大型馬 ${heavy.join('、')} はこのコースの傾向に合う。`);
   const bwOff = horses.filter(h => h.bw && h.bwGoodN >= 2 && Math.abs(h.bw - h.bwGood) >= 12).map(h => `${h.no} ${h.name}（好走時${h.bwGood}kg→今回${h.bw}kg）`);
   if (bwOff.length) pts.push(`好走時の体重から大きく離れている：${bwOff.join('、')}。`);
+  /* 相手関係：レベルの高い前走を使ってきた馬、逆に前走が低レベルだった上位人気 */
+  const strongLast = horses.filter(h => h.past[0]?.lvl && h.past[0].lvl.v >= 0.06 && h.past[0].lvl.n >= 5).sort((a, b) => b.past[0].lvl.v - a.past[0].lvl.v).slice(0, 4).map(h => `${nn(h)}（Lv+${(h.past[0].lvl.v * 100).toFixed(0)}・${h.past[0].pos}着）`);
+  if (strongLast.length) pts.push(`前走のレベルが高い：${strongLast.join('、')}。出走馬の次走成績から見た相手関係で、+10 は「出走馬が次走で平均より1割上の着順」。`);
+  const weakFav = horses.filter(h => h.pop && h.pop <= 3 && h.past[0]?.lvl && h.past[0].lvl.v <= -0.06 && h.past[0].lvl.n >= 5).map(h => `${nn(h)}（${h.pop}人気・前走 Lv${(h.past[0].lvl.v * 100).toFixed(0)}）`);
+  if (weakFav.length) pts.push(`上位人気だが前走の相手は弱かった：${weakFav.join('、')}。`);
   const nige = horses.filter(h => h.style === '逃げ');
   pts.push(nige.length ? `逃げ候補 ${nige.map(h => h.no + ' ' + h.name).join('、')}${nige.length >= 2 ? '（競り合えばペースが上がり差しが届く）' : '（単騎なら楽に運べる）'}。` : '明確な逃げ馬が不在。先行馬有利の流れになりやすい。');
   if (gates) pts.push(`馬連の本線 ${C.umaren[0][0]}（${(C.umaren[0][1] * 100).toFixed(1)}%）、三連複 ${C.sanpuku[0][0]}（${(C.sanpuku[0][1] * 100).toFixed(1)}%）。`);
@@ -153,7 +170,7 @@ for (const c of cards) {
 const out = {
   meta: {
     built: new Date().toISOString(), today: TODAY, groups: GROUPS,
-    model: { built: M.meta.built, split: M.meta.split, train: M.meta.train, test: M.meta.test, base: M.base.test, mix: M.mix?.test || null, mixCoef: mix ? { a: mix.a, b: mix.b } : null, popOnly: M.popOnly },
+    model: { built: M.meta.built, split: M.meta.split, train: M.meta.train, test: M.meta.test, base: M.base.test, mix: M.mix?.test || null, mixCoef: mix ? { a: mix.a, b: mix.b } : null, joint: M.joint?.test || null, jointCoef: M.joint?.coef?.slice(0, 12) || null, popOnly: M.popOnly },
     index: { from: DB.meta.from, to: DB.meta.to, races: DB.meta.races, runs: DB.meta.runs },
     backtest: BT ? { level: BT.meta.level, from: BT.meta.from, to: BT.meta.to, races: BT.meta.races, table: BT.table, note: BT.meta.note } : null,
   },

@@ -2,6 +2,9 @@
    南関・ボートと同じ2段構成。
      第1段 … オッズを使わない基礎モデル（lib/jfeat.mjs の特徴量）＋ 着順の段階ごとの温度（lib/bpl.mjs）
      第2段 … log p_基礎 と log p_人気（単勝オッズ）の合成。第1項の係数が「市場に何を足せているか」
+     joint  … 市場の対数確率（mktLog）を特徴量の1つとして他の全部と同時に当てはめる。
+              第2段が「基礎モデル丸ごと」に重みを付けるのに対し、こちらは特徴量ごとに
+              「市場の上に足せる分」だけが係数に残る。オッズが出たレースの予測はこちらを使う
      JRA_FIT_SPLIT … 学習と検証を切る日付（既定 2026-06-01）
      JRA_FIT_WARM  … 履歴の助走期間（既定 2024-03-01。それ以前のレースは前走が揃わないので学習に使わない）
      JRA_FIT_DB    … 指数（既定 data/jra/index.json。先読みを避けるなら index.train.json）
@@ -9,7 +12,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, readJSON, writeJSON } from './lib/jra.mjs';
-import { FEATURES, NF, buildRaceIndex, buildHistory, buildAsOf, loadPed, raceFromResult, makeFeaturizer } from './lib/jfeat.mjs';
+import { FEATURES, NF, MKT, buildRaceIndex, buildHistory, buildAsOf, loadPed, raceFromResult, makeFeaturizer } from './lib/jfeat.mjs';
 import { utilities, plWin, plackettLuce, fitTau } from './lib/bpl.mjs';
 
 const SPLIT = process.env.JRA_FIT_SPLIT || '2026-06-01';
@@ -36,7 +39,6 @@ for (const r of results) {
   const f = featurize(race);
   if (!f) continue;
   const X = f.rows.map(x => x.x);
-  if (DROPI.length) for (const x of X) for (const i of DROPI) x[i] = 0;
   data.push({ raceId: f.raceId, date: f.date, X, order: race.order, odds: f.rows.map(x => x.odds) });
 }
 const tr = data.filter(d => d.date < SPLIT), te = data.filter(d => d.date >= SPLIT);
@@ -57,12 +59,14 @@ function gradOne(X, order, beta, g) {
   }
   return ll;
 }
-function fit(rows) {
+/* drop に入れた列は係数を 0 に固定する（列そのものは残すので base と joint で同じ行列を使える） */
+function fit(rows, drop = new Set()) {
   const beta = new Float64Array(NF), m = new Float64Array(NF), v = new Float64Array(NF), g = new Float64Array(NF);
   for (let ep = 1; ep <= EPOCH; ep++) {
     g.fill(0); let ll = 0;
     for (const d of rows) ll += gradOne(d.X, d.order, beta, g);
     for (let k = 0; k < NF; k++) {
+      if (drop.has(k)) { beta[k] = 0; continue; }
       g[k] = g[k] / rows.length - L2 * beta[k];
       m[k] = 0.9 * m[k] + 0.1 * g[k]; v[k] = 0.999 * v[k] + 0.001 * g[k] * g[k];
       beta[k] += LR * (m[k] / (1 - 0.9 ** ep)) / (Math.sqrt(v[k] / (1 - 0.999 ** ep)) + 1e-8);
@@ -105,8 +109,8 @@ function fitMix(rows, beta, tau) {
   return { a: best.a, b: best.b, n: packed.length };
 }
 
-console.error('第1段を当てはめる…');
-const beta = fit(tr);
+console.error('第1段（base：市場なし）を当てはめる…');
+const beta = fit(tr, new Set([...DROPI, MKT]));
 const raw = evaluate(te, beta);
 /* 温度は学習データの末尾2割（β の当てはめに寄っていない部分）で決める。
    学習全体で決めると β の過学習ぶんまで鋭くなり、検証で強気に出た */
@@ -124,9 +128,23 @@ const ev2 = evaluate(te, beta, tau, mix);
 console.error(`  人気だけ: logloss ${popOnly.logloss}／1着的中 ${(popOnly.hit1 * 100).toFixed(1)}%／上位3頭 ${(popOnly.in3 * 100).toFixed(1)}%`);
 console.error(`  第2段（${mix.a}×log基礎 + ${mix.b}×log人気）: logloss ${ev2.logloss}／1着的中 ${(ev2.hit1 * 100).toFixed(1)}%／上位3頭 ${(ev2.in3 * 100).toFixed(1)}%`);
 
+/* joint：市場の対数確率を特徴量として同時に当てはめる。温度は同じく学習末尾2割 */
+let joint = null;
+if (!process.env.JRA_FIT_NOJOINT) {
+  console.error('joint（市場＋全特徴量）を当てはめる…');
+  const bj = fit(tr, new Set(DROPI));
+  const tj = fitTau(hold.map(d => ({ U: utilities(d.X, bj), order: d.order })));
+  const ej = evaluate(te, bj, tj);
+  const coef = [...bj].map((v, i) => [FEATURES[i], +v.toFixed(3)]).filter(([, v]) => v !== 0).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+  console.error(`  joint: logloss ${ej.logloss}／1着的中 ${(ej.hit1 * 100).toFixed(1)}%／上位3頭 ${(ej.in3 * 100).toFixed(1)}%（温度 τ1 ${tj[0]}／τ2 ${tj[1]}）`);
+  console.error('  joint の係数（絶対値順）: ' + coef.slice(0, 16).map(([k, v]) => `${k} ${v}`).join(' / '));
+  console.error('  較正（予測→実際）: ' + ej.cal.filter(Boolean).map(b => `${(b.p * 100).toFixed(0)}→${(b.y * 100).toFixed(0)}`).join(' '));
+  joint = { beta: [...bj].map(v => +v.toFixed(4)), tau: tj, test: ej, coef };
+}
+
 writeJSON('data/jra/model.json', {
   meta: { built: new Date().toISOString().slice(0, 10), split: SPLIT, warm: WARM, feats: FEATURES, train: tr.length, test: te.length, from: data[0]?.date, to: data.at(-1)?.date, db: process.env.JRA_FIT_DB || 'data/jra/index.json' },
   base: { beta: [...beta].map(v => +v.toFixed(4)), tau, test: ev, testRaw: { logloss: raw.logloss, hit1: raw.hit1, in3: raw.in3 } },
-  mix: { ...mix, test: ev2 }, popOnly,
+  mix: { ...mix, test: ev2 }, popOnly, joint,
 });
 console.error('-> data/jra/model.json');
