@@ -1,8 +1,11 @@
-/* 南関の「その日の結果」を夜に取り込み、日別の成績を作り直して公開する。
+/* 南関の「その日の結果」を夜に取り込み、日別の成績を作り直して公開する。あわせて翌日以降の出馬表も取り込む。
    launchd（com.nankan.results）が 21:20 / 23:00 / 翌 06:30 に呼ぶ想定（常駐しない）。
    昨日〜今日の開催を対象にするので、1回目で取り切れなくても次の回で拾える。
+   出馬表は前日の夕方に出るので、21:20 の回で翌日ぶんが入り、06:30 の回で取り漏れを拾う。
 
-     fetch_payouts → fetch_results → fetch_odds（最終オッズ）→ build_results → build_top → embed_db → commit / push
+     fetch_payouts → fetch_results → fetch_odds（最終オッズ）→ build_results
+     → fetch_cards（今月）→ fetch_trend → build_trend → build_races → build_browse → embed_db → build_marks
+     → build_top → embed_db → commit / push
 
      NK_BT_TRACKS      … 対象の場（既定 大井,川崎）
      NK_REFRESH_NOPUSH … push しない（手元確認用）
@@ -34,6 +37,12 @@ run('fetch_payouts.mjs');
 run('fetch_results.mjs');
 run('fetch_odds.mjs');
 if (!run('build_results.mjs')) process.exit(1);
+/* 出馬表の取り込み（今月ぶん。取得済みはキャッシュ、新しい開催日だけ増える）→ 傾向 → 番組・出走馬 → データブラウザ → 埋め込み → 印 */
+const ym = ymd(today).slice(0, 7).replace('-', '');
+if (run('fetch_cards.mjs', { NK_FROM: ym, NK_TO: ym })) {
+  run('fetch_trend.mjs'); run('build_trend.mjs');
+  if (run('build_races.mjs')) { run('build_browse.mjs'); run('embed_db.mjs'); run('build_marks.mjs'); }
+}
 if (!run('build_top.mjs')) process.exit(1);
 if (!run('embed_db.mjs')) process.exit(1);
 const secs = ((Date.now() - t0) / 1000).toFixed(0);
@@ -45,7 +54,8 @@ const TARGETS = ['index.html', 'race.html', 'top.html', 'data.html', 'marks.html
   'data/nankan/results.jsonl', 'data/nankan/payouts.jsonl', 'data/nankan/odds.jsonl',
   'data/nankan/results.oi.json', 'data/nankan/results.kawasaki.json', 'data/nankan/top.json',
   'data/nankan/entries.oi.json', 'data/nankan/entries.kawasaki.json', 'data/nankan/races.oi.json', 'data/nankan/races.kawasaki.json',
-  'data/nankan/marksrec.json', 'data/nankan/backtest.json'];
+  'data/nankan/marksrec.json', 'data/nankan/backtest.json',
+  'data/nankan/trend.oi.json', 'data/nankan/trend.kawasaki.json', 'data/nankan/meet.oi.json', 'data/nankan/meet.kawasaki.json', 'data/nankan/browse.json'];
 try {
   const branch = git(['rev-parse', '--abbrev-ref', 'HEAD']);
   if (branch !== 'main') { console.error(`${stamp()} 取り込み完了（${secs}秒）／ブランチが ${branch} なので push しません`); process.exit(0); }

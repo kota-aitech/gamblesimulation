@@ -39,6 +39,8 @@ export const FEATURES = [
   'sIdx', 'bmsIdx', 'sSurf', 'oIdx',
   /* 馬体重：好走時の体重との差、コースの「大型有利／小柄有利」との相性 */
   'bwFit', 'bwEdge',
+  /* 走破時計（スピード指数の素朴版）：そのコースの平均勝ち時計との差を 200m あたりの秒に直したもの。近走の加重平均と最良 */
+  'spdIdx', 'spdBest',
 ];
 export const NF = FEATURES.length;
 
@@ -165,9 +167,19 @@ export function raceFromCard(c, H) {
 }
 
 /* ---- 1頭の推定値（南関 lib/horse.mjs の derive に相当）---- */
-function derive(h, race, RI) {
+function derive(h, race, RI, COURSE) {
   const past = h.past || [];
   let abS = 0, abW = 0, clS = 0, agS = 0, agW = 0, epS = 0, epW = 0;
+  /* 走破時計：コース平均の勝ち時計との差（速いほど＋）。馬場（重・不良）は 200m あたり 0.15秒ぶん割り引く */
+  let spS = 0, spW = 0, spBest = null;
+  for (let i = 0; i < past.length; i++) {
+    const p = past[i]; if (!p.time || !p.dist || !p.venue || !p.surface) continue;
+    const K = COURSE && COURSE[`${p.venue}|${p.surface}|${p.dist}`]; if (!K || !K.winTime) continue;
+    const hal = p.dist / 200;
+    const babaAdj = p.baba === '重' ? 0.1 : p.baba === '不' || p.baba === '不良' ? 0.15 : p.baba === '稍' || p.baba === '稍重' ? 0.05 : 0;
+    const v = clamp((K.winTime - p.time) / hal + babaAdj, -1.5, 1.0);
+    const w = W[i] ?? 0.4; spS += v * w; spW += w; if (spBest == null || v > spBest) spBest = v;
+  }
   let same = [0, 0], other = [0, 0], surfSame = [0, 0], surfOther = [0, 0], wet = [0, 0], venue = [0, 0];
   let tS = 0, tW = 0, fastRel = [0, 0], slowRel = [0, 0];
   past.forEach((p, i) => {
@@ -200,6 +212,7 @@ function derive(h, race, RI) {
   }
   const mean = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
   return {
+    spdIdx: spW ? spS / spW : 0, spdBest: spBest ?? 0,
     styleHist, bwGood: mean(good), bwGoodN: good.length, bwPast: mean(all), bwMin: all.length ? Math.min(...all) : null, bwMax: all.length ? Math.max(...all) : null,
     ability, clsAbility: abW ? clS / abW : 0,
     close: agW ? -(agS / agW) : 0,                     // 速いほどプラス
@@ -226,7 +239,7 @@ export function makeFeaturizer(DB, RI, ASOF) {
     const isWet = race.baba && race.baba !== '良' ? 1 : 0;
     const bws = live.map(h => h.bw).filter(x => x > 0);
     const bwAvg = bws.length ? bws.reduce((a, b) => a + b, 0) / bws.length : 470;
-    const ds = live.map(h => derive(h, race, RI));
+    const ds = live.map(h => derive(h, race, RI, COURSE));
     const cnt = {}; ds.forEach(d => cnt[d.style] = (cnt[d.style] || 0) + 1);
     const rows = live.map((h, hi) => {
       const d = ds[hi];
@@ -267,6 +280,7 @@ export function makeFeaturizer(DB, RI, ASOF) {
         bwFit: h.bw && d.bwGoodN >= 2 ? -Math.min(Math.abs(h.bw - d.bwGood), 30) / 12 : 0,
         /* コースの大型有利度 × 出走平均との差 */
         bwEdge: h.bw && K && K.bwAvg ? bwLean * clamp((h.bw - K.bwAvg) / 25, -2, 2) : 0,
+        spdIdx: d.spdIdx, spdBest: d.spdBest,
       };
       const v = new Float64Array(NF);
       FEATURES.forEach((k, i) => { v[i] = Number.isFinite(x[k]) ? x[k] : 0; });

@@ -356,8 +356,10 @@ HTML も index.html に書き換わりうる）。
 
 ### 日別の成績（`top.html` の「日別の成績」）
 `build_results.mjs` が `summary.byDay` を作り、TOPに開催日ごとの表を出す。
-**結果の取り込みは夜に自動**（launchd `com.nankan.results` → `tools/nightly_results.mjs`。21:20／23:00／翌06:30 に
-昨日〜今日の 払戻・結果・最終オッズ を取って `build_results → build_top → embed_db → commit/push`）。
+**結果の取り込みと出馬表の取り込みは夜に自動**（launchd `com.nankan.results` → `tools/nightly_results.mjs`。21:20／23:00／翌06:30 に
+昨日〜今日の 払戻・結果・最終オッズ を取って `build_results`、続けて **今月の出馬表を取り直し**
+（`fetch_cards → fetch_trend → build_trend → build_races → build_browse → embed_db → build_marks`）、`build_top → embed_db → commit/push`）。
+出馬表は前日夕方に出るので 21:20 の回で翌日ぶんが入る。手で回すのは月またぎで `NK_FROM/NK_TO` を変えるときだけ。
 当日でも結果と払戻が取れていれば日別に入る（`c.date <= TODAY`）。ログは `data/nankan/results.log`。
 ◎的中／上位3頭に勝ち馬／各BOXの回収率と的中率／**その日に使ったオッズの種類**を並べる。
 
