@@ -902,6 +902,53 @@ base は人気にまだ遠い（logloss で 0.22）。joint は人気を 0.004 �
 
 ---
 
+## ばんえい競馬版（帯広）— 2026-09-14 着手
+
+南関・JRA と同じ構成（データ層 `data/banei/` ＋ ツール層 `tools/banei_*.mjs` ＋ 1ファイルの `banei.html`、TOP のタブ）。他と混ぜない。
+ばんえいは直線200mの1コースだけ、10頭立て、着順は **積載重量・馬体重・馬場水分（含水率）** に強く左右される。
+含水率が高いほど砂が締まって速く（水分 0.8% で勝ち時計 2分超、3% で 1分40秒台）、乾くと重い。
+
+### データ元（地方競馬情報サイト keiba.go.jp、NAR 公式・UTF-8）
+| 用途 | URL | 備考 |
+|---|---|---|
+| 月別開催日程 | `/KeibaWeb/MonthlyConveneInfo/MonthlyConveneInfoTop?k_year=&k_month=` | 「帯広ば」の行の RaceList リンクから開催日 |
+| 当日メニュー | `/KeibaWeb/TodayRaceInfo/RaceList?k_raceDate=YYYY%2FMM%2FDD&k_babaCode=3` | 発走・競走名・天候・**馬場水分**・頭数・変更情報（出走取消） |
+| 出馬表 | `…/DebaTable?k_raceDate=&k_raceNo=&k_babaCode=3` | 1頭＝5行。馬体重（当日）・オッズ・積載・減量記号（☆＝10kg／△＝20kg）・父母母父・馬主・生産牧場・着別成績・**前5走（着順・日付・馬場水分・頭数・馬番・競走名・人気・馬体重・騎手・積載・タイム・着差）** |
+| 競走成績 | `…/RaceMarkTable?…` | 着順・枠・馬番・性齢・積載・騎手・調教師・馬体重(増減)・タイム・人気・単勝オッズ・**払戻（全券種）**。優勝馬の血統は 2026-04 以降だけ |
+`babaCode=3` が帯広。**単勝オッズの列は最近のページにしか無い**（2025年以前は人気だけ）。市場の見立てが要るところは
+「人気順位ごとの勝率」（`lib/bnfeat.mjs` の `marketProbs`）で代用する。同じ枠の2頭目は枠のセル（rowspan）が無い（`parseCard` で引き継ぐ）。
+払戻は `<section class="newRefundTable">`（ページ先頭の「当日払戻金」リンクを拾わないこと）。
+
+**マナー**：`lib/bn.mjs` が 2秒間隔・単一スレッド・キャッシュ（`data/cache/banei/`）・ネット切断は待つ。1日の取得は 当日メニュー1＋出馬表12＋成績12。
+
+### ファイル
+```
+banei.html                 出馬表（新聞配色の馬柱：積載・馬体重・水分つき前5走）＋予想＋水分帯・コース別の実測。NKBANEI マーカー
+data/banei/results.jsonl   成績（.gitignore。1レース1行）／cards.jsonl 出馬表（.gitignore。血統・馬主・前5走の元）
+data/banei/index.json      ★騎手・調教師・コンビ・種牡馬・母父・馬主・馬番・水分帯・馬体重帯の集計
+data/banei/model.json      ★条件付きロジット（base・joint）／backtest.json／races.json／top.json／preds.jsonl／results.json
+tools/lib/bn.mjs           取得共通　tools/lib/bnpage.mjs パーサ（parseMonthly / parseRaceList / parseResult / parseCard）
+tools/lib/bnfeat.mjs       特徴量 44個（下）　tools/banei_fetch.mjs 取り込み（BN_FROM/TO、BN_KIND=results|cards|both）
+tools/banei_build_db.mjs   index.json　banei_fit.mjs 当てはめ　banei_backtest.mjs 検証　banei_build_races.mjs 出馬表に当てる
+tools/banei_build_results.mjs 日別成績　banei_check.mjs DOM スタブ検査　refresh_banei.mjs 反映係（launchd: com.banei.refresh、15分おき）
+```
+
+### 特徴量（`lib/bnfeat.mjs`）— 南関の項目＋ばんえい固有
+- 近走：相対着順の加重平均、クラス差込み、前走の着順・勝ち馬との秒差、走数、連勝、勝った直後
+- **時計**：`stdTime(水分, クラス)`＝水分ビン（0.5%刻み）の平均勝ち時計＋クラス補正（k=20）との対数差。水分で時計がまるごと変わるので生の時計は使わない
+- **積載**：レース平均との差（`loadRel`）、前走からの増減（`loadChg`）、**馬体重に対する比**（`loadBw`）
+- 馬体重：対数・レース内相対・増減・普段との差・増減の絶対値（800〜1,200kg）
+- **馬場水分**：`moistX`＝馬ごとの「水分2.0以上と1.2以下での相対着順の差」×今日の水分の偏り、経験した水分の平均との差、前走との差
+- **コース**：馬番（10コース）と、馬番別の「3着内シェア÷出走シェア」（`index.json` の `gate`）
+- 人：騎手・調教師・コンビ・騎手の直近60騎乗（レース時点、`buildAsOf`）、減量騎手
+- 血統・馬主：種牡馬・母父（前走が少ない馬ほど）・馬主（レース時点）。血統は出馬表から（`loadPed`）
+- クラスは競走名の末尾から：2歳・3歳は D→C→B→A→OP、3歳以上は C2→C1→B4→B3→B2→B1→A2→A1→OP（`classOf`）
+
+### 進み具合
+- 2026-09-14 夜：取得層・パーサ・指数・特徴量・当てはめ・検証・ページ・TOP タブ・反映係まで書き、2023-09〜2026-09 の成績と出馬表を取得中（約5,400R、翌朝まで）。
+  **モデルは仮**（数百レースで動作確認しただけ）。取得が終わったら `BN_REFETCH=1 BN_KIND=results` で成績を取り直し（払戻の解析を直したため。キャッシュから読むので速い）
+  → `banei_build_db` → `banei_fit`（split 20260401）→ `banei_backtest` → `banei_build_races` → embed → `banei_check` → launchd 登録
+
 ## ボートレース版
 
 競馬側とは別の競技だが、**方針は同じ**（1ファイル・依存ゼロで配る／データは `data/` + `tools/` に分ける／
@@ -1208,7 +1255,8 @@ G1・SG や準優の加点は入れていないが、同じ節の全員に同じ
 - **当てはめ結果（2026-09-14、学習 151,120R／検証 16,522R）**：ex logloss 1.202（前 1.204、検証集合が少し違う）、1着的中 56.9%、上位3艇 87.6%。
   係数は小さい（`dayIn1` 0.03／`dayMak` 0.07／`todayRel` 0.05／`todaySt` −0.03）。回収率は ◎単勝 92.0%／◎複勝 94.9%／3艇BOX3連複 81.2%（1号艇の単勝 89.6%）で横ばい。
   **「今日はインが弱い」は読みのポイントとしての価値のほうが大きく、モデルの数字はほとんど動かない。**
-  同じ検証集合で外して比べた結果（`BT_FIT_DROP=dayIn1,dayOut,dayMak,todayRel,todaySt`）はこの下に追記
+  同じ検証集合で外して比べた（`BT_FIT_DROP=dayIn1,dayOut,dayMak,todayRel,todaySt`、ex）：外すと logloss **1.203**／1着的中 56.8%／上位3艇 87.6%。
+  **差は 0.001**。入れておいて害は無いが、精度の材料としては数えない
 
 ### まだやっていないこと
 - **第2段（オッズとの合成）**。K ファイルには当たった組の配当しか無いので、

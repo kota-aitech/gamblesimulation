@@ -35,7 +35,7 @@ for (const r of results) {
   if (race.order.some(i => i < 0)) continue;
   const f = featurize(race);
   if (!f) continue;
-  data.push({ raceId: f.raceId, date: f.date, X: f.rows.map(x => x.x), order: race.order, odds: f.rows.map(x => x.odds) });
+  data.push({ raceId: f.raceId, date: f.date, X: f.rows.map(x => x.x), order: race.order, mkt: f.mkt });
 }
 const tr = data.filter(d => d.date < SPLIT), te = data.filter(d => d.date >= SPLIT);
 console.error(`  学習 ${tr.length}R（${WARM}〜${SPLIT}）／検証 ${te.length}R`);
@@ -69,12 +69,11 @@ function fit(rows, drop = new Set()) {
   }
   return beta;
 }
-const popProbs = odds => { const inv = odds.map(o => (o > 0 ? 1 / o : 0)); const s = inv.reduce((a, b) => a + b, 0); return s > 0 ? inv.map(v => v / s) : null; };
 function evaluate(rows, beta, tau = [1, 1], popOnly = false) {
   let ll = 0, hit1 = 0, in3 = 0, n = 0;
   const cal = Array.from({ length: 10 }, () => ({ p: 0, y: 0, n: 0 }));
   for (const d of rows) {
-    let p = popOnly ? popProbs(d.odds) : plWin(utilities(d.X, beta), tau[0]);
+    let p = popOnly ? d.mkt : plWin(utilities(d.X, beta), tau[0]);
     if (!p) continue;
     const w = d.order[0];
     ll -= Math.log(Math.max(1e-9, p[w]));
@@ -94,10 +93,11 @@ const ev = evaluate(te, beta, tau);
 console.error(`  base: logloss ${ev.logloss}／1着的中 ${(ev.hit1 * 100).toFixed(1)}%／上位3頭 ${(ev.in3 * 100).toFixed(1)}%（温度 τ1 ${tau[0]}／τ2 ${tau[1]}）`);
 console.error('  係数: ' + coefs(beta).slice(0, 16).map(([k, v]) => `${k} ${v}`).join(' / '));
 console.error('  較正（予測→実際）: ' + ev.cal.filter(Boolean).map(b => `${(b.p * 100).toFixed(0)}→${(b.y * 100).toFixed(0)}`).join(' '));
-/* 単勝オッズは古い成績ページには無い（人気だけ）。市場との比較と joint は全頭のオッズが揃ったレースだけで */
-const hasOdds = d => d.odds.every(o => o > 0);
+/* 市場の見立て：単勝オッズは古い成績ページに無いので、人気順位ごとの勝率（lib/bnfeat.mjs の marketProbs）で代用する。
+   それも無いレース（人気の欠け）は市場との比較と joint から外す */
+const hasOdds = d => !!d.mkt;
 const trO = tr.filter(hasOdds), teO = te.filter(hasOdds);
-console.error(`  オッズあり: 学習 ${trO.length}R／検証 ${teO.length}R`);
+console.error(`  市場の見立てあり: 学習 ${trO.length}R／検証 ${teO.length}R`);
 const popOnly = teO.length ? evaluate(teO, beta, tau, true) : null;
 const baseO = teO.length ? evaluate(teO, beta, tau) : null;
 if (popOnly) console.error(`  人気だけ: logloss ${popOnly.logloss}／1着的中 ${(popOnly.hit1 * 100).toFixed(1)}%／上位3頭 ${(popOnly.in3 * 100).toFixed(1)}%（同じ ${teO.length}R で base は ${baseO.logloss}／${(baseO.hit1 * 100).toFixed(1)}%／${(baseO.in3 * 100).toFixed(1)}%）`);

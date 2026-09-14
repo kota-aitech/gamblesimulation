@@ -79,7 +79,7 @@ for (const c of cards) {
   const race = raceFromCard(c, H);
   const f = featurize(race);
   if (!f) continue;
-  const hasOdds = f.rows.every(x => x.odds > 0);
+  const hasOdds = !!f.mkt;
   let Um = utilities(f.rows.map(x => x.x), beta), level = 'base', tauR = tau, bUse = beta;
   if (hasOdds && betaJ) { Um = utilities(f.rows.map(x => x.x), betaJ); tauR = tauJ; level = 'joint'; bUse = betaJ; nJ++; }
   const lanes = f.rows.map(x => x.no);

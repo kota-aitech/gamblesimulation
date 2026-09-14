@@ -63,7 +63,17 @@ export function buildRaceIndex(results) {
     for (const [k, v] of meanBy(x => x.ck, x => x.t - (mM.get(x.mb) || 0), 20)) cO.set(k, v);
   }
   const stdTime = (moist, cls) => { const m = mM.get(moistBin(moist)); if (m == null) return null; return m + (cO.get(`${cls.grp}|${cls.lvl ?? 'x'}`) || 0); };
-  return { idx, stdTime, moistMean: Object.fromEntries(mM), clsOff: Object.fromEntries(cO) };
+  /* 人気順位ごとの勝率（単勝オッズは古い成績ページに無いので、市場の見立ては人気順位から作る。k=10 で 1/頭数 に縮小） */
+  const pr = Array.from({ length: 17 }, () => [0, 0]);
+  for (const r of results) { const n = r.entries.filter(e => posNum(e.pos) != null).length; for (const e of r.entries) { if (!(e.pop >= 1) || posNum(e.pos) == null) continue; const k = Math.min(e.pop, 16); pr[k][0] += e.pos === 1 ? 1 : 0; pr[k][1]++; } void n; }
+  const popRate = pr.map(([w, n], k) => k ? (w + 10 * 0.1) / (n + 10) : null);
+  return { idx, stdTime, moistMean: Object.fromEntries(mM), clsOff: Object.fromEntries(cO), popRate };
+}
+/* 市場の確率：全頭の単勝オッズがあればその逆数、無ければ人気順位ごとの勝率。どちらも無ければ null */
+export function marketProbs(live, RI) {
+  if (live.every(h => h.odds > 0)) { const inv = live.map(h => 1 / h.odds), s = inv.reduce((a, b) => a + b, 0); return inv.map(v => v / s); }
+  if (RI?.popRate && live.every(h => h.pop >= 1)) { const q = live.map(h => RI.popRate[Math.min(h.pop, 16)] || 0.02), s = q.reduce((a, b) => a + b, 0); return q.map(v => v / s); }
+  return null;
 }
 
 /* ---- 「そのレース時点」の人的要因・血統（結果を日付順に流し、その日より前だけで作る）---- */
@@ -199,7 +209,8 @@ export function makeFeaturizer(DB, RI, ASOF) {
     const bws = live.map(h => h.bw).filter(v => v > 0), bwAvg = bws.length ? bws.reduce((a, b) => a + b, 0) / bws.length : 950;
     const lbs = live.filter(h => h.load > 0 && h.bw > 0).map(h => h.load / h.bw), lbAvg = lbs.length ? lbs.reduce((a, b) => a + b, 0) / lbs.length : 0.62;
     const moist = race.moist ?? 1.5;
-    const lq = live.every(h => h.odds > 0) ? live.map(h => -Math.log(h.odds)) : null;
+    const mkt = marketProbs(live, RI);
+    const lq = mkt ? mkt.map(q => Math.log(q)) : null;
     const lqm = lq ? lq.reduce((a, b) => a + b, 0) / lq.length : 0;
     const ds = live.map(h => derive(h, race, RI));
     const rows = live.map((h, hi) => {
@@ -240,6 +251,6 @@ export function makeFeaturizer(DB, RI, ASOF) {
       FEATURES.forEach((k, i) => { v[i] = Number.isFinite(x[k]) ? x[k] : 0; });
       return { no: h.no, waku: h.waku, name: h.name, horseId: h.horseId, x: v, d, hf, odds: h.odds, pop: h.pop };
     });
-    return { raceId: race.raceId, date: race.date, moist: race.moist, cls: race.cls, n: live.length, rows, order: race.order };
+    return { raceId: race.raceId, date: race.date, moist: race.moist, cls: race.cls, n: live.length, rows, order: race.order, mkt, mktSrc: mkt ? (live.every(h => h.odds > 0) ? 'odds' : 'pop') : null };
   };
 }

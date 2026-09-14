@@ -40,7 +40,7 @@ for (const r of results) {
   const f = featurize(race);
   if (!f) continue;
   let Um = utilities(f.rows.map(x => x.x), beta), tauR = tau;
-  if (LEVEL === 'joint' && M.joint && f.rows.every(x => x.odds > 0)) { Um = utilities(f.rows.map(x => x.x), betaJ); tauR = tauJ; }
+  if (LEVEL === 'joint' && M.joint && f.mkt) { Um = utilities(f.rows.map(x => x.x), betaJ); tauR = tauJ; }
   const lanes = f.rows.map(x => x.no);
   const C = combosOf(Um, tauR, lanes);
   const ord = C.p1.map((p, i) => [p, i]).sort((a, b) => b[0] - a[0]).map(x => lanes[x[1]]);
