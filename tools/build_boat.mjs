@@ -38,9 +38,10 @@ function betaOf(level) {
   const missing = [];
   FEATS.forEach((k, i) => { const j = feats.indexOf(k); if (j < 0) missing.push(k); else b[i] = src[j]; });
   const extra = feats.filter(k => !FEATS.includes(k));
-  if (missing.length || extra.length) {
-    throw new Error(`model.json の特徴量が bfeat.mjs と合わない（無い: ${missing.join(',') || '-'}／余分: ${extra.join(',') || '-'}）。fit_boat.mjs を回し直す`);
-  }
+  /* モデルにあって bfeat に無い＝並びがずれる恐れがあるので止める。
+     bfeat にあってモデルに無い＝足したばかりの特徴量。0（効かせない）で動かし、fit_boat を回すと効く */
+  if (extra.length) throw new Error(`model.json に bfeat.mjs に無い特徴量がある（${extra.join(',')}）。fit_boat.mjs を回し直す`);
+  if (missing.length && level === 'pre') console.error(`  (モデルに無い特徴量は 0 で扱う: ${missing.join(',')}。fit_boat.mjs を回すと効く)`);
   return b;
 }
 const BETA = { pre: betaOf('pre'), ex: betaOf('ex') };
@@ -81,8 +82,9 @@ const GROUP = {
   windC: '水面', waveC: '水面', wDir: '水面', wSpd: '水面', wWave: '水面',
   exDev: '展示', exRank: '展示',
   age: 'その他', weight: 'その他', fRate: 'その他', makuri: 'その他', inGain: 'その他',
+  dayIn1: '当日', dayOut: '当日', dayMak: '当日', todayRel: '当日', todaySt: '当日',
 };
-const GROUPS = ['コース', '実力', '当地', 'ST', 'モーター', '調子', '水面', '展示', 'その他'];
+const GROUPS = ['コース', '実力', '当地', 'ST', 'モーター', '調子', '水面', '展示', '当日', 'その他'];
 function contrib(x, beta) {
   const g = Object.fromEntries(GROUPS.map(k => [k, 0]));
   for (let i = 0; i < NF; i++) g[GROUP[FEATS[i]] || 'その他'] += beta[i] * x[i];
@@ -124,7 +126,7 @@ function buildRace(date, jcd, prog, live, venueWeather) {
     const r = DB.racer?.[b.toban] || null;
     const bf = bfBy.get(b.lane), sx = stBy.get(b.lane);
     const course = sx?.course || null;
-    const rolled = roll.read({ date, jcd }, { toban: b.toban, course, lane: b.lane, motor: b.motor, motorGen: b.motorGen });
+    const rolled = roll.read({ date, jcd, r: prog.r }, { toban: b.toban, course, lane: b.lane, motor: b.motor, motorGen: b.motorGen });
     const genIdx = motorGenOf(jcd, b.motor);
     const mi = DB.motor?.[jcd]?.[b.motor + '#' + genIdx] || null;
     return {
@@ -223,6 +225,7 @@ function buildRace(date, jcd, prog, live, venueWeather) {
       course: b.course, ex: b.ex, exST: b.exST, exF: b.exF, tilt: b.tilt, prop: b.prop, parts: b.parts, adjust: b.adjust,
       form: round(b.form), formN: b.formN, mForm: round(b.mForm), setuST: round(b.setuST), setuEx: round(b.setuEx), setuRuns: b.setuRuns, mUp: round(b.mUp, 1),
       ptRate: round(b.ptRate, 2), ptN: b.ptN, ptRank: b.ptRank, ptTot: b.ptTot, ptGap: round(b.ptGap, 2), shobu: b.shobu || null,
+      dayIn1: round(b.dayIn1, 3), dayOut: round(b.dayOut, 3), dayMak: round(b.dayMak, 3), dayN: b.dayN || 0, todayRel: round(b.todayRel, 2), todaySt: b.todaySt ?? null, todayN: b.todayN || 0,
       racer: b.racer, motorIdx: b.motorIdx,
     })),
     pre: stripTri(pre), ex: ex ? stripTri(ex) : null,
@@ -243,8 +246,45 @@ const TODAY_RES = new Map();                      // 'date|jcd' -> [{r, c1, tri}
     const w = k.entries.find(e => Number(e.pos) === 1);
     if (!w) continue;
     const tri = k.pay?.ex3?.[0]?.y ?? null;        // K の ex3 が3連単（tri は3連複）
-    (TODAY_RES.get(`${k.date}|${k.jcd}`) || TODAY_RES.set(`${k.date}|${k.jcd}`, []).get(`${k.date}|${k.jcd}`)).push({ r: k.r, c1: w.course === 1, tri });
+    (TODAY_RES.get(`${k.date}|${k.jcd}`) || TODAY_RES.set(`${k.date}|${k.jcd}`, []).get(`${k.date}|${k.jcd}`)).push({ r: k.r, c1: w.course === 1, tri, src: 'K', k });
   }
+}
+/* 公式サイトのレース結果ページ（fetch_live が締切6分後から拾う）。K より早いので、K に無いレースだけ足す */
+function addLiveResults(date, live) {
+  let n = 0;
+  for (const lv of Object.values(live?.races || {})) {
+    const rr = lv.result; if (!rr?.done) continue;
+    const key = `${date}|${lv.jcd}`;
+    const a = TODAY_RES.get(key) || TODAY_RES.set(key, []).get(key);
+    if (a.some(x => x.r === lv.r)) continue;
+    const k = { date, jcd: lv.jcd, r: lv.r, kimari: rr.kimari, entries: rr.entries.map(e => ({ pos: e.pos, lane: e.lane, toban: e.toban, course: e.course, st: e.st, f: e.f })), pay: rr.pay };
+    a.push({ r: lv.r, c1: rr.winCourse === 1, tri: rr.pay?.ex3?.[0]?.y ?? null, src: 'web', k }); n++;
+  }
+  return n;
+}
+/* その日の終わったレースを時点つきの指標（lib/bload.mjs の makeRolling）に流し込む。
+   read() は「番号が若いレースだけ」を見るので、先に全部足しておいて構わない */
+function pushTodayResults(date) {
+  let n = 0;
+  for (const [key, list] of TODAY_RES) {
+    if (!key.startsWith(date + '|')) continue;
+    const jcd = key.split('|')[1];
+    for (const x of list.sort((a, b) => a.r - b.r)) {
+      const k = x.k, prog = P.get(`${date}|${jcd}|${k.r}`);
+      if (!k || !prog) continue;
+      const byLane = new Map(prog.boats.map(b => [b.lane, b]));
+      let winC = null;
+      for (const e of k.entries) {
+        const b = byLane.get(e.lane); if (!b || !b.toban) continue;
+        const course = e.course || e.lane;
+        const p = DB.base?.[`${jcd}|${course}`]?.win ?? 1 / 6;
+        roll.push({ date, jcd, r: k.r }, { toban: b.toban, motor: b.motor, motorGen: b.motorGen, pos: e.pos, st: e.st, f: e.f, course }, p, null);
+        if (Number(e.pos) === 1) winC = course;
+      }
+      roll.pushRace({ date, jcd, r: k.r }, winC, k.kimari); n++;
+    }
+  }
+  return n;
 }
 /* 傾向。結果が3レース以上あれば実測（1コース勝率・3連単平均配当・万舟率）、無ければ予想の本命勝率の平均 */
 function trendOf(date, jcd, races, baseC1) {
@@ -334,6 +374,8 @@ for (const date of dates) {
   if (!progs.length) { console.error(`  ${date}: 番組表なし`); continue; }
   let live = null;
   try { live = readJSON(`data/boat/live.${date}.json`); } catch { }
+  const nWeb = addLiveResults(date, live), nPushed = pushTodayResults(date);
+  if (nPushed) console.error(`  ${date}: 当日の結果 ${nPushed}R（うち公式サイトから ${nWeb}R）を時点指標に反映`);
   const byV = new Map();
   for (const o of progs) (byV.get(o.jcd) || byV.set(o.jcd, []).get(o.jcd)).push(o);
   const venues = [];
@@ -402,6 +444,18 @@ for (const date of dates) {
       if (sb.length) race.points.push(`勝負駆け：${sb.map(b => `${b.lane} ${b.name}（${b.shobu.label}・残り${b.shobu.remain}走で平均${b.shobu.need}点${b.shobu.need > 8 ? '＝ほぼ1着' : b.shobu.need > 6 ? '＝2着以上' : ''}）`).join('、')}。`);
       const safe = race.boats.filter(b => b.shobu?.label === '当確圏');
       if (safe.length && race.stage?.lastPrelim) race.points.push(`準優進出が濃厚：${safe.map(b => `${b.lane} ${b.name}`).join('、')}（全部6着でもボーダー以上）。`);
+      /* その日のここまでの傾向（時点指標 dayIn1 …）。3R 以上たまってから */
+      const b0 = race.boats[0];
+      if (b0 && b0.dayN >= 3) {
+        const base1 = V.course?.[0]?.win ?? NAT1;
+        const res = (TODAY_RES.get(`${date}|${jcd}`) || []).filter(x => x.r < race.r);
+        const c1 = res.filter(x => x.c1).length, mak = res.filter(x => /まくり/.test(x.k?.kimari || '')).length;
+        const inTxt = b0.dayIn1 >= 0.06 ? 'イン有利' : b0.dayIn1 <= -0.06 ? 'インが弱い' : 'ふだん並み';
+        const outTxt = b0.dayOut >= 0.25 ? '・外のコースが来ている' : b0.dayOut <= -0.25 ? '・内で決まっている' : '';
+        race.points.push(`本日ここまで${res.length}R：1コース${c1}勝（${(c1 / res.length * 100).toFixed(0)}%・ふだん${(base1 * 100).toFixed(0)}%）・まくり系${mak}本 → ${inTxt}${outTxt}。${BETA.ex[FEATS.indexOf('dayIn1')] ? 'この傾向は予測にも入れてある（根拠の「当日」）。' : '（予測への反映は次のモデル更新から）'}`);
+      }
+      const ran = race.boats.filter(b => b.todayN > 0);
+      if (ran.length) race.points.push(`本日すでに走った艇：${ran.map(b => `${b.lane} ${b.name}（${Math.round((0.5 - b.todayRel) * 5 + 1)}着${b.todaySt != null ? `・ST${b.todaySt.toFixed(2)}` : ''}）`).join('、')}。`);
     }
     venues.push({
       jcd, name: VNAME[jcd], pref: vinfo.pref || V.pref || '', area: vinfo.area || V.area || '',

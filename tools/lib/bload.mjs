@@ -111,9 +111,18 @@ export function loadPrograms({ from = '', to = '' } = {}) {
      mForm   … そのモーターの直近45日の上振れ */
 const FORM_DAYS = 90, MOTOR_DAYS = 45, SETU_GAP = 3;
 const FORM_K = 25, MFORM_K = 20;
+/* その日のここまで（同じ場の、番号が若いレース）の傾向。K=3 で縮小
+     dayIn1   … 1コースの1着率の、場の基準からのズレ（＋＝今日はイン有利）
+     dayOut   … 1着艇のコース番号の、期待値からのズレ（＋＝外が来ている）
+     dayMak   … まくり・まくり差しの割合の、基準（0.3）からのズレ
+     dayN     … その日のここまでのレース数
+   選手の当日ここまで（同じ日の前のレース）
+     todayRel … 相対着順−0.5（1着 +0.5 … 6着 −0.5）、todaySt … その ST、todayN … 走数 */
+const DAY_K = 3, MAK_BASE = 0.30;
 export function makeRolling(base) {
   const bz = (jcd, c) => base?.[jcd + '|' + c]?.win ?? [0, .55, .13, .13, .11, .06, .03][c] ?? 1 / 6;
-  const R = new Map(), MO = new Map(), SE = new Map();
+  const expC = jcd => { let s = 0, t = 0; for (let c = 1; c <= 6; c++) { const p = bz(jcd, c); s += c * p; t += p; } return t ? s / t : 2.2; };
+  const R = new Map(), MO = new Map(), SE = new Map(), DAY = new Map(), TD = new Map();
   const trim = (a, t, days) => { while (a.length && t - a[0][0] > days) a.shift(); };
   const resid = (a, k) => {
     if (!a.length) return { v: 0, n: 0 };
@@ -129,13 +138,29 @@ export function makeRolling(base) {
       const se = SE.get(`${e.toban}|${r.jcd}`);
       const live = se && t - se.lastDay <= SETU_GAP ? se : null;
       const f = resid(ra, FORM_K), m = resid(mo, MFORM_K);
+      /* その日のここまで（番号が若いレースだけ。順不同で流し込まれても先読みにならないよう r で切る） */
+      const day = (DAY.get(`${r.date}|${r.jcd}`) || []).filter(x => r.r == null || x.r < r.r);
+      let in1 = 0, outC = 0, mak = 0;
+      for (const x of day) { in1 += x.win1 - x.p1; outC += x.winC - x.expC; mak += x.mak - MAK_BASE; }
+      const dn = day.length + DAY_K;
+      const td = (TD.get(`${e.toban}|${r.date}`) || []).filter(x => r.r == null || x.r < r.r);
+      const tl = td.length ? td[td.length - 1] : null;
       return {
         form: f.v, formN: f.n, mForm: m.v, mFormN: m.n,
         setuST: live && live.stN ? live.stSum / live.stN : null,
         setuEx: live && live.exN ? live.exSum / live.exN : null,
         setuRuns: live ? live.n : 0,
+        dayIn1: day.length ? in1 / dn : 0, dayOut: day.length ? outC / dn : 0, dayMak: day.length ? mak / dn : 0, dayN: day.length,
+        todayRel: tl ? tl.rel : 0, todaySt: tl ? tl.st : null, todayN: td.length,
         _p: p,
       };
+    },
+    /* レースが終わったあとに1回。1着のコースと決まり手 */
+    pushRace(r, winCourse, kimari) {
+      if (!winCourse) return;
+      const k = `${r.date}|${r.jcd}`;
+      let a = DAY.get(k); if (!a) DAY.set(k, a = []);
+      a.push({ r: r.r, win1: winCourse === 1 ? 1 : 0, p1: bz(r.jcd, 1), winC: winCourse, expC: expC(r.jcd), mak: /まくり/.test(kimari || '') ? 1 : 0 });
     },
     /* レースが終わったあとに足す。read より必ずあとに呼ぶ */
     push(r, e, p, exDev) {
@@ -149,6 +174,13 @@ export function makeRolling(base) {
       se.n++; se.lastDay = t;
       if (e.st != null && !e.f) { se.stSum += e.st; se.stN++; }
       if (exDev != null) { se.exSum += exDev; se.exN++; }
+      /* 当日の走り（同じ日の後のレース用） */
+      const pos = Number(e.pos);
+      if (pos >= 1 && pos <= 6) {
+        const tk = `${e.toban}|${r.date}`;
+        let td = TD.get(tk); if (!td) TD.set(tk, td = []);
+        td.push({ r: r.r, rel: 0.5 - (pos - 1) / 5, st: e.st != null && !e.f ? e.st : null });
+      }
     },
   };
 }
@@ -176,6 +208,8 @@ export function loadRaces({ from = '', to = '', prog = null, base = null, roll =
     for (const b of boats) Object.assign(b, roll.read(k, b));
     const keep = fin.every(i => i >= 0);
     for (const b of boats) roll.push(k, b, b._p, exMean != null && b.ex != null ? exMean - b.ex : null);
+    const w = boats.find(x => Number(x.pos) === 1);
+    roll.pushRace(k, w ? w.course : null, k.kimari);
     for (const b of boats) delete b._p;
     if (!keep) continue;
     if (keys && !keys.has(`${k.date}|${k.jcd}|${k.r}`)) continue;

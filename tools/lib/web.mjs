@@ -45,6 +45,59 @@ export function parseRaceIndex(html, hd) {
   return { days: uniq.length, dayIdx: dayIdx || null, dates: uniq };
 }
 
+/* ---- レース結果（raceresult）----
+   確定した着順・進入コースとST・決まり手・払戻・水面気象。K（od2）は翌日か開催中に1時間おきにしか取れないので、
+   「その日のここまでの傾向」を後半のレースに効かせるにはこのページが要る。
+   返り値は K と同じ形に寄せる（entries[].pos/lane/toban/course/st、kimari、pay.ex3 など）。未確定なら done:false */
+const ZEN = s => String(s || '').replace(/[０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0));
+export function parseRaceResult(html) {
+  const t = tables(html);
+  const out = { done: false, entries: [], starts: [], kimari: null, pay: {}, weather: {} };
+  const tb = t.find(x => /レースタイム/.test(x));
+  if (tb) {
+    for (const m of tb.matchAll(/<tbody>([\s\S]*?)<\/tbody>/g)) {
+      const cs = tds(m[1]);
+      if (cs.length < 4) continue;
+      const lane = Number((cs[1].a.match(/is-boatColor(\d)/) || [])[1]) || nn(cs[1].v);
+      const toban = (m[1].match(/is-fs12">\s*(\d{4})/) || [])[1] || null;
+      const name = text((m[1].match(/is-lh24__3rdadd">([\s\S]*?)<\/span>/) || ['', ''])[1]).replace(/\s+/g, '');
+      const posTxt = ZEN(cs[0].v).trim();
+      const pos = /^\d$/.test(posTxt) ? Number(posTxt) : null;          // 失格・転覆・F は null（pos の文字は posTxt に残す）
+      const tm = cs[3].v.match(/(\d)'(\d\d)"(\d)/);
+      out.entries.push({ pos, posTxt, lane, toban, name, time: tm ? Number(tm[1]) * 60 + Number(tm[2]) + Number(tm[3]) / 10 : null });
+    }
+  }
+  /* スタート情報：並び順が進入コース、中の数字が艇番、時間のあとに決まり手が付く（1着艇だけ） */
+  for (const m of html.matchAll(/<div class="table1_boatImage1[^"]*">([\s\S]*?)<\/div>/g)) {
+    const lane = num((m[1].match(/table1_boatImage1Number[^>]*>(\d)</) || [])[1]);
+    const inner = text((m[1].match(/table1_boatImage1TimeInner[^>]*>([^<]*)</) || [])[1] || '');
+    const st = inner.match(/([FL]?\.\d\d)/);
+    if (lane) out.starts.push({ course: out.starts.length + 1, lane, ...stNum(st ? st[1] : ''), kimari: inner.replace(/[FL]?\.\d\d/, '').trim() || null });
+  }
+  const km = html.match(/<th>決まり手<\/th>[\s\S]*?<td[^>]*>([^<]*)<\/td>/);
+  out.kimari = km ? text(km[1]) || null : null;
+  /* 払戻：勝式ごとに 組番・金額・人気。拡連複・複勝は複数行 */
+  const pt = html.replace(/&yen;/g, '¥').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ');
+  const KIND = { '3連単': 'ex3', '3連複': 'tri', '2連単': 'ex2', '2連複': 'qn', '拡連複': 'wide', '単勝': 'win', '複勝': 'place' };
+  const re = /(3連単|3連複|2連単|2連複|拡連複|単勝|複勝)((?:\s*(?:\d\s*[-=]\s*)*\d\s*¥[\d,]+(?:\s+\d+)?)+)/g;
+  for (const m of pt.matchAll(re)) {
+    const k = KIND[m[1]]; const rows = [];
+    /* 単勝・複勝には人気の列が無い（次の行の艇番を人気と取り違えないように） */
+    const rx = k === 'win' || k === 'place' ? /(\d)\s*¥([\d,]+)()/g : /((?:\d\s*[-=]\s*)*\d)\s*¥([\d,]+)(?:\s+(\d+))?/g;
+    for (const x of m[2].matchAll(rx)) rows.push({ c: x[1].replace(/\s+/g, ''), y: Number(x[2].replace(/,/g, '')), pop: x[3] ? Number(x[3]) : null });
+    if (rows.length) out.pay[k] = rows;
+  }
+  out.weather.temp = nn((pt.match(/気温\s*([\d.]+)℃/) || [])[1]);
+  out.weather.wind = nn((pt.match(/風速\s*(\d+)m/) || [])[1]);
+  out.weather.wave = nn((pt.match(/波高\s*(\d+)cm/) || [])[1]);
+  out.weather.windDir = Number((html.match(/weather1_bodyUnitImage is-wind(\d+)/) || [])[1]) || null;
+  const w1 = out.entries.find(e => e.pos === 1);
+  out.done = out.entries.length === 6 && !!w1;
+  if (w1) { const sIdx = out.starts.find(x => x.lane === w1.lane); out.winCourse = sIdx ? sIdx.course : null; }
+  for (const e of out.entries) { const st = out.starts.find(x => x.lane === e.lane); if (st) { e.course = st.course; e.st = st.st; e.f = st.f; } }
+  return out;
+}
+
 export function stNum(s) {
   const m = String(s).trim().match(/^([FL])?\.?(\d{1,2})$|^([FL])?(\d\.\d\d)$/);
   if (!m) return { st: null, f: null, l: null };

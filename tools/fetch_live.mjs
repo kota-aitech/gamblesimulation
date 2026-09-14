@@ -12,7 +12,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, get, freshTtl, VNAME, ymdOf } from './lib/bt.mjs';
-import { parseBefore, parseOddsTF, parseOdds3T, parseRaceIndex } from './lib/web.mjs';
+import { parseBefore, parseOddsTF, parseOdds3T, parseRaceIndex, parseRaceResult } from './lib/web.mjs';
 
 const DATE = process.env.BT_DATE || ymdOf(new Date());
 const LEAD = Number(process.env.BT_LEAD || 8);
@@ -48,7 +48,7 @@ const minsTo = hhmm => {
   return (t - now) / 60000;
 };
 
-const todo = [];
+const todo = [], done = [];
 for (const jcd of jcds) {
   /* 節の日数と今日が何日目か（開催情報ページ。1日1回で足りる） */
   if (!state.meet?.[jcd]) {
@@ -67,7 +67,7 @@ for (const jcd of jcds) {
   }
   closes.forEach((c, i) => {
     const left = minsTo(c);
-    if (left < -2) return;                         // 締切済み
+    if (left < -2) { if (left <= -6) done.push({ jcd, r: i + 1, close: c, left }); return; }   // 締切済み → 結果を取る側へ
     todo.push({ jcd, r: i + 1, close: c, left });
   });
 }
@@ -111,6 +111,23 @@ for (const t of todo) {
     } catch (e) { console.error(`  ! オッズ ${VNAME[t.jcd]}${t.r}R ${e.message}`); }
   }
 }
+/* 締切から6分たったレースの結果（着順・進入・ST・決まり手・払戻）。K は開催中1時間おきにしか取れないので、
+   「その日のここまでの傾向」を後半のレースに効かせるにはここで拾う。確定前（未公表）なら次の周回で取り直す */
+done.sort((a, b) => b.left - a.left);                // 新しいレースから
+let nr = 0;
+for (const t of done) {
+  if (n >= MAX + 6) break;                            // 結果は本命の取得（直前・オッズ）を押しのけない範囲で
+  const key = `${t.jcd}|${t.r}`;
+  const st = (state.races[key] ||= { jcd: t.jcd, venue: VNAME[t.jcd], r: t.r, close: t.close });
+  if (st.result?.done) continue;
+  if (st.resultTry && Date.now() - st.resultTry < 4 * 60000) continue;   // 未確定だったら4分あける
+  try {
+    const rr = parseRaceResult(await get(`${B}raceresult?rno=${t.r}&jcd=${t.jcd}&hd=${DATE}`, { ttlDays: 0.002 }));
+    n++; st.resultTry = Date.now();
+    if (rr.done) { st.result = rr; nr++; }
+  } catch (e) { console.error(`  ! 結果 ${VNAME[t.jcd]}${t.r}R ${e.message}`); }
+}
+if (nr) console.error(`  結果 ${nr}R 確定（未確定 ${done.filter(t => !state.races[`${t.jcd}|${t.r}`]?.result?.done).length}R）`);
 state.at = new Date().toISOString();
 fs.writeFileSync(LIVE, JSON.stringify(state));
 console.error(`  ${n} ページ取得 -> data/boat/live.${DATE}.json (${(fs.statSync(LIVE).size / 1024).toFixed(0)} KB)`);
