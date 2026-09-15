@@ -43,7 +43,17 @@ export const FEATS = [
   'setuF', 'setuF2',           // 今節にFを切っている（本数・2本以上）。F持ちはスタートを控える
   'tideC', 'tideLvlC',         // 潮の局面（上げ／下げ）と潮位の高さ × コース（干満差のある場だけ。lib/tide.mjs）
   'phFinalC', 'phSemiC',       // 優勝戦・準優勝戦 × コース（インが堅い／荒れる）
+  'kyuNear', 'kyuBelow',       // 級別ボーダー争い：ボーダーに近い（期末が近いほど強く）・下から狙う側か（lib/bload.mjs の kyu）
 ];
+/* 級別ボーダーとの差。いまの級（A1/A2/B1）ごとに見るべきボーダーが違う。B2 と出走の少ない選手は対象外 */
+export function kyuGapOf(kyu, grade) {
+  if (!kyu || kyu.rate == null || kyu.runs < 30 || !kyu.border) return null;
+  const b = kyu.border;
+  if (grade === 'A1') return { gap: kyu.rate - b.A1, target: 'A1維持', border: b.A1 };
+  if (grade === 'A2') { const up = kyu.rate - b.A1, keep = kyu.rate - b.A2; return Math.abs(up) <= Math.abs(keep) ? { gap: up, target: 'A1昇格', border: b.A1 } : { gap: keep, target: 'A2維持', border: b.A2 }; }
+  if (grade === 'B1') return { gap: kyu.rate - b.A2, target: 'A2昇格', border: b.A2 };
+  return null;
+}
 export const NF = FEATS.length;
 
 /* 今節成績の文字列（'1526' など）→ 平均着順と走数。F/K/S は6着相当に寄せる */
@@ -111,6 +121,9 @@ export function raceFeatures(race, boats, DB, ST, { level = 'pre' } = {}) {
     set('tideC', td ? td.phase * cC : 0); set('tideLvlC', td ? td.lvl * cC : 0);
     const cls = race.cls || '';
     set('phFinalC', /優勝戦/.test(cls) && !/準優/.test(cls) ? cC : 0); set('phSemiC', /準優/.test(cls) ? cC : 0);
+    const kg = kyuGapOf(b.kyu, b.grade);
+    const near = kg ? Math.max(0, 1 - Math.abs(kg.gap) / 0.4) * ((b.kyu.daysLeft ?? 999) <= 75 ? 1 : 0.4) : 0;
+    set('kyuNear', near); set('kyuBelow', kg && kg.gap < 0 ? near : 0);
     set('cz', cp.reduce((a, p, i) => a + p * bz(i + 1, 'win'), 0) - logit(1 / 6));
     set('czTop2', cp.reduce((a, p, i) => a + p * bz(i + 1, 'top2'), 0) - logit(2 / 6));
 

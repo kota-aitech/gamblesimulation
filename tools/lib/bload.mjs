@@ -119,10 +119,39 @@ const FORM_K = 25, MFORM_K = 20;
    選手の当日ここまで（同じ日の前のレース）
      todayRel … 相対着順−0.5（1着 +0.5 … 6着 −0.5）、todaySt … その ST、todayN … 走数 */
 const DAY_K = 3, MAK_BASE = 0.30;
+/* ---- 級別審査期間 ----
+   前期 5/1〜10/31（翌年 1〜6月に適用）、後期 11/1〜4/30（7〜12月に適用）。
+   勝率＝着順点の平均（1着10・2着8・3着6・4着4・5着2・6着1。準優 +1・優勝戦 +2 の概算。SG/G1 の加点は入れていない）。
+   事故率＝事故点÷出走回数（F・L・失格・転覆などを 10 点、不良航法・待機違反を 7 点の概算）。
+   級別の基準：A1 は勝率 6.20 以上かつ上位 20%、A2 は 5.40 以上かつ上位 40%、いずれも事故率 0.70 以下・出走 90／70 回以上。
+   ボーダーは「基準値」と「その時点の分位点」の大きいほう。 */
+export function periodOf(date) { const y = Number(date.slice(0, 4)), m = Number(date.slice(4, 6)); return m >= 5 && m <= 10 ? `${y}A` : m >= 11 ? `${y}B` : `${y - 1}B`; }
+export function periodEnd(date) { const y = Number(date.slice(0, 4)), m = Number(date.slice(4, 6)); return m >= 5 && m <= 10 ? `${y}1031` : m >= 11 ? `${y + 1}0430` : `${y}0430`; }
+export function periodStart(date) { const y = Number(date.slice(0, 4)), m = Number(date.slice(4, 6)); return m >= 5 && m <= 10 ? `${y}0501` : m >= 11 ? `${y}1101` : `${y - 1}1101`; }
+const KPT = { 1: 10, 2: 8, 3: 6, 4: 4, 5: 2, 6: 1 };
+export const KYU_MIN = { A1: 6.20, A2: 5.40, B1: 2.00 };
+export const KYU_RUNS = { A1: 90, A2: 70, B1: 50 };
+
 export function makeRolling(base) {
   const bz = (jcd, c) => base?.[jcd + '|' + c]?.win ?? [0, .55, .13, .13, .11, .06, .03][c] ?? 1 / 6;
   const expC = jcd => { let s = 0, t = 0; for (let c = 1; c <= 6; c++) { const p = bz(jcd, c); s += c * p; t += p; } return t ? s / t : 2.2; };
   const R = new Map(), MO = new Map(), SE = new Map(), DAY = new Map(), TD = new Map();
+  const KY = new Map();                                   // toban -> { period, runs, pt, q2, q3, acc }
+  const BORDER = new Map();                               // date -> { A1, A2, n }（その日の分位点。1日1回だけ計算）
+  const borderOf = (date) => {
+    if (BORDER.has(date)) return BORDER.get(date);
+    const per = periodOf(date);
+    const rates = [...KY.values()].filter(k => k.period === per && k.runs >= 20).map(k => k.pt / k.runs).sort((a, b) => b - a);
+    const cut = q => rates.length >= 50 ? rates[Math.min(rates.length - 1, Math.floor(rates.length * q))] : 0;
+    const b = { A1: Math.max(KYU_MIN.A1, cut(0.20)), A2: Math.max(KYU_MIN.A2, cut(0.40)), n: rates.length };
+    BORDER.set(date, b);
+    return b;
+  };
+  const kyuOf = (toban, date) => {
+    const k = KY.get(toban);
+    if (!k || k.period !== periodOf(date)) return { runs: 0, rate: null, q2: null, q3: null, acc: null };
+    return { runs: k.runs, rate: k.pt / k.runs, q2: k.q2 / k.runs, q3: k.q3 / k.runs, acc: k.acc / k.runs };
+  };
   const trim = (a, t, days) => { while (a.length && t - a[0][0] > days) a.shift(); };
   const resid = (a, k) => {
     if (!a.length) return { v: 0, n: 0 };
@@ -152,6 +181,7 @@ export function makeRolling(base) {
         setuRuns: live ? live.n : 0,
         dayIn1: day.length ? in1 / dn : 0, dayOut: day.length ? outC / dn : 0, dayMak: day.length ? mak / dn : 0, dayN: day.length,
         todayRel: tl ? tl.rel : 0, todaySt: tl ? tl.st : null, todayN: td.length,
+        kyu: { ...kyuOf(e.toban, r.date), border: borderOf(r.date), daysLeft: dayNo(periodEnd(r.date)) - t },
         _p: p,
       };
     },
@@ -165,6 +195,19 @@ export function makeRolling(base) {
     /* レースが終わったあとに足す。read より必ずあとに呼ぶ */
     push(r, e, p, exDev) {
       const t = dayNo(r.date), win = Number(e.pos) === 1 ? 1 : 0;
+      /* 級別審査期間の着順点・事故点（欠場は数えない） */
+      {
+        const per = periodOf(r.date), pos = Number(e.pos), ptxt = String(e.pos ?? '');
+        if (!/欠/.test(ptxt)) {
+          let k = KY.get(e.toban);
+          if (!k || k.period !== per) KY.set(e.toban, k = { period: per, runs: 0, pt: 0, q2: 0, q3: 0, acc: 0 });
+          const cls = r.cls || '';
+          const bonus = /優勝戦/.test(cls) && !/準優/.test(cls) ? 2 : /準優/.test(cls) ? 1 : 0;
+          k.runs++;
+          if (pos >= 1 && pos <= 6) { k.pt += KPT[pos] + bonus; if (pos <= 2) k.q2++; if (pos <= 3) k.q3++; }
+          if (e.f || e.l) k.acc += 10; else if (!(pos >= 1 && pos <= 6)) k.acc += /不|待/.test(ptxt) ? 7 : 10;
+        }
+      }
       let ra = R.get(e.toban); if (!ra) R.set(e.toban, ra = []); ra.push([t, win, p]);
       const mk = `${r.jcd}|${e.motor}|${e.motorGen}`;
       let mo = MO.get(mk); if (!mo) MO.set(mk, mo = []); mo.push([t, win, p]);

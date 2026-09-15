@@ -15,7 +15,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, readJSON, writeJSON, VENUES, VNAME, ymdOf } from './lib/bt.mjs';
 import { FEATS, NF, raceFeatures } from './lib/bfeat.mjs';
-import { loadPrograms, loadRaces, makeRolling } from './lib/bload.mjs';
+import { loadPrograms, loadRaces, makeRolling, periodStart, periodEnd, KYU_RUNS } from './lib/bload.mjs';
+import { kyuGapOf } from './lib/bfeat.mjs';
 import { windCompass } from './lib/web.mjs';
 import { plackettLuce, pairProbs } from './lib/bpl.mjs';
 import { settle, finishOf, payOf } from './lib/bsettle.mjs';
@@ -38,6 +39,7 @@ function tideDayOf(jcd, date) {
 }
 
 const addDays = (ymd, n) => { const d = new Date(`${ymd.slice(0, 4)}-${ymd.slice(4, 6)}-${ymd.slice(6, 8)}T00:00:00`); d.setDate(d.getDate() + n); return ymdOf(d); };
+const dayNoOf = ymd => Math.round(new Date(`${ymd.slice(0, 4)}-${ymd.slice(4, 6)}-${ymd.slice(6, 8)}T00:00:00Z`).getTime() / 86400000);
 const round = (v, k = 3) => v == null || !Number.isFinite(v) ? null : Number(v.toFixed(k));
 
 /* ---- 係数は「名前」で合わせる。model.json と bfeat.mjs の特徴量が食い違っていたら止める ---- */
@@ -66,10 +68,12 @@ const last = dates.at(-1);
 
 /* ---- 番組表（直近100日ぶん。調子・今節の計算にも使う）---- */
 console.error('番組表と直近の結果を読む…');
-const P = loadPrograms({ from: addDays(TODAY, -100), to: last });
+/* 級別審査期間（5/1〜 or 11/1〜）の勝率も時点指標で作るので、期の初日まで遡って流し込む */
+const ROLL_FROM = [addDays(TODAY, -100), periodStart(TODAY)].sort()[0];
+const P = loadPrograms({ from: ROLL_FROM, to: last });
 const roll = makeRolling(DB.base);
-const past = loadRaces({ from: addDays(TODAY, -100), to: addDays(TODAY, -1), prog: P, base: DB.base, roll });
-console.error(`  直近100日 ${past.length}R を流し込んだ`);
+const past = loadRaces({ from: ROLL_FROM, to: addDays(TODAY, -1), prog: P, base: DB.base, roll });
+console.error(`  ${ROLL_FROM}〜 ${past.length}R を流し込んだ`);
 
 /* index.json のモーター世代は全期間で振ってあるので、番号ごとに一番新しい世代を使う */
 function motorGenOf(jcd, no) {
@@ -230,6 +234,21 @@ function buildRace(date, jcd, prog, live, venueWeather) {
   /* 節間の得点率：準優ボーダー付近の艇は勝負気配。初日は成績が無いので出さない */
   const near = boats.filter(b => b.ptGap != null && Math.abs(b.ptGap) <= 1.0).sort((a, b) => b.ptRate - a.ptRate);
   if (near.length) pts.push(`準優ボーダー争い：${near.map(b => `${b.lane} ${b.name}（得点率 ${b.ptRate.toFixed(2)}・${b.ptRank}位/${b.ptTot}人・ボーダー${b.ptGap >= 0 ? '+' : ''}${b.ptGap.toFixed(2)}）`).join('、')}。`);
+  /* 級別ボーダー争い（審査期間の勝率がボーダー付近で、期末が近い） */
+  for (const b of boats) {
+    const kg = kyuGapOf(b.kyu, b.grade);
+    if (!kg) { b.kyuInfo = b.kyu && b.kyu.runs ? { rate: round(b.kyu.rate, 2), runs: b.kyu.runs, label: null } : null; continue; }
+    const soon = b.kyu.daysLeft <= 75;
+    const needRuns = KYU_RUNS[kg.target.startsWith('A1') ? 'A1' : 'A2'];
+    /* 札は本当に際どい選手だけ（勝率 0.15〜0.20 の幅＝残り40日で1着2〜3本ぶん） */
+    let label = null;
+    if (kg.gap < 0 && kg.gap >= -0.20) label = '昇格争い';
+    else if (kg.gap >= 0 && kg.gap <= 0.15) label = kg.target.endsWith('維持') ? '降格危機' : '昇格圏';
+    b.kyuInfo = { rate: round(b.kyu.rate, 2), runs: b.kyu.runs, q2: round(b.kyu.q2, 2), acc: round(b.kyu.acc, 2), daysLeft: b.kyu.daysLeft,
+      target: kg.target, border: round(kg.border, 2), gap: round(kg.gap, 2), needRuns, label: soon || Math.abs(kg.gap) <= 0.1 ? label : null };
+  }
+  const kyuHot = boats.filter(b => b.kyuInfo?.label);
+  if (kyuHot.length) pts.push(`級別ボーダー争い（期末 ${periodEnd(date).slice(4, 6)}/${periodEnd(date).slice(6, 8)}、残り${boats[0].kyu?.daysLeft ?? '—'}日）：${kyuHot.map(b => `${b.lane} ${b.name}（${b.kyuInfo.label}・${b.kyuInfo.target}まで${b.kyuInfo.gap >= 0 ? '+' : ''}${b.kyuInfo.gap.toFixed(2)}、勝率${b.kyuInfo.rate.toFixed(2)}／${b.kyuInfo.runs}走）`).join('、')}。勝率は着順点の概算（SG/G1 の加点は未反映）。`);
   const fs_ = boats.filter(b => (b.racer?.fRate ?? 0) >= 0.02);
   if (fs_.length) pts.push(`F率が高い：${fs_.map(b => `${b.lane} ${b.name}（${(b.racer.fRate * 100).toFixed(1)}%）`).join('、')}。スタートを控えると勢いが削がれる。`);
 
@@ -246,7 +265,7 @@ function buildRace(date, jcd, prog, live, venueWeather) {
       course: b.course, ex: b.ex, exST: b.exST, exF: b.exF, tilt: b.tilt, prop: b.prop, parts: b.parts, adjust: b.adjust,
       oLap: b.oLap, oTurn: b.oTurn, oStr: b.oStr,
       form: round(b.form), formN: b.formN, mForm: round(b.mForm), setuST: round(b.setuST), setuEx: round(b.setuEx), setuRuns: b.setuRuns, mUp: round(b.mUp, 1),
-      ptRate: round(b.ptRate, 2), ptN: b.ptN, ptRank: b.ptRank, ptTot: b.ptTot, ptGap: round(b.ptGap, 2), shobu: b.shobu || null,
+      ptRate: round(b.ptRate, 2), ptN: b.ptN, ptRank: b.ptRank, ptTot: b.ptTot, ptGap: round(b.ptGap, 2), shobu: b.shobu || null, kyu: b.kyuInfo || null,
       dayIn1: round(b.dayIn1, 3), dayOut: round(b.dayOut, 3), dayMak: round(b.dayMak, 3), dayN: b.dayN || 0, todayRel: round(b.todayRel, 2), todaySt: b.todaySt ?? null, todayN: b.todayN || 0,
       racer: b.racer, motorIdx: b.motorIdx,
     })),
@@ -304,7 +323,7 @@ function pushTodayResults(date) {
         const b = byLane.get(e.lane); if (!b || !b.toban) continue;
         const course = e.course || e.lane;
         const p = DB.base?.[`${jcd}|${course}`]?.win ?? 1 / 6;
-        roll.push({ date, jcd, r: k.r }, { toban: b.toban, motor: b.motor, motorGen: b.motorGen, pos: e.pos, st: e.st, f: e.f, course }, p, null);
+        roll.push({ date, jcd, r: k.r, cls: prog.cls || k.cls || '' }, { toban: b.toban, motor: b.motor, motorGen: b.motorGen, pos: e.pos, st: e.st, f: e.f, course }, p, null);
         if (Number(e.pos) === 1) winC = course;
       }
       roll.pushRace({ date, jcd, r: k.r }, winC, k.kimari); n++;
@@ -660,16 +679,19 @@ console.error(`-> data/boat/top.json (${(fs.statSync(path.join(ROOT, 'data/boat/
    1日ぶんで 3MB → 1MB 台。蓄積するのは data/ 側であって、ページは常に今日・明日だけ */
 const BOAT_COLS = ['lane', 'toban', 'name', 'age', 'branch', 'weight', 'grade', 'natWin', 'nat2', 'locWin', 'loc2', 'motor', 'motor2', 'boat', 'boat2', 'setu',
   'course', 'ex', 'exST', 'exF', 'oLap', 'oTurn', 'oStr', 'tilt', 'prop', 'parts', 'adjust', 'form', 'formN', 'mForm', 'setuST', 'setuEx', 'setuRuns', 'mUp',
-  'ptRate', 'ptN', 'ptRank', 'ptTot', 'ptGap', 'shobu',
+  'ptRate', 'ptN', 'ptRank', 'ptTot', 'ptGap', 'shobu', 'kyu',
   'r_idx', 'r_byC', 'r_byJ', 'r_st', 'r_stDev', 'r_fRate', 'r_inGain', 'r_tune', 'r_n', 'm_idx', 'm_n'];
 const r2 = v => v == null ? null : Number(v.toFixed(2)), r3 = v => v == null ? null : Number(v.toFixed(3));
 const packPred = P => P && ({ U: P.U.map(r2), tau: P.tau, p1: P.p1.map(r3), top2: P.top2.map(r3), top3: P.top3.map(r3), c: P.c.map(g => GROUPS.map(k => g[k] || 0)) });
 out.boatCols = BOAT_COLS;
+out.kyuDaysLeft = Object.fromEntries(out.days.map(d => [d.date, dayNoOf(periodEnd(d.date)) - dayNoOf(d.date)]));   // 期末までの日数（日ごと）
 out.groups = GROUPS;
 for (const d of out.days) for (const v of d.venues) for (const r of v.races) {
   r.boats = r.boats.map(b => {
     const flat = { ...b, r_idx: b.racer?.idx ?? null, r_byC: b.racer?.byC ?? null, r_byJ: b.racer?.byJ ?? null, r_st: b.racer?.st ?? null, r_stDev: b.racer?.stDev ?? null,
       r_fRate: b.racer?.fRate ?? null, r_inGain: b.racer?.inGain ?? null, r_tune: b.racer?.tune ?? null, r_n: b.racer?.n ?? null, m_idx: b.motorIdx?.idx ?? null, m_n: b.motorIdx?.n ?? null };
+    /* 級別は配列にたたむ（[勝率, 走数, 2連対, 事故率, 目標, ボーダー, 差, 札]。boat.html の unpackBoats が戻す） */
+    if (flat.kyu) { const k = flat.kyu; flat.kyu = [k.rate, k.runs, k.q2 ?? null, k.acc ?? null, k.target || null, k.border ?? null, k.gap ?? null, k.label || null]; }
     return BOAT_COLS.map(k => { const v = flat[k]; return v === undefined ? null : (Array.isArray(v) && !v.length ? 0 : v); });
   });
   r.pre = packPred(r.pre); r.ex = packPred(r.ex);
