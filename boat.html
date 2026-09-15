@@ -191,18 +191,19 @@ table.log{width:100%;border-collapse:collapse;font-size:12px;background:var(--pa
 table.log th{font-weight:600;color:var(--mute);text-align:left;padding:4px 5px;border-bottom:1px solid var(--line);background:var(--head);font-size:11px;white-space:nowrap}
 table.log td{padding:5px 5px;border-bottom:1px solid var(--line2);vertical-align:middle;white-space:nowrap}
 table.log td.r,table.log th.r{text-align:right}
+table.log td:nth-child(3){white-space:normal;max-width:130px;line-height:1.25}
 table.log tr.hit1 td:first-child{border-left:3px solid var(--red)}
 table.log tr.pend td{color:var(--mute)}
 table.log tr.cur td{background:#fff8f0}
 table.log a{text-decoration:none}
-.logwrap{overflow-x:auto}
+.logwrap,.tblwrap{overflow-x:auto}
 @media (max-width:900px){
   body{padding-bottom:58px;font-size:13px}
   .brand{padding:6px 10px;gap:8px}.brand h1{font-size:13.5px}.brand h1 small{display:none}.brand nav{font-size:11px;gap:8px}
   .hrow{padding:5px 10px}.vgroups{padding:3px 10px 5px}
   .tab{padding:4px 9px;font-size:12px}
   .vhead{padding:6px 10px;gap:8px}.vhead .vn{font-size:16px}.vhead .vt{max-width:100%;flex-basis:100%;order:9}
-  .vhead .nx{margin-left:auto}
+  .vhead .nx{margin-left:0;flex-basis:100%;order:8}
   #races{flex-wrap:nowrap;overflow-x:auto;gap:5px;padding:5px 10px 7px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   #races::-webkit-scrollbar{display:none}
   .rbtn{flex:none;min-width:54px;padding:4px 7px}
@@ -265,7 +266,7 @@ table.log a{text-decoration:none}
         <h2 class="first">予想</h2>
         <div id="predHead" class="kv"></div>
         <div id="resBox"></div>
-        <table class="pred" style="margin-top:6px"><thead><tr><th>印</th><th>艇・選手</th><th>級</th><th class="r">ｺｰｽ</th><th class="r">展示</th><th class="r">1着</th><th class="r">2連</th><th class="r">3連</th><th class="r">単勝</th></tr></thead><tbody id="predBody"></tbody></table>
+        <div class="tblwrap"><table class="pred" style="margin-top:6px"><thead><tr><th>印</th><th>艇・選手</th><th>級</th><th class="r">ｺｰｽ</th><th class="r">展示</th><th class="r">1着</th><th class="r">2連</th><th class="r">3連</th><th class="r">単勝</th></tr></thead><tbody id="predBody"></tbody></table></div>
         <h2>AIの買い目（確率から直接組む・検証実績つき）</h2>
         <div id="aiBox"></div>
         <h2>印から組む買い方（検証実績つき）</h2>

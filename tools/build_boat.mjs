@@ -18,6 +18,7 @@ import { FEATS, NF, raceFeatures } from './lib/bfeat.mjs';
 import { loadPrograms, loadRaces, makeRolling } from './lib/bload.mjs';
 import { windCompass } from './lib/web.mjs';
 import { plackettLuce, pairProbs } from './lib/bpl.mjs';
+import { settle, finishOf, payOf } from './lib/bsettle.mjs';
 
 const TODAY = process.env.BT_TODAY || ymdOf(new Date());
 const AHEAD = Number(process.env.BT_AHEAD ?? 1);
@@ -237,9 +238,11 @@ function buildRace(date, jcd, prog, live, venueWeather) {
 
 /* ---- 当日の結果（od2 の K は開催中に途中まで公開される）から、場ごとの「本日の傾向」を出す ---- */
 const TODAY_RES = new Map();                      // 'date|jcd' -> [{r, c1, tri}]
+/* 節間の結果（過去日）も同じ表から引くので、今日の7日前から読む（6日開催＋余裕） */
+const LOG_FROM = addDays(TODAY, -7);
 {
   const f = path.join(ROOT, 'data/boat/results.jsonl');
-  const tag = dates.map(d => `"date":"${d}"`);
+  const tag = []; for (let d = LOG_FROM; d <= last; d = addDays(d, 1)) tag.push(`"date":"${d}"`);
   for (const line of fs.readFileSync(f, 'utf8').split('\n')) {
     if (!line || !tag.some(t => line.includes(t))) continue;
     const k = JSON.parse(line);
@@ -257,7 +260,9 @@ function addLiveResults(date, live) {
     const key = `${date}|${lv.jcd}`;
     const a = TODAY_RES.get(key) || TODAY_RES.set(key, []).get(key);
     if (a.some(x => x.r === lv.r)) continue;
-    const k = { date, jcd: lv.jcd, r: lv.r, kimari: rr.kimari, entries: rr.entries.map(e => ({ pos: e.pos, lane: e.lane, toban: e.toban, course: e.course, st: e.st, f: e.f })), pay: rr.pay };
+    /* 公式サイトの組番は 2連複・3連複・拡連複が「1=4=6」なので、K と同じ「1-4-6」に直す（精算の突き合わせ用） */
+    const pay = Object.fromEntries(Object.entries(rr.pay || {}).map(([kind, rows]) => [kind, rows.map(x => ({ ...x, c: String(x.c).replace(/=/g, '-') }))]));
+    const k = { date, jcd: lv.jcd, r: lv.r, kimari: rr.kimari, entries: rr.entries.map(e => ({ pos: e.pos, lane: e.lane, toban: e.toban, course: e.course, st: e.st, f: e.f })), pay };
     a.push({ r: lv.r, c1: rr.winCourse === 1, tri: rr.pay?.ex3?.[0]?.y ?? null, src: 'web', k }); n++;
   }
   return n;
@@ -351,6 +356,84 @@ process.on('exit', () => { if (predsDirty) fs.writeFileSync(PREDS, [...recorded.
 let REC = null;
 try { REC = readJSON('data/boat/results.json'); } catch { }
 
+/* ---- 節間の結果 ----
+   その開催（節）の初日から date までの、終わったレースの結果と「そのとき記録した予想」を1行ずつ。
+   節の日程は live.<date>.json の meet（開催情報ページ）、無ければ番組表の「第n日」から遡る。
+   過去日の結果は K（od2）、まだ K に無ければ公式サイトの結果（live.<date>.json）。
+   予想は preds.jsonl の記録（締切時点で書いたもの。後から作り直さない）。
+   的中と払戻は lib/bsettle.mjs（日別の成績と同じ式）。1レース 200 バイト前後に抑える */
+const LIVE_CACHE = new Map();
+const liveOf = d => { if (!LIVE_CACHE.has(d)) { let o = null; try { o = readJSON(`data/boat/live.${d}.json`); } catch { } LIVE_CACHE.set(d, o); } return LIVE_CACHE.get(d); };
+function meetDatesOf(date, jcd, live, rs) {
+  const m = live?.meet?.[jcd];
+  if (m?.dates?.length) return m.dates.filter(d => d <= date);
+  /* 番組表の「第n日」で遡る：同じ場・同じ節名で日が1つずつ小さくなる限り */
+  const out = [date];
+  let d = date, n = Number((rs[0]?.day || '').replace(/[^０-９0-9]/g, '').replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0))) || 1;
+  for (let i = 0; i < 7 && n > 1; i++) {
+    d = addDays(d, -1);
+    const p = P.get(`${d}|${jcd}|1`);
+    if (!p || p.title !== rs[0].title) break;
+    out.unshift(d); n--;
+  }
+  return out;
+}
+function meetLog(date, jcd, live, rs) {
+  const mdates = meetDatesOf(date, jcd, live, rs);
+  const days = [];
+  for (const d of mdates) {
+    if (d < LOG_FROM) continue;
+    const lv = d === date ? live : liveOf(d);
+    if (d !== date) addLiveResults(d, lv);             // 過去日で K がまだ無いレースは公式サイトの結果で補う
+    const kList = TODAY_RES.get(`${d}|${jcd}`) || [];
+    const byR = new Map(kList.map(x => [x.r, x.k]));
+    const rows = [];
+    const progs = [...P.values()].filter(o => o.date === d && o.jcd === jcd).sort((a, b) => a.r - b.r);
+    for (const p of progs) {
+      const k = byR.get(p.r);
+      const pred = recorded.get(`${d}|${jcd}|${p.r}`) || null;
+      const row = { r: p.r, cls: p.cls, close: p.close || null };
+      if (pred) {
+        row.top = pred.top.slice(0, 4); row.lv = pred.level;
+        row.p1 = round(pred.p1?.[pred.top[0]], 3);
+        row.ai3 = pred.ai?.tri3 || null;
+      }
+      if (k) {
+        const fin = finishOf(k);
+        const w = k.entries.find(e => Number(e.pos) === 1);
+        row.fin = fin; row.kim = k.kimari || null; row.c1 = w?.course ?? null;
+        row.st = k.entries.filter(e => Number(e.pos) >= 1).sort((a, b) => Number(a.pos) - Number(b.pos)).map(e => e.lane);   // 全着順（失格は末尾に落ちる）
+        const dq = k.entries.filter(e => e.pos == null || Number(e.pos) < 1).map(e => e.lane); if (dq.length) row.dq = dq;
+        row.pay = { win: payOf(k, 'win', String(fin ? fin[0] : '')), ex2: fin ? payOf(k, 'ex2', `${fin[0]}-${fin[1]}`) : 0,
+          tri: fin ? payOf(k, 'tri', fin.slice().sort().join('-')) : 0, ex3: fin ? payOf(k, 'ex3', fin.join('-')) : 0,
+          pop3: (k.pay?.ex3 || [])[0]?.pop ?? null };
+        if (pred && fin) {
+          const S = settle(pred, k);
+          if (S) {
+            const b = S.bets, h = n => b[n].hit ? 1 : 0, ret = n => b[n].ret;
+            row.hit = { w: h('◎単勝'), p: h('◎複勝'), q: h('◎○2連単'), b3: h('3艇BOX3連複'), t3: h('3連単 ◎○▲(1点)'), a3: b['AI 3連単 上位3点'].n ? h('AI 3連単 上位3点') : null, in3: S.in3 };
+            row.ret = { w: ret('◎単勝'), p: ret('◎複勝'), q: ret('◎○2連単'), b3: ret('3艇BOX3連複'), a3: ret('AI 3連単 上位3点') };
+          }
+        }
+        row.src = (kList.find(x => x.r === p.r) || {}).src || null;
+      }
+      rows.push(row);
+    }
+    /* 日の集計（◎的中／◎単勝・3艇BOX3連複・AI上位3点 の投資と払戻） */
+    const done = rows.filter(r => r.hit);
+    const sum = key => done.reduce((a, r) => a + (r.ret?.[key] || 0), 0);
+    const cnt = key => done.reduce((a, r) => a + (r.hit?.[key] || 0), 0);
+    const nA3 = done.filter(r => r.hit.a3 != null).length;
+    days.push({
+      date: d, dayIdx: mdates.indexOf(d) + 1, n: rows.length, done: rows.filter(r => r.fin).length, pred: done.length,
+      c1: rows.filter(r => r.c1 === 1).length, res: rows.filter(r => r.fin).length,
+      sum: done.length ? { hit1: cnt('w'), in3: cnt('in3'), p: cnt('p'), b3: cnt('b3'), a3: cnt('a3'), retW: sum('w'), retP: sum('p'), retB3: sum('b3'), retA3: sum('a3'), betA3: nA3 * 300 } : null,
+      rows,
+    });
+  }
+  return { dates: mdates, days };
+}
+
 /* ---- 日ごと・場ごとに組む ---- */
 /* built は「データの時点」にする（現在時刻にすると、中身が同じでも today.json が毎回変わって
    refresh_boat が空のコミットを積み続ける） */
@@ -391,6 +474,10 @@ for (const date of dates) {
       return race;
     });
     const recV = REC?.days?.find(d => d.date === date)?.venues?.find(v => v.jcd === jcd) || null;
+    const LOG = meetLog(date, jcd, live, rs);
+    /* 当日の終わったレースには結果を添える（予想の下に着順と的中を出す） */
+    const todayRows = LOG.days.find(x => x.date === date)?.rows || [];
+    for (const race of races) { const row = todayRows.find(x => x.r === race.r); if (row?.fin) race.result = { fin: row.fin, st: row.st, kim: row.kim, c1: row.c1, pay: row.pay, hit: row.hit || null, ret: row.ret || null, top: row.top || null }; }
     const V = DB.venues?.[jcd] || {}, S = ST[jcd] || {};
     const vinfo = VENUES.find(v => v.jcd === jcd) || {};
     const closes0 = live?.closes?.[jcd] || rs.map(p => p.close);
@@ -461,7 +548,8 @@ for (const date of dates) {
       jcd, name: VNAME[jcd], pref: vinfo.pref || V.pref || '', area: vinfo.area || V.area || '',
       title: rs[0].title, day: rs[0].day,
       band: bandOf(closes0?.[0]),
-      meet: { days, dayIdx, lastPrelim, hasSemi, hasFinal, adv },
+      meet: { days, dayIdx, lastPrelim, hasSemi, hasFinal, adv, dates: LOG.dates },
+      log: LOG,                                         // 節間の結果（結果・予想・的中）
       trend: trendOf(date, jcd, races, V.course?.[0]?.win ?? NAT1),
       rec: recV ? { races: recV.races, hit1: recV.hit1, in3: recV.in3, bets: recV.bets } : null,   // 本日ここまでの成績
       course: (V.course || []).map(c => ({ n: c.n, win: round(c.win, 4), top2: round(c.top2, 4), top3: round(c.top3, 4), st: c.st, kim: c.kim })),
@@ -485,6 +573,7 @@ const top = {
     venues: d.venues.map(v => ({
       jcd: v.jcd, name: v.name, title: v.title, day: v.day, exCount: v.exCount, win1: v.course?.[0]?.win ?? null,
       band: v.band, trend: { label: v.trend.label, text: v.trend.text, src: v.trend.src }, rec: v.rec, meet: v.meet,
+      log: v.log ? v.log.days.map(({ rows: _r, ...d }) => d) : null,
       races: v.races.map(r => {
         const P = r.ex || r.pre;
         const ord = P.p1.map((p, i) => [p, i]).sort((a, b) => b[0] - a[0]).slice(0, 3);

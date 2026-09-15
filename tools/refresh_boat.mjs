@@ -42,7 +42,8 @@ if (od2Age > 60 || process.env.NK_REFRESH_FORCE) {
 }
 
 /* 2) 変化があるときだけ作り直す */
-const watch = [`live.${TODAY}.json`, `live.${addDays(TODAY, 1)}.json`, 'programs.jsonl', 'model.json', 'index.json'].map(f => path.join(D, f));
+/* 節間の結果は昨日以前の K と live からも作るので、results.jsonl（K の取り直し）と昨日の live も見る */
+const watch = [`live.${addDays(TODAY, -1)}.json`, `live.${TODAY}.json`, `live.${addDays(TODAY, 1)}.json`, 'programs.jsonl', 'results.jsonl', 'model.json', 'index.json'].map(f => path.join(D, f));
 const sig = watch.map(f => { try { const s = fs.statSync(f); return `${path.basename(f)}:${s.mtimeMs}:${s.size}`; } catch { return path.basename(f) + ':-'; } }).join('|');
 let prev = '';
 try { prev = fs.readFileSync(STAMP, 'utf8'); } catch { }

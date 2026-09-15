@@ -53,7 +53,7 @@ const sandbox = {
 sandbox.window.document = document;
 sandbox.globalThis = sandbox;
 vm.createContext(sandbox);
-vm.runInContext(js + '\nglobalThis.__X={state,loadRace,renderPred,sampleRace,NKBOAT};', sandbox);
+vm.runInContext(js + '\nglobalThis.__X={state,loadRace,renderPred,renderLog,sampleRace,NKBOAT};', sandbox);
 
 const X = sandbox.__X;
 let bad = 0, races = 0, exN = 0;
@@ -71,15 +71,23 @@ for (let d = 0; d < X.NKBOAT.days.length; d++) {
       if (!rec.frames?.length) { console.log(`  ! ${day.date} ${day.venues[v].name} ${r.r}R フレームが空`); bad++; }
       if (r.level === 'ex') exN++;
       races++;
+      /* 節間の結果：当日ぶんの行数＝レース数、結果の付いたレースには着順3つ */
+      const L = day.venues[v].log;
+      if (L) {
+        const td = L.days.find(x => x.date === day.date);
+        if (!td || td.rows.length !== day.venues[v].races.length) { console.log(`  ! ${day.date} ${day.venues[v].name} 節間の結果の行数が出走レース数と違う`); bad++; }
+        if (r.result && (!r.result.fin || r.result.fin.length !== 3)) { console.log(`  ! ${day.date} ${day.venues[v].name} ${r.r}R 結果の着順が3つない`); bad++; }
+      }
     }
   }
 }
-const need = ['predHead', 'predBody', 'points', 'trifecta', 'badge', 'venueInfo', 'srcNote', 'recBox'];
+const need = ['predHead', 'predBody', 'points', 'trifecta', 'badge', 'venueInfo', 'srcNote', 'recBox', 'vhead', 'races', 'logTitle', 'btBox'];
 for (const id of need) {
   const e = store.get(id);
   const has = e && ((e.innerHTML || '').length > 3 || (e.textContent || '').length > 3);
   if (!has) { console.log(`  ! #${id} が空`); bad++; }
 }
-console.log(`boat: ${races} レース（直前情報あり ${exN}）をレンダリング、要素チェック ${need.length} 件、問題 ${bad} 件`);
+let logDays = 0, logRes = 0; for (const d of X.NKBOAT.days) for (const v of d.venues) for (const x of (v.log?.days || [])) { logDays++; logRes += x.done; }
+console.log(`boat: ${races} レース（直前情報あり ${exN}）をレンダリング、節間の結果 ${logDays} 日 ${logRes} R、要素チェック ${need.length} 件、問題 ${bad} 件`);
 console.log('読みのポイント抜粋:', (store.get('points').innerHTML || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 200));
 process.exit(bad ? 1 : 0);

@@ -430,7 +430,7 @@ const hm=s=>{if(!s)return 9999;const [h,m]=s.split(':').map(Number);return h*60+
 let bmode=(()=>{const v=new URLSearchParams(location.search).get('view');return ['rec','time','venue'].includes(v)?v:'rec';})();   /* ?view=venue で場ごとから開ける */
 document.querySelectorAll('#bbar button').forEach(b=>b.classList.toggle('on',b.dataset.f===bmode));
 const BALL=[];
-for(const d of (NKBT2.days||[]))for(const v of d.venues)for(const r of v.races)BALL.push({...r,date:d.date,jcd:v.jcd,venue:v.name,vtitle:v.title,vday:v.day});
+for(const d of (NKBT2.days||[]))for(const v of d.venues)for(const r of v.races)BALL.push({...r,date:d.date,jcd:v.jcd,venue:v.name,vtitle:v.title,vday:v.day,vmeet:v.meet||null});
 document.querySelectorAll('#bbar button').forEach(b=>b.onclick=()=>{bmode=b.dataset.f;document.querySelectorAll('#bbar button').forEach(x=>x.classList.toggle('on',x===b));brender();});
 const BT=NKBT2.backtest||null;
 const roiOf=k=>BT&&BT.table[k]?BT.table[k]:null;
@@ -441,7 +441,7 @@ function bcard(r){
   return `<div class="card ${w&&w.p>=0.6?'gA':''}">
     <div class="card__h"><span class="rno">${r.r}R</span><span class="tk">${esc(r.venue)} ${fmtD(r.date)}</span>
       <span class="lvl ${r.level}">${r.level==='ex'?'直前情報あり':'番組表のみ'}</span><span class="tm">${r.close||''}</span></div>
-    <div class="card__cls">${esc(r.cls||'')}　<span style="color:var(--faint)">${esc(r.vtitle||'')}${r.vday?'・'+r.vday:''}</span></div>
+    <div class="card__cls">${esc(r.cls||'')}　<span style="color:var(--faint)">${esc(r.vtitle||'')}${r.vmeet&&r.vmeet.dayIdx?`・${r.vmeet.dayIdx}日目／${r.vmeet.days||'—'}日間`:(r.vday?'・'+r.vday:'')}</span></div>
     <div class="horses">${t.map((h,i)=>`<div class="h"><span class="mk ${['m1','m2','m3'][i]}">${['◎','○','▲'][i]}</span>${bnum(h.lane)}<span class="nm">${esc(h.name)}</span><span class="od">${h.grade||''}${h.o?'　'+h.o.toFixed(1)+'倍':''}</span><span class="pw">${(h.p*100).toFixed(0)}%</span></div>`).join('')}</div>
     <div class="bets"><div class="t">本命3艇BOX 3連複${s3?`<span class="rec">検証${BT.races.toLocaleString()}Rの実測 的中${s3.hit}%・回収 ${s3.roi}%</span>`:''}</div>
       <div class="boxline"><b>${r.box3}</b></div>
@@ -466,7 +466,7 @@ function brender(){
       for(const [b,lab] of BANDS){const list=d.venues.filter(v=>(v.band||'day')===b);if(!list.length)continue;
         h+=`<details open><summary style="cursor:pointer;font-family:var(--mincho);font-weight:700;font-size:14px;margin:8px 0 6px">${lab} <small style="font-family:var(--gothic);font-weight:400;color:var(--sub)">${list.length}場</small></summary><div class="vgrid">`+list.map(v=>{
           const nx=nxOf(v);const w=nx&&nx.top&&nx.top[0];const isSoon=soon&&soon.jcd===v.jcd;
-          return `<div class="vbox"><div class="vn">${esc(v.name)} <span class="vs">${esc(v.title||'')}${v.day?'・'+v.day:''}</span></div>
+          return `<div class="vbox"><div class="vn">${esc(v.name)} ${v.meet&&v.meet.dayIdx?`<b style="font-size:12px">${v.meet.dayIdx}日目</b><span class="vs">／${v.meet.days||'—'}日間</span>`:''}<span class="vs"> ${esc(v.title||'')}${!(v.meet&&v.meet.dayIdx)&&v.day?'・'+v.day:''}</span></div>
             <div class="vs">1コース1着率 ${v.win1!=null?(v.win1*100).toFixed(1)+'%':'—'}・直前情報あり ${v.exCount}R</div>
             ${v.trend?`<div class="vs" style="margin-top:2px"><b style="color:${TRC[v.trend.label]||'var(--ink)'}">${v.trend.label}</b>　${esc(v.trend.text)}</div>`:''}
             <div style="margin-top:4px">${nx?`次 <b>${nx.r}R</b> <b style="${isSoon?'color:var(--red)':''}">${nx.close||''}</b>　${w?`◎ ${bnum(w.lane)} ${esc(w.name)} ${(w.p*100).toFixed(0)}%`:''}`:'本日は終了'}</div>
