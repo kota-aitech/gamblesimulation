@@ -27,6 +27,14 @@ const ST = readJSON('data/boat/stadium.json');
 const M = readJSON(process.env.BT_MODEL || 'data/boat/model.json');   // 係数（検証用に差し替え可）
 let BT = null;
 try { BT = readJSON('data/boat/backtest.json'); } catch { console.error('  (backtest.json なし。実績の並記は省く)'); }
+/* 潮位（気象庁の推算値。tools/fetch_tide.mjs）。無ければ潮の表示は出ない */
+let TIDE = null;
+try { TIDE = readJSON('data/boat/tide.json'); } catch { console.error('  (tide.json なし。潮の表示は省く。node tools/fetch_tide.mjs)'); }
+function tideDayOf(jcd, date) {
+  const st = TIDE?.station?.[jcd]; if (!st) return null;
+  const d = TIDE.data?.[st.code]?.[date]; if (!d) return null;
+  return { code: st.code, name: st.name, note: st.note || null, h: d.h, hi: d.hi, lo: d.lo };
+}
 
 const addDays = (ymd, n) => { const d = new Date(`${ymd.slice(0, 4)}-${ymd.slice(4, 6)}-${ymd.slice(6, 8)}T00:00:00`); d.setDate(d.getDate() + n); return ymdOf(d); };
 const round = (v, k = 3) => v == null || !Number.isFinite(v) ? null : Number(v.toFixed(k));
@@ -554,6 +562,7 @@ for (const date of dates) {
       rec: recV ? { races: recV.races, hit1: recV.hit1, in3: recV.in3, bets: recV.bets } : null,   // 本日ここまでの成績
       course: (V.course || []).map(c => ({ n: c.n, win: round(c.win, 4), top2: round(c.top2, 4), top3: round(c.top3, 4), st: c.st, kim: c.kim })),
       take: S.take || null, water: S.water || null, tide: S.tide || null, motorType: S.motorType || null,
+      tideDay: tideDayOf(jcd, date),                     // その日の潮位（毎時・満潮・干潮）。干満差のある場だけ
       closes: live?.closes?.[jcd] || rs.map(p => p.close),
       exCount: races.filter(r => r.level === 'ex').length,
       races,
@@ -574,6 +583,7 @@ const top = {
       jcd: v.jcd, name: v.name, title: v.title, day: v.day, exCount: v.exCount, win1: v.course?.[0]?.win ?? null,
       band: v.band, trend: { label: v.trend.label, text: v.trend.text, src: v.trend.src }, rec: v.rec, meet: v.meet,
       log: v.log ? v.log.days.map(({ rows: _r, ...d }) => d) : null,
+      tideDay: v.tideDay ? { name: v.tideDay.name, hi: v.tideDay.hi, lo: v.tideDay.lo } : null,
       races: v.races.map(r => {
         const P = r.ex || r.pre;
         const ord = P.p1.map((p, i) => [p, i]).sort((a, b) => b[0] - a[0]).slice(0, 3);
@@ -596,7 +606,7 @@ console.error(`-> data/boat/top.json (${(fs.statSync(path.join(ROOT, 'data/boat/
    艇は「列名＋配列」にしてキー名の繰り返しを消し、使わない項目を落とし、桁を丸める。
    boat.html は読み込み時に boatCols を使って元のオブジェクトに戻す（unpackBoats）。
    1日ぶんで 3MB → 1MB 台。蓄積するのは data/ 側であって、ページは常に今日・明日だけ */
-const BOAT_COLS = ['lane', 'toban', 'name', 'age', 'branch', 'weight', 'grade', 'natWin', 'nat2', 'locWin', 'loc2', 'motor', 'motor2', 'setu',
+const BOAT_COLS = ['lane', 'toban', 'name', 'age', 'branch', 'weight', 'grade', 'natWin', 'nat2', 'locWin', 'loc2', 'motor', 'motor2', 'boat', 'boat2', 'setu',
   'course', 'ex', 'exST', 'exF', 'tilt', 'prop', 'parts', 'adjust', 'form', 'formN', 'mForm', 'setuST', 'setuEx', 'setuRuns', 'mUp',
   'ptRate', 'ptN', 'ptRank', 'ptTot', 'ptGap', 'shobu',
   'r_idx', 'r_byC', 'r_byJ', 'r_st', 'r_stDev', 'r_fRate', 'r_inGain', 'r_tune', 'r_n', 'm_idx', 'm_n'];

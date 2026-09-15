@@ -1024,6 +1024,7 @@ data/boat/
   results.jsonl              K を1レース1行にしたもの（.gitignore。222MB。キャッシュから作り直せる）
   programs.jsonl             B を1レース1行にしたもの（.gitignore。247MB）
   stadium.json               ★全24場の公式集計（コース別入着率・決まり手・枠→コース・季節別・水質）— コミット対象
+  tide.json                  ★気象庁の潮位表（毎時潮位・満潮・干潮。干満差のある場の最寄り観測点）— コミット対象
   index.json                 ★選手・モーター・場・水面条件の指数 — コミット対象
   index.train.json           ★先読みを避けた学習用の指数（検証開始の前日まで）— コミット対象
   model.json                 ★条件付きロジットの係数と検証結果 — コミット対象
@@ -1042,6 +1043,7 @@ tools/
   lib/bfeat.mjs              条件付きロジットの特徴量（pre / ex の2レベル）
   fetch_od2.mjs              K・B を日付範囲で取り込む
   fetch_stadium.mjs          全24場の場データ
+  fetch_tide.mjs             気象庁の潮位表（推算値）→ tide.json（干満差のある12場の最寄り観測点、年1回）
   fetch_live.mjs             当日の直前情報とオッズ、締切後のレース結果（launchd: com.boat.live が1分おきに呼ぶ）
   fetch_before_hist.mjs      過去の直前情報を無作為標本で取る → before.jsonl
   build_boatdb.mjs           選手・モーター・場・水面条件の指数 → index.json
@@ -1204,6 +1206,13 @@ NK_REFRESH_NOPUSH=1 NK_REFRESH_FORCE=1 node tools/refresh_boat.mjs   # 上の3�
 - `lib/bsettle.mjs` は `build_boat_results.mjs` と `build_boat.mjs` の共用。**精算の式をここ以外に書かない**
 - `refresh_boat.mjs` は `results.jsonl` と昨日の `live` も変化の対象に入れてある（K の取り直しで節間の結果が更新される）
 - `boat_check.mjs` は要素チェックに `vhead / races / logTitle / btBox` を足し、節間の結果の行数＝出走レース数、結果の着順が3つあることを見る
+- **予想表にモーター・ボートの2連率**（M番号・今節の番組表の値・棒。40%以上を緑、25%未満を橙）、**モーター指数**（3年の実測の上振れ）と直近の伸び、
+  **展示タイム（順位・棒）・展示ST（棒）**を列で出す。左には「展示・機力の比較」表（6艇を横並びで棒）。スマホは 級・展示ST・ボート・3連 を落として横スクロール
+- **オリジナル展示データ（一周・回り足・直線タイム）は公式サイト（boatrace.jp）に無い。** 各場のサイトが独自形式で出しているものなので未収録（画面の但し書きにも書いてある）
+- **潮位**：`tools/fetch_tide.mjs` が気象庁の潮位表（推算値・年1ファイル `…/tide/suisan/txt/{年}/{地点}.txt`、1行1日＝毎時24×3桁＋満潮4×7桁＋干潮4×7桁）を
+  干満差のある12場ぶんの最寄り観測点で取って `data/boat/tide.json`（約570KB、コミット対象）。場→観測点は `STATION`（下関・若松＝門司、鳴門＝小松島、大村＝長崎は参考値）。
+  `build_boat` が場ごとに `tideDay`（毎時潮位・満潮・干潮）を付け、ページ側で締切時刻の潮位・上げ／下げ・次の満潮を出す（`tideAt`）。
+  場の見出し・予想の「潮」行・左の「潮」・場データの1日の潮位グラフ（各レースの締切を点線で重ねる）。`refresh_boat` が1日1回 `fetch_tide` を呼ぶ（キャッシュ200日）
 
 - 日付タブ（今日／明日）→ 場（**モーニング／日中／ナイターの3行**。1Rの締切が 10:30 前＝モーニング、14:30 以降＝ナイター。
   行ごとに ▼ で畳め、状態は localStorage）→ 1〜12R

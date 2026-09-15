@@ -41,9 +41,15 @@ if (od2Age > 60 || process.env.NK_REFRESH_FORCE) {
   fs.writeFileSync(OD2STAMP, String(Date.now()));
 }
 
+/* 1b) 潮位表は1日1回（年1ファイルなので実際はキャッシュから読むだけ） */
+const TIDESTAMP = path.join(D, '.tide-stamp');
+let tideAge = Infinity;
+try { tideAge = (Date.now() - fs.statSync(TIDESTAMP).mtimeMs) / 3600000; } catch { }
+if (tideAge > 24 || !fs.existsSync(path.join(D, 'tide.json'))) { run('fetch_tide.mjs'); fs.writeFileSync(TIDESTAMP, String(Date.now())); }
+
 /* 2) 変化があるときだけ作り直す */
 /* 節間の結果は昨日以前の K と live からも作るので、results.jsonl（K の取り直し）と昨日の live も見る */
-const watch = [`live.${addDays(TODAY, -1)}.json`, `live.${TODAY}.json`, `live.${addDays(TODAY, 1)}.json`, 'programs.jsonl', 'results.jsonl', 'model.json', 'index.json'].map(f => path.join(D, f));
+const watch = [`live.${addDays(TODAY, -1)}.json`, `live.${TODAY}.json`, `live.${addDays(TODAY, 1)}.json`, 'programs.jsonl', 'results.jsonl', 'model.json', 'index.json', 'tide.json'].map(f => path.join(D, f));
 const sig = watch.map(f => { try { const s = fs.statSync(f); return `${path.basename(f)}:${s.mtimeMs}:${s.size}`; } catch { return path.basename(f) + ':-'; } }).join('|');
 let prev = '';
 try { prev = fs.readFileSync(STAMP, 'utf8'); } catch { }
@@ -72,7 +78,7 @@ const gitRetry = (args, n = 4) => {
 };
 const stamp = new Date().toLocaleString('ja-JP', { hour12: false }).replace(/\//g, '-');
 if (process.env.NK_REFRESH_NOPUSH) { console.error(`${stamp} 反映完了（${secs}秒・push なし）`); process.exit(0); }
-const TARGETS = ['boat.html', 'top.html', 'data/boat/today.json', 'data/boat/top.json', 'data/boat/odds_live.jsonl',
+const TARGETS = ['boat.html', 'top.html', 'data/boat/today.json', 'data/boat/top.json', 'data/boat/odds_live.jsonl', 'data/boat/tide.json',
   'data/boat/preds.jsonl', 'data/boat/results.json',
   `data/boat/live.${TODAY}.json`, `data/boat/live.${addDays(TODAY, 1)}.json`];
 try {
