@@ -26,8 +26,9 @@ export const STATION = {
 };
 
 const yearNow = new Date().getFullYear();
-const years = [Number(process.env.BT_TIDE_YEAR || yearNow)];
-if (!process.env.BT_TIDE_YEAR && new Date().getMonth() === 11) years.push(yearNow + 1);
+/* BT_TIDE_YEARS=2023,2024,2025,2026 で学習期間ぶんをまとめて取れる（一度きり）。既定は今年（12月は翌年も） */
+const years = process.env.BT_TIDE_YEARS ? process.env.BT_TIDE_YEARS.split(',').map(Number) : [Number(process.env.BT_TIDE_YEAR || yearNow)];
+if (!process.env.BT_TIDE_YEAR && !process.env.BT_TIDE_YEARS && new Date().getMonth() === 11) years.push(yearNow + 1);
 
 function parseTxt(txt) {
   const days = {};
@@ -58,8 +59,8 @@ for (const code of codes) {
     } catch (e) { console.error(`  ! ${code} ${y}: ${e.message}`); }
   }
 }
-/* 古い年は落とす（今年の前年まで） */
-for (const code of codes) for (const k of Object.keys(out.data[code])) if (Number(k.slice(0, 4)) < yearNow - 1) delete out.data[code][k];
+/* 学習に使う3年より前は落とす */
+for (const code of codes) for (const k of Object.keys(out.data[code])) if (Number(k.slice(0, 4)) < yearNow - 3) delete out.data[code][k];
 const p = path.join(ROOT, 'data/boat/tide.json');
 fs.writeFileSync(p, JSON.stringify(out));
 console.error(`-> data/boat/tide.json (${(fs.statSync(p).size / 1024).toFixed(0)} KB)`);

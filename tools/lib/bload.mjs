@@ -213,7 +213,7 @@ export function loadRaces({ from = '', to = '', prog = null, base = null, roll =
     for (const b of boats) delete b._p;
     if (!keep) continue;
     if (keys && !keys.has(`${k.date}|${k.jcd}|${k.r}`)) continue;
-    out.push({ ...k, boats, order: fin, fin: fin.map(i => boats[i].lane) });
+    out.push({ ...k, cls: k.cls || b.cls || '', close: b.close || null, fixed: /進入固定/.test(b.cls || k.cls || ''), boats, order: fin, fin: fin.map(i => boats[i].lane) });
   }
   return out;
 }

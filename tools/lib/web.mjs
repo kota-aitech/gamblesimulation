@@ -163,6 +163,7 @@ export function parseBefore(html) {
   out.weather.windDir = Number(pick('風向', /weather1_bodyUnitImage is-wind(\d+)/)) || null;
   const sky = text((html.match(/is-weather\d"><\/p>\s*<div class="weather1_bodyUnitLabel">\s*<span[^>]*>([^<]*)</) || [])[1] || '');
   out.weather.sky = sky || null;
+  out.stable = /安定板使用/.test(html) || null;                    // 安定板（od2 の K・B には無いので、ここでしか取れない）
   /* 直前情報は各レース約30分前の公表。まだ出ていなければ published:false */
   out.published = out.boats.some(b => b.ex != null) || null;
   return out;

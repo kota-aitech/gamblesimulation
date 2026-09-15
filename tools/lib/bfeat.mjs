@@ -1,3 +1,4 @@
+import { tideOf } from './tide.mjs';
 /* 条件付きロジット（Plackett–Luce）用の特徴量。レース前に分かる情報だけを使う。
    単位はすべて「対数オッズ差」に寄せる（南関側と同じ約束）。
 
@@ -39,6 +40,9 @@ export const FEATS = [
   'dayIn1', 'dayOut', 'dayMak',    // その日のここまでの傾向（イン有利／外が来ている／まくりが決まる）× 進入コース
   'todayRel', 'todaySt',           // 選手の当日ここまでの走り（相対着順・ST）
   'exDev', 'exRank',           // ex レベルのみ（pre では 0）
+  'setuF', 'setuF2',           // 今節にFを切っている（本数・2本以上）。F持ちはスタートを控える
+  'tideC', 'tideLvlC',         // 潮の局面（上げ／下げ）と潮位の高さ × コース（干満差のある場だけ。lib/tide.mjs）
+  'phFinalC', 'phSemiC',       // 優勝戦・準優勝戦 × コース（インが堅い／荒れる）
 ];
 export const NF = FEATS.length;
 
@@ -52,6 +56,7 @@ function setuOf(s) {
    ex: 実際の進入が分かっているので one-hot。
    pre: 場の「枠番別コース取得率」（stadium.json の take、％）を使う */
 function courseProb(lane, course, take) {
+  /* 進入固定レースは枠＝コース（pre でも確定） */
   const p = [0, 0, 0, 0, 0, 0];
   if (course) { p[course - 1] = 1; return p; }
   const row = take?.[lane - 1];
@@ -93,11 +98,19 @@ export function raceFeatures(race, boats, DB, ST, { level = 'pre' } = {}) {
 
   return boats.map(b => {
     const r = DB.racer?.[b.toban] || null;
-    const cp = courseProb(b.lane, level === 'ex' ? b.course : null, take);
+    const cp = courseProb(b.lane, level === 'ex' ? b.course : (race.fixed ? b.lane : null), take);
     const cMid = cp.reduce((a, p, i) => a + p * (i + 1), 0);      // 期待進入コース
     const x = new Float64Array(NF);
     const set = (k, v) => { x[FEATS.indexOf(k)] = Number.isFinite(v) ? v : 0; };
 
+    /* コース中心化（内 −1 〜 外 +1）。レース内で同じ値になる旗はこれと掛けて艇ごとの値にする */
+    const cC = (cMid - 3.5) / 2.5;
+    const nF = [...String(b.setu || '')].filter(ch => ch === 'F').length;
+    set('setuF', nF); set('setuF2', nF >= 2 ? 1 : 0);
+    const td = race.tide === undefined ? tideOf(race.jcd, race.date, race.close) : race.tide;
+    set('tideC', td ? td.phase * cC : 0); set('tideLvlC', td ? td.lvl * cC : 0);
+    const cls = race.cls || '';
+    set('phFinalC', /優勝戦/.test(cls) && !/準優/.test(cls) ? cC : 0); set('phSemiC', /準優/.test(cls) ? cC : 0);
     set('cz', cp.reduce((a, p, i) => a + p * bz(i + 1, 'win'), 0) - logit(1 / 6));
     set('czTop2', cp.reduce((a, p, i) => a + p * bz(i + 1, 'top2'), 0) - logit(2 / 6));
 

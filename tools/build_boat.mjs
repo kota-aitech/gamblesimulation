@@ -131,7 +131,8 @@ function buildRace(date, jcd, prog, live, venueWeather) {
   if (before?.weather) { wx = before.weather; wxSrc = 'own'; }
   else if (venueWeather) { wx = venueWeather.weather; wxSrc = `${venueWeather.r}R`; }
   const windDir = wx ? windCompass(jcd, wx.windDir) : null;
-  const raceW = { jcd, date, dist: prog.dist, wind: wx ? wx.wind : null, wave: wx ? wx.wave : null, windDir };
+  const raceW = { jcd, date, dist: prog.dist, wind: wx ? wx.wind : null, wave: wx ? wx.wave : null, windDir,
+    cls: prog.cls || '', close: prog.close || lv?.close || null, fixed: /進入固定/.test(prog.cls || ''), stable: before?.stable || null };
 
   const boats = prog.boats.map(b => {
     const r = DB.racer?.[b.toban] || null;
@@ -237,6 +238,7 @@ function buildRace(date, jcd, prog, live, venueWeather) {
     r: prog.r, cls: prog.cls, dist: prog.dist, close: prog.close || lv?.close || null, level,
     weather: wx ? { ...wx, windDir, src: wxSrc } : null,
     orig: orig ? { labels: orig.labels, at: orig.at, src: orig.src } : null,
+    fixed: raceW.fixed || undefined, stable: raceW.stable || undefined,
     cond: cn ? cn.shift : null,                    // この条件でのコース別の得失（対数オッズ差）
     boats: boats.map(b => ({
       lane: b.lane, toban: b.toban, name: b.name, age: b.age, branch: b.branch, weight: b.weight, grade: b.grade,
