@@ -442,6 +442,43 @@ function meetLog(date, jcd, live, rs) {
   return { dates: mdates, days };
 }
 
+/* ---- モーター一覧（場データのタブ用）----
+   その節に使われている全モーターを、番組表の「モーター2連率」（今期＝入れ替え後の累計）と 3年の実測指数（同じ番号・同じ世代）、
+   節間の成績（K の着順をモーター番号で集計）、割り当て（日ごとに誰が乗ったか）で並べる。エース機＝2連率の上位 */
+function motorList(date, jcd, mdates) {
+  const byNo = new Map();
+  const names = new Map();                        // toban -> name
+  const days = mdates.filter(d => d >= LOG_FROM);
+  for (const d of days) {
+    const di = mdates.indexOf(d) + 1;
+    const progs = [...P.values()].filter(o => o.date === d && o.jcd === jcd);
+    const res = new Map((TODAY_RES.get(`${d}|${jcd}`) || []).map(x => [x.r, x.k]));
+    for (const p of progs) for (const b of p.boats) {
+      if (b.motor == null) continue;
+      let m = byNo.get(b.motor); if (!m) byNo.set(b.motor, m = { no: b.motor, m2: null, boat: null, b2: null, runs: [] });
+      if (d >= (m._d || '')) { m.m2 = b.motor2 ?? m.m2; m.boat = b.boat ?? m.boat; m.b2 = b.boat2 ?? m.b2; m._d = d; }
+      if (b.toban) names.set(b.toban, b.name);
+      const k = res.get(p.r);
+      const e = k?.entries?.find(x => x.lane === b.lane);
+      const pos = e ? (Number(e.pos) >= 1 ? Number(e.pos) : 0) : null;   // 0＝失格など、null＝未確定
+      m.runs.push([di, p.r, b.lane, b.toban || null, pos, e?.course ?? null]);
+    }
+  }
+  const out = [];
+  for (const m of byNo.values()) {
+    const gen = motorGenOf(jcd, m.no);
+    const mi = DB.motor?.[jcd]?.[m.no + '#' + gen] || null;
+    const done = m.runs.filter(r => r[4] != null && r[4] > 0);
+    const w1 = done.filter(r => r[4] === 1).length, w2 = done.filter(r => r[4] <= 2).length, w3 = done.filter(r => r[4] <= 3).length;
+    const today = m.runs.filter(r => r[0] === mdates.indexOf(date) + 1);
+    out.push({ no: m.no, m2: m.m2, boat: m.boat, b2: m.b2, idx: mi ? round(mi.idx, 2) : null, n: mi?.n ?? null, win: mi ? round(mi.win, 3) : null,
+      meet: { runs: done.length, w1, w2, w3 }, runs: m.runs, today: today.map(r => [r[1], r[2], r[3]]) });
+  }
+  out.sort((a, b) => (b.m2 ?? -1) - (a.m2 ?? -1) || (b.idx ?? -9) - (a.idx ?? -9));
+  out.forEach((m, i) => m.rank = i + 1);
+  return { motors: out, names: Object.fromEntries(names) };
+}
+
 /* ---- 日ごと・場ごとに組む ---- */
 /* built は「データの時点」にする（現在時刻にすると、中身が同じでも today.json が毎回変わって
    refresh_boat が空のコミットを積み続ける） */
@@ -558,6 +595,7 @@ for (const date of dates) {
       band: bandOf(closes0?.[0]),
       meet: { days, dayIdx, lastPrelim, hasSemi, hasFinal, adv, dates: LOG.dates },
       log: LOG,                                         // 節間の結果（結果・予想・的中）
+      motors: motorList(date, jcd, LOG.dates),          // モーター一覧（今期2連率・3年指数・節間成績・割り当て）
       trend: trendOf(date, jcd, races, V.course?.[0]?.win ?? NAT1),
       rec: recV ? { races: recV.races, hit1: recV.hit1, in3: recV.in3, bets: recV.bets } : null,   // 本日ここまでの成績
       course: (V.course || []).map(c => ({ n: c.n, win: round(c.win, 4), top2: round(c.top2, 4), top3: round(c.top3, 4), st: c.st, kim: c.kim })),
