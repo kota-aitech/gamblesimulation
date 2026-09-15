@@ -13,6 +13,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, get, freshTtl, VNAME, ymdOf } from './lib/bt.mjs';
 import { parseBefore, parseOddsTF, parseOdds3T, parseRaceIndex, parseRaceResult } from './lib/web.mjs';
+import { ORIGEX, parseOrigEx } from './lib/origex.mjs';
 
 const DATE = process.env.BT_DATE || ymdOf(new Date());
 const LEAD = Number(process.env.BT_LEAD || 8);
@@ -88,6 +89,18 @@ for (const t of todo) {
       st.before = b; n++;
       if (b.published) console.error(`  直前 ${VNAME[t.jcd]}${t.r}R 展示 ${b.boats.map(x => x.ex ?? '-').join('/')} 風${b.weather.wind}m 波${b.weather.wave}cm`);
     } catch (e) { console.error(`  ! 直前 ${VNAME[t.jcd]}${t.r}R ${e.message}`); }
+  }
+
+  /* オリジナル展示データ（一周・まわり足・直線）は各場の独自サイト（lib/origex.mjs）。直前情報が出たあと、
+     まだ値が入っていなければ5分あけて取り直す。サイトが落ちていても他の取得を止めない */
+  const oc = ORIGEX[t.jcd];
+  if (oc && st.before?.published && !st.orig?.published && !(st.origTry && Date.now() - st.origTry < 5 * 60000) && n < MAX) {
+    st.origTry = Date.now();
+    try {
+      const o = parseOrigEx(t.jcd, await get(oc.url(DATE, t.r), { ttlDays: 0.002 }));
+      n++;
+      if (o) { st.orig = { ...o, at: new Date().toISOString(), src: oc.host }; if (o.published) console.error(`  独自展示 ${VNAME[t.jcd]}${t.r}R 一周 ${[1,2,3,4,5,6].map(l => o.boats[l]?.lap ?? '-').join('/')}`); }
+    } catch (e) { console.error(`  ! 独自展示 ${VNAME[t.jcd]}${t.r}R ${e.message}`); }
   }
 
   /* オッズは締切 LEAD 分前に「締切前スナップショット」として残す。

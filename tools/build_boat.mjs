@@ -19,6 +19,7 @@ import { loadPrograms, loadRaces, makeRolling } from './lib/bload.mjs';
 import { windCompass } from './lib/web.mjs';
 import { plackettLuce, pairProbs } from './lib/bpl.mjs';
 import { settle, finishOf, payOf } from './lib/bsettle.mjs';
+import { ORIGEX } from './lib/origex.mjs';
 
 const TODAY = process.env.BT_TODAY || ymdOf(new Date());
 const AHEAD = Number(process.env.BT_AHEAD ?? 1);
@@ -121,6 +122,7 @@ function buildRace(date, jcd, prog, live, venueWeather) {
   const key = `${jcd}|${prog.r}`;
   const lv = live?.races?.[key] || null;
   const before = lv?.before?.published ? lv.before : null;
+  const orig = lv?.orig?.published ? lv.orig : null;           // 各場の独自サイトのオリジナル展示（一周・まわり足・直線）
   const stBy = new Map((before?.startEx || []).map(s => [s.lane, s]));
   const bfBy = new Map((before?.boats || []).map(b => [b.lane, b]));
 
@@ -142,6 +144,7 @@ function buildRace(date, jcd, prog, live, venueWeather) {
       ...b, ...rolled, _p: undefined,
       course, ex: bf?.ex ?? null, tilt: bf?.tilt ?? null, prop: bf?.prop ?? null, parts: bf?.parts || [], adjust: bf?.adjust ?? 0,
       exST: sx ? (sx.f ? -Math.abs(sx.st) : sx.st) : null, exF: !!sx?.f,
+      oLap: orig?.boats?.[b.lane]?.lap ?? null, oTurn: orig?.boats?.[b.lane]?.turn ?? null, oStr: orig?.boats?.[b.lane]?.str ?? null,
       motorGenIdx: genIdx,
       racer: r ? {
         idx: r.idx, byC: r.byC?.[course || b.lane] ?? null, byJ: r.byJ?.[jcd] ?? null, st: r.st, stDev: r.stDev,
@@ -203,6 +206,12 @@ function buildRace(date, jcd, prog, live, venueWeather) {
     const ent = [...stBy.values()].sort((a, b) => a.course - b.course).map(s => s.lane).join('');
     const fast = boats.filter(b => b.ex != null).sort((a, b) => a.ex - b.ex)[0];
     pts.push(`スタート展示の進入 ${ent.split('').join(' ')}${ent !== '123456' ? '（枠なりではない）' : '（枠なり）'}。展示タイム最速は ${fast ? `${fast.lane} ${fast.name}（${fast.ex.toFixed(2)}秒）` : '—'}。`);
+    if (orig) {
+      const L = orig.labels;
+      const best = k => boats.filter(b => b['o' + k[0].toUpperCase() + k.slice(1)] != null).sort((a, b) => a['o' + k[0].toUpperCase() + k.slice(1)] - b['o' + k[0].toUpperCase() + k.slice(1)])[0];
+      const bl = best('lap'), bt = best('turn'), bs = L.str ? best('str') : null;
+      pts.push(`${VNAME[jcd]}の独自計測：${L.lap}最速 ${bl ? `${bl.lane} ${bl.name}（${bl.oLap.toFixed(2)}）` : '—'}、${L.turn}最速 ${bt ? `${bt.lane} ${bt.name}（${bt.oTurn.toFixed(2)}）` : '—'}${bs ? `、${L.str}最速 ${bs.lane} ${bs.name}（${bs.oStr.toFixed(2)}）` : ''}。`);
+    }
     const swapped = boats.filter(b => b.parts.length || b.prop);
     if (swapped.length) pts.push(`部品交換：${swapped.map(b => `${b.lane} ${b.name}（${[...b.parts, b.prop ? 'ペラ新' : ''].filter(Boolean).join('・')}）`).join('、')}。`);
   } else {
@@ -227,11 +236,13 @@ function buildRace(date, jcd, prog, live, venueWeather) {
   return {
     r: prog.r, cls: prog.cls, dist: prog.dist, close: prog.close || lv?.close || null, level,
     weather: wx ? { ...wx, windDir, src: wxSrc } : null,
+    orig: orig ? { labels: orig.labels, at: orig.at, src: orig.src } : null,
     cond: cn ? cn.shift : null,                    // この条件でのコース別の得失（対数オッズ差）
     boats: boats.map(b => ({
       lane: b.lane, toban: b.toban, name: b.name, age: b.age, branch: b.branch, weight: b.weight, grade: b.grade,
       natWin: b.natWin, nat2: b.nat2, locWin: b.locWin, loc2: b.loc2, motor: b.motor, motor2: b.motor2, boat: b.boat, boat2: b.boat2, setu: b.setu,
       course: b.course, ex: b.ex, exST: b.exST, exF: b.exF, tilt: b.tilt, prop: b.prop, parts: b.parts, adjust: b.adjust,
+      oLap: b.oLap, oTurn: b.oTurn, oStr: b.oStr,
       form: round(b.form), formN: b.formN, mForm: round(b.mForm), setuST: round(b.setuST), setuEx: round(b.setuEx), setuRuns: b.setuRuns, mUp: round(b.mUp, 1),
       ptRate: round(b.ptRate, 2), ptN: b.ptN, ptRank: b.ptRank, ptTot: b.ptTot, ptGap: round(b.ptGap, 2), shobu: b.shobu || null,
       dayIn1: round(b.dayIn1, 3), dayOut: round(b.dayOut, 3), dayMak: round(b.dayMak, 3), dayN: b.dayN || 0, todayRel: round(b.todayRel, 2), todaySt: b.todaySt ?? null, todayN: b.todayN || 0,
@@ -601,6 +612,7 @@ for (const date of dates) {
       course: (V.course || []).map(c => ({ n: c.n, win: round(c.win, 4), top2: round(c.top2, 4), top3: round(c.top3, 4), st: c.st, kim: c.kim })),
       take: S.take || null, water: S.water || null, tide: S.tide || null, motorType: S.motorType || null,
       tideDay: tideDayOf(jcd, date),                     // その日の潮位（毎時・満潮・干潮）。干満差のある場だけ
+      origSrc: ORIGEX[jcd] ? { host: ORIGEX[jcd].host, labels: ORIGEX[jcd].labels } : null,   // 独自展示データが取れる場か
       closes: live?.closes?.[jcd] || rs.map(p => p.close),
       exCount: races.filter(r => r.level === 'ex').length,
       races,
@@ -645,7 +657,7 @@ console.error(`-> data/boat/top.json (${(fs.statSync(path.join(ROOT, 'data/boat/
    boat.html は読み込み時に boatCols を使って元のオブジェクトに戻す（unpackBoats）。
    1日ぶんで 3MB → 1MB 台。蓄積するのは data/ 側であって、ページは常に今日・明日だけ */
 const BOAT_COLS = ['lane', 'toban', 'name', 'age', 'branch', 'weight', 'grade', 'natWin', 'nat2', 'locWin', 'loc2', 'motor', 'motor2', 'boat', 'boat2', 'setu',
-  'course', 'ex', 'exST', 'exF', 'tilt', 'prop', 'parts', 'adjust', 'form', 'formN', 'mForm', 'setuST', 'setuEx', 'setuRuns', 'mUp',
+  'course', 'ex', 'exST', 'exF', 'oLap', 'oTurn', 'oStr', 'tilt', 'prop', 'parts', 'adjust', 'form', 'formN', 'mForm', 'setuST', 'setuEx', 'setuRuns', 'mUp',
   'ptRate', 'ptN', 'ptRank', 'ptTot', 'ptGap', 'shobu',
   'r_idx', 'r_byC', 'r_byJ', 'r_st', 'r_stDev', 'r_fRate', 'r_inGain', 'r_tune', 'r_n', 'm_idx', 'm_n'];
 const r2 = v => v == null ? null : Number(v.toFixed(2)), r3 = v => v == null ? null : Number(v.toFixed(3));
