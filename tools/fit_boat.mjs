@@ -32,21 +32,27 @@ const ST = readJSON('data/boat/stadium.json');
 /* ---- レースを組み立てる（lib/bload.mjs が K と B を突き合わせ、
    モーターの世代と2連率の伸びを付ける）---- */
 console.error('データを読む…');
-const races = loadRaces({ base: DB.base });
+let races = loadRaces({ base: DB.base });
 console.error(`  ${races.length} レース（${races[0].date} 〜 ${races.at(-1).date}）`);
 
-const tr = races.filter(r => r.date < SPLIT), te = races.filter(r => r.date >= SPLIT);
+let tr = races.filter(r => r.date < SPLIT), te = races.filter(r => r.date >= SPLIT);
 console.error(`  学習 ${tr.length}R（〜${SPLIT}）／検証 ${te.length}R`);
+const META = { train: tr.length, test: te.length, from: races[0].date, to: races.at(-1).date };
 
 /* ---- Plackett–Luce ---- */
 const DROPI = [...DROP].map(k => FEATS.indexOf(k)).filter(i => i >= 0);
+/* メモリ：この Mac は RAM 8GB。レースのオブジェクト（16万×6艇）を持ったままだとスワップに落ちて数倍遅くなるので、
+   先に全レベルぶんを Float32 の行列に詰めてから元の配列を捨てる（1レベル 250MB ほど） */
 function pack(rs, level) {
   return rs.map(r => {
     const X = raceFeatures(r, r.boats, DB, ST, { level });
     if (DROPI.length) for (const x of X) for (const i of DROPI) x[i] = 0;
-    return { X, order: r.order };
+    return { X: X.map(x => Float32Array.from(x)), order: r.order };
   });
 }
+const PACKED = {};
+for (const level of LEVELS) { PACKED[level] = { tr: pack(tr, level), te: pack(te, level) }; console.error(`  ${level} の行列を作った`); }
+races = tr = te = null;
 /* 1〜3着の並びの対数尤度と勾配 */
 function gradOne(X, order, beta, g) {
   const n = X.length;
@@ -110,10 +116,10 @@ function evaluate(data, beta, tau = [1, 1]) {
   return { logloss: ll / n, hit1: hit1 / n, in3: in3 / n, n, cal: cal.map(b => b.n ? { p: +(b.p / b.n).toFixed(3), y: +(b.y / b.n).toFixed(3), n: b.n } : null) };
 }
 
-const out = { meta: { es: ES, l2: L2, epoch: EPOCH, drop: [...DROP], built: new Date().toISOString().slice(0, 10), split: SPLIT, feats: FEATS, train: tr.length, test: te.length, from: races[0].date, to: races.at(-1).date } };
+const out = { meta: { es: ES, l2: L2, epoch: EPOCH, drop: [...DROP], built: new Date().toISOString().slice(0, 10), split: SPLIT, feats: FEATS, train: META.train, test: META.test, from: META.from, to: META.tot(-1).date } };
 for (const level of LEVELS) {
   console.error(`第1段（${level}）を当てはめる…`);
-  const trd = pack(tr, level), ted = pack(te, level);
+  const { tr: trd, te: ted } = PACKED[level];
   let beta;
   if (REUSE) {
     const feats = REUSE.meta.feats, src = REUSE[level].beta;
@@ -136,7 +142,7 @@ for (const level of LEVELS) {
 }
 /* 参考：進入コースだけ（＝枠なり前提の基準）でどこまで当たるか */
 if (LEVELS.includes('ex')) {
-  const ted = pack(te, 'ex');
+  const ted = PACKED.ex.te;
   const b = new Float64Array(NF); b[FEATS.indexOf('cz')] = 1;
   out.courseOnly = evaluate(ted, b);
   console.error(`  コースだけ: logloss ${out.courseOnly.logloss.toFixed(3)}／1着的中 ${(out.courseOnly.hit1 * 100).toFixed(1)}%／上位3艇 ${(out.courseOnly.in3 * 100).toFixed(1)}%`);
