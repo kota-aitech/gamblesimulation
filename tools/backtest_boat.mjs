@@ -7,7 +7,7 @@
 import { readJSON, writeJSON, VNAME } from './lib/bt.mjs';
 import { loadRaces } from './lib/bload.mjs';
 import { FEATS, NF, raceFeatures } from './lib/bfeat.mjs';
-import { utilities, plackettLuce, pairProbs } from './lib/bpl.mjs';
+import { utilities, raceProbs } from './lib/bpl.mjs';
 
 const DB = readJSON(process.env.BT_BT_DB || 'data/boat/index.train.json');
 const ST = readJSON('data/boat/stadium.json');
@@ -38,7 +38,7 @@ const byDay = {}, byVenue = {};
 
 for (const r of races) {
   const X = raceFeatures(r, r.boats, DB, ST, { level: LEVEL });
-  const PL = plackettLuce(utilities(X, beta), TAU);
+  const PL = raceProbs(utilities(X, beta), TAU, X.ctx, M.stage || null);   // 2着・3着は段階モデル（あれば）
   const p = PL.p1;
   const rank = p.map((v, i) => [v, r.boats[i].lane]).sort((a, b) => b[0] - a[0]).map(x => x[1]);
   const pl = Object.fromEntries(r.boats.map((b, i) => [b.lane, p[i]]));
@@ -52,7 +52,7 @@ for (const r of races) {
   {
     const lanes = r.boats.map(b => b.lane), w3 = `${f1}-${f2}-${f3}`, w2 = `${f1}-${f2}`;
     const triK = PL.tri.slice(0, 8).map(t => `${lanes[t[0]]}-${lanes[t[1]]}-${lanes[t[2]]}`);
-    const exK = pairProbs(utilities(X, beta), TAU).slice(0, 5).map(t => `${lanes[t[0]]}-${lanes[t[1]]}`);
+    const exK = PL.pairs.slice(0, 5).map(t => `${lanes[t[0]]}-${lanes[t[1]]}`);
     for (const n of [3, 5, 8]) { const hit = triK.slice(0, n).includes(w3); add(`AI 3連単 上位${n}点`, 100 * n, hit ? payOf(r, 'ex3', w3) : 0, hit ? 1 : 0); }
     for (const n of [3, 5]) { const hit = exK.slice(0, n).includes(w2); add(`AI 2連単 上位${n}点`, 100 * n, hit ? payOf(r, 'ex2', w2) : 0, hit ? 1 : 0); }
   }

@@ -84,3 +84,61 @@ export function fitTau(data) {
   const t1 = golden(ll1, 0.5, 3), t2 = golden(ll2, 0.3, 3);
   return [+t1.toFixed(3), +t2.toFixed(3)];
 }
+
+/* ---- 2着・3着の段階モデル ----
+   1着は第1段のモデル（温度 τ1）、2着は「勝った艇との関係」で別に学習した条件付きロジット、3着も同様。
+   1コースが逃げれば2着は2・3コースの差し、まくりが決まれば2着は外や残った内、という構造を
+   PL の同じ式では表せないので分ける。特徴量（lib/bpl.mjs のここで一元管理。fit_boat_stage.mjs も同じ関数を使う）：
+     2着候補 i（勝者 w）: cz2＝P(2着コース | 1着コース) の対数オッズ（学習データの表）、u＝第1段の強さ、
+                        adjIn/adjOut＝勝者のすぐ内／外、stDiff・rDiff・exDiff＝勝者との差
+     3着候補 i（1着 w・2着 s）: cz3＝P(3着コース | 1着コース)、u、adjW・adjS＝1着・2着に隣接、勝者との差 */
+export const STAGE2 = ['cz2', 'u', 'adjIn', 'adjOut', 'stDiff', 'rDiff', 'exDiff'];
+export const STAGE3 = ['cz3', 'u', 'adjW', 'adjS', 'stDiff', 'rDiff', 'exDiff'];
+const lg = p => Math.log(Math.max(1e-4, p) / Math.max(1e-4, 1 - p));
+export function stage2X(ctx, U, w, i, T2) {
+  const cw = ctx[w].c, ci = ctx[i].c;
+  return [lg(T2[cw - 1][ci - 1]) - lg(1 / 5), U[i], ci === cw - 1 ? 1 : 0, ci === cw + 1 ? 1 : 0, ctx[i].st - ctx[w].st, ctx[i].r - ctx[w].r, ctx[i].ex - ctx[w].ex];
+}
+export function stage3X(ctx, U, w, s, i, T3) {
+  const cw = ctx[w].c, cs = ctx[s].c, ci = ctx[i].c;
+  return [lg(T3[cw - 1][ci - 1]) - lg(1 / 4), U[i], Math.abs(ci - cw) === 1 ? 1 : 0, Math.abs(ci - cs) === 1 ? 1 : 0, ctx[i].st - ctx[w].st, ctx[i].r - ctx[w].r, ctx[i].ex - ctx[w].ex];
+}
+const dot = (b, x) => { let s = 0; for (let k = 0; k < b.length; k++) s += b[k] * x[k]; return s; };
+const softmax = v => { const m = Math.max(...v); const e = v.map(x => Math.exp(x - m)); const s = e.reduce((a, b) => a + b, 0); return e.map(x => x / s); };
+/* 段階モデルで6艇120通り。M = model.stage（{t2:{beta,table}, t3:{beta,table}}）。無ければ plackettLuce と同じ形を返す */
+export function stagedPL(U, tau1, ctx, M) {
+  const n = U.length;
+  const p1 = plWin(U, tau1);
+  const p2 = Array(n).fill(0), p3 = Array(n).fill(0), tri = [];
+  for (let w = 0; w < n; w++) {
+    const cand = [...Array(n).keys()].filter(i => i !== w);
+    const q2 = softmax(cand.map(i => dot(M.t2.beta, stage2X(ctx, U, w, i, M.t2.table))));
+    cand.forEach((s, k) => {
+      const ps = p1[w] * q2[k];
+      p2[s] += ps;
+      const c3 = cand.filter(i => i !== s);
+      const q3 = softmax(c3.map(i => dot(M.t3.beta, stage3X(ctx, U, w, s, i, M.t3.table))));
+      c3.forEach((t, j) => { const p = ps * q3[j]; p3[t] += p; tri.push([w, s, t, p]); });
+    });
+  }
+  tri.sort((x, y) => y[3] - x[3]);
+  return { p1, top2: p1.map((v, i) => v + p2[i]), top3: p1.map((v, i) => v + p2[i] + p3[i]), tri };
+}
+export function stagedPairs(tri, n = 6) {
+  const m = new Map();
+  for (const [a, b, , p] of tri) { const k = a * n + b; m.set(k, (m.get(k) || 0) + p); }
+  return [...m].map(([k, p]) => [Math.floor(k / n), k % n, p]).sort((x, y) => y[2] - x[2]);
+}
+
+/* 共通の入口：model.stage があれば段階モデル、無ければ PL（温度つき）。戻り値の形は同じ（pairs も付ける） */
+export function raceProbs(U, tau, ctx, stage) {
+  if (stage && ctx) { const R = stagedPL(U, tau[0], ctx, stage); R.pairs = stagedPairs(R.tri, U.length); return R; }
+  const R = plackettLuce(U, tau); R.pairs = pairProbs(U, tau); return R;
+}
+/* 6艇120通りを「a→b→c の辞書順」で並べた確率（千分率の整数）。boat.html の3D再生がここから標本を引く */
+export function packTri(tri, n = 6) {
+  const m = new Map(tri.map(([a, b, c, p]) => [a * 36 + b * 6 + c, p]));
+  const out = [];
+  for (let a = 0; a < n; a++) for (let b = 0; b < n; b++) { if (b === a) continue; for (let c = 0; c < n; c++) { if (c === a || c === b) continue; out.push(Math.round((m.get(a * 36 + b * 6 + c) || 0) * 1000)); } }
+  return out;
+}

@@ -44,6 +44,9 @@ export const FEATS = [
   'tideC', 'tideLvlC',         // 潮の局面（上げ／下げ）と潮位の高さ × コース（干満差のある場だけ。lib/tide.mjs）
   'phFinalC', 'phSemiC',       // 優勝戦・準優勝戦 × コース（インが堅い／荒れる）
   'kyuNear', 'kyuBelow',       // 級別ボーダー争い：ボーダーに近い（期末が近いほど強く）・下から狙う側か（lib/bload.mjs の kyu）
+  'rIdxXc', 'stXc', 'motorXc', 'exXc',   // 実力・ST・モーター・展示 × コース（外ほど機力とSTが要る）
+  'stVsIn', 'rIdxVsIn',        // すぐ内側の艇との差（ST・実力）。内より速ければまくれる
+  'in1Idx',                    // いちばん内の艇の実力（内が強いと外は苦しい。内の艇自身は 0）
 ];
 /* 級別ボーダーとの差。いまの級（A1/A2/B1）ごとに見るべきボーダーが違う。B2 と出走の少ない選手は対象外 */
 export function kyuGapOf(kyu, grade) {
@@ -106,7 +109,15 @@ export function raceFeatures(race, boats, DB, ST, { level = 'pre' } = {}) {
     return t ? cp.reduce((a, p, i) => a + p * (t[i + 1] ?? 0), 0) : 0;
   };
 
-  return boats.map(b => {
+  /* 艇をまたぐ特徴量（隣との差・内の艇の実力）のために先に基礎値を並べる */
+  const pre = boats.map(b => {
+    const r = DB.racer?.[b.toban] || null;
+    const cp = courseProb(b.lane, level === 'ex' ? b.course : (race.fixed ? b.lane : null), take);
+    return { cMid: cp.reduce((a, p, i) => a + p * (i + 1), 0), rIdx: r?.idx ?? 0, st: r?.stDev != null ? -r.stDev * 10 : 0 };
+  });
+  const inner = i => { let j = -1; for (let k = 0; k < pre.length; k++) if (k !== i && pre[k].cMid < pre[i].cMid && (j < 0 || pre[k].cMid > pre[j].cMid)) j = k; return j; };
+  const inmost = pre.reduce((m, p, i) => (p.cMid < pre[m].cMid ? i : m), 0);
+  const X = boats.map((b, bi) => {
     const r = DB.racer?.[b.toban] || null;
     const cp = courseProb(b.lane, level === 'ex' ? b.course : (race.fixed ? b.lane : null), take);
     const cMid = cp.reduce((a, p, i) => a + p * (i + 1), 0);      // 期待進入コース
@@ -124,6 +135,12 @@ export function raceFeatures(race, boats, DB, ST, { level = 'pre' } = {}) {
     const kg = kyuGapOf(b.kyu, b.grade);
     const near = kg ? Math.max(0, 1 - Math.abs(kg.gap) / 0.4) * ((b.kyu.daysLeft ?? 999) <= 75 ? 1 : 0.4) : 0;
     set('kyuNear', near); set('kyuBelow', kg && kg.gap < 0 ? near : 0);
+    const mIdx = DB.motor?.[jcd]?.[b.motor + '#' + (b.motorGen || 1)]?.idx ?? 0;
+    set('rIdxXc', pre[bi].rIdx * cC); set('stXc', pre[bi].st * cC); set('motorXc', mIdx * cC);
+    set('exXc', level === 'ex' && exMean != null && b.ex != null ? (exMean - b.ex) * 20 * cC : 0);
+    const j = inner(bi);
+    set('stVsIn', j >= 0 ? pre[bi].st - pre[j].st : 0); set('rIdxVsIn', j >= 0 ? pre[bi].rIdx - pre[j].rIdx : 0);
+    set('in1Idx', bi === inmost ? 0 : pre[inmost].rIdx);
     set('cz', cp.reduce((a, p, i) => a + p * bz(i + 1, 'win'), 0) - logit(1 / 6));
     set('czTop2', cp.reduce((a, p, i) => a + p * bz(i + 1, 'top2'), 0) - logit(2 / 6));
 
@@ -192,4 +209,7 @@ export function raceFeatures(race, boats, DB, ST, { level = 'pre' } = {}) {
     }
     return x;
   });
+  /* 2着・3着の段階モデル（lib/bpl.mjs の stagedPL）用：艇ごとのコース（pre は期待コースを丸める）・ST・実力・展示 */
+  X.ctx = boats.map((b, i) => ({ c: level === 'ex' && b.course ? b.course : Math.max(1, Math.min(6, Math.round(pre[i].cMid))), st: pre[i].st, r: pre[i].rIdx, ex: X[i][FEATS.indexOf('exDev')] }));
+  return X;
 }

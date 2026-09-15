@@ -24,6 +24,9 @@ const DB = readJSON(process.env.BT_FIT_DB || 'data/boat/index.json');
    「足した特徴量が本当に効いているか」は、外して同じ手続きで比べないと分からない。 */
 const DROP = new Set((process.env.BT_FIT_DROP || '').split(',').map(s => s.trim()).filter(Boolean));
 const LEVELS = (process.env.BT_FIT_LEVELS || 'pre,ex').split(',').map(s => s.trim()).filter(Boolean);
+/* 早期終了：学習データの末尾 ES 割（日付順）を切り出して、5エポックごとの logloss が最良の β を採る。
+   「10エポック時点のほうが収束後より良い」ことがあったので、学習に寄りすぎるのを止める。BT_FIT_ES=0 で無効 */
+const ES = process.env.BT_FIT_ES === '0' ? 0 : Number(process.env.BT_FIT_ES || 0.15);
 const ST = readJSON('data/boat/stadium.json');
 
 /* ---- レースを組み立てる（lib/bload.mjs が K と B を突き合わせ、
@@ -66,8 +69,9 @@ function gradOne(X, order, beta, g) {
   void n;
   return ll;
 }
-function fit(data, label) {
+function fit(data, label, val = null) {
   const beta = new Float64Array(NF);
+  let best = null, bestLL = Infinity, bestEp = 0;
   const m = new Float64Array(NF), v = new Float64Array(NF);
   const g = new Float64Array(NF);
   for (let ep = 1; ep <= EPOCH; ep++) {
@@ -81,8 +85,13 @@ function fit(data, label) {
       const mh = m[k] / (1 - Math.pow(0.9, ep)), vh = v[k] / (1 - Math.pow(0.999, ep));
       beta[k] += LR * mh / (Math.sqrt(vh) + 1e-8);
     }
-    if (ep % 20 === 0) console.error(`    ${label} ep${ep} 対数尤度/R ${(ll / data.length).toFixed(4)}`);
+    if (val && ep % 5 === 0) {
+      const v = evaluate(val, beta).logloss;
+      if (v < bestLL) { bestLL = v; bestEp = ep; best = Float64Array.from(beta); }
+      if (ep % 20 === 0) console.error(`    ${label} ep${ep} 対数尤度/R ${(ll / data.length).toFixed(4)}　検証用 logloss ${v.toFixed(4)}（最良 ep${bestEp} ${bestLL.toFixed(4)}）`);
+    } else if (ep % 20 === 0) console.error(`    ${label} ep${ep} 対数尤度/R ${(ll / data.length).toFixed(4)}`);
   }
+  if (best) { console.error(`    ${label}: 早期終了 → ep${bestEp} の β を採用（検証用 logloss ${bestLL.toFixed(4)}）`); return best; }
   return beta;
 }
 function evaluate(data, beta, tau = [1, 1]) {
@@ -101,7 +110,7 @@ function evaluate(data, beta, tau = [1, 1]) {
   return { logloss: ll / n, hit1: hit1 / n, in3: in3 / n, n, cal: cal.map(b => b.n ? { p: +(b.p / b.n).toFixed(3), y: +(b.y / b.n).toFixed(3), n: b.n } : null) };
 }
 
-const out = { meta: { drop: [...DROP], built: new Date().toISOString().slice(0, 10), split: SPLIT, feats: FEATS, train: tr.length, test: te.length, from: races[0].date, to: races.at(-1).date } };
+const out = { meta: { es: ES, l2: L2, epoch: EPOCH, drop: [...DROP], built: new Date().toISOString().slice(0, 10), split: SPLIT, feats: FEATS, train: tr.length, test: te.length, from: races[0].date, to: races.at(-1).date } };
 for (const level of LEVELS) {
   console.error(`第1段（${level}）を当てはめる…`);
   const trd = pack(tr, level), ted = pack(te, level);
@@ -111,6 +120,9 @@ for (const level of LEVELS) {
     beta = new Float64Array(NF);
     FEATS.forEach((k, i) => { const j = feats.indexOf(k); if (j < 0) throw new Error(`${process.env.BT_FIT_BETA} に ${k} が無い`); beta[i] = src[j]; });
     console.error(`  β は ${process.env.BT_FIT_BETA} を再利用`);
+  } else if (ES > 0) {
+    const cut = Math.floor(trd.length * (1 - ES));                 // 学習は日付順なので末尾が新しい
+    beta = fit(trd.slice(0, cut), level, trd.slice(cut));
   } else beta = fit(trd, level);
   /* 着順の段階ごとの温度（lib/bpl.mjs）。学習データで決め、検証は温度つきで測る */
   const raw = evaluate(ted, beta);

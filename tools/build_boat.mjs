@@ -18,7 +18,7 @@ import { FEATS, NF, raceFeatures } from './lib/bfeat.mjs';
 import { loadPrograms, loadRaces, makeRolling, periodStart, periodEnd, KYU_RUNS } from './lib/bload.mjs';
 import { kyuGapOf } from './lib/bfeat.mjs';
 import { windCompass } from './lib/web.mjs';
-import { plackettLuce, pairProbs } from './lib/bpl.mjs';
+import { raceProbs, packTri } from './lib/bpl.mjs';
 import { settle, finishOf, payOf } from './lib/bsettle.mjs';
 import { ORIGEX } from './lib/origex.mjs';
 
@@ -164,12 +164,15 @@ function buildRace(date, jcd, prog, live, venueWeather) {
   const predict = level => {
     const X = feat(level), beta = BETA[level];
     const U = X.map(x => { let s = 0; for (let k = 0; k < NF; k++) s += beta[k] * x[k]; return s; });
-    const pl = plackettLuce(U, TAU[level]);
-    return { U: U.map(v => round(v)), tau: TAU[level], p1: pl.p1.map(v => round(v, 4)), top2: pl.top2.map(v => round(v, 4)), top3: pl.top3.map(v => round(v, 4)), tri: pl.tri, pairs: pairProbs(U, TAU[level]), c: X.map(x => contrib(x, beta)) };
+    /* 2着・3着は段階モデル（model.json の stage。1着の決まり方で2着の分布を変える）。無ければ PL */
+    const pl = raceProbs(U, TAU[level], X.ctx, M.stage || null);
+    return { U: U.map(v => round(v)), tau: TAU[level], p1: pl.p1.map(v => round(v, 4)), top2: pl.top2.map(v => round(v, 4)), top3: pl.top3.map(v => round(v, 4)), tri: pl.tri, pairs: pl.pairs, tri120: packTri(pl.tri), c: X.map(x => contrib(x, beta)) };
   };
   const pre = predict('pre');
   const ex = before ? predict('ex') : null;
   const use = ex || pre, level = ex ? 'ex' : 'pre';
+  /* 120通りの確率は使う段階のぶんだけ埋める（両方だと1レース1KB増える。もう片方の3D標本は Gumbel で足りる） */
+  if (ex) delete pre.tri120;
 
   /* オッズ（締切前スナップショットがあればそれ、無ければ暫定）*/
   let odds = null;
@@ -522,7 +525,7 @@ const dataAt = (() => {
 const out = {
   meta: {
     built: dataAt, today: TODAY,
-    model: { built: M.meta.built, split: M.meta.split, train: M.meta.train, test: M.meta.test, pre: M.pre.test, ex: M.ex.test, courseOnly: M.courseOnly },
+    model: { built: M.meta.built, split: M.meta.split, train: M.meta.train, test: M.meta.test, pre: M.pre.test, ex: M.ex.test, courseOnly: M.courseOnly, stage: M.stage?.test || null },
     index: { from: DB.meta.from, to: DB.meta.to, races: DB.meta.races, racers: Object.keys(DB.racer || {}).length },
     backtest: BT ? { level: BT.meta.level, from: BT.meta.from, to: BT.meta.to, races: BT.meta.races, table: BT.table } : null,
     nat1: round(NAT1, 4),
@@ -682,7 +685,7 @@ const BOAT_COLS = ['lane', 'toban', 'name', 'age', 'branch', 'weight', 'grade', 
   'ptRate', 'ptN', 'ptRank', 'ptTot', 'ptGap', 'shobu', 'kyu',
   'r_idx', 'r_byC', 'r_byJ', 'r_st', 'r_stDev', 'r_fRate', 'r_inGain', 'r_tune', 'r_n', 'm_idx', 'm_n'];
 const r2 = v => v == null ? null : Number(v.toFixed(2)), r3 = v => v == null ? null : Number(v.toFixed(3));
-const packPred = P => P && ({ U: P.U.map(r2), tau: P.tau, p1: P.p1.map(r3), top2: P.top2.map(r3), top3: P.top3.map(r3), c: P.c.map(g => GROUPS.map(k => g[k] || 0)) });
+const packPred = P => P && ({ U: P.U.map(r2), tau: P.tau, p1: P.p1.map(r3), top2: P.top2.map(r3), top3: P.top3.map(r3), tri120: P.tri120, c: P.c.map(g => GROUPS.map(k => g[k] || 0)) });
 out.boatCols = BOAT_COLS;
 out.kyuDaysLeft = Object.fromEntries(out.days.map(d => [d.date, dayNoOf(periodEnd(d.date)) - dayNoOf(d.date)]));   // 期末までの日数（日ごと）
 out.groups = GROUPS;
