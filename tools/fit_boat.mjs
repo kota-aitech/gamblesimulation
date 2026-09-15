@@ -50,9 +50,19 @@ function pack(rs, level) {
     return { X: X.map(x => Float32Array.from(x)), order: r.order };
   });
 }
-const PACKED = {};
-for (const level of LEVELS) { PACKED[level] = { tr: pack(tr, level), te: pack(te, level) }; console.error(`  ${level} の行列を作った`); }
+/* レースを1つずつ全レベルの行列にしてから、そのレースのオブジェクトを捨てる（ピークを抑える） */
+const PACKED = Object.fromEntries(LEVELS.map(l => [l, { tr: [], te: [] }]));
+for (const r of races) {
+  const dst = r.date < SPLIT ? 'tr' : 'te';
+  for (const level of LEVELS) {
+    const X = raceFeatures(r, r.boats, DB, ST, { level });
+    if (DROPI.length) for (const x of X) for (const i of DROPI) x[i] = 0;
+    PACKED[level][dst].push({ X: X.map(x => Float32Array.from(x)), order: r.order });
+  }
+  r.boats = null;
+}
 races = tr = te = null;
+console.error(`  行列を作った（${LEVELS.join('/')}）`);
 /* 1〜3着の並びの対数尤度と勾配 */
 function gradOne(X, order, beta, g) {
   const n = X.length;
@@ -116,7 +126,7 @@ function evaluate(data, beta, tau = [1, 1]) {
   return { logloss: ll / n, hit1: hit1 / n, in3: in3 / n, n, cal: cal.map(b => b.n ? { p: +(b.p / b.n).toFixed(3), y: +(b.y / b.n).toFixed(3), n: b.n } : null) };
 }
 
-const out = { meta: { es: ES, l2: L2, epoch: EPOCH, drop: [...DROP], built: new Date().toISOString().slice(0, 10), split: SPLIT, feats: FEATS, train: META.train, test: META.test, from: META.from, to: META.tot(-1).date } };
+const out = { meta: { es: ES, l2: L2, epoch: EPOCH, drop: [...DROP], built: new Date().toISOString().slice(0, 10), split: SPLIT, feats: FEATS, train: META.train, test: META.test, from: META.from, to: META.to } };
 for (const level of LEVELS) {
   console.error(`第1段（${level}）を当てはめる…`);
   const { tr: trd, te: ted } = PACKED[level];
