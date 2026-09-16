@@ -36,13 +36,13 @@ const cards = new Map(jl('cards.jsonl').map(c => [c.raceId, c]));
 /* オッズがあれば第2段（人気との合成）まで使う。
    締切前スナップショット（watch_odds.mjs）を最優先、無ければ最終オッズ。 */
 const oddsMap = new Map();
-for (const o of jl('odds.jsonl')) oddsMap.set(o.raceId, { src: '最終', tan: o.tan });
+for (const o of jl('odds.jsonl')) oddsMap.set(o.raceId, { src: '最終', tan: o.tan, upd: o.updated || null });
 /* 暫定(odds_pre.json) → 締切前(T-n) の順に上書きするので、締切前があればそちらが残る */
 try {
   const P = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/nankan/odds_pre.json'), 'utf8'));
-  for (const o of Object.values(P)) oddsMap.set(o.raceId, { src: `暫定(発走${o.minsToPost}分前)`, tan: o.tan });
+  for (const o of Object.values(P)) oddsMap.set(o.raceId, { src: `暫定(発走${o.minsToPost}分前)`, tan: o.tan, at: o.capturedAt || null, upd: o.updated || null });
 } catch {}
-for (const o of jl('odds_live.jsonl')) if (o.tag !== 'final' && o.tag !== 'pre') oddsMap.set(o.raceId, { src: `締切前(発走${o.minsToPost}分前)`, tan: o.tan });
+for (const o of jl('odds_live.jsonl')) if (o.tag !== 'final' && o.tag !== 'pre') oddsMap.set(o.raceId, { src: `締切前(発走${o.minsToPost}分前)`, tan: o.tan, at: o.capturedAt || null, upd: o.updated || null });
 const resForForm = jl('results.jsonl');
 const LAP = buildLapIndex(resForForm, [...cards.values()]);
 /* 能力・調教試験（新馬・転入初戦の手がかり）*/
@@ -130,7 +130,7 @@ for (const key of TRACKS) {
         const pr = f ? predictRace(MDL, f, od ? od.tan : null, live.map(h => h.no)) : null;
         if (pr && pr.nos.length === live.length && live.every((h, i) => pr.nos[i] === h.no)) {
           p = pr.p; combos = pr.combos;
-          if (pr.pm) { marketP = pr.pm; live.forEach((h, i) => { h.pubOdds = od.tan[h.no].odds; h.pFund = r3(pr.pFund[i]); }); r.oddsSrc = od.src; r.pSrc = pr.src; }
+          if (pr.pm) { marketP = pr.pm; live.forEach((h, i) => { h.pubOdds = od.tan[h.no].odds; h.pFund = r3(pr.pFund[i]); }); r.oddsSrc = od.src; r.oddsAt = od.at || null; r.oddsUpd = od.upd || null; r.pSrc = pr.src; }
         }
       }
       if (!p) { p = mc.win.slice(); noModel++; }

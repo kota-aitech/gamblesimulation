@@ -32,7 +32,7 @@ for (const key of TRACKS) {
       return { r: r.r, time: r.time, dist: r.dist, n: r.n, cls: r.cls, date: r.date,
         grade: r.grade || null, conf: r.conf ?? null, pTop: r.pTop ?? null,
         ev: r.ev || null, nPos: r.nPos || null, pace: r.pace || null,
-        oddsSrc: r.oddsSrc || null,
+        oddsSrc: r.oddsSrc || null, oddsAt: r.oddsAt || null, oddsUpd: r.oddsUpd || null,
         bets: r.bets ? { umaren: (r.bets.umaren || []).slice(0, 6), sanpuku: (r.bets.sanpuku || []).slice(0, 6) } : null,
         box: r.box || null,
         flow,
