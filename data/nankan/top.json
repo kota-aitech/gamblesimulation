@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-09-16T11:12:18.221Z",
+ "builtAt": "2026-09-16T11:14:35.323Z",
  "tracks": {
   "oi": {
    "track": "大井",
@@ -25,6 +25,8 @@
       },
       "pace": "H",
       "oddsSrc": "締切前(発走9分前)",
+      "oddsAt": "2026-09-16T05:06:09.429Z",
+      "oddsUpd": "2026年9月16日 14:04",
       "bets": {
        "umaren": [
         {
@@ -238,6 +240,8 @@
       },
       "pace": "H",
       "oddsSrc": "締切前(発走8分前)",
+      "oddsAt": "2026-09-16T05:41:57.725Z",
+      "oddsUpd": "2026年9月16日 14:39",
       "bets": {
        "umaren": [],
        "sanpuku": [
@@ -465,6 +469,8 @@
       },
       "pace": "S",
       "oddsSrc": "締切前(発走9分前)",
+      "oddsAt": "2026-09-16T06:16:22.582Z",
+      "oddsUpd": "2026年9月16日 15:14",
       "bets": {
        "umaren": [
         {
@@ -717,6 +723,8 @@
       },
       "pace": "S",
       "oddsSrc": "締切前(発走8分前)",
+      "oddsAt": "2026-09-16T06:51:58.880Z",
+      "oddsUpd": "2026年9月16日 15:50",
       "bets": {
        "umaren": [],
        "sanpuku": []
@@ -907,6 +915,8 @@
       },
       "pace": "M",
       "oddsSrc": "締切前(発走8分前)",
+      "oddsAt": "2026-09-16T07:26:44.353Z",
+      "oddsUpd": "2026年9月16日 16:25",
       "bets": {
        "umaren": [
         {
@@ -1171,6 +1181,8 @@
       },
       "pace": "H",
       "oddsSrc": "締切前(発走8分前)",
+      "oddsAt": "2026-09-16T08:01:41.026Z",
+      "oddsUpd": "2026年9月16日 16:59",
       "bets": {
        "umaren": [
         {
@@ -1424,6 +1436,8 @@
       },
       "pace": "H",
       "oddsSrc": "締切前(発走8分前)",
+      "oddsAt": "2026-09-16T08:37:02.898Z",
+      "oddsUpd": "2026年9月16日 17:35",
       "bets": {
        "umaren": [],
        "sanpuku": [
@@ -1657,6 +1671,8 @@
       },
       "pace": "H",
       "oddsSrc": "締切前(発走9分前)",
+      "oddsAt": "2026-09-16T09:11:08.910Z",
+      "oddsUpd": "2026年9月16日 18:09",
       "bets": {
        "umaren": [],
        "sanpuku": [
@@ -1888,6 +1904,8 @@
       },
       "pace": "H",
       "oddsSrc": "締切前(発走9分前)",
+      "oddsAt": "2026-09-16T09:46:00.822Z",
+      "oddsUpd": "2026年9月16日 18:43",
       "bets": {
        "umaren": [
         {
@@ -2158,6 +2176,8 @@
       },
       "pace": "H",
       "oddsSrc": "暫定(発走35分前)",
+      "oddsAt": "2026-09-16T09:54:37.538Z",
+      "oddsUpd": "2026年9月16日 18:53",
       "bets": {
        "umaren": [],
        "sanpuku": []
@@ -2354,6 +2374,8 @@
       },
       "pace": "S",
       "oddsSrc": "締切前(発走8分前)",
+      "oddsAt": "2026-09-16T11:01:53.984Z",
+      "oddsUpd": "2026年9月16日 20:00",
       "bets": {
        "umaren": [
         {
@@ -2591,18 +2613,20 @@
       "cls": "金毘羅坂賞 Ｂ３(二) 選抜特別",
       "date": "2026-09-16",
       "grade": "A",
-      "conf": 0.095,
-      "pTop": 0.179,
+      "conf": 0.094,
+      "pTop": 0.176,
       "ev": {
        "umaren": 1.35,
        "sanpuku": 1
       },
       "nPos": {
        "umaren": 1,
-       "sanpuku": 1
+       "sanpuku": 2
       },
       "pace": "S",
-      "oddsSrc": "暫定(発走39分前)",
+      "oddsSrc": "暫定(発走36分前)",
+      "oddsAt": "2026-09-16T11:13:30.299Z",
+      "oddsUpd": "2026年9月16日 20:12",
       "bets": {
        "umaren": [
         {
@@ -2610,8 +2634,8 @@
           7,
           10
          ],
-         "p": 0.0209,
-         "odds": 64.6,
+         "p": 0.0211,
+         "odds": 64,
          "ev": 1.35
         }
        ],
@@ -2622,8 +2646,18 @@
           7,
           10
          ],
-         "p": 0.0116,
-         "odds": 86.4,
+         "p": 0.0117,
+         "odds": 85.1,
+         "ev": 1
+        },
+        {
+         "c": [
+          7,
+          10,
+          11
+         ],
+         "p": 0.0128,
+         "odds": 77.6,
          "ev": 1
         }
        ]
@@ -2759,19 +2793,19 @@
         "gate": 7,
         "name": "ワクシングムーン",
         "mark": "◎",
-        "win": 0.179,
-        "top3": 0.469,
+        "win": 0.176,
+        "top3": 0.464,
         "style": "差し",
         "jockey": "本橋孝太",
-        "odds": 3.9
+        "odds": 4
        },
        {
         "no": 2,
         "gate": 2,
         "name": "セキトバシューズ",
         "mark": "○",
-        "win": 0.147,
-        "top3": 0.438,
+        "win": 0.148,
+        "top3": 0.439,
         "style": "差し",
         "jockey": "藤田凌",
         "odds": 4.3
@@ -2781,8 +2815,8 @@
         "gate": 5,
         "name": "ファーストメイト",
         "mark": "▲",
-        "win": 0.127,
-        "top3": 0.326,
+        "win": 0.128,
+        "top3": 0.327,
         "style": "差し",
         "jockey": "吉原寛人",
         "odds": 9
@@ -2793,7 +2827,7 @@
         "name": "アレグランサ",
         "mark": "△",
         "win": 0.101,
-        "top3": 0.238,
+        "top3": 0.239,
         "style": "逃げ",
         "jockey": "達城龍次",
         "odds": 13
@@ -2816,6 +2850,8 @@
       "nPos": null,
       "pace": "M",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -2985,6 +3021,8 @@
       "nPos": null,
       "pace": "H",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -3172,6 +3210,8 @@
       "nPos": null,
       "pace": "S",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -3353,6 +3393,8 @@
       "nPos": null,
       "pace": "M",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -3516,6 +3558,8 @@
       "nPos": null,
       "pace": "M",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -3667,6 +3711,8 @@
       "nPos": null,
       "pace": "H",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -3848,6 +3894,8 @@
       "nPos": null,
       "pace": "H",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -3993,6 +4041,8 @@
       "nPos": null,
       "pace": "H",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -4162,6 +4212,8 @@
       "nPos": null,
       "pace": "H",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -4331,6 +4383,8 @@
       "nPos": null,
       "pace": "S",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -4506,10 +4560,10 @@
       "cls": "未来優駿２０２６（ＪＢＣ２歳優駿指定競走） 第７回 ゴールドジュニア（ＳIII）",
       "date": "2026-09-17",
       "grade": "B",
-      "conf": 0.168,
-      "pTop": 0.347,
+      "conf": 0.169,
+      "pTop": 0.349,
       "ev": {
-       "umaren": 1.25,
+       "umaren": 1.26,
        "sanpuku": 0.85
       },
       "nPos": {
@@ -4517,7 +4571,9 @@
        "sanpuku": 0
       },
       "pace": "H",
-      "oddsSrc": "暫定(発走1439分前)",
+      "oddsSrc": "暫定(発走1436分前)",
+      "oddsAt": "2026-09-16T11:13:30.820Z",
+      "oddsUpd": "2026年9月16日 20:12",
       "bets": {
        "umaren": [
         {
@@ -4525,17 +4581,17 @@
           9,
           12
          ],
-         "p": 0.0203,
-         "odds": 61.9,
-         "ev": 1.25
+         "p": 0.0201,
+         "odds": 62.9,
+         "ev": 1.26
         },
         {
          "c": [
           2,
           9
          ],
-         "p": 0.0209,
-         "odds": 51.6,
+         "p": 0.0206,
+         "odds": 52.5,
          "ev": 1.08
         },
         {
@@ -4543,9 +4599,9 @@
           2,
           12
          ],
-         "p": 0.0328,
-         "odds": 31.2,
-         "ev": 1.02
+         "p": 0.0325,
+         "odds": 31.7,
+         "ev": 1.03
         }
        ],
        "sanpuku": []
@@ -4669,8 +4725,8 @@
         "gate": 3,
         "name": "パープルフォッグ",
         "mark": "◎",
-        "win": 0.347,
-        "top3": 0.718,
+        "win": 0.349,
+        "top3": 0.721,
         "style": "逃げ",
         "jockey": "西啓太",
         "odds": 1.8
@@ -4680,11 +4736,11 @@
         "gate": 2,
         "name": "ケテンパッション",
         "mark": "○",
-        "win": 0.134,
-        "top3": 0.389,
+        "win": 0.133,
+        "top3": 0.388,
         "style": "逃げ",
         "jockey": "笹川翼",
-        "odds": 6.9
+        "odds": 7
        },
        {
         "no": 12,
@@ -4692,10 +4748,10 @@
         "name": "ケンブラック",
         "mark": "▲",
         "win": 0.129,
-        "top3": 0.357,
+        "top3": 0.356,
         "style": "逃げ",
         "jockey": "藤本現暉",
-        "odds": 8.2
+        "odds": 8.3
        },
        {
         "no": 9,
@@ -4703,10 +4759,10 @@
         "name": "ゴールドシュミット",
         "mark": "△",
         "win": 0.084,
-        "top3": 0.264,
+        "top3": 0.263,
         "style": "差し",
         "jockey": "Ｆ．ゴンサルベス",
-        "odds": 13.3
+        "odds": 13.5
        }
       ]
      },
@@ -4724,6 +4780,8 @@
       "nPos": null,
       "pace": "H",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -4889,6 +4947,8 @@
       "nPos": null,
       "pace": "S",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -5034,6 +5094,8 @@
       "nPos": null,
       "pace": "M",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -5221,6 +5283,8 @@
       "nPos": null,
       "pace": "H",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -5408,6 +5472,8 @@
       "nPos": null,
       "pace": "M",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -5571,6 +5637,8 @@
       "nPos": null,
       "pace": "M",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -5716,6 +5784,8 @@
       "nPos": null,
       "pace": "S",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -5849,6 +5919,8 @@
       "nPos": null,
       "pace": "H",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -6024,6 +6096,8 @@
       "nPos": null,
       "pace": "H",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -6187,6 +6261,8 @@
       "nPos": null,
       "pace": "H",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -6344,6 +6420,8 @@
       "nPos": null,
       "pace": "M",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -6513,6 +6591,8 @@
       "nPos": null,
       "pace": "H",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
@@ -6700,6 +6780,8 @@
       "nPos": null,
       "pace": "S",
       "oddsSrc": null,
+      "oddsAt": null,
+      "oddsUpd": null,
       "bets": null,
       "box": {
        "3": {
