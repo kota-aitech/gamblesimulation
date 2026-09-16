@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, readJSON } from './lib/nk.mjs';
 import { inject } from './lib/embed.mjs';
+import { raceExtras } from './lib/nkresults.mjs';
 
 /* ボートレース版（boat.html）。tools/build_boat.mjs の today.json を NKBOAT に埋める。
    NK_EMBED_ONLY=boat なら南関側は触らずこれだけ行う（refresh_boat.mjs が使う） */
@@ -63,6 +64,7 @@ try {
     const d = readJSON(`data/nankan/entries.${k}.json`);
     ent[k] = { track: d.track, days: d.days, entries: d.entries };
   }
+  Object.assign(ent, raceExtras(TRACKS));          // 日別の集計と開催ごとの結果（build_marks と同じ）
   inject('race.html', 'NKRACE', 'NKR', ent);
 } catch (e) { console.error('  (race.html はスキップ: ' + e.message + ')'); }
 

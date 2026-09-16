@@ -15,6 +15,7 @@ import { loadModel, condOf } from './lib/model.mjs';
 import { makeFeaturizer, buildLapIndex, buildShikenIndex, buildFormIndex, FEATURES } from './lib/feat.mjs';
 import { betPlan, confOf } from './lib/bets.mjs';
 import { predictRace } from './lib/nkstage.mjs';
+import { raceExtras } from './lib/nkresults.mjs';
 
 const TRACKS = (process.env.NK_RACE_TRACKS || '大井:oi,川崎:kawasaki,船橋:funabashi,浦和:urawa').split(',').map(s => s.split(':')[1]);
 const JA = { oi: '大井', kawasaki: '川崎', funabashi: '船橋', urawa: '浦和' };
@@ -180,14 +181,8 @@ for (const key of TRACKS) {
   ent.meta = d.meta;
   console.error(`${JA[key] || key}: ${done} レースに印（ロジット${done - noModel} / シミュレータ${noModel} / うちオッズ合成 ${blendN}${reused ? ` / 位置取り再利用 ${reused}` : ''}）`);
 }
-/* 「この買い方は実際どうだったか」を画面に出すため、実測も一緒に渡す */
-ent.record = {};
-for (const key of TRACKS) {
-  const rp = path.join(ROOT, `data/nankan/results.${key}.json`);
-  if (!fs.existsSync(rp)) continue;
-  const R = readJSON(`data/nankan/results.${key}.json`);
-  if (R.meta && R.meta.summary) ent.record[R.track] = R.meta.summary;
-}
+/* 実測（日別の集計と、開催ごとのレース結果）は lib/nkresults.mjs で組む。embed_db.mjs も同じものを埋める */
+Object.assign(ent, raceExtras(TRACKS));
 inject('race.html', 'NKRACE', 'NKR', ent);
 
 /* index.html にも「本紙予想」の確率を渡す（races.*.json 側にも同じ値を入れる） */
