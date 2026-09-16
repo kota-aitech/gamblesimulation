@@ -48,8 +48,7 @@ if (process.env.NK_REFRESH_NOPUSH) {
 }
 /* 対象は生成物のみ。手で編集中のコードや文書は絶対に巻き込まない */
 const TARGETS = ['index.html', 'race.html', 'top.html', 'data.html', 'marks.html',
-  'data/nankan/entries.oi.json', 'data/nankan/entries.kawasaki.json',
-  'data/nankan/races.oi.json', 'data/nankan/races.kawasaki.json',
+  ...['oi', 'kawasaki', 'funabashi', 'urawa'].flatMap(k => [`data/nankan/entries.${k}.json`, `data/nankan/races.${k}.json`]),
   'data/nankan/top.json', 'data/nankan/odds_pre.json', 'data/nankan/odds_live.jsonl'];
 try {
   const branch = git(['rev-parse', '--abbrev-ref', 'HEAD']);

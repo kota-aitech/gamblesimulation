@@ -1,7 +1,7 @@
 /* ブラウザなしで index.html の <script> を丸ごと実行し、init() が最後まで通るかを見る。
    最小の DOM/Canvas スタブを当てて、描画・予想パネル・人的要因パネルの
    レンダリング関数が例外を出さないこと、主要な要素に中身が入ることを確認する。
-   使い方: node tools/ui_check.mjs [oi|kawasaki]                              */
+   使い方: node tools/ui_check.mjs [oi|kawasaki|funabashi|urawa]                              */
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';

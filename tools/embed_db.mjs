@@ -38,7 +38,7 @@ if (process.env.NK_EMBED_ONLY === 'boat') { embedBoat(); process.exit(0); }
 if (process.env.NK_EMBED_ONLY === 'jra') { embedJra(); process.exit(0); }
 if (process.env.NK_EMBED_ONLY === 'banei') { embedBanei(); process.exit(0); }
 
-const TRACKS = (process.env.NK_RACE_TRACKS || '大井:oi,川崎:kawasaki').split(',').map(s => s.split(':')[1]);
+const TRACKS = (process.env.NK_RACE_TRACKS || '大井:oi,川崎:kawasaki,船橋:funabashi,浦和:urawa').split(',').map(s => s.split(':')[1]);
 const out = {};
 for (const k of TRACKS) {
   const d = readJSON(`data/nankan/races.${k}.json`);

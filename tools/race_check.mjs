@@ -1,5 +1,5 @@
 /* ブラウザなしで race.html（出馬表ページ）を実行し、全開催日・全レースを描画する。
-   使い方: node tools/race_check.mjs [oi|kawasaki]                          */
+   使い方: node tools/race_check.mjs [oi|kawasaki|funabashi|urawa]                          */
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
@@ -79,7 +79,8 @@ for (const [dk, list] of Object.entries(X.D.days)) {
   }
 }
 console.log(`${track}: ${races} レース / 出走 ${horses} 頭（うち前5走あり ${withPast}）/ 取消 ${scratched} 頭 / 段位あり ${graded} レース、問題 ${bad} 件`);
-const rk = Object.keys(X.D.entries)[9];
+const rk = Object.keys(X.D.entries)[9] || Object.keys(X.D.entries)[0];
+if (!rk) { console.log(`${track}: 今日以降の出馬表なし（開催の谷間）。問題 ${bad} 件`); process.exit(bad ? 1 : 0); }
 const top = X.D.entries[rk].filter(h => h.mark).sort((a, b) => b.win - a.win);
 console.log(`例 ${rk}: ` + top.map(h => `${h.mark}${h.no} ${h.name}(${(h.win * 100).toFixed(1)}%)`).join(' '));
 process.exit(bad ? 1 : 0);

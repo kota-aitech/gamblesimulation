@@ -10,7 +10,7 @@ import { buildShikenIndex, buildFormIndex } from './lib/feat.mjs';
 
 const DB = readJSON('data/nankan/index.json');
 const NDAYS = Number(process.env.NK_RACE_DAYS || 3);   // 今日・明日・明後日
-const WANT = (process.env.NK_RACE_TRACKS || '大井:oi,川崎:kawasaki').split(',').map(s => s.split(':'));
+const WANT = (process.env.NK_RACE_TRACKS || '大井:oi,川崎:kawasaki,船橋:funabashi,浦和:urawa').split(',').map(s => s.split(':'));
 /* 能力・調教試験。新馬・転入初戦の唯一の実走記録なので寸評に載せる */
 let SK = null;
 try {

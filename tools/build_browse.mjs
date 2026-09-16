@@ -43,7 +43,7 @@ const bms = Object.values(DB.bms || {}).sort((a, b) => b.n - a.n).map(pedRow);
 
 /* 場・距離別の傾向 */
 const trend = {};
-for (const k of ['oi', 'kawasaki']) {
+for (const k of ['oi', 'kawasaki', 'funabashi', 'urawa']) {
   const p = path.join(ROOT, `data/nankan/trend.${k}.json`);
   if (!fs.existsSync(p)) continue;
   const t = JSON.parse(fs.readFileSync(p, 'utf8'));

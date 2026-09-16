@@ -9,7 +9,7 @@ import path from 'node:path';
 import { get, text, num, ROOT, writeJSON } from './lib/nk.mjs';
 
 const BASE = 'https://www.nankankeiba.com';
-const WANT = (process.env.NK_RACE_TRACKS || '大井:oi,川崎:kawasaki').split(',').map(s => s.split(':'));
+const WANT = (process.env.NK_RACE_TRACKS || '大井:oi,川崎:kawasaki,船橋:funabashi,浦和:urawa').split(',').map(s => s.split(':'));
 const JO = { '浦和': '18', '船橋': '19', '大井': '20', '川崎': '21' };
 const NDAYS = Number(process.env.NK_MEET_DAYS || 14);
 const TODAY = process.env.NK_TODAY || new Date().toISOString().slice(0, 10);

@@ -1,6 +1,6 @@
 /* index.html のセクション0〜5（データとシミュレーション本体）だけを切り出して
    Node で動かし、脚質の位置取りと人的要因の効き方を確認する。
-   使い方: node tools/sim_check.mjs [oi|kawasaki]                          */
+   使い方: node tools/sim_check.mjs [oi|kawasaki|funabashi|urawa]                          */
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
@@ -29,6 +29,8 @@ console.log(`実データ ${checked}/${DAYS[dayKey].length} レース`);
 
 /* 代表レースで人的要因の効きを比べる */
 const key = Object.keys(REAL).find(k => k.startsWith(dayKey) && REAL[k].length >= 10);
+/* 開催の谷間で実データが無い場は、サンプルの1レースしか無いので人的要因の比較は飛ばす（異常ではない） */
+if (!key) { console.log('実出走馬のあるレースが無い（次の開催まで出馬表なし）。人的要因の比較は省略'); process.exit(0); }
 const rr = DAYS[dayKey].find(x => x.r === Number(key.split('|')[1]));
 const race = { ...rr, horses: REAL[key].map(h => ({ ...h })) };
 const base = { baba: '良', weather: '曇', wind: 0, front: 0.45, out: 0.3, recent: 0.6, human: 0 };

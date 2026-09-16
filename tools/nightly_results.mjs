@@ -7,7 +7,7 @@
      → fetch_cards（今月）→ fetch_trend → build_trend → build_races → build_browse → embed_db → build_marks
      → build_top → embed_db → commit / push
 
-     NK_BT_TRACKS      … 対象の場（既定 大井,川崎）
+     NK_BT_TRACKS      … 対象の場（既定 大井,川崎,船橋,浦和）
      NK_REFRESH_NOPUSH … push しない（手元確認用）
    結果ページも印も、取り込んだ後の予想は作り直さない（記録済みの予想で精算する）。 */
 import fs from 'node:fs';
@@ -17,7 +17,7 @@ import { ROOT } from './lib/nk.mjs';
 
 const ymd = d => d.toLocaleDateString('sv-SE');
 const today = new Date(), yest = new Date(today); yest.setDate(yest.getDate() - 1);
-const env = { NK_BT_TRACKS: process.env.NK_BT_TRACKS || '大井,川崎', NK_BT_FROM: ymd(yest), NK_BT_TO: ymd(today) };
+const env = { NK_BT_TRACKS: process.env.NK_BT_TRACKS || '大井,川崎,船橋,浦和', NK_BT_FROM: ymd(yest), NK_BT_TO: ymd(today) };
 const stamp = () => new Date().toLocaleString('ja-JP', { hour12: false }).replace(/\//g, '-');
 
 const run = (script, extra = {}) => {
@@ -52,10 +52,9 @@ if (process.env.NK_REFRESH_NOPUSH) { console.error(`${stamp()} 取り込み完�
 const git = (args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 const TARGETS = ['index.html', 'race.html', 'top.html', 'data.html', 'marks.html', 'boat.html',
   'data/nankan/results.jsonl', 'data/nankan/payouts.jsonl', 'data/nankan/odds.jsonl',
-  'data/nankan/results.oi.json', 'data/nankan/results.kawasaki.json', 'data/nankan/top.json',
-  'data/nankan/entries.oi.json', 'data/nankan/entries.kawasaki.json', 'data/nankan/races.oi.json', 'data/nankan/races.kawasaki.json',
+  ...['oi', 'kawasaki', 'funabashi', 'urawa'].flatMap(k => [`data/nankan/results.${k}.json`, `data/nankan/entries.${k}.json`, `data/nankan/races.${k}.json`, `data/nankan/trend.${k}.json`, `data/nankan/meet.${k}.json`]), 'data/nankan/top.json',
   'data/nankan/marksrec.json', 'data/nankan/backtest.json',
-  'data/nankan/trend.oi.json', 'data/nankan/trend.kawasaki.json', 'data/nankan/meet.oi.json', 'data/nankan/meet.kawasaki.json', 'data/nankan/browse.json'];
+  'data/nankan/browse.json'];
 try {
   const branch = git(['rev-parse', '--abbrev-ref', 'HEAD']);
   if (branch !== 'main') { console.error(`${stamp()} 取り込み完了（${secs}秒）／ブランチが ${branch} なので push しません`); process.exit(0); }

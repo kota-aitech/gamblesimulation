@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, readJSON, writeJSON } from './lib/nk.mjs';
 
-const TRACKS = (process.env.NK_RACE_TRACKS || '大井:oi,川崎:kawasaki').split(',').map(s => s.split(':')[1]);
+const TRACKS = (process.env.NK_RACE_TRACKS || '大井:oi,川崎:kawasaki,船橋:funabashi,浦和:urawa').split(',').map(s => s.split(':')[1]);
 const PICK = fs.existsSync(path.join(ROOT, 'data/nankan/racepick.json')) ? readJSON('data/nankan/racepick.json') : null;
 const BT = fs.existsSync(path.join(ROOT, 'data/nankan/backtest.json')) ? readJSON('data/nankan/backtest.json') : null;
 const MDL = fs.existsSync(path.join(ROOT, 'data/nankan/model.json')) ? readJSON('data/nankan/model.json') : null;

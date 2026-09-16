@@ -15,7 +15,7 @@ import { loadModel, condOf } from './lib/model.mjs';
 import { makeFeaturizer, buildLapIndex, buildShikenIndex, buildFormIndex, FEATURES } from './lib/feat.mjs';
 import { betPlan, confOf } from './lib/bets.mjs';
 
-const TRACKS = (process.env.NK_RACE_TRACKS || '大井:oi,川崎:kawasaki').split(',').map(s => s.split(':')[1]);
+const TRACKS = (process.env.NK_RACE_TRACKS || '大井:oi,川崎:kawasaki,船橋:funabashi,浦和:urawa').split(',').map(s => s.split(':')[1]);
 const JA = { oi: '大井', kawasaki: '川崎', funabashi: '船橋', urawa: '浦和' };
 const N = Number(process.env.NK_MARK_TRIALS || 600);
 const FAST = !!process.env.NK_MARK_FAST;   // オッズだけ変わったときの再計算を省く

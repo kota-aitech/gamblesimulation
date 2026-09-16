@@ -8,7 +8,7 @@ import { makeDerivers } from './lib/horse.mjs';
 import { makeFeaturizer, buildLapIndex, buildShikenIndex, buildFormIndex, FEATURES } from './lib/feat.mjs';
 import { betPlan, confOf } from './lib/bets.mjs';
 
-const WANT = (process.env.NK_RACE_TRACKS || '大井:oi,川崎:kawasaki').split(',').map(s => s.split(':'));
+const WANT = (process.env.NK_RACE_TRACKS || '大井:oi,川崎:kawasaki,船橋:funabashi,浦和:urawa').split(',').map(s => s.split(':'));
 const NDAYS = Number(process.env.NK_RESULT_DAYS || 10);
 const TODAY = process.env.NK_TODAY || new Date().toLocaleDateString('sv-SE');
 const MAXPTS = Number(process.env.NK_BET_MAXPTS || 12);
