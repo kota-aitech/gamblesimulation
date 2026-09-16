@@ -17,30 +17,24 @@ FEATS.forEach((k, i) => { const j = M.meta.feats.indexOf(k); beta[i] = j >= 0 ? 
 const tau = M.ex.tau || [1, 1];
 
 console.error('データを読む…');
-const races = loadRaces({ base: DB.base });
-const tr = races.filter(r => r.date < SPLIT), te = races.filter(r => r.date >= SPLIT);
-console.error(`  学習 ${tr.length}R／検証 ${te.length}R`);
-
+let races = loadRaces({ base: DB.base });
 /* 表：P(2着コース | 1着コース)、P(3着コース | 1着コース)（学習データ、加算1で平滑化） */
 const T2 = Array.from({ length: 6 }, () => Array(6).fill(1)), T3 = Array.from({ length: 6 }, () => Array(6).fill(1));
-for (const r of tr) {
-  const c = i => r.boats[i].course || r.boats[i].lane;
-  const [w, s, t] = r.order;
-  T2[c(w) - 1][c(s) - 1]++; T3[c(w) - 1][c(t) - 1]++;
+/* メモリ（RAM 8GB）：レースごとに U と ctx だけ残して元のオブジェクトを捨てる */
+const trd = [], ted = [];
+for (let ri = 0; ri < races.length; ri++) {
+  const r = races[ri];
+  if (r.date < SPLIT) { const c = i => r.boats[i].course || r.boats[i].lane; const [w, s, t] = r.order; T2[c(w) - 1][c(s) - 1]++; T3[c(w) - 1][c(t) - 1]++; }
+  const X = raceFeatures(r, r.boats, DB, ST, { level: 'ex' });
+  (r.date < SPLIT ? trd : ted).push({ U: utilities(X, beta), ctx: X.ctx, order: r.order });
+  races[ri] = null;
 }
+races = null; if (globalThis.gc) globalThis.gc();
+const tr = trd, te = ted;
+console.error(`  学習 ${tr.length}R／検証 ${te.length}R`);
 const norm = T => T.map(row => { const s = row.reduce((a, b) => a + b, 0); return row.map(v => v / s); });
 const P2 = norm(T2), P3 = norm(T3);
 console.error('  1コースが勝ったときの2着コース: ' + P2[0].map((v, i) => `${i + 1}c ${(v * 100).toFixed(0)}%`).join(' '));
-
-/* 学習用の行列：レースごとに U と ctx を作り、2着（5択）・3着（4択）の標本にする */
-function pack(rs) {
-  return rs.map(r => {
-    const X = raceFeatures(r, r.boats, DB, ST, { level: 'ex' });
-    const U = utilities(X, beta);
-    return { U, ctx: X.ctx, order: r.order };
-  });
-}
-const trd = pack(tr), ted = pack(te);
 const dot = (b, x) => { let s = 0; for (let k = 0; k < b.length; k++) s += b[k] * x[k]; return s; };
 function fitStage(rows, nf, label) {
   /* rows: [{X:[cands][nf], y}] */
@@ -88,6 +82,6 @@ const base = evalAll(ted, false), st = evalAll(ted, true);
 const fmt = o => `2着logloss ${o.ll2}／3着logloss ${o.ll3}／2連単本線 ${(o.ex2 * 100).toFixed(1)}%（上位3点 ${(o.ex2top3 * 100).toFixed(1)}%）／3連単本線 ${(o.ex3 * 100).toFixed(1)}%・上位3点 ${(o.top3 * 100).toFixed(1)}%・5点 ${(o.top5 * 100).toFixed(1)}%・8点 ${(o.top8 * 100).toFixed(1)}%`;
 console.error(`  PL（温度つき）: ${fmt(base)}`);
 console.error(`  段階モデル    : ${fmt(st)}`);
-stage.test = { pl: base, staged: st, split: SPLIT, train: tr.length };
+stage.test = { pl: base, staged: st, split: SPLIT, train: trd.length };
 M.stage = stage;
 writeJSON(process.env.BT_STAGE_OUT || MP, M);

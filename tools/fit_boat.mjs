@@ -17,7 +17,7 @@ const SPLIT = process.env.BT_FIT_SPLIT || '20260601';
    （β を変えずに較正だけ足すとき用。全体で数分） */
 const REUSE = process.env.BT_FIT_BETA ? readJSON(process.env.BT_FIT_BETA) : null;
 const EPOCH = Number(process.env.BT_FIT_EPOCH || 60);
-const L2 = Number(process.env.BT_FIT_L2 || 2e-4);
+const L2 = Number(process.env.BT_FIT_L2 || 2e-1);          // 2026-09-16 のスイープで 2e-1 が最良（2e-4 は過学習）
 const LR = Number(process.env.BT_FIT_LR || 0.05);
 const DB = readJSON(process.env.BT_FIT_DB || 'data/boat/index.json');
 /* 切り分け用。BT_FIT_DROP に特徴量名をカンマ区切りで書くと、その列を 0 にして当てはめる。
@@ -26,7 +26,7 @@ const DROP = new Set((process.env.BT_FIT_DROP || '').split(',').map(s => s.trim(
 const LEVELS = (process.env.BT_FIT_LEVELS || 'pre,ex').split(',').map(s => s.trim()).filter(Boolean);
 /* 早期終了：学習データの末尾 ES 割（日付順）を切り出して、5エポックごとの logloss が最良の β を採る。
    「10エポック時点のほうが収束後より良い」ことがあったので、学習に寄りすぎるのを止める。BT_FIT_ES=0 で無効 */
-const ES = process.env.BT_FIT_ES === '0' ? 0 : Number(process.env.BT_FIT_ES || 0.15);
+const ES = Number(process.env.BT_FIT_ES || 0);              // 既定は無効（2026-09-16 の比較で逆効果だった）
 const ST = readJSON('data/boat/stadium.json');
 
 /* ---- レースを組み立てる（lib/bload.mjs が K と B を突き合わせ、
@@ -52,16 +52,18 @@ function pack(rs, level) {
 }
 /* レースを1つずつ全レベルの行列にしてから、そのレースのオブジェクトを捨てる（ピークを抑える） */
 const PACKED = Object.fromEntries(LEVELS.map(l => [l, { tr: [], te: [] }]));
-for (const r of races) {
+for (let ri = 0; ri < races.length; ri++) {
+  const r = races[ri];
   const dst = r.date < SPLIT ? 'tr' : 'te';
   for (const level of LEVELS) {
     const X = raceFeatures(r, r.boats, DB, ST, { level });
     if (DROPI.length) for (const x of X) for (const i of DROPI) x[i] = 0;
     PACKED[level][dst].push({ X: X.map(x => Float32Array.from(x)), order: r.order });
   }
-  r.boats = null;
+  races[ri] = null;                                   // K の着順・払戻・艇のオブジェクトをここで手放す
 }
 races = tr = te = null;
+if (globalThis.gc) globalThis.gc();
 console.error(`  行列を作った（${LEVELS.join('/')}）`);
 /* 1〜3着の並びの対数尤度と勾配 */
 function gradOne(X, order, beta, g) {
