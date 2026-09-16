@@ -20,8 +20,8 @@ export const tri3 = (p, a, b, c) => [[a,b,c],[a,c,b],[b,a,c],[b,c,a],[c,a,b],[c,
 const combos2 = n => { const o = []; for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) o.push([i, j]); return o; };
 const combos3 = n => { const o = []; for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) for (let k = j + 1; k < n; k++) o.push([i, j, k]); return o; };
 
-/* p: モデルの勝率ベクトル, pm: 市場の勝率ベクトル, nos: 馬番 */
-export function betPlan(p, pm, nos, maxPts = 12) {
+/* p: モデルの勝率ベクトル, pm: 市場の勝率ベクトル, nos: 馬番, combos: lib/nkstage.mjs の raceCombos（段階モデルの組の確率。無ければ Harville） */
+export function betPlan(p, pm, nos, maxPts = 12, combos = null) {
   if (!pm) return null;
   const out = {};
   for (const [key, need] of [['umaren', 2], ['sanpuku', 3]]) {
@@ -29,7 +29,8 @@ export function betPlan(p, pm, nos, maxPts = 12) {
     const cbs = need === 2 ? combos2(p.length) : combos3(p.length);
     const list = [];
     for (const cb of cbs) {
-      const q = need === 2 ? pair2(p, cb[0], cb[1]) : tri3(p, cb[0], cb[1], cb[2]);
+      const ck = cb.slice().sort((a, b) => a - b).join('-');
+      const q = combos ? ((need === 2 ? combos.umaren : combos.sanpuku).get(ck) || 0) : (need === 2 ? pair2(p, cb[0], cb[1]) : tri3(p, cb[0], cb[1], cb[2]));
       const qm = need === 2 ? pair2(pm, cb[0], cb[1]) : tri3(pm, cb[0], cb[1], cb[2]);
       if (qm <= 0 || q < lim.minQ) continue;
       const odds = (1 - TAKEOUT) / qm;

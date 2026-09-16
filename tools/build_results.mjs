@@ -7,6 +7,7 @@ import { ROOT, readJSON, writeJSON } from './lib/nk.mjs';
 import { makeDerivers } from './lib/horse.mjs';
 import { makeFeaturizer, buildLapIndex, buildShikenIndex, buildFormIndex, FEATURES } from './lib/feat.mjs';
 import { betPlan, confOf } from './lib/bets.mjs';
+import { predictRace } from './lib/nkstage.mjs';
 
 const WANT = (process.env.NK_RACE_TRACKS || '大井:oi,川崎:kawasaki,船橋:funabashi,浦和:urawa').split(',').map(s => s.split(':'));
 const NDAYS = Number(process.env.NK_RESULT_DAYS || 10);
@@ -70,24 +71,14 @@ for (const [jaName, key] of WANT) {
       if (!f) continue;
 
       /* 当時と同じやり方で予想を再現する */
-      let p = null;
+      let p = null, marketP = null, plan = null, grade = null, ev = null, combos = null;
       if (MDL) {
-        const pl = softmax(f.rows.map(h => FEATURES.reduce((s, k, i) => s + MDL.beta[i] * ((h.x[k] - MDL.mean[k]) / MDL.sd[k]), 0)));
-        p = live.map(h => { const i = f.rows.findIndex(x => x.no === h.no); return i >= 0 ? pl[i] : null; });
-        if (p.some(x => x == null)) p = null;
+        const pr = predictRace(MDL, f, od ? od.tan : null, live.map(h => h.no));
+        if (pr && pr.nos.length === live.length && live.every((h, i) => pr.nos[i] === h.no)) { p = pr.p; combos = pr.combos; marketP = pr.pm; }
       }
-      let marketP = null, plan = null, grade = null, ev = null;
-      if (p && od) {
-        const o = live.map(h => (od.tan[h.no] || {}).odds);
-        if (o.every(x => x > 0)) {
-          const inv = o.map(x => 1 / x), z = inv.reduce((a, b) => a + b, 0);
-          marketP = inv.map(x => x / z);
-          if (MDL.beta2) {
-            const u = p.map((x, i) => MDL.beta2[0] * Math.log(Math.max(x, 1e-9)) + MDL.beta2[1] * Math.log(marketP[i]));
-            const mx = Math.max(...u), ex = u.map(x => Math.exp(x - mx)), sz = ex.reduce((a, b) => a + b, 0);
-            p = ex.map(x => x / sz);
-          }
-          plan = betPlan(p, marketP, live.map(h => h.no), MAXPTS);
+      if (p && marketP) {
+        {
+          plan = betPlan(p, marketP, live.map(h => h.no), MAXPTS, combos);
           ev = { umaren: plan.umaren.best, sanpuku: plan.sanpuku.best };
           grade = gradeOf(plan.umaren.best);
         }

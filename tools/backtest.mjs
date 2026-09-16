@@ -19,6 +19,7 @@ import path from 'node:path';
 import { ROOT, readJSON, writeJSON } from './lib/nk.mjs';
 import { makeFeaturizer, buildLapIndex, buildShikenIndex, buildFormIndex, FEATURES } from './lib/feat.mjs';
 import { loadModel, condOf } from './lib/model.mjs';
+import { predictRace } from './lib/nkstage.mjs';
 
 const TRACKS = (process.env.NK_BT_TRACKS || '大井').split(',');
 const KEY = { '大井': 'oi', '川崎': 'kawasaki', '船橋': 'funabashi', '浦和': 'urawa' };
@@ -29,7 +30,7 @@ const SIZES = (process.env.NK_BT_SIZES || '3,4,5,6').split(',').map(Number);
 const EDGE = Number(process.env.NK_BT_EDGE || 1.3);   // 市場の何倍の確率で買うか
 const TAKEOUT = Number(process.env.NK_BT_TAKEOUT || 0.25);
 const UNIT = 100;
-const WANT = (process.env.NK_BT_MODELS || 'sim,fund,blend,pub').split(',');
+const WANT = (process.env.NK_BT_MODELS || 'sim,fund,blend,joint,pub').split(',');
 
 const DB = readJSON(process.env.NK_BT_DB || 'data/nankan/index.train.json');
 const MODEL = fs.existsSync(path.join(ROOT, 'data/nankan/model.json')) ? readJSON('data/nankan/model.json') : null;
@@ -155,6 +156,10 @@ for (const track of TRACKS) {
     if (WANT.includes('fund')) P.fund = pf;
     if (WANT.includes('pub')) P.pub = pp;
     if (WANT.includes('blend')) P.blend = blendP(pf, pp);
+    /* joint（市場つき）と、段階モデルの組の確率（期待値ベースの買い目で使う） */
+    const PR = MODEL ? predictRace(MODEL, f, od ? od.tan : null) : null;
+    if (WANT.includes('joint') && PR && PR.src === 'joint') P.joint = PR.p;
+    const CB = PR ? PR.combos : null;
 
     const dayAcc = (byDay[c.date] ||= { date: c.date, races: 0, model: {}, pop: {} });
     dayAcc.races++;
@@ -180,7 +185,8 @@ for (const track of TRACKS) {
           const combos = need === 2 ? pairs(nos.map((_, i) => i)) : triples(nos.map((_, i) => i));
           const buy = new Set();
           for (const cb of combos) {
-            const q = need === 2 ? permute2(p, cb[0], cb[1]) : permute3(p, cb[0], cb[1], cb[2]);
+            /* 段階モデルの組の確率は joint（＝predictRace の勝率）のときだけ。他のモデルは自分の勝率から Harville */
+            const q = (CB && m === 'joint') ? ((need === 2 ? CB.umaren : CB.sanpuku).get(sortKey(cb)) || 0) : (need === 2 ? permute2(p, cb[0], cb[1]) : permute3(p, cb[0], cb[1], cb[2]));
             const qm = need === 2 ? permute2(pp, cb[0], cb[1]) : permute3(pp, cb[0], cb[1], cb[2]);
             if (qm > 0 && q / qm >= EDGE && q * (1 - TAKEOUT) / qm >= 1) buy.add(sortKey(cb.map(i => nos[i])));
           }
@@ -191,7 +197,7 @@ for (const track of TRACKS) {
         }
       }
     }
-    const best = P.blend || P.fund || P.sim;
+    const best = P.joint || P.blend || P.fund || P.sim;
     if (best) detail.push({ date: c.date, R: c.R, dist: c.dist, n: nos.length, baba: res ? res.baba : '',
       pick: best.map((x, i) => [x, i]).sort((a, b) => b[0] - a[0]).slice(0, 6).map(([, i]) => nos[i]),
       popPick: pp ? pp.map((x, i) => [x, i]).sort((a, b) => b[0] - a[0]).slice(0, 6).map(([, i]) => nos[i]) : [],
@@ -204,7 +210,7 @@ for (const track of TRACKS) {
     races: detail.length, detail };
 
   console.error(`\n=== ${track}  ${FROM}〜${TO}  ${detail.length}レース（1点${UNIT}円）`);
-  const LB = { sim: 'シミュ', fund: 'ロジット', blend: '合成', pub: '人気' };
+  const LB = { sim: 'シミュ', fund: 'ロジット', blend: '合成', joint: 'joint', pub: '人気' };
   for (const [t, ja] of TYPES) {
     console.error(`-- ${ja}`);
     for (const k of SIZES) {

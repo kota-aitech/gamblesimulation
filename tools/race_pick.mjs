@@ -13,6 +13,7 @@ import path from 'node:path';
 import { ROOT, readJSON, writeJSON } from './lib/nk.mjs';
 import { makeFeaturizer, buildLapIndex, buildShikenIndex, buildFormIndex, FEATURES } from './lib/feat.mjs';
 import { betPlan, confOf } from './lib/bets.mjs';
+import { predictRace } from './lib/nkstage.mjs';
 
 const TRACKS = (process.env.NK_BT_TRACKS || '大井,川崎').split(',');
 const FROM = process.env.NK_BT_FROM || '2026-06-01';
@@ -54,16 +55,15 @@ for (const c of cards) {
   const nos = f.rows.map(h => h.no);
   const o = nos.map(n => (od.tan[n] || {}).odds);
   if (!o.every(x => x > 0)) continue;
-  const inv = o.map(x => 1 / x), z = inv.reduce((a, b) => a + b, 0);
-  const pm = inv.map(x => x / z);
-  const pf = softmax(f.rows.map(h => FEATURES.reduce((s, k, i) => s + MODEL.beta[i] * ((h.x[k] - MODEL.mean[k]) / MODEL.sd[k]), 0)));
-  const p = MODEL.beta2 ? softmax(pf.map((x, i) => MODEL.beta2[0] * Math.log(x) + MODEL.beta2[1] * Math.log(pm[i]))) : pf;
+  const pr = predictRace(MODEL, f, od.tan);
+  if (!pr || !pr.pm) continue;
+  const pm = pr.pm, p = pr.p, combos = pr.combos;
 
   const rank = p.map((x, i) => [x, i]).sort((a, b) => b[0] - a[0]).map(([, i]) => i);
   const sel = rank.slice(0, BOX).map(i => nos[i]);
 
   /* 期待値：現実的に買える範囲に絞ってから最大値を取る（lib/bets.mjs） */
-  const plan = betPlan(p, pm, nos, 999);
+  const plan = betPlan(p, pm, nos, 999, combos);
   const ev = { umaren: { best: plan.umaren.best, n: plan.umaren.nPos, buy: plan.umaren.buy.map(b => b.c.join('-')) },
                sanpuku: { best: plan.sanpuku.best, n: plan.sanpuku.nPos, buy: plan.sanpuku.buy.map(b => b.c.join('-')) } };
 

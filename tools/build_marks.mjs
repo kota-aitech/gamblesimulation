@@ -14,6 +14,7 @@ import { inject } from './lib/embed.mjs';
 import { loadModel, condOf } from './lib/model.mjs';
 import { makeFeaturizer, buildLapIndex, buildShikenIndex, buildFormIndex, FEATURES } from './lib/feat.mjs';
 import { betPlan, confOf } from './lib/bets.mjs';
+import { predictRace } from './lib/nkstage.mjs';
 
 const TRACKS = (process.env.NK_RACE_TRACKS || '大井:oi,川崎:kawasaki,船橋:funabashi,浦和:urawa').split(',').map(s => s.split(':')[1]);
 const JA = { oi: '大井', kawasaki: '川崎', funabashi: '船橋', urawa: '浦和' };
@@ -119,43 +120,26 @@ for (const key of TRACKS) {
         : M.monteCarlo({ dist: r.dist, horses: live.map(h => ({ ...h })) }, cond, N);
       if (reusable) reused++;
 
-      /* 予測：ロジット */
-      let p = null;
+      /* 予測：ロジット（lib/nkstage.mjs の predictRace。オッズがあれば joint → 第2段、無ければ基礎。2着・3着は段階モデル） */
+      let p = null, marketP = null, combos = null;
       const card = cards.get(r.raceId);
+      const od = oddsMap.get(r.raceId);
       if (MDL && card) {
         const f = featurize(card, cond.baba, null, LAP);
-        if (f) {
-          const pl = logitP(f);
-          p = live.map(h => { const i = f.rows.findIndex(x => x.no === h.no); return i >= 0 ? pl[i] : null; });
-          if (p.some(x => x == null)) p = null;
+        const pr = f ? predictRace(MDL, f, od ? od.tan : null, live.map(h => h.no)) : null;
+        if (pr && pr.nos.length === live.length && live.every((h, i) => pr.nos[i] === h.no)) {
+          p = pr.p; combos = pr.combos;
+          if (pr.pm) { marketP = pr.pm; live.forEach((h, i) => { h.pubOdds = od.tan[h.no].odds; h.pFund = r3(pr.pFund[i]); }); r.oddsSrc = od.src; r.pSrc = pr.src; }
         }
       }
       if (!p) { p = mc.win.slice(); noModel++; }
-
-      /* 単勝オッズがあれば第2段で合成する（検証では人気と互角まで来る） */
-      let blended = null, marketP = null;
-      const od = oddsMap.get(r.raceId);
-      if (MDL && MDL.beta2 && od) {
-        const o = live.map(h => (od.tan[h.no] || {}).odds);
-        if (o.every(x => x > 0)) {
-          const inv = o.map(x => 1 / x), z = inv.reduce((a, b) => a + b, 0);
-          marketP = inv.map(x => x / z);
-          const pp = marketP;
-          const u = p.map((x, i) => MDL.beta2[0] * Math.log(Math.max(x, 1e-9)) + MDL.beta2[1] * Math.log(pp[i]));
-          const mx = Math.max(...u), ex = u.map(x => Math.exp(x - mx)), sz = ex.reduce((a, b) => a + b, 0);
-          blended = ex.map(x => x / sz);
-          live.forEach((h, i) => { h.pubOdds = o[i]; h.pFund = r3(p[i]); });
-          r.oddsSrc = od.src;
-          p = blended;
-        }
-      }
-      const t3 = top3Of(p);
+      const t3 = combos ? combos.top3 : top3Of(p);
 
       /* 自信度・期待値・おすすめ買い目 */
       r.conf = r3(confOf(p));
       r.pTop = r3(Math.max(...p));
       if (marketP) {
-        const plan = betPlan(p, marketP, live.map(h => h.no), MAXPTS);
+        const plan = betPlan(p, marketP, live.map(h => h.no), MAXPTS, combos);
         r.ev = { umaren: plan.umaren.best, sanpuku: plan.sanpuku.best };
         r.nPos = { umaren: plan.umaren.nPos, sanpuku: plan.sanpuku.nPos };
         r.bets = { umaren: plan.umaren.buy, sanpuku: plan.sanpuku.buy };
