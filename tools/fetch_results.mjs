@@ -18,6 +18,10 @@ const OUT = path.join(ROOT, 'data', 'nankan', 'results.jsonl');
 const TRACKS = (process.env.NK_BT_TRACKS || '大井,川崎,船橋,浦和').split(',');
 const FROM = process.env.NK_BT_FROM || '2000-01-01';
 const TO = process.env.NK_BT_TO || new Date().toISOString().slice(0, 10);
+/* 開催中に少しずつ取るとき：発走から N 分たっていないレースは飛ばす（結果ページが空のうちは叩かない）。refresh.mjs が使う */
+const AFTER = process.env.NK_RES_AFTER_POST ? Number(process.env.NK_RES_AFTER_POST) : null;
+const TODAY = new Date().toLocaleDateString('sv-SE');
+const notYet = r => { if (AFTER == null || r.date !== TODAY || !r.time) return false; const [h, m] = r.time.split(':').map(Number); const d = new Date(); d.setHours(h, m + AFTER, 0, 0); return Date.now() < d.getTime(); };
 
 function parseResult(html) {
   const flat = text(html.replace(/<script[\s\S]*?<\/script>/g, '').replace(/<[^>]+>/g, '|'))
@@ -57,7 +61,7 @@ for (const line of fs.readFileSync(path.join(ROOT, 'data/nankan/cards.jsonl'), '
   if (!line) continue;
   const c = JSON.parse(line);
   if (!TRACKS.includes(c.track) || c.date < FROM || c.date > TO) continue;
-  races.push({ raceId: c.raceId, date: c.date, track: c.track, R: c.R });
+  races.push({ raceId: c.raceId, date: c.date, track: c.track, R: c.R, time: c.time || null });
 }
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 const done = new Set();
@@ -65,12 +69,13 @@ if (fs.existsSync(OUT)) for (const l of fs.readFileSync(OUT, 'utf8').split('\n')
 
 let added = 0, day = '';
 for (const r of races.sort((a, b) => a.raceId.localeCompare(b.raceId))) {
-  if (done.has(r.raceId)) continue;
+  if (done.has(r.raceId) || notYet(r)) continue;
   let res;
   try { res = parseResult(await get(`${BASE}/result/${r.raceId}.do`, { ttlDays: freshTtl(r.date) })); }
   catch (e) { console.error(`  ! ${r.raceId} ${e.message}`); continue; }
   if (!res.order.length) { console.error(`  - ${r.raceId} 着順なし（未開催？）`); continue; }
-  fs.appendFileSync(OUT, JSON.stringify({ ...r, ...res }) + '\n');
+  const { time: _t, ...rec } = r;
+  fs.appendFileSync(OUT, JSON.stringify({ ...rec, ...res }) + '\n');
   done.add(r.raceId); added++;
   if (day !== r.date) { day = r.date; console.error(`${r.date} ${r.track} …`); }
 }

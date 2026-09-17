@@ -18,7 +18,26 @@ const watch = ['odds_pre.json', 'odds_live.jsonl'].map(f => path.join(ROOT, 'dat
 const sig = watch.map(f => { try { const s = fs.statSync(f); return `${f}:${s.mtimeMs}:${s.size}`; } catch { return f + ':-'; } }).join('|');
 let prev = '';
 try { prev = fs.readFileSync(STAMP, 'utf8'); } catch {}
-if (sig === prev && !process.env.NK_REFRESH_FORCE) { process.exit(0); }
+/* 開催中の結果：発走10分後から、終わったレースの結果・払戻を取る（1レース1回。8分おき）。取れたら results.<track>.json を作り直して
+   「開催の結果」と日別の成績を日中に更新する。夜の nightly_results と同じ取得スクリプトなので二重にはならない（取得済みは飛ばす） */
+const RSTAMP = path.join(ROOT, 'data', 'nankan', '.results-stamp');
+let rAge = Infinity;
+try { rAge = (Date.now() - fs.statSync(RSTAMP).mtimeMs) / 60000; } catch {}
+let resultsChanged = false;
+if (rAge > 8 || process.env.NK_REFRESH_FORCE) {
+  const today = new Date().toLocaleDateString('sv-SE');
+  const before = (() => { try { return fs.statSync(path.join(ROOT, 'data/nankan/results.jsonl')).size; } catch { return 0; } })();
+  const envR = { NK_BT_FROM: today, NK_BT_TO: today, NK_RES_AFTER_POST: '10' };
+  run2('fetch_results.mjs', envR); run2('fetch_payouts.mjs', envR);
+  fs.writeFileSync(RSTAMP, String(Date.now()));
+  const after = (() => { try { return fs.statSync(path.join(ROOT, 'data/nankan/results.jsonl')).size; } catch { return 0; } })();
+  if (after !== before) { resultsChanged = true; run2('build_results.mjs'); }
+}
+if (sig === prev && !resultsChanged && !process.env.NK_REFRESH_FORCE) { process.exit(0); }
+function run2(script, env) {
+  try { execFileSync(process.execPath, [path.join(ROOT, 'tools', script)], { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'], env: { ...process.env, ...env } }); return true; }
+  catch (e) { console.error(`! ${script} 失敗: ${String(e.stderr || e.message).split('\n').slice(-3).join(' ')}`); return false; }
+}
 
 const run = (script, env) => {
   try {
@@ -48,7 +67,8 @@ if (process.env.NK_REFRESH_NOPUSH) {
 }
 /* 対象は生成物のみ。手で編集中のコードや文書は絶対に巻き込まない */
 const TARGETS = ['index.html', 'race.html', 'top.html', 'data.html', 'marks.html',
-  ...['oi', 'kawasaki', 'funabashi', 'urawa'].flatMap(k => [`data/nankan/entries.${k}.json`, `data/nankan/races.${k}.json`]),
+  ...['oi', 'kawasaki', 'funabashi', 'urawa'].flatMap(k => [`data/nankan/entries.${k}.json`, `data/nankan/races.${k}.json`, `data/nankan/results.${k}.json`]),
+  'data/nankan/results.jsonl', 'data/nankan/payouts.jsonl',
   'data/nankan/top.json', 'data/nankan/odds_pre.json', 'data/nankan/odds_live.jsonl'];
 try {
   const branch = git(['rev-parse', '--abbrev-ref', 'HEAD']);
