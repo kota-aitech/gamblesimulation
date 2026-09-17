@@ -1,4 +1,4 @@
-/* data/nankan/races.*.json を index.html の NKDB マーカーの間に埋め込む。
+/* data/nankan/races.*.json を sim.html の NKDB マーカーの間に埋め込む。
    1ファイル・依存ゼロを保つための最後の工程。実行後は node --check で構文確認すること。 */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -55,7 +55,7 @@ out.meta = {
   counts: { jockey: Object.keys(idx.jockey).length, trainer: Object.keys(idx.trainer).length, combo: Object.keys(idx.combo).length, owner: Object.keys(idx.owner).length },
 };
 
-inject('index.html', 'NKDB', 'NKDATA', out);
+inject('sim.html', 'NKDB', 'NKDATA', out);
 
 /* 出馬表ページ（race.html）: 前5走まで入った詳しい方 */
 try {

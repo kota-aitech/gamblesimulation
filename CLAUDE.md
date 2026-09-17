@@ -36,13 +36,20 @@
 
 ---
 
+## 配信先とファイル名（2026-09-17 に変更）
+- **3D 予想ページは `sim.html`**（旧 `index.html`）。`index.html` は入口の振り分けだけ（`/` → `top.html`、`?track=` 付きは `sim.html`）。
+  この文書で「index.html」と書いてある箇所（NKDB の埋め込み、`lib/model.mjs` が読む本体、sim_check / ui_check）は **すべて `sim.html` のこと**。
+- 配信は **GitHub Pages**（main ブランチ直下、`.nojekyll` あり）。Render は 9/16 に「パイプライン分数の上限」でデプロイが止まったため移行。
+  Pages はビルド分数の制限が無い（1時間10ビルドまで）。push は `tools/publish.mjs` が15分おきにまとめる（1日最大96回）。
+  `render.yaml` は残してあるが使っていない。
+
 ## ファイル構成
 ```
 top.html                **トップ**（サイトの `/` はこれに rewrite）。競馬／ボートの切替タブを持ち、
                         競馬面＝おすすめレース（本命BOX・段位・期待値・自信度）、ボート面＝本命の強い順・締切順・場ごと。
                         選んだ競技は localStorage と `?sport=` に残す ※新聞配色
 marks.html              印別の単勝・複勝回収率 ※新聞配色
-index.html              予想シミュレーション＋3D（?track=oi / ?track=kawasaki）※ダーク配色
+sim.html                予想シミュレーション＋3D（?track=oi / kawasaki / funabashi / urawa）※ダーク配色。index.html は入口の振り分け
 race.html               出馬表（競馬新聞の馬柱。横型／縦型を切替。?track=…&day=…&r=…）※新聞配色
 data.html               データブラウザ（騎手・調教師・コンビ・馬主・種牡馬の一覧）※新聞配色
 boat.html               ボートレース版（全24場・今日と明日・条件付きロジット。下の専用節を参照）※ダーク配色

@@ -1,4 +1,4 @@
-/* cards.jsonl + index.json → index.html に埋め込む番組・出走馬データ
+/* cards.jsonl + index.json → sim.html に埋め込む番組・出走馬データ
    data/nankan/races.<track>.json  { days:{...}, real:{...} }
    脚質/能力/上がり/距離/道悪 は CLAUDE.md の判定ルールを実装したもの。
    さらに 騎手・調教師・馬主・コンビ指数・勝負掛け指数 を各馬に付ける。      */
@@ -62,7 +62,7 @@ for (const [jaName, key] of WANT) {
       full[`${dk}|${c.R}`] = hs.map(({ memo, ...h }) => ({ ...h, ...h._full, _full: undefined }));
       real[`${dk}|${c.R}`] = hs.map(({ _full, note, memo, brief, ...rest }) => ({
         ...rest,
-        // index.html の右パネル用は【近走】と【人】だけの短い版
+        // sim.html の右パネル用は【近走】と【人】だけの短い版
         memo: (note || []).filter(([k]) => k === '近走' || k === '人').map(([k, v]) => `【${k}】${v}`).join(''),
       }));
     }

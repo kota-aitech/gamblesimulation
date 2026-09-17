@@ -1,4 +1,4 @@
-/* ブラウザなしで index.html の <script> を丸ごと実行し、init() が最後まで通るかを見る。
+/* ブラウザなしで sim.html の <script> を丸ごと実行し、init() が最後まで通るかを見る。
    最小の DOM/Canvas スタブを当てて、描画・予想パネル・人的要因パネルの
    レンダリング関数が例外を出さないこと、主要な要素に中身が入ることを確認する。
    使い方: node tools/ui_check.mjs [oi|kawasaki|funabashi|urawa]                              */
@@ -8,7 +8,7 @@ import vm from 'node:vm';
 import { ROOT } from './lib/nk.mjs';
 
 const track = process.argv[2] || 'oi';
-const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+const html = fs.readFileSync(path.join(ROOT, 'sim.html'), 'utf8');
 const js = html.slice(html.lastIndexOf('<script>') + 8, html.lastIndexOf('</script>'));
 const ids = [...html.matchAll(/id="([^"]+)"/g)].map(m => m[1]);
 

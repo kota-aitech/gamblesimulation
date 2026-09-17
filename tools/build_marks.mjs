@@ -1,12 +1,12 @@
-/* 出馬表ページ（race.html）と予想ページ（index.html）に載せる予想印を作る。
+/* 出馬表ページ（race.html）と予想ページ（sim.html）に載せる予想印を作る。
 
    印と勝率は**条件付きロジット**（fit_model.mjs の係数）で出す。
    3Dシミュレータは順位予測に向かないことが検証で分かったので、
    予測はロジット、シミュレータは「この馬場条件だとどう走るか」を見る道具、と役割を分けている。
    3角・4角の平均位置とペースはシミュレータの出力をそのまま使う（そこは物理のほうが素直）。
 
-   ※ embed_db.mjs のあとに実行すること（index.html の傾向データを読むため）。
-   出力: entries.<track>.json を更新し、race.html と index.html に埋め直す       */
+   ※ embed_db.mjs のあとに実行すること（sim.html の傾向データを読むため）。
+   出力: entries.<track>.json を更新し、race.html と sim.html に埋め直す       */
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, readJSON, writeJSON } from './lib/nk.mjs';
@@ -185,7 +185,7 @@ for (const key of TRACKS) {
 Object.assign(ent, raceExtras(TRACKS));
 inject('race.html', 'NKRACE', 'NKR', ent);
 
-/* index.html にも「本紙予想」の確率を渡す（races.*.json 側にも同じ値を入れる） */
+/* sim.html にも「本紙予想」の確率を渡す（races.*.json 側にも同じ値を入れる） */
 const light = {};
 for (const key of TRACKS) {
   const rp = `data/nankan/races.${key}.json`;
@@ -201,4 +201,4 @@ for (const key of TRACKS) {
   writeJSON(rp, R);
   light[key] = { days: R.days, real: R.real };
 }
-console.error('races.*.json にも本紙予想を書き戻した（index.html は embed_db で反映）');
+console.error('races.*.json にも本紙予想を書き戻した（sim.html は embed_db で反映）');

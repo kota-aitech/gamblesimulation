@@ -50,7 +50,7 @@ if (process.env.NK_REFRESH_NOPUSH) { console.error(`${stamp()} 取り込み完�
 
 /* --- 公開（生成物と取り込んだ生データだけを commit / push）--- */
 const git = (args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
-const TARGETS = ['index.html', 'race.html', 'top.html', 'data.html', 'marks.html', 'boat.html',
+const TARGETS = ['sim.html', 'race.html', 'top.html', 'data.html', 'marks.html', 'boat.html',
   'data/nankan/results.jsonl', 'data/nankan/payouts.jsonl', 'data/nankan/odds.jsonl',
   ...['oi', 'kawasaki', 'funabashi', 'urawa'].flatMap(k => [`data/nankan/results.${k}.json`, `data/nankan/entries.${k}.json`, `data/nankan/races.${k}.json`, `data/nankan/trend.${k}.json`, `data/nankan/meet.${k}.json`]), 'data/nankan/top.json',
   'data/nankan/marksrec.json', 'data/nankan/backtest.json',

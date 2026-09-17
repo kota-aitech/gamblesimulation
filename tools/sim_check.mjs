@@ -1,4 +1,4 @@
-/* index.html のセクション0〜5（データとシミュレーション本体）だけを切り出して
+/* sim.html のセクション0〜5（データとシミュレーション本体）だけを切り出して
    Node で動かし、脚質の位置取りと人的要因の効き方を確認する。
    使い方: node tools/sim_check.mjs [oi|kawasaki|funabashi|urawa]                          */
 import fs from 'node:fs';
@@ -7,7 +7,7 @@ import vm from 'node:vm';
 import { ROOT } from './lib/nk.mjs';
 
 const track = process.argv[2] || 'oi';
-const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+const html = fs.readFileSync(path.join(ROOT, 'sim.html'), 'utf8');
 const js = html.slice(html.lastIndexOf('<script>') + 8, html.lastIndexOf('</script>'));
 const cut = js.indexOf('   6. 3Dシーン');
 const src = js.slice(0, js.lastIndexOf('/* ====', cut));

@@ -98,7 +98,7 @@ export function makeDerivers(DB, SK, FM) {
   
   /* 寸評。読んで分かる日本語にする。
      note は [見出し, 本文] の配列で、race.html が見出しつきで組む。
-     memo はそれを1行に連ねたもの（index.html 用）。                          */
+     memo はそれを1行に連ねたもの（sim.html 用）。                          */
   function chaku(rs) {
     const c = [0, 0, 0, 0];
     rs.forEach(p => c[Math.min(p.pos, 4) - 1]++);

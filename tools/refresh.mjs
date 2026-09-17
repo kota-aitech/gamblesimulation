@@ -66,7 +66,7 @@ if (process.env.NK_REFRESH_NOPUSH) {
   process.exit(0);
 }
 /* 対象は生成物のみ。手で編集中のコードや文書は絶対に巻き込まない */
-const TARGETS = ['index.html', 'race.html', 'top.html', 'data.html', 'marks.html',
+const TARGETS = ['sim.html', 'race.html', 'top.html', 'data.html', 'marks.html',
   ...['oi', 'kawasaki', 'funabashi', 'urawa'].flatMap(k => [`data/nankan/entries.${k}.json`, `data/nankan/races.${k}.json`, `data/nankan/results.${k}.json`]),
   'data/nankan/results.jsonl', 'data/nankan/payouts.jsonl',
   'data/nankan/top.json', 'data/nankan/odds_pre.json', 'data/nankan/odds_live.jsonl'];
