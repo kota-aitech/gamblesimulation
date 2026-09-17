@@ -600,6 +600,11 @@ HTML のオッズページ（100KB）は使わない。発売前は `0.0` が並
 レース丸ごと「オッズなし」に落ちていた**。`build_marks` / `build_results` で取消扱いにし、
 頭数からも引く。画面には「発売中止」と出す。
 
+**公開は `tools/publish.mjs` がまとめて行う（2026-09-17〜）。** 各反映ジョブ（refresh / refresh_boat / refresh_jra / refresh_banei / nightly_results）は
+ローカルに commit するだけで、push は launchd `com.nankan.publish` が15分おきに「溜まっていれば」押す。Render は push ごとにデプロイするので、
+1日600回 push していたら 9/16 17:27 でデプロイが止まった（パイプライン分数の枠）。これで多くても1日96回。`NK_PUSH_NOW=1` で従来どおりその場で push。
+ログは `data/publish.log`。公開が古いと感じたら `git status -sb` の ahead と `data/publish.log` を見る。
+
 **反映と公開（`tools/refresh.mjs`）**
 オッズが変わったら `build_marks → build_top → embed_db` を回して各ページに埋め直し、
 **git に commit / push して公開サイトへ反映する**（Render は main を見てデプロイするため、

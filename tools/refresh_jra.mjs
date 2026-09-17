@@ -68,9 +68,9 @@ try {
   const staged = git(['diff', '--cached', '--name-only']);
   if (!staged) { console.error(`${stamp()} 反映完了（${secs}秒）／差分なし`); process.exit(0); }
   git(['commit', '-q', '-m', `chore(jra): ${stamp()} 時点の出馬表と予想を反映`, '-m', 'tools/refresh_jra.mjs による自動コミット']);
-  try { git(['push', 'origin', 'main']); }
-  catch { git(['fetch', '-q', 'origin', 'main']); git(['rebase', '-q', '--autostash', 'origin/main']); git(['push', 'origin', 'main']); }
-  console.error(`${stamp()} 反映＋push 完了（${secs}秒・${staged.split('\n').length}ファイル）`);
+  /* push はしない。publish.mjs（launchd 15分おき）がまとめて押す＝Render のデプロイ回数を抑える。NK_PUSH_NOW=1 でその場で push */
+  if (process.env.NK_PUSH_NOW) { try { git(['push', 'origin', 'main']); } catch { git(['fetch', '-q', 'origin', 'main']); git(['rebase', '-q', '--autostash', 'origin/main']); git(['push', 'origin', 'main']); } }
+  console.error(`${stamp()} 反映＋commit 完了（${secs}秒・${staged.split('\n').length}ファイル）`);
 } catch (e) {
   console.error(`${stamp()} git で失敗: ${String(e.stderr || e.message).split('\n').filter(Boolean).slice(-2).join(' ')}`);
   process.exit(1);

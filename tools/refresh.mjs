@@ -80,19 +80,9 @@ try {
   const n = staged.split('\n').length;
   git(['commit', '-q', '-m', `chore(odds): ${stamp} 時点のオッズを反映`,
     '-m', 'tools/refresh.mjs による自動コミット（オッズ更新 → 印・期待値・買い目・TOPの再生成）']);
-  try {
-    git(['push', 'origin', 'main']);
-  } catch {
-    /* 別の場所から push されていて弾かれた場合。生成物は作り直せるので、
-       リモートを正として rebase してから押し直す。手が入ったコードは対象外なので安全。 */
-    /* 作業中の未コミット変更があっても止まらないよう autostash で退避する
-       （ボート側の refresh と同時に走って、実際に "You have unstaged changes" で止まった） */
-    git(['fetch', '-q', 'origin', 'main']);
-    git(['rebase', '-q', '--autostash', 'origin/main']);
-    git(['push', 'origin', 'main']);
-    console.error(`${stamp} リモートが先行していたので rebase して push しました`);
-  }
-  console.error(`${stamp} 反映＋push 完了（${secs}秒・${n}ファイル）`);
+  /* push はしない。publish.mjs（launchd 15分おき）がまとめて押す＝Render のデプロイ回数を抑える。NK_PUSH_NOW=1 でその場で push */
+  if (process.env.NK_PUSH_NOW) { try { git(['push', 'origin', 'main']); } catch { git(['fetch', '-q', 'origin', 'main']); git(['rebase', '-q', '--autostash', 'origin/main']); git(['push', 'origin', 'main']); } }
+  console.error(`${stamp} 反映＋commit 完了（${secs}秒・${n}ファイル${process.env.NK_PUSH_NOW ? '・push' : '・push は publish'}）`);
 } catch (e) {
   const msg = String(e.stderr || e.stdout || e.message).split('\n').filter(Boolean).slice(-2).join(' ');
   console.error(`${stamp} 反映は完了（${secs}秒）が git で失敗: ${msg}`);

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  公開係（tools/publish.mjs）。15分おきに、ローカルに溜まったコミットがあれば push する。
+  各反映ジョブは commit だけにしてあるので、Render のデプロイは多くても1日96回に収まる。
+  ログ  tail -f __REPO__/data/publish.log
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.nankan.publish</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__NODE__</string>
+    <string>__REPO__/tools/publish.mjs</string>
+  </array>
+  <key>WorkingDirectory</key><string>__REPO__</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key><string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin</string>
+  </dict>
+  <key>StartInterval</key><integer>900</integer>
+  <key>StandardOutPath</key><string>__REPO__/data/publish.log</string>
+  <key>StandardErrorPath</key><string>__REPO__/data/publish.log</string>
+  <key>RunAtLoad</key><false/>
+</dict>
+</plist>

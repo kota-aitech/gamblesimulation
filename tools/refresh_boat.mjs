@@ -90,15 +90,9 @@ try {
   if (!staged) { console.error(`${stamp} 反映完了（${secs}秒）／内容に差分なし`); process.exit(0); }
   gitRetry(['commit', '-q', '-m', `chore(boat): ${stamp} 時点の直前情報とオッズを反映`,
     '-m', 'tools/refresh_boat.mjs による自動コミット（直前情報・オッズ更新 → 予測の再生成）']);
-  try { git(['push', 'origin', 'main']); }
-  catch {
-    /* 作業中の未コミット変更（tools/ など）があっても止まらないよう autostash で退避する */
-    git(['fetch', '-q', 'origin', 'main']);
-    git(['rebase', '-q', '--autostash', 'origin/main']);
-    git(['push', 'origin', 'main']);
-    console.error(`${stamp} リモートが先行していたので rebase して push しました`);
-  }
-  console.error(`${stamp} 反映＋push 完了（${secs}秒・${staged.split('\n').length}ファイル）`);
+  /* push はしない。publish.mjs（launchd 15分おき）がまとめて押す＝Render のデプロイ回数を抑える。NK_PUSH_NOW=1 でその場で push */
+  if (process.env.NK_PUSH_NOW) { try { git(['push', 'origin', 'main']); } catch { git(['fetch', '-q', 'origin', 'main']); git(['rebase', '-q', '--autostash', 'origin/main']); git(['push', 'origin', 'main']); } }
+  console.error(`${stamp} 反映＋commit 完了（${secs}秒・${staged.split('\n').length}ファイル${process.env.NK_PUSH_NOW ? '・push' : '・push は publish'}）`);
 } catch (e) {
   const msg = String(e.stderr || e.stdout || e.message).split('\n').filter(Boolean).slice(-2).join(' ');
   console.error(`${stamp} 反映は完了（${secs}秒）が git で失敗: ${msg}`);
