@@ -12,10 +12,16 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const LOCK = path.join(ROOT, 'data', '.publish.lock');
 const stamp = () => new Date().toLocaleString('ja-JP', { hour12: false }).replace(/\//g, '-');
 const git = (args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
-const gitRetry = (args, n = 4) => {
+const sleep = ms => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+/* 一時的な失敗は待って押し直す。
+     index.lock … 反映ジョブの commit と重なったとき
+     名前解決・接続の失敗 … **スリープから起きた直後は Wi-Fi がまだ上がっていない**（実際に 9/18 19:21 の push が
+       「Could not resolve host」で落ちた）。ここで諦めると次の周回（15分後）まで公開が遅れる */
+const TRANSIENT = /index\.lock|Another git process|Could not resolve host|Could not resolve proxy|Connection (refused|reset|timed out)|Operation timed out|unable to access|Failed to connect|Recv failure|SSL_ERROR|The requested URL returned error: 5/i;
+const gitRetry = (args, n = 5) => {
   for (let i = 0; ; i++) {
     try { return git(args); }
-    catch (e) { const m = String(e.stderr || e.message); if (i >= n - 1 || !/index\.lock|Another git process/.test(m)) throw e; Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 2000); }
+    catch (e) { const m = String(e.stderr || e.message); if (i >= n - 1 || !TRANSIENT.test(m)) throw e; sleep(/index\.lock|Another git process/.test(m) ? 2000 : 15000); }
   }
 };
 if (fs.existsSync(LOCK) && Date.now() - fs.statSync(LOCK).mtimeMs < 10 * 60000) { console.error(`${stamp()} 前の publish がまだ動いている`); process.exit(0); }
@@ -28,7 +34,7 @@ try {
   try { gitRetry(['push', 'origin', 'main']); }
   catch {
     /* 弾かれたらリモートを正として rebase して押し直す。作業中の未コミット変更は autostash で退避 */
-    git(['fetch', '-q', 'origin', 'main']);
+    gitRetry(['fetch', '-q', 'origin', 'main']);
     gitRetry(['rebase', '-q', '--autostash', 'origin/main']);
     gitRetry(['push', 'origin', 'main']);
   }

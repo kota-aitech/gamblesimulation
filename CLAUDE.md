@@ -43,6 +43,23 @@
   Pages はビルド分数の制限が無い（1時間10ビルドまで）。push は `tools/publish.mjs` が15分おきにまとめる（1日最大96回）。
   Render のサービスは 9/18 に削除済み（`render.yaml` も削除）。
 
+## 自動実行と電源（**取得が止まる原因のほぼ全部がこれ**）
+取得・反映・公開はすべて macOS の launchd（`sh tools/launchd/install.sh` で登録、`StartInterval` 60〜1200秒）。
+**launchd はスリープ中は動かない。** MacBook は電源設定に関係なく**フタを閉じると clamshell sleep に入り**、
+以後は DarkWake（数十秒のメンテナンス起動）だけになってジョブは走らない。`caffeinate` はアイドルスリープしか止められないので効かない。
+
+- 点検は `node tools/health.mjs`。各ジョブの登録状態・前回の書き込み・**スリープで止まっていた時間**（`pmset -g log` から
+  Sleep → 次の本物の Wake までを拾う。`Wake Requests` の行を拾わないようタブ区切りまで見る）・未 push のコミット数を出す
+- フタを閉じたまま動かすには **root が要る**：`sudo sh tools/launchd/nosleep.sh on`
+  （`pmset -c disablesleep 1` ＝**電源接続中だけ**寝なくなる。バッテリー運用では今までどおり寝る＝電池切れで落ちるより良い。
+  合わせて毎朝 8:45 の `pmset repeat wakeorpoweron` も入る）。戻すのは `off`
+- **スリープ中に失われるもの**：締切前オッズのスナップショット（南関 T-8・ボート T-8）と、締切時点の予想の記録。
+  結果・払戻・番組表は後から取り直せる（キャッシュではなく公開ページに残るため）。
+  予想の記録は起きたあとに追いつくが `late`（締切から何分後か）が大きくなり、そのぶん実戦より有利な数字になる
+- スリープから起きた直後は **Wi-Fi がまだ上がっていない**ので、最初の1回が名前解決で落ちる。
+  `publish.mjs` は名前解決・接続の失敗を15秒あけて5回まで押し直す（2026-09-18 に追加。それまでは次の周回まで公開が15分遅れていた）
+- 実測（2026-09-18）：直近24時間のうち **908分（15時間）がスリープ**だった。夜はほぼ止まっている
+
 ## ファイル構成
 ```
 top.html                **トップ**（サイトの `/` はこれに rewrite）。競馬／ボートの切替タブを持ち、
@@ -94,7 +111,8 @@ tools/
   refresh.mjs           オッズが変わったら印・期待値・買い目・TOPを作り直して各ページへ反映
   nightly_results.mjs   夜にその日の結果・払戻・最終オッズを取り込み、日別の成績を更新して push（launchd: com.nankan.results）
   odds_drift.mjs        締切前と最終オッズのズレを測る
-  launchd/              締切前オッズ取得を macOS に登録する plist と install.sh
+  launchd/              締切前オッズ取得を macOS に登録する plist と install.sh、フタを閉じても寝ない設定 nosleep.sh
+  health.mjs            自動実行の点検（ジョブの状態・スリープで止まっていた時間・未 push）
   fit_model.mjs         条件付きロジットの当てはめ → model.json
   backtest.mjs          予想の当て方ごとに的中率・回収率を検証 → backtest.json
   build_db.mjs          指数の算出 → index.json
