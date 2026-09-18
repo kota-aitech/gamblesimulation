@@ -39,7 +39,7 @@
 ## 配信先とファイル名（2026-09-17 に変更）
 - **3D 予想ページは `sim.html`**（旧 `index.html`）。`index.html` は入口の振り分けだけ（`/` → `top.html`、`?track=` 付きは `sim.html`）。
   この文書で「index.html」と書いてある箇所（NKDB の埋め込み、`lib/model.mjs` が読む本体、sim_check / ui_check）は **すべて `sim.html` のこと**。
-- 配信は **GitHub Pages**（main ブランチ直下、`.nojekyll` あり）。Render は 9/16 に「パイプライン分数の上限」でデプロイが止まったため移行。
+- 配信は **GitHub Pages**（main ブランチ直下、`.nojekyll` あり）。リポジトリは 2026-09-18 に `gamblesimulation` に改名。**公開 URL: https://kota-aitech.github.io/gamblesimulation/**（旧 `…/oi-keiba-3d-demo/` は 404。GitHub の転送は git/Web の URL だけで Pages には効かない）。Render は 9/16 に「パイプライン分数の上限」でデプロイが止まったため移行。
   Pages はビルド分数の制限が無い（1時間10ビルドまで）。push は `tools/publish.mjs` が15分おきにまとめる（1日最大96回）。
   `render.yaml` は残してあるが使っていない。
 
