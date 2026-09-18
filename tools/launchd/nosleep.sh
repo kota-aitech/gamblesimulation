@@ -12,10 +12,19 @@
 # （つないでいないのに寝かせないと、電池切れで落ちて取りこぼしが増えるため）。
 # 閉じたまま動かすので、カバンの中など放熱できない場所には入れないこと。
 set -e
+REPO=$(cd "$(dirname "$0")/../.." && pwd)
+DAEMON=/Library/LaunchDaemons/com.nankan.acsleep.plist
 [ "$(id -u)" = 0 ] || { echo "sudo で実行してください: sudo sh tools/launchd/nosleep.sh ${1:-on}"; exit 1; }
 case "${1:-on}" in
   on)
-    pmset -c disablesleep 1 2>/dev/null || pmset -a disablesleep 1
+    # disablesleep は電源別に持てず**システム全体**に効く（macOS 側の仕様）。
+    # そのままだとバッテリー運用でも寝なくなって電池を使い切るので、
+    # 電源の状態を1分おきに見て切り替える LaunchDaemon を入れる。
+    sed "s#__REPO__#$REPO#g" "$REPO/tools/launchd/com.nankan.acsleep.plist" > "$DAEMON"
+    chown root:wheel "$DAEMON"; chmod 644 "$DAEMON"
+    launchctl bootout system/com.nankan.acsleep 2>/dev/null || true
+    launchctl bootstrap system "$DAEMON"
+    sh "$REPO/tools/launchd/acsleep.sh"        # いますぐ1回反映
     pmset -c sleep 0
     pmset -c disksleep 0
     pmset -c displaysleep 5          # 画面だけは消す（本体は起きたまま）
@@ -24,14 +33,17 @@ case "${1:-on}" in
     # 起きたあとは上の disablesleep が効くので、つないだままなら1日中起きている。
     pmset repeat wakeorpoweron MTWRFSU 08:45:00
     echo "電源接続中はスリープしない設定にしました（フタを閉じても取得は続きます）"
+    echo "バッテリーに切り替わったら自動で元に戻ります（電池切れ防止）"
     echo "毎朝 8:45 に自動で起きる予約も入れました（バッテリー運用で寝てしまった日の保険）"
     ;;
   off)
-    pmset -c disablesleep 0 2>/dev/null || pmset -a disablesleep 0
+    launchctl bootout system/com.nankan.acsleep 2>/dev/null || true
+    rm -f "$DAEMON"
+    pmset -a disablesleep 0
     pmset -c sleep 10
     pmset -c disksleep 10
     pmset repeat cancel
-    echo "元に戻しました（電源接続中も10分でスリープ・朝の自動起動も解除）"
+    echo "元に戻しました（電源接続中も10分でスリープ・朝の自動起動も解除・常駐も削除）"
     ;;
   *) echo "使い方: sudo sh tools/launchd/nosleep.sh [on|off]"; exit 1 ;;
 esac
