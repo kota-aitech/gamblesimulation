@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, readJSON, writeJSON, ymdOf } from './lib/bn.mjs';
-import { FEATURES, NF, buildRaceIndex, buildHistory, buildAsOf, loadPed, raceFromCard, makeFeaturizer } from './lib/bnfeat.mjs';
+import { FEATURES, NF, buildRaceIndex, buildHistory, buildAsOf, buildLaneIndex, loadPed, raceFromCard, makeFeaturizer } from './lib/bnfeat.mjs';
 import { utilities } from './lib/bpl.mjs';
 import { combosOf } from './lib/jbets.mjs';
 
@@ -30,8 +30,8 @@ for (const l of fs.readFileSync(path.join(ROOT, 'data/banei/results.jsonl'), 'ut
 results.sort((a, b) => a.raceId.localeCompare(b.raceId));
 const cardsText = fs.readFileSync(path.join(ROOT, 'data/banei/cards.jsonl'), 'utf8');
 const PED = loadPed(cardsText);
-const RI = buildRaceIndex(results), H = buildHistory(results, RI), ASOF = buildAsOf(results, PED);
-const featurize = makeFeaturizer(DB, RI, ASOF);
+const RI = buildRaceIndex(results), H = buildHistory(results, RI), ASOF = buildAsOf(results, PED), LANE = buildLaneIndex(results);
+const featurize = makeFeaturizer(DB, RI, ASOF, LANE);
 
 /* 発走が過ぎたレースの予想を記録（回収率の算出用）。後から作り直さない */
 const PREDS = path.join(ROOT, 'data/banei/preds.jsonl');
@@ -64,11 +64,12 @@ const GROUP = {
   spdIdx: '時計', spdBest: '時計', loadRel: '積載', loadChg: '積載', loadBw: '積載',
   bwLog: '馬体', bwRel: '馬体', bwDiff: '馬体', bwDev: '馬体', bwSwing: '馬体',
   moistX: '水分', moistExp: '水分', moistChg: '水分', gate: 'コース', gateEdge: 'コース',
+  laneDay: '当日コース', laneMeet: '当日コース', outerDay: '当日コース', outerMeet: '当日コース', jMoist: '人', tForm: '人', loadTop: '積載', loadMoist: '積載', bwMoist: '馬体',
   jIdx: '人', tIdx: '人', cIdx: '人', jForm: '人', appr: '人', sIdx: '血統', bmsIdx: '血統', oIdx: '馬主',
   restLog: '間隔', layoff: '間隔', classUp: '適性', downFirst: '適性', lastPop: '人気', lastOdds: '人気', mktLog: '人気',
   age: 'その他', mare: 'その他', gelding: 'その他',
 };
-const GROUPS = ['近走', '時計', '積載', '馬体', '水分', 'コース', '人', '血統', '馬主', '適性', '間隔', '人気', 'その他'];
+const GROUPS = ['近走', '時計', '積載', '馬体', '水分', 'コース', '当日コース', '人', '血統', '馬主', '適性', '間隔', '人気', 'その他'];
 const contrib = (x, b) => { const g = Object.fromEntries(GROUPS.map(k => [k, 0])); for (let i = 0; i < NF; i++) g[GROUP[FEATURES[i]] || 'その他'] += b[i] * x[i]; return GROUPS.map(k => round(g[k], 2)); };
 const moistWord = m => m == null ? '' : m < 1 ? '乾いて重い' : m < 2 ? 'やや重い' : m < 3 ? '軽め' : '水分が多く軽い';
 const moistBand = m => m == null ? null : m < 1 ? '〜0.9' : m < 1.5 ? '1.0〜1.4' : m < 2 ? '1.5〜1.9' : m < 2.5 ? '2.0〜2.4' : m < 3 ? '2.5〜2.9' : m < 4 ? '3.0〜3.9' : '4.0〜';
@@ -99,6 +100,8 @@ for (const c of cards) {
     const j = DB.jockey?.[e.jockeyId], t = DB.trainer?.[e.trainerId], cb = DB.combo?.[`${e.jockeyId}|${e.trainerId}`];
     note.push(`${(e.apprentice || '') + (e.jockey || '')}${j ? `（指数 ${sg(j.idx)}${j.hot != null ? `・直近1年 ${sg(j.hot)}` : ''}）` : '（指数なし）'}×${e.trainer || ''}${t ? `（${sg(t.idx)}）` : ''}${cb ? `／コンビ${cb.n}走 ${sg(cb.cIdx)}` : ''}`);
     if (e.sire || e.owner) note.push(`血統 ${e.sire || '—'}${hf.sN ? `（産駒 ${hf.sN}走・${sg(hf.sIdx)}）` : ''}／母父 ${e.damsire || '—'}${hf.bN ? `（${sg(hf.bmsIdx)}）` : ''}／馬主 ${e.owner || '—'}${hf.oN ? `（${hf.oN}走・${sg(hf.oIdx)}）` : ''}`);
+    /* 開催中のコース傾向（こたの実感：同じ馬番が続けて来る・外が来る開催は続く）。数字は「3着内の回数 − 期待」の縮小値 */
+    if (f.lane) { const ld = x.x[FEATURES.indexOf('laneDay')], lm = x.x[FEATURES.indexOf('laneMeet')]; if (f.lane.dayRaces || f.lane.meetRaces) note.push(`${x.no}番コースの開催中の傾向：今日ここまで ${f.lane.dayRaces}R で ${ld >= 0.2 ? '好走が続いている' : ld <= -0.2 ? '来ていない' : 'ふつう'}（${sg(ld, 2)}）／この開催 ${f.lane.meetRaces}R で ${sg(lm, 2)}`); }
     const g = DB.gate?.[x.no];
     if (g) note.push(`${x.no}番コース：3着内シェア÷出走シェア ${g.edge.toFixed(2)}（${g.n}走・勝率 ${(g.win * 100).toFixed(1)}%）`);
     return {
@@ -128,6 +131,13 @@ for (const c of cards) {
   }
   const big = horses.filter(h => h.bw >= 1100).map(h => `${nn(h)}（${h.bw}kg）`);
   if (big.length) pts.push(`1,100kg 超の大型馬：${big.join('、')}。`);
+  /* 当日・開催のコース傾向（先読みなし：このレースより前の結果だけ） */
+  if (f.lane && (f.lane.dayRaces >= 2 || f.lane.meetRaces >= 6)) {
+    const od = f.lane.outerDay, om = f.lane.outerMeet;
+    const word = v => v >= 0.15 ? '外（8〜10番）が来ている' : v <= -0.15 ? '内（1〜3番）が来ている' : '内外の差は小さい';
+    const hot = horses.map(h => [h, h.c ? 0 : 0]).map(([h]) => [h, f.rows.find(x => x.no === h.no)?.x[FEATURES.indexOf('laneMeet')] ?? 0]).filter(([, v]) => v >= 0.2).sort((a, b) => b[1] - a[1]).slice(0, 3);
+    pts.push(`開催中のコース傾向：${f.lane.dayRaces ? `本日ここまで ${f.lane.dayRaces}R は ${word(od)}（外−内 ${sg(od, 2)}）` : '本日はこれが最初の材料'}。この開催（${f.lane.meetDates.length ? f.lane.meetDates.map(d => `${+d.slice(4, 6)}/${+d.slice(6, 8)}`).join('・') + '〜' : ''}${f.lane.meetRaces}R）は ${word(om)}${hot.length ? `。好走が続く馬番：${hot.map(([h, v]) => `${h.no}番（${sg(v, 2)}）`).join('、')}` : ''}。`);
+  }
   const G = DB.gate || {}; const gs = Object.entries(G).filter(([, v]) => v.n >= 300);
   if (gs.length) { const best = gs.slice().sort((a, b) => b[1].edge - a[1].edge); pts.push(`コース（馬番）の得失：${gs.map(([k, v]) => `${k}番 ${v.edge.toFixed(2)}`).join(' ')}（1.00 が損得なし。良いのは ${best[0][0]}番、悪いのは ${best.at(-1)[0]}番）。`); }
   pts.push(`馬連の本線 ${C.umaren[0][0]}（${(C.umaren[0][1] * 100).toFixed(1)}%）、三連複 ${C.sanpuku[0][0]}（${(C.sanpuku[0][1] * 100).toFixed(1)}%）。`);

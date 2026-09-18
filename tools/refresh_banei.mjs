@@ -36,6 +36,13 @@ if (run('banei_fetch.mjs', { BN_FROM: today, BN_TO: addDays(today, 3), BN_KIND: 
   const after = fs.existsSync(cardsFile) ? fs.statSync(cardsFile).size : 0;
   if (after !== before || process.env.NK_REFRESH_FORCE) changed = true;
 }
+/* 1b) 開催中（10〜21時）は今日の結果を毎回取り直す（終わったレースだけ増える。当日のコース傾向 laneDay に使う）。
+   未確定の結果ページは lib/bn.mjs の freshTtl で30分ほど開けて再試行 */
+if (hour >= 10 && hour <= 21 && hasUpcoming()) {
+  const rf = path.join(D, 'results.jsonl');
+  const b0 = fs.existsSync(rf) ? fs.statSync(rf).size : 0;
+  if (run('banei_fetch.mjs', { BN_FROM: today, BN_TO: today, BN_KIND: 'results' })) { const a0 = fs.existsSync(rf) ? fs.statSync(rf).size : 0; if (a0 !== b0) changed = true; }
+}
 /* 2) 結果と指数：21:30 以降に1日1回（最終レースは 20:40 ごろ） */
 if ((hour > 21 || (hour === 21 && now.getMinutes() >= 30)) && prev.resultsDay !== today) {
   if (run('banei_fetch.mjs', { BN_FROM: addDays(today, -2), BN_TO: today, BN_KIND: 'results' })) { prev.resultsDay = today; run('banei_build_db.mjs'); changed = true; }

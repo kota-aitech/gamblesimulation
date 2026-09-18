@@ -8,7 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, writeJSON } from './lib/bn.mjs';
-import { FEATURES, NF, MKT, buildRaceIndex, buildHistory, buildAsOf, loadPed, raceFromResult, makeFeaturizer } from './lib/bnfeat.mjs';
+import { FEATURES, NF, MKT, buildRaceIndex, buildHistory, buildAsOf, buildLaneIndex, loadPed, raceFromResult, makeFeaturizer } from './lib/bnfeat.mjs';
 import { utilities, plWin, fitTau } from './lib/bpl.mjs';
 
 const SPLIT = process.env.BN_FIT_SPLIT || '20260401';
@@ -25,9 +25,9 @@ const first = results[0].date;
 const WARM = process.env.BN_FIT_WARM || (() => { const d = new Date(`${first.slice(0, 4)}-${first.slice(4, 6)}-${first.slice(6, 8)}`); d.setMonth(d.getMonth() + 6); return d.toISOString().slice(0, 10).replace(/-/g, ''); })();
 const cardsFile = path.join(ROOT, 'data/banei/cards.jsonl');
 const PED = loadPed(fs.existsSync(cardsFile) ? fs.readFileSync(cardsFile, 'utf8') : '');
-const RI = buildRaceIndex(results), H = buildHistory(results, RI), ASOF = buildAsOf(results, PED);
+const RI = buildRaceIndex(results), H = buildHistory(results, RI), ASOF = buildAsOf(results, PED), LANE = buildLaneIndex(results);
 console.error(`  ${results.length}R（${first}〜${results.at(-1).date}）血統 ${PED.size} 頭`);
-const featurize = makeFeaturizer(DB, RI, ASOF);
+const featurize = makeFeaturizer(DB, RI, ASOF, LANE);
 const data = [];
 for (const r of results) {
   if (r.date < WARM) continue;

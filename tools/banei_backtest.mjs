@@ -4,7 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, readJSON, writeJSON } from './lib/bn.mjs';
-import { FEATURES, NF, buildRaceIndex, buildHistory, buildAsOf, loadPed, raceFromResult, makeFeaturizer } from './lib/bnfeat.mjs';
+import { FEATURES, NF, buildRaceIndex, buildHistory, buildAsOf, buildLaneIndex, loadPed, raceFromResult, makeFeaturizer } from './lib/bnfeat.mjs';
 import { utilities } from './lib/bpl.mjs';
 import { combosOf } from './lib/jbets.mjs';
 
@@ -24,8 +24,8 @@ for (const l of fs.readFileSync(path.join(ROOT, 'data/banei/results.jsonl'), 'ut
 results.sort((a, b) => a.raceId.localeCompare(b.raceId));
 const cardsFile = path.join(ROOT, 'data/banei/cards.jsonl');
 const PED = loadPed(fs.existsSync(cardsFile) ? fs.readFileSync(cardsFile, 'utf8') : '');
-const RI = buildRaceIndex(results), H = buildHistory(results, RI), ASOF = buildAsOf(results, PED);
-const featurize = makeFeaturizer(DB, RI, ASOF);
+const RI = buildRaceIndex(results), H = buildHistory(results, RI), ASOF = buildAsOf(results, PED), LANE = buildLaneIndex(results);
+const featurize = makeFeaturizer(DB, RI, ASOF, LANE);
 
 const payOf = (r, kind, code) => { const h = (r.pay?.[kind] || []).find(x => x.c === code); return h ? h.y : 0; };
 const sortKey = a => a.slice().sort((x, y) => x - y).join('-');

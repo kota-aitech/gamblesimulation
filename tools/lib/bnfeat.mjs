@@ -39,6 +39,11 @@ export const FEATURES = [
   'jIdx', 'tIdx', 'cIdx', 'jForm', 'appr',               // 騎手・調教師・コンビ・騎手の調子・減量騎手
   'sIdx', 'bmsIdx', 'oIdx',                              // 血統・馬主（レース時点）
   'age', 'mare', 'gelding', 'restLog', 'layoff', 'classUp', 'downFirst', 'lastPop', 'lastOdds',
+  /* ばんえい特化（2026-09-18）：開催中のコース（馬番）の好走傾向、騎手の馬場別、厩舎の調子、積載・馬体重×水分 */
+  'laneDay', 'laneMeet',                                 // この馬番が 今日ここまで／この開催ここまで 3着内に来ているか（期待との差、時点つき）
+  'outerDay', 'outerMeet',                               // 外（8〜10）と内（1〜3）のどちらが来ているか × 自分の馬番の内外
+  'jMoist', 'tForm',                                     // 騎手の「今日の水分帯」での上振れ、厩舎の直近60走の調子
+  'loadTop', 'loadMoist', 'bwMoist',                     // トップハンデ、積載比×水分、馬体重×水分
   'mktLog',                                              // 市場（joint のみ。base では 0 固定）
 ];
 export const NF = FEATURES.length;
@@ -79,6 +84,7 @@ export function marketProbs(live, RI) {
 /* ---- 「そのレース時点」の人的要因・血統（結果を日付順に流し、その日より前だけで作る）---- */
 export function buildAsOf(results, ped = new Map()) {
   const J = new Map(), T = new Map(), C = new Map(), S = new Map(), B = new Map(), O = new Map();
+  const JW = new Map(), JD = new Map();                   // 騎手の 重い馬場（水分2.0以上）／軽い馬場（1.2以下）
   let runs = 0, wins = 0;
   const snap = new Map();
   const get = (m, k) => { let v = m.get(k); if (!v) m.set(k, v = { n: 0, w: 0, q: [], qw: 0 }); return v; };
@@ -87,6 +93,7 @@ export function buildAsOf(results, ped = new Map()) {
   const hf = e => {
     const p0 = P0(), L0 = logit(p0);
     const j = J.get(e.jockeyId), t = T.get(e.trainerId), c = C.get(e.jockeyId + '|' + e.trainerId);
+    const jw = JW.get(e.jockeyId), jd = JD.get(e.jockeyId);
     const jIdx = j ? shrunk(j.w, j.n, p0, 50) : 0, tIdx = t ? shrunk(t.w, t.n, p0, 50) : 0;
     const own = sig(L0 + jIdx), cExp = sig(L0 + 0.8 * jIdx + 0.6 * tIdx);
     const pd = pedOf(e);
@@ -94,6 +101,8 @@ export function buildAsOf(results, ped = new Map()) {
     return {
       jIdx, tIdx, cIdx: c ? shrunk(c.w, c.n, cExp, 40) : 0,
       jForm: j && j.q.length >= 10 ? shrunk(j.qw, j.q.length, own, 40) : 0,
+      tForm: t && t.q && t.q.length >= 10 ? shrunk(t.qw, t.q.length, sig(L0 + tIdx), 40) : 0,
+      jWet: jw && jw.n >= 10 ? shrunk(jw.w, jw.n, own, 30) : 0, jDry: jd && jd.n >= 10 ? shrunk(jd.w, jd.n, own, 30) : 0,
       sIdx: s ? shrunk(s.w, s.n, p0, 60) : 0, bmsIdx: b ? shrunk(b.w, b.n, p0, 60) : 0, oIdx: o ? shrunk(o.w, o.n, p0, 40) : 0,
       jN: j ? j.n : 0, tN: t ? t.n : 0, cN: c ? c.n : 0, sN: s ? s.n : 0, bN: b ? b.n : 0, oN: o ? o.n : 0,
       sire: pd.sire || null, damsire: pd.damsire || null, owner: pd.owner || null,
@@ -105,7 +114,8 @@ export function buildAsOf(results, ped = new Map()) {
       if (posNum(e.pos) == null) continue;
       const win = e.pos === 1 ? 1 : 0; runs++; wins += win;
       if (e.jockeyId) { const j = get(J, e.jockeyId); j.n++; j.w += win; j.q.push(win); j.qw += win; if (j.q.length > 60) j.qw -= j.q.shift(); }
-      if (e.trainerId) { const t = get(T, e.trainerId); t.n++; t.w += win; }
+      if (e.trainerId) { const t = get(T, e.trainerId); t.n++; t.w += win; t.q.push(win); t.qw += win; if (t.q.length > 60) t.qw -= t.q.shift(); }
+      if (e.jockeyId && r.moist != null) { if (r.moist >= 2) { const x = get(JW, e.jockeyId); x.n++; x.w += win; } else if (r.moist <= 1.2) { const x = get(JD, e.jockeyId); x.n++; x.w += win; } }
       if (e.jockeyId && e.trainerId) { const c = get(C, e.jockeyId + '|' + e.trainerId); c.n++; c.w += win; }
       const pd = pedOf(e);
       if (pd.sire) { const s = get(S, pd.sire); s.n++; s.w += win; }
@@ -115,6 +125,54 @@ export function buildAsOf(results, ped = new Map()) {
   }
   return { of(raceId, e) { return snap.get(`${raceId}|${e.horseId}`) || hf(e); }, latest(e) { return hf(e); }, P0: P0() };
 }
+/* ---- 開催中のコース（馬番）の好走傾向 ----
+   こたの実感：「その開催を通じて同じ馬番が好走する」「外枠が来る開催は続く」。直線200mの10コースは砂圧などが数字にならない形で
+   結果に出るので、その日・その開催の「ここまでの結果」を馬番ごとに積む。先読みしないよう、必ず「そのレースより前」だけを見る。
+   開催＝連続した開催日（日付の差が1日以内のつながり。土日月）。
+     laneDay / laneMeet  … その馬番の 3着内回数 − 期待（3/頭数）を k で縮小（今日 k=3、開催 k=6）。×3 で目盛りを対数オッズ差に寄せる
+     outerDay / outerMeet … 外（8〜10）の3着内率 − 内（1〜3）の3着内率 を縮小したもの。特徴量ではこれに自分の馬番の内外（−1〜+1）を掛ける */
+export function buildLaneIndex(results) {
+  const byDate = new Map();
+  for (const r of results) {
+    const n = r.entries.filter(e => posNum(e.pos) != null).length; if (n < 4) continue;
+    const lanes = {}; for (const e of r.entries) if (posNum(e.pos) != null && e.no) lanes[e.no] = e.pos <= 3 ? 1 : 0;
+    (byDate.get(r.date) || byDate.set(r.date, []).get(r.date)).push({ r: r.r, n, lanes });
+  }
+  const dates = [...byDate.keys()].sort();
+  const meetDatesOf = date => {              // date と同じ開催の日（date より前）
+    const out = []; let cur = date;
+    for (let i = dates.indexOf(date) - 1; i >= 0; i--) { if (days(cur, dates[i]) <= 1) { out.unshift(dates[i]); cur = dates[i]; } else break; }
+    /* date 自体が結果に無い日（予測時）は、直近の開催日が1日以内なら同じ開催とみなす */
+    if (!byDate.has(date)) { const last = dates.filter(d => d < date).at(-1); if (last && days(date, last) <= 1 && !out.includes(last)) { out.length = 0; cur = last; out.unshift(last); for (let i = dates.indexOf(last) - 1; i >= 0; i--) { if (days(cur, dates[i]) <= 1) { out.unshift(dates[i]); cur = dates[i]; } else break; } } }
+    return out;
+  };
+  const acc = (list) => {
+    const lane = {}; let outerIn = 0, outerN = 0, innerIn = 0, innerN = 0;
+    for (const x of list) {
+      const exp = 3 / x.n;
+      for (const [no, in3] of Object.entries(x.lanes)) {
+        const v = lane[no] || (lane[no] = { d: 0, n: 0 }); v.d += in3 - exp; v.n++;
+        if (+no >= 8) { outerIn += in3; outerN++; } else if (+no <= 3) { innerIn += in3; innerN++; }
+      }
+    }
+    return { lane, outer: outerN >= 3 && innerN >= 3 ? (outerIn / outerN - innerIn / innerN) : 0, races: list.length };
+  };
+  const cache = new Map();
+  return {
+    at(date, r) {
+      const key = `${date}|${r}`; if (cache.has(key)) return cache.get(key);
+      const today = (byDate.get(date) || []).filter(x => x.r < r);
+      const meet = meetDatesOf(date).flatMap(d => byDate.get(d) || []).concat(today);
+      const D = acc(today), M = acc(meet);
+      const o = { dayRaces: D.races, meetRaces: M.races, outerDay: D.outer, outerMeet: M.outer,
+        laneDay: no => { const v = D.lane[no]; return v ? v.d / (v.n + 3) * 3 : 0; },
+        laneMeet: no => { const v = M.lane[no]; return v ? v.d / (v.n + 6) * 3 : 0; },
+        meetDates: meetDatesOf(date) };
+      cache.set(key, o); return o;
+    },
+  };
+}
+
 /* cards.jsonl → horseId -> {sire, dam, damsire, owner, color, birth}（出馬表は全頭の血統を持つ） */
 export function loadPed(cardsText) {
   const m = new Map();
@@ -153,7 +211,7 @@ export function raceFromResult(r, H) {
     no: e.no, waku: e.waku, horseId: e.horseId, name: e.name, sexAge: e.sexAge, load: e.load, jockey: e.jockey, jockeyId: e.jockeyId, trainerId: e.trainerId,
     bw: e.bw, bwDiff: e.bwDiff, odds: e.odds, pop: e.pop, past: pastOf(H, e.horseId, r.date), _pos: e.pos,
   }));
-  return { raceId: r.raceId, date: r.date, moist: r.moist, weather: r.weather, cls: classOf(r.name, r.cond), name: r.name, horses,
+  return { raceId: r.raceId, date: r.date, r: r.r, moist: r.moist, weather: r.weather, cls: classOf(r.name, r.cond), name: r.name, horses,
     order: [1, 2, 3].map(p => horses.findIndex(h => h._pos === p)) };
 }
 /* ---- 予測用：出馬表 → レース（前5走は results から。無ければ出馬表の前5走） ---- */
@@ -163,7 +221,7 @@ export function raceFromCard(c, H) {
     bw: e.bw, bwDiff: e.bwDiff, odds: e.odds, pop: e.pop, sire: e.sire, damsire: e.damsire, owner: e.owner,
     past: (() => { const h = pastOf(H, e.horseId, c.date); if (h.length) return h; return (e.past || []).map(p => ({ ...p, cls: classOf(p.name, ''), diff: p.pos === 1 ? 0 : p.diff })); })(),
   }));
-  return { raceId: c.raceId, date: c.date, moist: c.moist, weather: c.weather, cls: classOf(c.name, c.cond), name: c.name, horses };
+  return { raceId: c.raceId, date: c.date, r: c.r, moist: c.moist, weather: c.weather, cls: classOf(c.name, c.cond), name: c.name, horses };
 }
 
 /* ---- 1頭の推定値 ---- */
@@ -199,7 +257,7 @@ function derive(h, race, RI) {
   };
 }
 
-export function makeFeaturizer(DB, RI, ASOF) {
+export function makeFeaturizer(DB, RI, ASOF, LANE = null) {
   if (!ASOF) throw new Error('makeFeaturizer には buildAsOf(results) の戻り値が要る');
   const GATE = (DB && DB.gate) || {};
   return function featurize(race) {
@@ -213,6 +271,9 @@ export function makeFeaturizer(DB, RI, ASOF) {
     const lq = mkt ? mkt.map(q => Math.log(q)) : null;
     const lqm = lq ? lq.reduce((a, b) => a + b, 0) / lq.length : 0;
     const ds = live.map(h => derive(h, race, RI));
+    const LN = LANE ? LANE.at(race.date, race.r ?? Number(String(race.raceId).slice(-2))) : null;
+    const mc = clamp((moist - 1.5) / 1.5, -1.5, 1.5);
+    const loadMax = Math.max(...live.map(h => h.load || 0));
     const rows = live.map((h, hi) => {
       const d = ds[hi], hf = ASOF.of(race.raceId, h);
       const p0 = h.past && h.past[0];
@@ -245,12 +306,18 @@ export function makeFeaturizer(DB, RI, ASOF) {
         restLog: Math.log(rest) - 2.7, layoff: rest >= 60 ? 1 : 0,
         classUp: clsDiff, downFirst: clsDiff < 0 ? 1 : 0,
         lastPop: p0 && p0.n && p0.pop ? Math.log(p0.pop / p0.n) : 0, lastOdds: p0 && p0.odds ? clamp(Math.log(p0.odds / 8), -2.5, 2.5) : 0,
+        laneDay: LN ? LN.laneDay(h.no) : 0, laneMeet: LN ? LN.laneMeet(h.no) : 0,
+        outerDay: LN ? LN.outerDay * ((h.no || 5.5) - 5.5) / 4.5 * 3 : 0, outerMeet: LN ? LN.outerMeet * ((h.no || 5.5) - 5.5) / 4.5 * 3 : 0,
+        jMoist: moist >= 2 ? hf.jWet : moist <= 1.2 ? hf.jDry : 0, tForm: hf.tForm,
+        loadTop: h.load && loadMax && h.load === loadMax && live.filter(x => x.load === loadMax).length <= 2 ? 1 : 0,
+        loadMoist: (h.load && h.bw ? (h.load / h.bw - lbAvg) * 10 : 0) * mc,
+        bwMoist: (h.bw ? clamp((h.bw - bwAvg) / 50, -3, 3) : 0) * mc,
         mktLog: lq ? lq[hi] - lqm : 0,
       };
       const v = new Float64Array(NF);
       FEATURES.forEach((k, i) => { v[i] = Number.isFinite(x[k]) ? x[k] : 0; });
       return { no: h.no, waku: h.waku, name: h.name, horseId: h.horseId, x: v, d, hf, odds: h.odds, pop: h.pop };
     });
-    return { raceId: race.raceId, date: race.date, moist: race.moist, cls: race.cls, n: live.length, rows, order: race.order, mkt, mktSrc: mkt ? (live.every(h => h.odds > 0) ? 'odds' : 'pop') : null };
+    return { raceId: race.raceId, date: race.date, moist: race.moist, cls: race.cls, n: live.length, rows, order: race.order, mkt, lane: LN ? { dayRaces: LN.dayRaces, meetRaces: LN.meetRaces, outerDay: +LN.outerDay.toFixed(3), outerMeet: +LN.outerMeet.toFixed(3), meetDates: LN.meetDates } : null, mktSrc: mkt ? (live.every(h => h.odds > 0) ? 'odds' : 'pop') : null };
   };
 }
