@@ -17,6 +17,9 @@ on:
       minutes:
         description: 'ループする分数'
         default: '150'
+      lead:
+        description: '締切の何分前を拾うか（試験用。ふだんは 8）'
+        default: '8'
 permissions:
   contents: write
 jobs:
@@ -42,6 +45,6 @@ jobs:
         env:
           CO_OUT_ROOT: ${{ github.workspace }}/cloud
           CO_MINUTES: ${{ github.event.inputs.minutes || '150' }}
-          CO_LEAD: '8'
+          CO_LEAD: ${{ github.event.inputs.lead || '8' }}
           CO_PUSH_EVERY: '5'
         run: node tools/cloud_odds.mjs --sport=${{ matrix.sport }}
