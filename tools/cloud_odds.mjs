@@ -179,13 +179,31 @@ function publish(force) {
 /* ---- 見回り ---- */
 const end = MINUTES ? Date.now() + MINUTES * 60000 : 0;
 let sched = new Map(), schedAt = 0;
+/* 番組（レースと締切時刻）は日に何度も変わらないのに、ジョブが再起動するたび取り直すと
+   取得元を余計に叩く（南関は1レース1ページ＝1日48ページ）。odds-cloud に置いて使い回す */
+const schedFile = date => path.join(OUT_ROOT, 'data', 'odds_cloud', SPORT, `sched.${date}.json`);
+const SCHED_TTL = Number(process.env.CO_SCHED_TTL || 6) * 3600000;
+async function racesOf(date) {
+  const f = schedFile(date);
+  try {
+    const c = JSON.parse(fs.readFileSync(f, 'utf8'));
+    if (Date.now() - Date.parse(c.savedAt) < SCHED_TTL && c.races?.length) return c.races;
+  } catch { }
+  const races = await SRC.races(date);
+  if (races.length) {
+    fs.mkdirSync(path.dirname(f), { recursive: true });
+    fs.writeFileSync(f, JSON.stringify({ savedAt: new Date().toISOString(), races }));
+    dirty = true;
+  }
+  return races;
+}
 async function schedule() {
   if (Date.now() - schedAt < 20 * 60000 && sched.size) return sched;
   const m = new Map();
   for (let i = 0; i <= DAYS; i++) {
     const d = addDays(today(), i);
     loadSeen(d);
-    try { for (const r of await SRC.races(d)) m.set(`${d}|${r.key}`, r); }
+    try { for (const r of await racesOf(d)) m.set(`${d}|${r.key}`, r); }
     catch (e) { log(`${d} の番組が取れない: ${e.message}`); }
   }
   if (m.size) { sched = m; schedAt = Date.now(); log(`対象 ${m.size}レース`); }
