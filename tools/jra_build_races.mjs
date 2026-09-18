@@ -167,12 +167,55 @@ for (const c of cards) {
   (D.get(c.venue) || D.set(c.venue, []).get(c.venue)).push(race1);
   nR++;
 }
+/* 含水率・クッション値（JRA 公式。tools/jra_fetch_baba.mjs）と、その統計（jra_baba_stats.mjs） */
+let BABA = new Map(), BSTAT = null;
+try { for (const l of fs.readFileSync(path.join(ROOT, 'data/jra/baba.jsonl'), 'utf8').split('\n')) if (l) { const o = JSON.parse(l); BABA.set(`${o.date}|${o.venue}`, o); } } catch { }
+try { BSTAT = readJSON('data/jra/baba_stats.json'); } catch { }
+/* 含水率の帯（統計と同じ切り方）と、その帯の傾向を1行にする */
+const MBIN = { 芝: [[0, 10, '〜10%（乾）'], [10, 12, '10〜12%'], [12, 14, '12〜14%'], [14, 16, '14〜16%'], [16, 99, '16%〜（湿）']],
+  ダート: [[0, 4, '〜4%（乾）'], [4, 6, '4〜6%'], [6, 8, '6〜8%'], [8, 10, '8〜10%'], [10, 12, '10〜12%'], [12, 99, '12%〜（湿）']] };
+const mbinOf = (surf, v) => v == null || !MBIN[surf] ? null : (MBIN[surf].find(b => v >= b[0] && v < b[1]) || MBIN[surf].at(-1))[2];
+/* その日の含水率・クッション値を各レースに付け、読みのポイントに1行足す（測定は朝。レース直前の値ではない） */
+const babaFor = (date, venue) => {
+  /* その日の測定が無ければ、同じ場の直近（4日以内）の測定を使う。金曜正午の値を土日に当てる用 */
+  for (let k = 0; k <= 4; k++) {
+    const d = new Date(Date.parse(date + 'T00:00:00') - k * 86400000).toISOString().slice(0, 10);
+    const b = BABA.get(`${d}|${venue}`);
+    if (b) return { ...b, at: d, days: k };
+  }
+  return null;
+};
+for (const [date, V] of days) for (const [venue, races] of V) {
+  const b = babaFor(date, venue);
+  if (!b) continue;
+  for (const r of races) {
+    const surf = /芝/.test(r.surface || '') ? '芝' : /ダ/.test(r.surface || '') ? 'ダート' : null;
+    const g = surf === '芝' ? b.turfGoal : b.dirtGoal, c4 = surf === '芝' ? b.turfCorner : b.dirtCorner;
+    const moist = g != null && c4 != null ? (g + c4) / 2 : g ?? c4;
+    /* r.baba は馬場状態（良/稍重/重/不良）なので、含水率は別名で持つ */
+    r.moist = { surf, goal: g, corner: c4, moist: moist != null ? Math.round(moist * 10) / 10 : null, cushion: b.cushion ?? null, live: !!b.live,
+      turf: [b.turfGoal, b.turfCorner], dirt: [b.dirtGoal, b.dirtCorner], bin: mbinOf(surf, moist), at: b.at, ago: b.days };
+    if (moist == null) continue;
+    const S = BSTAT?.bySurface?.[surf]?.[r.moist.bin];
+    const all = BSTAT?.bySurface?.[surf] ? Object.values(BSTAT.bySurface[surf]) : [];
+    const avgDev = all.length ? all.reduce((a, x) => a + (x.timeDev ?? 0) * x.races, 0) / all.reduce((a, x) => a + x.races, 0) : null;
+    let line = `含水率 ${surf} ${g ?? '—'}%（ゴール前）／${c4 ?? '—'}%（4コーナー）${b.cushion != null ? `・芝のクッション値 ${b.cushion}` : ''}${b.days ? `（${b.at.slice(5).replace('-', '/')} の測定値）` : b.live ? '（当日の公表値）' : '（JRA公式の測定値・朝）'}。`;
+    if (S && S.races >= 100) {
+      const fast = avgDev != null && S.timeDev != null ? S.timeDev - avgDev : null;
+      line += `この帯（${r.moist.bin}）の過去 ${S.races.toLocaleString()}レースでは、勝ち時計が平均より ${fast != null ? (fast <= -0.1 ? `${Math.abs(fast).toFixed(2)}秒 速い` : fast >= 0.1 ? `${fast.toFixed(2)}秒 かかる` : 'ほぼ同じ') : '—'}、`;
+      line += `勝ち馬の4角位置は ${S.pass4 != null ? (S.pass4 <= 0.19 ? '前寄り' : S.pass4 >= 0.27 ? '後ろからでも届く' : '標準') : '—'}（${S.pass4}）、1番人気の勝率 ${S.favWin != null ? (S.favWin * 100).toFixed(1) : '—'}%。`;
+    }
+    r.points.push(line);
+  }
+}
+
 const out = {
   meta: {
     built: new Date().toISOString(), today: TODAY, groups: GROUPS,
     model: { built: M.meta.built, split: M.meta.split, train: M.meta.train, test: M.meta.test, base: M.base.test, mix: M.mix?.test || null, mixCoef: mix ? { a: mix.a, b: mix.b } : null, joint: M.joint?.test || null, jointCoef: M.joint?.coef?.slice(0, 12) || null, popOnly: M.popOnly },
     index: { from: DB.meta.from, to: DB.meta.to, races: DB.meta.races, runs: DB.meta.runs },
     backtest: BT ? { level: BT.meta.level, from: BT.meta.from, to: BT.meta.to, races: BT.meta.races, table: BT.table, note: BT.meta.note, byVenue: BT.byVenue || null } : null,
+    babaStats: BSTAT ? { meta: BSTAT.meta, note: BSTAT.note, bySurface: BSTAT.bySurface, byCushion: BSTAT.byCushion, babaMoist: BSTAT.babaMoist } : null,
   },
   days: [...days].map(([date, V]) => ({ date, venues: [...V].map(([venue, races]) => ({ venue, races: races.sort((a, b) => a.r - b.r) })) })),
 };

@@ -45,13 +45,17 @@ if (hour >= 17 && prev.resultsDay !== today) {
 }
 /* 3) 週1回（月曜 20時以降）モデルを当てはめ直す */
 if (dow === 1 && hour >= 20 && prev.fitWeek !== `${today}`) {
-  if (run('jra_fit.mjs', { JRA_FIT_EPOCH: '300' })) { run('jra_backtest.mjs'); prev.fitWeek = today; changed = true; }
+  if (run('jra_fit.mjs', { JRA_FIT_EPOCH: '300' })) { run('jra_backtest.mjs'); run('jra_baba_stats.mjs'); prev.fitWeek = today; changed = true; }
 }
 fs.writeFileSync(stampFile, JSON.stringify(prev));
 if (!changed && !hasUpcoming()) { process.exit(0); }
 if (!changed && prev.builtAt && Date.now() - prev.builtAt < 6 * 3600000) process.exit(0);   // 変化なしなら6時間に1回だけ作り直す
 
 const t0 = Date.now();
+/* 含水率・クッション値：当日の馬場情報（開催中のみ）と、今年のアーカイブ（開催後の木曜に更新）。1日1回 */
+if (prev.babaDay !== today) {
+  if (run('jra_fetch_baba.mjs', { JRA_BABA_FROM: String(new Date().getFullYear()), JRA_BABA_TO: String(new Date().getFullYear()) })) { prev.babaDay = today; changed = true; }
+}
 run('jra_build_results.mjs');                                   // 記録済みの予想 × 最新の結果（preds が無い初日は何もしない）
 if (!run('jra_build_races.mjs')) process.exit(1);
 if (!run('embed_db.mjs', { NK_EMBED_ONLY: 'jra' })) process.exit(1);
@@ -60,7 +64,7 @@ const secs = ((Date.now() - t0) / 1000).toFixed(0);
 if (process.env.NK_REFRESH_NOPUSH) { console.error(`${stamp()} 反映完了（${secs}秒・push なし）`); process.exit(0); }
 
 const git = (args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
-const TARGETS = ['jra.html', 'top.html', 'data/jra/races.json', 'data/jra/top.json', 'data/jra/index.json', 'data/jra/model.json', 'data/jra/backtest.json',
+const TARGETS = ['jra.html', 'top.html', 'data/jra/races.json', 'data/jra/top.json', 'data/jra/index.json', 'data/jra/model.json', 'data/jra/backtest.json', 'data/jra/baba.jsonl', 'data/jra/baba_stats.json',
   'data/jra/preds.jsonl', 'data/jra/results.json', 'data/jra/horses.jsonl'];
 try {
   if (git(['rev-parse', '--abbrev-ref', 'HEAD']) !== 'main') { console.error(`${stamp()} main ではないので push しない`); process.exit(0); }
