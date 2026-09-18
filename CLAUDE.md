@@ -60,6 +60,29 @@
   `publish.mjs` は名前解決・接続の失敗を15秒あけて5回まで押し直す（2026-09-18 に追加。それまでは次の周回まで公開が15分遅れていた）
 - 実測（2026-09-18）：直近24時間のうち **908分（15時間）がスリープ**だった。夜はほぼ止まっている
 
+### 締切前オッズだけはクラウドで取る（2026-09-19〜）
+Mac が寝ている間に**二度と取れなくなるのは締切前オッズだけ**（結果・払戻・番組表は後から取り直せる）。
+そこで**オッズの記録だけを GitHub Actions に出した**。予想・印・ページ生成・公開は今までどおり Mac 側。
+
+```
+.github/workflows/odds.yml   南関・ボート・中央の3本を並べて回す（JST 8時から22時まで2時間おき・1本150分ループ）
+tools/cloud_odds.mjs         締切 CO_LEAD 分前（既定8）のオッズを拾って odds-cloud ブランチへ追記する
+tools/merge_cloud_odds.mjs   Mac 側で odds-cloud を取り込み、既存の odds_live.jsonl に混ぜる（publish.mjs が15分おきに呼ぶ）
+```
+- **記録は main ではなく `odds-cloud` ブランチに置く。** main へ push すると GitHub Pages が毎回ビルドされ、
+  「1時間に10ビルド」の制限に当たるため。クラウドは main を触らず、Mac は odds-cloud を触らないので衝突しない
+- 取得元はどれも GitHub の実行環境（米国IP）から 200 で見えることを確認済み
+  （南関 `oddsJS`／ボート `oddstf`・`odds3t`・od2／netkeiba の一覧とオッズAPI／Yahoo／JRA の馬場情報）
+- レース時刻の元は**ウェブだけ**で完結させている（Mac にしかない cards.jsonl などは使わない）。
+  南関＝カレンダー→番組表→出馬表の発走時刻、ボート＝`index?hd=`→各場の `oddstf` の締切12件、中央＝netkeiba の `race_list_sub`
+- 締切は 南関＝発走1分前、ボート＝表の時刻そのもの、中央＝発走時刻
+- 同じレース・同じタグを二重に取らないよう、既存ファイルを読んで `日付|レース|タグ` で照合する。
+  Mac 側の取り込みも同じ鍵で重複を落とす（Mac が起きていたときは Mac の記録が残る）
+- **cron を細かく増やさないこと。** GitHub の予約実行は混雑時に5〜20分ずれる。長く走る1本のほうが確実で、
+  `concurrency: cancel-in-progress` で次の回が前の回を引き継ぐ
+- 手で試すときは workflow_dispatch の `lead`（締切の何分前か）を大きくすると、いまの時刻でも取得を通せる
+  （2026-09-19 の試験は `lead=458` で阪神1Rを拾えた）
+
 ## ファイル構成
 ```
 top.html                **トップ**（サイトの `/` はこれに rewrite）。競馬／ボートの切替タブを持ち、
@@ -113,6 +136,8 @@ tools/
   odds_drift.mjs        締切前と最終オッズのズレを測る
   launchd/              締切前オッズ取得を macOS に登録する plist と install.sh、フタを閉じても寝ない設定 nosleep.sh
   health.mjs            自動実行の点検（ジョブの状態・スリープで止まっていた時間・未 push）
+  cloud_odds.mjs        締切前オッズをクラウド（GitHub Actions）で取る本体
+  merge_cloud_odds.mjs  odds-cloud ブランチの記録を手元の odds_live.jsonl に取り込む
   fit_model.mjs         条件付きロジットの当てはめ → model.json
   backtest.mjs          予想の当て方ごとに的中率・回収率を検証 → backtest.json
   build_db.mjs          指数の算出 → index.json

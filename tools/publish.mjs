@@ -29,6 +29,10 @@ fs.writeFileSync(LOCK, String(process.pid));
 process.on('exit', () => { try { fs.unlinkSync(LOCK); } catch { } });
 try {
   if (git(['rev-parse', '--abbrev-ref', 'HEAD']) !== 'main') { process.exit(0); }
+  /* クラウド（GitHub Actions）が odds-cloud ブランチに貯めた締切前オッズを取り込む。
+     Mac が寝ていた時間帯のオッズはここから入る。失敗しても公開は続ける */
+  try { execFileSync(process.execPath, [path.join(ROOT, 'tools', 'merge_cloud_odds.mjs')], { cwd: ROOT, stdio: ['ignore', 'inherit', 'inherit'] }); }
+  catch (e) { console.error(`${stamp()} クラウドのオッズ取り込みに失敗（公開は続ける）`); }
   const ahead = Number(git(['rev-list', '--count', 'origin/main..main']) || 0);
   if (!ahead) process.exit(0);                       // 出すものがない（静かに終わる）
   try { gitRetry(['push', 'origin', 'main']); }
