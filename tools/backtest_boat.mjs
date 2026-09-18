@@ -96,9 +96,14 @@ for (const r of races) {
   const d = (byDay[r.date] ||= { n: 0, hit: 0, bet: 0, ret: 0 });
   const top4 = rank.slice(0, 4), ok = [f1, f2, f3].every(x => top4.includes(x));
   d.n++; d.hit += ok ? 1 : 0; d.bet += 400; d.ret += ok ? payOf(r, 'tri', [f1, f2, f3].sort((a, b) => a - b).join('-')) : 0;
-  const v = (byVenue[r.jcd] ||= { name: VNAME[r.jcd], n: 0, hit1: 0, in3: 0, bet: 0, ret: 0 });
+  const v = (byVenue[r.jcd] ||= { name: VNAME[r.jcd], n: 0, hit1: 0, in3: 0, bet: 0, ret: 0, win: { bet: 0, ret: 0, hit: 0 }, box3: { bet: 0, ret: 0, hit: 0 } });
   v.n++; v.hit1 += rank[0] === f1 ? 1 : 0; v.in3 += [f1, f2, f3].includes(rank[0]) ? 1 : 0;
   v.bet += 400; v.ret += ok ? payOf(r, 'tri', [f1, f2, f3].sort((a, b) => a - b).join('-')) : 0;
+  /* 場別でも代表的な2つ（◎単勝・本命3艇BOX 3連複）を持つ。画面の「場別の成績」で買い方を切り替えて見るため */
+  const w1hit = rank[0] === f1;
+  v.win.bet += 100; v.win.ret += w1hit ? payOf(r, 'win', String(rank[0])) : 0; v.win.hit += w1hit ? 1 : 0;
+  const t3 = rank.slice(0, 3), ok3 = [f1, f2, f3].every(x => t3.includes(x));
+  v.box3.bet += 100; v.box3.ret += ok3 ? payOf(r, 'tri', [f1, f2, f3].sort((a, b) => a - b).join('-')) : 0; v.box3.hit += ok3 ? 1 : 0;
 }
 
 const pct = (a, b) => b ? +(100 * a / b).toFixed(1) : null;
@@ -117,6 +122,7 @@ for (const [j, v] of Object.entries(byVenue).sort((a, b) => a[0].localeCompare(b
 writeJSON('data/boat/backtest.json', {
   meta: { level: LEVEL, from: races[0]?.date, to: races.at(-1)?.date, races: races.length },
   table,
-  byVenue: Object.fromEntries(Object.entries(byVenue).map(([j, v]) => [j, { ...v, hit1: pct(v.hit1, v.n), in3: pct(v.in3, v.n), roi: pct(v.ret, v.bet) }])),
+  byVenue: Object.fromEntries(Object.entries(byVenue).map(([j, v]) => [j, { name: v.name, n: v.n, hit1: pct(v.hit1, v.n), in3: pct(v.in3, v.n), roi: pct(v.ret, v.bet),
+    winRoi: pct(v.win.ret, v.win.bet), winHit: pct(v.win.hit, v.n), box3Roi: pct(v.box3.ret, v.box3.bet), box3Hit: pct(v.box3.hit, v.n) }])),
   byDay: Object.fromEntries(Object.entries(byDay).map(([d, v]) => [d, { ...v, hit: pct(v.hit, v.n), roi: pct(v.ret, v.bet) }])),
 });

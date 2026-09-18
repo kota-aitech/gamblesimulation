@@ -7,7 +7,7 @@
 
 - **公開物は `index.html` 1ファイル・依存ゼロ**（three.js も CDN も使わない。3D は Canvas 2D への自前透視投影）
 - **データは別レイヤ**（`data/` + `tools/`）で持ち、ビルド時に index.html へ埋め込む。この2つを混同しない
-- 公開先: Render Static Site（GitHub の main に push → 自動デプロイ）。設定は `render.yaml`
+- 公開先: GitHub Pages（main 直下。push は `tools/publish.mjs` が15分おきにまとめる）。URL は https://kota-aitech.github.io/gamblesimulation/
 - UI は日本語。PC は3カラム、幅 900px 以下はスマホUI（下部タブ 3D／予想／条件）
 
 ---
@@ -41,7 +41,7 @@
   この文書で「index.html」と書いてある箇所（NKDB の埋め込み、`lib/model.mjs` が読む本体、sim_check / ui_check）は **すべて `sim.html` のこと**。
 - 配信は **GitHub Pages**（main ブランチ直下、`.nojekyll` あり）。リポジトリは 2026-09-18 に `gamblesimulation` に改名。**公開 URL: https://kota-aitech.github.io/gamblesimulation/**（旧 `…/oi-keiba-3d-demo/` は 404。GitHub の転送は git/Web の URL だけで Pages には効かない）。Render は 9/16 に「パイプライン分数の上限」でデプロイが止まったため移行。
   Pages はビルド分数の制限が無い（1時間10ビルドまで）。push は `tools/publish.mjs` が15分おきにまとめる（1日最大96回）。
-  `render.yaml` は残してあるが使っていない。
+  Render のサービスは 9/18 に削除済み（`render.yaml` も削除）。
 
 ## ファイル構成
 ```
@@ -53,7 +53,6 @@ sim.html                予想シミュレーション＋3D（?track=oi / kawasa
 race.html               出馬表（競馬新聞の馬柱。横型／縦型を切替。?track=…&day=…&r=…）※新聞配色
 data.html               データブラウザ（騎手・調教師・コンビ・馬主・種牡馬の一覧）※新聞配色
 boat.html               ボートレース版（全24場・今日と明日・条件付きロジット。下の専用節を参照）※ダーク配色
-render.yaml             Render Blueprint（SPA用の catch-all rewrite は置かないこと）
 
 data/
   cache/                取得した生ページ（Shift_JIS のまま）。.gitignore 済み・再取得で作り直せる
@@ -360,6 +359,16 @@ HTML も index.html に書き換わりうる）。
 モデルが市場を上回っていない現状ではただの外れ馬券になる。
 **おすすめの主役は本命BOX**にして、期待値の組は「参考」として実績つきで併記する。
 画面には必ず実測の回収率を並記すること（`NKR.record` / `NKT.record`）。
+
+### 場別の成績（`top.html` の「場別の成績（通算）」。2026-09-18 追加）
+南関（4場）・中央（10場）・ボート（24場）で、**実際に記録した予想を払戻で精算した通算**を場ごとに並べる。ばんえいは帯広だけなので出さない。
+- データ：`results.json`（ボート／中央）に `byVenue`（全期間の場別合計。`build_boat_results.mjs` / `jra_build_results.mjs` が日別と同時に積む）、
+  南関は `results.<track>.json` の `meta.summary` がそのまま場別（`build_top.mjs` が `record` に入れる）
+- 検証側も場別を持つ：`backtest_boat.mjs` の `byVenue`（◎単勝・3艇BOX3連複・4艇BOX3連複）、`jra_backtest.mjs` の `byVenue`（同）、南関は `backtest.json` の `tracks`
+- 画面：`top.html` の `venueBoard(selEl, bodyEl, rows, metrics, opts)` が3競技で共通。買い方のボタンで並べ替えと棒が変わる。
+  列は 場／R／◎的中／上位3／**回収率（数値）**／棒（細線が100%）／的中／検証の同型。棒は 100%以上が赤・70%未満が灰
+- **表のセルの中では `<div>` の幅が 0 に潰れることがある**（`table.sum` の中で実測 2px になった）。棒には `min-width` を直接持たせること
+- 場ごとのレース数は少ない（ボートで1場あたり12〜72R）。**場の優劣として読ませない**注記を必ず出す
 
 ### 日別の成績（`top.html` の「日別の成績」）
 `build_results.mjs` が `summary.byDay` を作り、TOPに開催日ごとの表を出す。

@@ -172,7 +172,7 @@ const out = {
     built: new Date().toISOString(), today: TODAY, groups: GROUPS,
     model: { built: M.meta.built, split: M.meta.split, train: M.meta.train, test: M.meta.test, base: M.base.test, mix: M.mix?.test || null, mixCoef: mix ? { a: mix.a, b: mix.b } : null, joint: M.joint?.test || null, jointCoef: M.joint?.coef?.slice(0, 12) || null, popOnly: M.popOnly },
     index: { from: DB.meta.from, to: DB.meta.to, races: DB.meta.races, runs: DB.meta.runs },
-    backtest: BT ? { level: BT.meta.level, from: BT.meta.from, to: BT.meta.to, races: BT.meta.races, table: BT.table, note: BT.meta.note } : null,
+    backtest: BT ? { level: BT.meta.level, from: BT.meta.from, to: BT.meta.to, races: BT.meta.races, table: BT.table, note: BT.meta.note, byVenue: BT.byVenue || null } : null,
   },
   days: [...days].map(([date, V]) => ({ date, venues: [...V].map(([venue, races]) => ({ venue, races: races.sort((a, b) => a.r - b.r) })) })),
 };

@@ -34,7 +34,7 @@ const payOf = (r, kind, code) => { const h = (r.pay?.[kind] || []).find(x => x.c
 const sortKey = a => a.slice().sort((x, y) => x - y).join('-');
 const P = {};
 const add = (name, bet, ret, hit) => { const o = P[name] ||= { bet: 0, ret: 0, hit: 0, races: 0 }; o.bet += bet; o.ret += ret; o.hit += hit ? 1 : 0; o.races++; };
-const byMonth = {};
+const byMonth = {}, byVenue = {};
 let nR = 0, hit1 = 0, in3 = 0;
 for (const r of results) {
   if (r.date < FROM || r.date > TO) continue;
@@ -75,13 +75,24 @@ for (const r of results) {
   /* 基準：単勝1番人気 */
   const pop1 = f.rows.slice().sort((a, b) => (a.pop || 99) - (b.pop || 99))[0];
   if (pop1?.pop === 1) { add('［基準］1番人気の単勝', 100, pop1.no === w1 ? payOf(r, 'win', String(w1)) : 0, pop1.no === w1); }
+  /* 場別（画面の「場別の成績」用。◎単勝と本命4頭BOX三連複） */
+  {
+    const v = byVenue[r.venue] ||= { races: 0, hit1: 0, in3: 0, win: { bet: 0, ret: 0, hit: 0 }, box4: { bet: 0, ret: 0, hit: 0 }, box3: { bet: 0, ret: 0, hit: 0 } };
+    v.races++; if (ord[0] === w1) v.hit1++; if (ord.slice(0, 3).includes(w1)) v.in3++;
+    const wh = t1 === w1;
+    v.win.bet += 100; v.win.ret += wh ? payOf(r, 'win', String(t1)) : 0; v.win.hit += wh ? 1 : 0;
+    const b4v = ord.slice(0, 4), h4v = b4v.includes(f1) && b4v.includes(f2) && b4v.includes(f3);
+    v.box4.bet += 400; v.box4.ret += h4v ? payOf(r, 'sanpuku', s3) : 0; v.box4.hit += h4v ? 1 : 0;
+    const b3v = ord.slice(0, 3), h3v = b3v.includes(f1) && b3v.includes(f2) && b3v.includes(f3);
+    v.box3.bet += 100; v.box3.ret += h3v ? payOf(r, 'sanpuku', s3) : 0; v.box3.hit += h3v ? 1 : 0;
+  }
   const mo = byMonth[r.date.slice(0, 7)] ||= { races: 0, hit1: 0, in3: 0, win: { bet: 0, ret: 0 }, box4: { bet: 0, ret: 0 } };
   mo.races++; if (ord[0] === w1) mo.hit1++; if (ord.slice(0, 3).includes(w1)) mo.in3++;
   mo.win.bet += 100; mo.win.ret += t1 === w1 ? payOf(r, 'win', String(t1)) : 0;
   const b4 = ord.slice(0, 4), h4 = b4.includes(f1) && b4.includes(f2) && b4.includes(f3); mo.box4.bet += 400; mo.box4.ret += h4 ? payOf(r, 'sanpuku', s3) : 0;
 }
 const table = Object.fromEntries(Object.entries(P).map(([k, v]) => [k, { races: v.races, hit: +(100 * v.hit / v.races).toFixed(1), roi: +(100 * v.ret / v.bet).toFixed(1), bet: v.bet, ret: v.ret }]));
-const out = { meta: { level: LEVEL, from: FROM, to: TO, races: nR, hit1: +(hit1 / nR).toFixed(4), in3: +(in3 / nR).toFixed(4), note: LEVEL !== 'base' ? '単勝オッズは結果ページの確定値。締切前の値ではないので実戦よりやや有利' : '' }, table, byMonth };
+const out = { meta: { level: LEVEL, from: FROM, to: TO, races: nR, hit1: +(hit1 / nR).toFixed(4), in3: +(in3 / nR).toFixed(4), note: LEVEL !== 'base' ? '単勝オッズは結果ページの確定値。締切前の値ではないので実戦よりやや有利' : '' }, table, byVenue: Object.fromEntries(Object.entries(byVenue).map(([k, v]) => [k, { races: v.races, hit1: +(100 * v.hit1 / v.races).toFixed(1), in3: +(100 * v.in3 / v.races).toFixed(1), winRoi: +(100 * v.win.ret / v.win.bet).toFixed(1), winHit: +(100 * v.win.hit / v.races).toFixed(1), box4Roi: +(100 * v.box4.ret / v.box4.bet).toFixed(1), box4Hit: +(100 * v.box4.hit / v.races).toFixed(1), box3Roi: +(100 * v.box3.ret / v.box3.bet).toFixed(1), box3Hit: +(100 * v.box3.hit / v.races).toFixed(1) }])), byMonth };
 writeJSON('data/jra/backtest.json', out);
 console.error(`検証 ${nR}R（${LEVEL}）1着的中 ${(100 * hit1 / nR).toFixed(1)}%／上位3頭に勝ち馬 ${(100 * in3 / nR).toFixed(1)}%`);
 for (const [k, v] of Object.entries(table)) console.error(`  ${k.padEnd(16)} 的中 ${String(v.hit).padStart(5)}%  回収 ${String(v.roi).padStart(6)}%`);

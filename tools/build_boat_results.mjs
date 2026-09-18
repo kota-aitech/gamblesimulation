@@ -30,8 +30,9 @@ for (const line of fs.readFileSync(path.join(ROOT, 'data/boat/results.jsonl'), '
 }
 
 /* 精算の式は lib/bsettle.mjs（build_boat.mjs の「節間の結果」と共用） */
-const out = { built: new Date().toISOString(), bets: BETS, days: [], total: null };
+const out = { built: new Date().toISOString(), bets: BETS, days: [], byVenue: [], total: null };
 const TOTAL = mk();
+const VEN = new Map();                                   // 場別の通算（全期間。日をまたいで足す）
 let matched = 0, pending = 0;
 for (const date of dates) {
   const byV = new Map();
@@ -46,10 +47,13 @@ for (const date of dates) {
     let V = byV.get(p.jcd); if (!V) byV.set(p.jcd, V = { S: mk(), preds: 0, late: 0 });
     merge(V.S, S); merge(DAY, S); merge(TOTAL, S);
     V.preds++; if (p.late > 30) V.late++;
+    let W = VEN.get(p.jcd); if (!W) VEN.set(p.jcd, W = { S: mk(), days: new Set(), late: 0 });
+    merge(W.S, S); W.days.add(date); if (p.late > 30) W.late++;
   }
   const venues = [...byV.keys()].sort().map(jcd => ({ jcd, name: VNAME[jcd], late: byV.get(jcd).late, ...fin(byV.get(jcd).S) }));
   out.days.push({ date, venues, ...fin(DAY) });
 }
+out.byVenue = [...VEN.keys()].sort().map(jcd => ({ jcd, name: VNAME[jcd], days: VEN.get(jcd).days.size, late: VEN.get(jcd).late, ...fin(VEN.get(jcd).S) }));
 out.total = fin(TOTAL);
 out.note = `予想は締切後に記録したもの（late＝締切30分以上あとに記録したレース数。モデルはオッズを使わないので中身は同じ）。成績は公式ダウンロードデータ（K）。`;
 writeJSON('data/boat/results.json', out);

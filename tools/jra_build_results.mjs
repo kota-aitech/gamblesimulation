@@ -52,7 +52,8 @@ function settle(p, k) {
 const merge = (A, B) => { A.races += B.races; A.hit1 += B.hit1; A.in3 += B.in3; for (const b of BETS) { const x = A.bets[b], y = B.bets[b]; x.n += y.n; x.hit += y.hit; x.bet += y.bet; x.ret += y.ret; } };
 const fin = S => ({ races: S.races, hit1: S.races ? +(S.hit1 / S.races).toFixed(3) : null, in3: S.races ? +(S.in3 / S.races).toFixed(3) : null,
   bets: Object.fromEntries(BETS.map(b => { const x = S.bets[b]; return [b, { n: x.n, hit: x.n ? +(x.hit / x.n).toFixed(3) : null, bet: x.bet, ret: x.ret, roi: x.bet ? +(x.ret / x.bet).toFixed(3) : null }]; })) });
-const out = { built: new Date().toISOString(), bets: BETS, days: [], total: null };
+const out = { built: new Date().toISOString(), bets: BETS, days: [], byVenue: [], total: null };
+const VEN = new Map();                                   // 場別の通算（全期間）
 const TOTAL = mk(); let matched = 0, pending = 0;
 for (const date of dates) {
   const byV = new Map(), DAY = mk();
@@ -63,9 +64,12 @@ for (const date of dates) {
     matched++;
     let V = byV.get(p.venue); if (!V) byV.set(p.venue, V = { S: mk(), late: 0, mix: 0 });
     merge(V.S, S); merge(DAY, S); merge(TOTAL, S); if (p.late > 60) V.late++; if (p.level === 'mix') V.mix++;
+    let W = VEN.get(p.venue); if (!W) VEN.set(p.venue, W = { S: mk(), days: new Set(), late: 0 });
+    merge(W.S, S); W.days.add(date); if (p.late > 60) W.late++;
   }
   out.days.push({ date, venues: [...byV].map(([venue, v]) => ({ venue, late: v.late, mix: v.mix, ...fin(v.S) })), ...fin(DAY) });
 }
+out.byVenue = [...VEN.keys()].sort().map(venue => ({ venue, days: VEN.get(venue).days.size, late: VEN.get(venue).late, ...fin(VEN.get(venue).S) }));
 out.total = fin(TOTAL);
 out.note = '予想は発走後に記録したもの（late＝発走から60分以上あとに記録したレース数。再現＝後から同じ入力で作り直したもの）。払戻は Yahoo!スポーツの結果ページ。';
 writeJSON('data/jra/results.json', out);

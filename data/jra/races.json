@@ -1,6 +1,6 @@
 {
  "meta": {
-  "built": "2026-09-18T01:48:11.339Z",
+  "built": "2026-09-18T02:15:09.651Z",
   "today": "2026-09-18",
   "groups": [
    "近走",
@@ -439,7 +439,108 @@
      "ret": 77640
     }
    },
-   "note": "単勝オッズは結果ページの確定値。締切前の値ではないので実戦よりやや有利"
+   "note": "単勝オッズは結果ページの確定値。締切前の値ではないので実戦よりやや有利",
+   "byVenue": {
+    "東京": {
+     "races": 68,
+     "hit1": 30.9,
+     "in3": 60.3,
+     "winRoi": 64.3,
+     "winHit": 30.9,
+     "box4Roi": 96.9,
+     "box4Hit": 23.5,
+     "box3Roi": 58.4,
+     "box3Hit": 10.3
+    },
+    "阪神": {
+     "races": 117,
+     "hit1": 29.1,
+     "in3": 69.2,
+     "winRoi": 63.9,
+     "winHit": 29.1,
+     "box4Roi": 94.6,
+     "box4Hit": 26.5,
+     "box3Roi": 116.1,
+     "box3Hit": 12
+    },
+    "函館": {
+     "races": 143,
+     "hit1": 33.6,
+     "in3": 62.9,
+     "winRoi": 78.4,
+     "winHit": 33.6,
+     "box4Roi": 81.3,
+     "box4Hit": 23.8,
+     "box3Roi": 126.3,
+     "box3Hit": 11.2
+    },
+    "福島": {
+     "races": 91,
+     "hit1": 41.8,
+     "in3": 68.1,
+     "winRoi": 107.4,
+     "winHit": 41.8,
+     "box4Roi": 72,
+     "box4Hit": 22,
+     "box3Roi": 34.7,
+     "box3Hit": 6.6
+    },
+    "小倉": {
+     "races": 91,
+     "hit1": 37.4,
+     "in3": 73.6,
+     "winRoi": 87.5,
+     "winHit": 37.4,
+     "box4Roi": 69.8,
+     "box4Hit": 18.7,
+     "box3Roi": 84.9,
+     "box3Hit": 12.1
+    },
+    "札幌": {
+     "races": 168,
+     "hit1": 36.3,
+     "in3": 70.8,
+     "winRoi": 88,
+     "winHit": 36.3,
+     "box4Roi": 88.3,
+     "box4Hit": 24.4,
+     "box3Roi": 111.9,
+     "box3Hit": 10.7
+    },
+    "新潟": {
+     "races": 144,
+     "hit1": 33.3,
+     "in3": 68.1,
+     "winRoi": 78.5,
+     "winHit": 33.3,
+     "box4Roi": 64.9,
+     "box4Hit": 20.8,
+     "box3Roi": 82.4,
+     "box3Hit": 8.3
+    },
+    "中京": {
+     "races": 137,
+     "hit1": 40.9,
+     "in3": 73.7,
+     "winRoi": 93.2,
+     "winHit": 40.9,
+     "box4Roi": 72.1,
+     "box4Hit": 23.4,
+     "box3Roi": 65.9,
+     "box3Hit": 8
+    },
+    "中山": {
+     "races": 45,
+     "hit1": 24.4,
+     "in3": 60,
+     "winRoi": 65.8,
+     "winHit": 24.4,
+     "box4Roi": 63.9,
+     "box4Hit": 15.6,
+     "box3Roi": 58,
+     "box3Hit": 4.4
+    }
+   }
   }
  },
  "days": [

@@ -650,7 +650,7 @@ const PICK = ['◎単勝', '◎複勝', '本命3艇BOX 3連複', '◎○の2連�
 const top = {
   builtAt: out.meta.built, today: TODAY, nat1: out.meta.nat1,
   model: out.meta.model ? { hit1: out.meta.model.ex?.hit1, in3: out.meta.model.ex?.in3, courseOnly: out.meta.model.courseOnly?.hit1, test: out.meta.model.test } : null,
-  backtest: BT ? { races: BT.meta.races, from: BT.meta.from, to: BT.meta.to, table: Object.fromEntries(PICK.filter(k => BT.table[k]).map(k => [k, { hit: BT.table[k].hit, roi: BT.table[k].roi }])) } : null,
+  backtest: BT ? { races: BT.meta.races, from: BT.meta.from, to: BT.meta.to, byVenue: BT.byVenue || null, table: Object.fromEntries(PICK.filter(k => BT.table[k]).map(k => [k, { hit: BT.table[k].hit, roi: BT.table[k].roi }])) } : null,
   days: out.days.map(d => ({
     date: d.date,
     venues: d.venues.map(v => ({
