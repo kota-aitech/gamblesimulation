@@ -47,6 +47,14 @@ export const FEATURES = [
        lvlX    … 強い相手関係で好走したか（(相対着順−0.5)×レベル の加重平均）
        lastLvl … 前走のレースレベル */
   'raceLvl', 'lvlX', 'lastLvl',
+  /* 含水率・クッション値（JRA公式。lib/jbaba.mjs）。レース全体で同じ値は条件付きロジットで消えるので、
+     必ず馬ごとの性質との掛け算で持つ。含水率は場×芝ダで標準化した偏差（0 がその場のふつう、+1 で1σ湿っている）
+       moistX    … その馬の道悪適性（過去走の相対着順×そのときの偏差）× 今日の偏差
+       moistPosD/T … 偏差 × 序盤の位置取り（前ほど＋）。ダートは湿ると前、芝は湿ると差しが届く＝符号が逆になるので芝ダで別の列にする
+       moistClose … 偏差 × 終いの速さ　moistSpd … 偏差 × 持ち時計　moistBw … 偏差 × レース内の馬体重
+       moistNew  … 今日の偏差 − その馬が経験してきた偏差（慣れていない条件か）
+       cushPos / cushSpd … クッション値の偏差（芝のみ）× 位置取り／持ち時計 */
+  'moistX', 'moistPosD', 'moistPosT', 'moistClose', 'moistSpd', 'moistBw', 'moistNew', 'cushPos', 'cushSpd',
   /* 市場（単勝オッズ）の対数確率。レース内で中心化。オッズが無いレースは 0。
      base モデルではこの列を必ず 0 にして当てはめ、joint モデルだけが使う（jra_fit.mjs） */
   'mktLog',
@@ -229,7 +237,7 @@ export function raceFromCard(c, H) {
 }
 
 /* ---- 1頭の推定値（南関 lib/horse.mjs の derive に相当）---- */
-function derive(h, race, RI, COURSE) {
+function derive(h, race, RI, COURSE, BABA) {
   const past = h.past || [];
   let abS = 0, abW = 0, clS = 0, agS = 0, agW = 0, epS = 0, epW = 0;
   /* 走破時計（速度指数）：200m あたりの基準タイム（コース＋馬場状態＋クラス。RI.stdTime）との差、速いほど＋。
@@ -256,6 +264,7 @@ function derive(h, race, RI, COURSE) {
   let same = [0, 0], other = [0, 0], surfSame = [0, 0], surfOther = [0, 0], wet = [0, 0], venue = [0, 0];
   let tS = 0, tW = 0, fastRel = [0, 0], slowRel = [0, 0];
   let lvS = 0, lvX = 0, lvW = 0, lastLvl = 0;
+  let mfS = 0, mfW = 0, mdS = 0;                      // 道悪適性（含水率の偏差 × 相対着順）と経験してきた含水率
   past.forEach((p, i) => {
     const w = W[i] ?? 0.4;
     const rel = p.n > 1 ? 1 - (p.pos - 1) / (p.n - 1) : 0.5;
@@ -272,6 +281,7 @@ function derive(h, race, RI, COURSE) {
     if (p.surface === race.surface) { surfSame[0] += rel; surfSame[1]++; } else if (p.surface) { surfOther[0] += rel; surfOther[1]++; }
     if (p.baba && p.baba !== '良') { wet[0] += rel; wet[1]++; }
     if (p.venue === race.venue) { venue[0] += rel; venue[1]++; }
+    if (BABA) { const mb = BABA.of(p.date, p.venue, p.surface); if (mb && mb.dev != null) { mfS += (rel - 0.5) * mb.dev * w; mdS += mb.dev * w; mfW += w; } }
     if (L && L.ten3) {
       const base = RI.tenBase.get(`${p.venue}|${p.surface}|${p.dist}`);
       if (base) { const dv = L.ten3 - base; tS += dv * w; tW += w; if (dv <= -0.3) { fastRel[0] += rel; fastRel[1]++; } else if (dv >= 0.3) { slowRel[0] += rel; slowRel[1]++; } }
@@ -300,12 +310,13 @@ function derive(h, race, RI, COURSE) {
     stamina: same[1] ? same[0] / same[1] - (other[1] ? other[0] / other[1] : ability) : 0,
     surfFit: surfSame[1] ? surfSame[0] / surfSame[1] - (surfOther[1] ? surfOther[0] / surfOther[1] : ability) : 0,
     wet: wet[1] ? wet[0] / wet[1] - ability : 0,
+    moistFit: mfW ? (mfS / mfW) * 2 : 0, moistExp: mfW ? mdS / mfW : 0, moistN: mfW,
     venueFit: venue[1] ? venue[0] / venue[1] - ability : 0,
     epos, style,
   };
 }
 
-export function makeFeaturizer(DB, RI, ASOF) {
+export function makeFeaturizer(DB, RI, ASOF, BABA) {
   if (!ASOF) throw new Error('makeFeaturizer には buildAsOf(results) の戻り値が要る（人的要因はレース時点の指数で作る）');
   const COURSE = (DB && DB.course) || {};
   return function featurize(race) {
@@ -316,9 +327,13 @@ export function makeFeaturizer(DB, RI, ASOF) {
     if (live.length < 5) return null;
     const kgAvg = live.reduce((a, h) => a + (h.kin || 55), 0) / live.length;
     const isWet = race.baba && race.baba !== '良' ? 1 : 0;
+    /* 含水率・クッション値。測定が無いレースは 0（列ごと落ちる） */
+    const MB = BABA ? BABA.of(race.date, race.venue, race.surface) : null;
+    const mdev = MB && MB.dev != null ? MB.dev : null, cdev = MB && MB.cdev != null ? MB.cdev : null;
+    const isDirt = /ダ/.test(race.surface || '') ? 1 : 0, isTurf = /芝/.test(race.surface || '') ? 1 : 0;
     const bws = live.map(h => h.bw).filter(x => x > 0);
     const bwAvg = bws.length ? bws.reduce((a, b) => a + b, 0) / bws.length : 470;
-    const ds = live.map(h => derive(h, race, RI, COURSE));
+    const ds = live.map(h => derive(h, race, RI, COURSE, BABA));
     /* 市場の対数確率（控除は正規化で消える）。全頭のオッズが揃ったレースだけ */
     const lq = live.every(h => h.odds > 0) ? live.map(h => -Math.log(h.odds)) : null;
     const lqm = lq ? lq.reduce((a, b) => a + b, 0) / lq.length : 0;
@@ -364,6 +379,15 @@ export function makeFeaturizer(DB, RI, ASOF) {
         bwEdge: h.bw && K && K.bwAvg ? bwLean * clamp((h.bw - K.bwAvg) / 25, -2, 2) : 0,
         spdIdx: d.spdIdx, spdBest: d.spdBest,
         raceLvl: d.raceLvl, lvlX: d.lvlX, lastLvl: d.lastLvl,
+        moistX: mdev != null ? d.moistFit * mdev : 0,
+        moistPosD: mdev != null && isDirt ? mdev * (0.5 - d.epos) * 2 : 0,
+        moistPosT: mdev != null && isTurf ? mdev * (0.5 - d.epos) * 2 : 0,
+        moistClose: mdev != null ? mdev * d.close : 0,
+        moistSpd: mdev != null ? mdev * d.spdBest : 0,
+        moistBw: mdev != null && h.bw ? mdev * clamp((h.bw - bwAvg) / 25, -2.5, 2.5) : 0,
+        moistNew: mdev != null && d.moistN ? clamp(mdev - d.moistExp, -3, 3) : 0,
+        cushPos: cdev != null ? cdev * (0.5 - d.epos) * 2 : 0,
+        cushSpd: cdev != null ? cdev * d.spdBest : 0,
         mktLog: lq ? lq[hi] - lqm : 0,
       };
       const v = new Float64Array(NF);

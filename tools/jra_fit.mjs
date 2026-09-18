@@ -8,11 +8,13 @@
      JRA_FIT_SPLIT … 学習と検証を切る日付（既定 2026-06-01）
      JRA_FIT_WARM  … 履歴の助走期間（既定 2024-03-01。それ以前のレースは前走が揃わないので学習に使わない）
      JRA_FIT_DB    … 指数（既定 data/jra/index.json。先読みを避けるなら index.train.json）
+     JRA_FIT_OUT   … 書き出し先（既定 data/jra/model.json。切り分けで本番を上書きしたくないとき）
      JRA_FIT_EPOCH / JRA_FIT_LR / JRA_FIT_L2 */
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, readJSON, writeJSON } from './lib/jra.mjs';
 import { FEATURES, NF, MKT, buildRaceIndex, buildHistory, buildAsOf, loadPed, raceFromResult, makeFeaturizer } from './lib/jfeat.mjs';
+import { loadBaba } from './lib/jbaba.mjs';
 import { utilities, plWin, plackettLuce, fitTau } from './lib/bpl.mjs';
 
 const SPLIT = process.env.JRA_FIT_SPLIT || '2026-06-01';
@@ -30,7 +32,8 @@ results.sort((a, b) => a.date.localeCompare(b.date) || a.raceId.localeCompare(b.
 const PED = loadPed(fs.existsSync(path.join(ROOT, 'data/jra/horses.jsonl')) ? fs.readFileSync(path.join(ROOT, 'data/jra/horses.jsonl'), 'utf8') : '');
 const RI = buildRaceIndex(results), H = buildHistory(results), ASOF = buildAsOf(results, PED);
 console.error(`  血統・馬主 ${PED.size} 頭`);
-const featurize = makeFeaturizer(DB, RI, ASOF);
+const BABA_IDX = loadBaba();                       // 含水率・クッション値（場×芝ダで標準化して特徴量に効かせる）
+const featurize = makeFeaturizer(DB, RI, ASOF, BABA_IDX);
 const data = [];
 for (const r of results) {
   if (r.date < WARM) continue;
@@ -142,9 +145,9 @@ if (!process.env.JRA_FIT_NOJOINT) {
   joint = { beta: [...bj].map(v => +v.toFixed(4)), tau: tj, test: ej, coef };
 }
 
-writeJSON('data/jra/model.json', {
+writeJSON(process.env.JRA_FIT_OUT || 'data/jra/model.json', {
   meta: { built: new Date().toISOString().slice(0, 10), split: SPLIT, warm: WARM, feats: FEATURES, train: tr.length, test: te.length, from: data[0]?.date, to: data.at(-1)?.date, db: process.env.JRA_FIT_DB || 'data/jra/index.json' },
   base: { beta: [...beta].map(v => +v.toFixed(4)), tau, test: ev, testRaw: { logloss: raw.logloss, hit1: raw.hit1, in3: raw.in3 } },
   mix: { ...mix, test: ev2 }, popOnly, joint,
 });
-console.error('-> data/jra/model.json');
+console.error('-> ' + (process.env.JRA_FIT_OUT || 'data/jra/model.json'));

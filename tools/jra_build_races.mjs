@@ -8,6 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, readJSON, writeJSON } from './lib/jra.mjs';
 import { FEATURES, NF, buildRaceIndex, buildHistory, buildAsOf, loadPed, raceFromCard, makeFeaturizer } from './lib/jfeat.mjs';
+import { loadBaba } from './lib/jbaba.mjs';
 import { utilities } from './lib/bpl.mjs';
 import { combosOf } from './lib/jbets.mjs';
 
@@ -34,7 +35,8 @@ for (const l of fs.readFileSync(path.join(ROOT, 'data/jra/results.jsonl'), 'utf8
 const PED = loadPed(fs.existsSync(path.join(ROOT, 'data/jra/horses.jsonl')) ? fs.readFileSync(path.join(ROOT, 'data/jra/horses.jsonl'), 'utf8') : '');
 const RI = buildRaceIndex(results), H = buildHistory(results), ASOF = buildAsOf(results, PED);
 console.error(`  血統・馬主 ${PED.size} 頭`);
-const featurize = makeFeaturizer(DB, RI, ASOF);
+const BABA_IDX = loadBaba();                       // 含水率・クッション値（場×芝ダで標準化して特徴量に効かせる）
+const featurize = makeFeaturizer(DB, RI, ASOF, BABA_IDX);
 
 /* 発走が過ぎたレースの予想を記録する（回収率の算出用。jra_build_results.mjs が読む）。
    ボートと同じで後から作り直さない。JRA_RECORD_PAST=1 のときだけ過去日の出馬表からも「再現」として記録する

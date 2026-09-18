@@ -849,7 +849,7 @@ data/jra/races.json      ★今日以降の出馬表と予測（jra.html 用）�
 tools/lib/jra.mjs        取得共通（レート制限・キャッシュ・規制時の休止・jsonl の差し替え追記）
 tools/lib/jrapage.mjs    netkeiba のパーサ（規制が解けたときだけ）
 tools/lib/yahoo.mjs      Yahoo!スポーツのパーサ（parseMonthly / parseList / parseResult / parseDenma）
-tools/lib/jfeat.mjs      特徴量 58個（南関の feat.mjs を踏襲。学習も予測も raceFromResult / raceFromCard で同じ形にしてから featurize。レースレベル・基準タイム・市場の対数確率もここ）
+tools/lib/jfeat.mjs      特徴量 66個（南関の feat.mjs を踏襲。学習も予測も raceFromResult / raceFromCard で同じ形にしてから featurize。レースレベル・基準タイム・市場の対数確率もここ）
 tools/lib/jbets.mjs      組の確率（馬連・馬単・三連複・三連単・ワイド。3着までの並びを全列挙）
 tools/jra_fetch_results.mjs  結果を取る（JRA_FROM/JRA_TO、JRA_SRC=yahoo|netkeiba、取得済みは飛ばす）
 tools/jra_fetch_cards.mjs    出馬表を取る（今日〜3日後）
@@ -857,6 +857,7 @@ tools/jra_build_db.mjs       指数 → index.json（JRA_DB_FROM/TO/OUT）
 tools/jra_fit.mjs            当てはめ → model.json（JRA_FIT_SPLIT/WARM/DB/EPOCH/L2）
 tools/jra_backtest.mjs       検証 → backtest.json（JRA_BT_LEVEL=base|mix）
 tools/jra_build_races.mjs    出馬表に当てる → races.json / top.json
+tools/lib/jbaba.mjs          含水率・クッション値を「場×芝ダのふつうからのズレ」に直して引く索引（特徴量用）
 tools/lib/jrapdf.mjs         JRA の PDF（含水率・クッション値）を表に起こす最小パーサ（zlib だけ）
 tools/jra_fetch_baba.mjs     含水率・クッション値の取り込み（アーカイブPDF＋当日ページ）→ baba.jsonl
 tools/jra_baba_stats.mjs     含水率・クッション値 × 結果の統計 → baba_stats.json
@@ -1002,6 +1003,30 @@ robots.txt は全面許可だが、**Referer と Accept を付けないと 200 �
 **ダートは湿るほど時計が速く前で決まる。芝は湿るほど時計がかかり、勝ち馬の4角位置が後ろ寄りになる（差しが届く）。**
 クッション値は 低い（軟らかい）ほど時計がかかり上がりも遅い（8.5未満で +0.39秒・上がり35.34）、高いほど速い。
 1番人気の勝率は 31〜36% で帯による差は小さい（＝人気馬の信頼度は含水率では大きく変わらない）。
+
+#### 含水率を特徴量に入れた結果（2026-09-18、学習 16,412R／検証 1,004R）
+含水率は**レース全体で同じ値**なので、そのまま列にしても条件付きロジットでは消える。必ず馬ごとの性質との掛け算で入れる。
+生の値は場と芝ダで水準が違う（芝 10〜16%、ダート 2〜12%）ので `lib/jbaba.mjs` が**場×芝ダの平均・標準偏差で標準化した偏差**にしてから渡す
+（測定が無い日は同じ場の直近4日以内。結果 19,171R のうち含水率が付くのは 87.5%、クッション値は芝の 87%）。
+
+| 特徴量 | 中身 | base | joint |
+|---|---|---|---|
+| `moistX` | その馬の道悪適性（過去走の (相対着順−0.5)×そのときの偏差）× 今日の偏差 | +0.045 | +0.030 |
+| `moistPosD` / `moistPosT` | 偏差 × 序盤の位置取り（前ほど＋）。**ダートは +0.020／芝は −0.025 と符号が逆** | +0.020／−0.025 | — |
+| `moistSpd` | 偏差 × 持ち時計（`spdBest`） | +0.047 | +0.054 |
+| `cushPos` / `cushSpd` | クッション値の偏差（芝のみ）× 位置取り／持ち時計 | +0.042／+0.067 | +0.056／+0.036 |
+| `moistClose` / `moistBw` / `moistNew` | 偏差 × 終い／馬体重、経験していない偏差か | ほぼ 0 | ほぼ 0 |
+
+| | base logloss | 1着的中 | 上位3頭 | joint logloss | joint 1着的中 |
+|---|---|---|---|---|---|
+| 含水率なし | 2.0946 | 27.5% | 60.1% | 1.8712 | 35.0% |
+| **含水率あり（採用）** | **2.0942** | **27.9%** | **60.2%** | **1.8711** | **35.5%** |
+
+**差は logloss で 0.0004＝誤差の範囲。** 1着的中が +0.4〜0.5 ポイント動いただけで、**含水率は予測精度をほとんど動かさない**。
+ただし係数の符号は統計（ダートは湿ると前・芝は湿ると差し）と一致していて、害も無いので載せた。
+**価値は画面の読み物のほう**（レース見出しの含水率と「含水率と結果の傾向」の表）。
+切り分けは `JRA_FIT_DROP=moistX,moistPosD,moistPosT,moistClose,moistSpd,moistBw,moistNew,cushPos,cushSpd`、
+本番を上書きせずに試すときは `JRA_FIT_OUT=<書き出し先>`（**相対パスで渡すこと**。`writeJSON` が ROOT と結合するので絶対パスはリポジトリ内に落ちる）。
 
 ### 日別・場別の成績（`jra_build_results.mjs` → `results.json` → TOP の中央競馬面）
 ボートと同じ仕組み。`jra_build_races` が**発走の過ぎたレース**の予想（順位・1着確率・AIの上位N点・1番人気）を `preds.jsonl` に記録し、
