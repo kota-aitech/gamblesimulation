@@ -1,6 +1,6 @@
 {
  "track": "浦和",
- "builtAt": "2026-09-22T22:46:00.428Z",
+ "builtAt": "2026-09-23T12:57:08.147Z",
  "source": "nankankeiba.com 出馬表の前5走欄＋レース傾向",
  "trendRef": {
   "800": {
@@ -281,24 +281,17 @@
   }
  },
  "calib": {
-  "frontMid": 0.8,
-  "meetMid": 0.823,
-  "frontSd": 0.04,
+  "frontMid": 0.801,
+  "meetMid": 0.827,
+  "frontSd": 0.032,
   "gateMid": -0.057,
   "gateSd": 0.074
  },
  "meet": {
   "track": "浦和",
   "source": "nankankeiba.com レース傾向（3着内回数ベスト3枠 / 1〜3着馬の3角位置）",
-  "name": "6/23(火)〜9/22(火) の14日",
+  "name": "6/24(水)〜9/23(水) の14日",
   "days": [
-   {
-    "d": "6/23(火)",
-    "front": 26,
-    "back": 10,
-    "best": [],
-    "partial": "12レース終了時"
-   },
    {
     "d": "6/24(水)",
     "front": 28,
@@ -387,6 +380,13 @@
     "d": "9/22(火)",
     "front": 32,
     "back": 4,
+    "best": [],
+    "partial": "12レース終了時"
+   },
+   {
+    "d": "9/23(水)",
+    "front": 28,
+    "back": 8,
     "best": [],
     "partial": "12レース終了時"
    }
