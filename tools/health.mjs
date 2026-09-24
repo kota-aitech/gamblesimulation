@@ -15,27 +15,32 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const sh = (cmd, args) => { try { return execFileSync(cmd, args, { encoding: 'utf8', maxBuffer: 64 << 20 }); } catch (e) { return String(e.stdout || ''); } };
 const ago = ms => ms == null ? '—' : ms < 60000 ? `${Math.round(ms / 1000)}秒前` : ms < 3600000 ? `${Math.round(ms / 60000)}分前` : `${(ms / 3600000).toFixed(1)}時間前`;
+/* [ラベル, 間隔(秒), 動いた形跡を示すファイル（複数可）, 説明]
+   **ログだけを見ると誤判定する。** 反映ジョブは「やることが無い日」は静かに終わってログを書かない
+   （開催が無ければ出馬表も結果も増えないので、それが正しい動き）。
+   そこで `.refresh-stamp`（作り直した時刻）や取得物の更新時刻も一緒に見て、**いちばん新しいもの**を採る */
 const JOBS = [
-  ['com.nankan.oddswatch', 60, 'data/nankan/oddswatch.log', '南関のオッズ（締切前・暫定）'],
-  ['com.nankan.refresh', 120, 'data/nankan/refresh.log', '南関の反映'],
-  ['com.nankan.results', 86400, 'data/nankan/results.log', '南関の結果（21:20/23:00/6:30）'],
-  ['com.boat.live', 60, 'data/boat/live.log', 'ボートの直前情報・オッズ・結果'],
-  ['com.boat.refresh', 180, 'data/boat/refresh.log', 'ボートの反映'],
-  ['com.jra.refresh', 1200, 'data/jra/refresh.log', '中央の取得と反映'],
-  ['com.banei.refresh', 900, 'data/banei/refresh.log', 'ばんえいの取得と反映'],
-  ['com.nankan.publish', 900, 'data/publish.log', '公開（GitHub へ push）'],
+  ['com.nankan.oddswatch', 60, ['data/nankan/oddswatch.log', 'data/nankan/.oddswatch.notyet.json'], '南関のオッズ（締切前・暫定）'],
+  ['com.nankan.refresh', 120, ['data/nankan/refresh.log', 'data/nankan/.refresh-stamp'], '南関の反映'],
+  ['com.nankan.results', 86400, ['data/nankan/results.log'], '南関の結果（21:20/23:00/6:30）'],
+  ['com.boat.live', 60, ['data/boat/live.log'], 'ボートの直前情報・オッズ・結果'],
+  ['com.boat.refresh', 180, ['data/boat/refresh.log', 'data/boat/.refresh-stamp'], 'ボートの反映'],
+  ['com.jra.refresh', 1200, ['data/jra/refresh.log', 'data/jra/.refresh-stamp'], '中央の取得と反映'],
+  ['com.banei.refresh', 900, ['data/banei/refresh.log', 'data/banei/.refresh-stamp'], 'ばんえいの取得と反映'],
+  ['com.nankan.publish', 900, ['data/publish.log'], '公開（GitHub へ push）'],
 ];
 const listed = sh('launchctl', ['list']);
 const now = Date.now();
 console.log(`点検 ${new Date().toLocaleString('ja-JP', { hour12: false })}\n`);
 console.log('ジョブ                     状態      前回の書き込み   間隔   中身');
-for (const [label, sec, rel, name] of JOBS) {
+for (const [label, sec, rels, name] of JOBS) {
   const line = listed.split('\n').find(l => l.endsWith('\t' + label) || l.split('\t')[2] === label);
   const exit = line ? line.split('\t')[1] : null;
-  const f = path.join(ROOT, rel);
-  const m = fs.existsSync(f) ? fs.statSync(f).mtimeMs : null;
+  let m = null;
+  for (const rel of rels) { const f = path.join(ROOT, rel); if (fs.existsSync(f)) { const t = fs.statSync(f).mtimeMs; if (m == null || t > m) m = t; } }
   const state = !line ? '未登録' : exit !== '0' ? `前回失敗(${exit})` : '登録済み';
-  console.log(`${label.padEnd(24)} ${state.padEnd(9)} ${ago(m ? now - m : null).padEnd(14)} ${String(sec).padStart(5)}秒  ${name}`);
+  const stale = m && (now - m) > Math.max(sec * 1000 * 6, 6 * 3600000) ? ' ←要確認' : '';
+  console.log(`${label.padEnd(24)} ${state.padEnd(9)} ${ago(m ? now - m : null).padEnd(14)} ${String(sec).padStart(5)}秒  ${name}${stale}`);
 }
 /* スリープの空白（10分以上） */
 const log = sh('pmset', ['-g', 'log']);
