@@ -80,8 +80,11 @@ const GROUP = {
   sIdx: '血統', bmsIdx: '血統', sSurf: '血統', oIdx: '馬主',
   gateEdge: '枠', gate: '枠', kgRel: '斤量', bwLog: '馬体', bwDiff: '馬体', bwDev: '馬体', bwSwing: '馬体', bwRel: '馬体', bwFit: '馬体', bwEdge: '馬体',
   restLog: '間隔', layoff: '間隔', age: 'その他', mare: 'その他',
+  /* 馬場（含水率・クッション値）。偏差×性質の moist* と、帯ごとの実測から作る baba* をひとまとめにする */
+  moistX: '馬場', moistPosD: '馬場', moistPosT: '馬場', moistClose: '馬場', moistSpd: '馬場', moistBw: '馬場', moistNew: '馬場',
+  cushPos: '馬場', cushSpd: '馬場', babaStyle: '馬場', babaGate: '馬場', babaJockey: '馬場',
 };
-const GROUPS = ['近走', '時計', '脚', '適性', '人', '血統', '馬主', '展開', '枠', '斤量', '馬体', '間隔', '人気', 'その他'];
+const GROUPS = ['近走', '時計', '脚', '適性', '馬場', '人', '血統', '馬主', '展開', '枠', '斤量', '馬体', '間隔', '人気', 'その他'];
 const contrib = x => { const g = Object.fromEntries(GROUPS.map(k => [k, 0])); for (let i = 0; i < NF; i++) g[GROUP[FEATURES[i]] || 'その他'] += beta[i] * x[i]; return GROUPS.map(k => round(g[k], 2)); };
 
 const days = new Map();
@@ -213,6 +216,17 @@ for (const [date, V] of days) for (const [venue, races] of V) {
       line += `勝ち馬の4角位置は ${S.pass4 != null ? (S.pass4 <= 0.19 ? '前寄り' : S.pass4 >= 0.27 ? '後ろからでも届く' : '標準') : '—'}（${S.pass4}）、1番人気の勝率 ${S.favWin != null ? (S.favWin * 100).toFixed(1) : '—'}%。`;
     }
     r.points.push(line);
+    /* その帯で実測されている脚質・枠の得失（lib/jbias.mjs）。モデルに入れている値そのものを言葉にする */
+    const BS = BIAS.of({ raceId: r.raceId, date, venue, surface: r.surface });
+    if (BS && BS.view && BS.view.n >= 3000) {
+      const st = Object.entries(BS.view.style).sort((a, b) => b[1] - a[1]);
+      const gt = Object.entries(BS.view.gate).map(([k, v]) => [Number(k), v]).sort((a, b) => b[1] - a[1]);
+      const pc = v => `${v >= 0 ? '+' : ''}${(v * 100).toFixed(0)}`;
+      const bits = [];
+      if (st.length >= 2 && Math.abs(st[0][1] - st.at(-1)[1]) >= 0.04) bits.push(`脚質は ${st[0][0]}（${pc(st[0][1])}）が有利で ${st.at(-1)[0]}（${pc(st.at(-1)[1])}）は不利`);
+      if (gt.length >= 4 && Math.abs(gt[0][1] - gt.at(-1)[1]) >= 0.08) bits.push(`枠は ${gt[0][0]}枠（${pc(gt[0][1])}）が良く ${gt.at(-1)[0]}枠（${pc(gt.at(-1)[1])}）が悪い`);
+      if (bits.length) r.points.push(`この馬場の帯で実測される傾向（${BS.view.n.toLocaleString()}頭ぶん・3着内率の対数オッズ差を100倍）：${bits.join('、')}。予想にも同じ値を効かせている。`);
+    }
   }
 }
 
