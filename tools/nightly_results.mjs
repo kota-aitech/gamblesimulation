@@ -75,7 +75,8 @@ try {
   git(['add', '--', ...TARGETS.filter(f => fs.existsSync(path.join(ROOT, f)))]);
   const staged = git(['diff', '--cached', '--name-only']);
   if (!staged) { console.error(`${stamp()} 取り込み完了（${secs}秒）／差分なし`); process.exit(0); }
-  git(['commit', '-q', '-m', `chore(results): ${env.NK_BT_TO} の結果を取り込み`, '-m', 'tools/nightly_results.mjs による自動コミット（結果・払戻・最終オッズ → 日別の成績）']);
+  /* パスを明示（索引にある他の作業ファイルを巻き込まないため。tools/refresh.mjs の注記を参照） */
+  git(['commit', '-q', '-m', `chore(results): ${env.NK_BT_TO} の結果を取り込み`, '-m', 'tools/nightly_results.mjs による自動コミット（結果・払戻・最終オッズ → 日別の成績）', '--', ...TARGETS.filter(f => fs.existsSync(path.join(ROOT, f)))]);
   /* push はしない。publish.mjs（launchd 15分おき）がまとめて押す＝Render のデプロイ回数を抑える。NK_PUSH_NOW=1 でその場で push */
   if (process.env.NK_PUSH_NOW) { try { git(['push', 'origin', 'main']); } catch { git(['fetch', '-q', 'origin', 'main']); git(['rebase', '-q', '--autostash', 'origin/main']); git(['push', 'origin', 'main']); } }
   console.error(`${stamp()} 取り込み＋commit 完了（${secs}秒・${staged.split('\n').length}ファイル）`);

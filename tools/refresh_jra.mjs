@@ -75,7 +75,8 @@ try {
   git(['add', '--', ...TARGETS.filter(f => fs.existsSync(path.join(ROOT, f)))]);
   const staged = git(['diff', '--cached', '--name-only']);
   if (!staged) { console.error(`${stamp()} 反映完了（${secs}秒）／差分なし`); process.exit(0); }
-  git(['commit', '-q', '-m', `chore(jra): ${stamp()} 時点の出馬表と予想を反映`, '-m', 'tools/refresh_jra.mjs による自動コミット']);
+  /* パスを明示（索引にある他の作業ファイルを巻き込まないため。tools/refresh.mjs の注記を参照） */
+  git(['commit', '-q', '-m', `chore(jra): ${stamp()} 時点の出馬表と予想を反映`, '-m', 'tools/refresh_jra.mjs による自動コミット', '--', ...TARGETS.filter(f => fs.existsSync(path.join(ROOT, f)))]);
   /* push はしない。publish.mjs（launchd 15分おき）がまとめて押す＝Render のデプロイ回数を抑える。NK_PUSH_NOW=1 でその場で push */
   if (process.env.NK_PUSH_NOW) { try { git(['push', 'origin', 'main']); } catch { git(['fetch', '-q', 'origin', 'main']); git(['rebase', '-q', '--autostash', 'origin/main']); git(['push', 'origin', 'main']); } }
   console.error(`${stamp()} 反映＋commit 完了（${secs}秒・${staged.split('\n').length}ファイル）`);

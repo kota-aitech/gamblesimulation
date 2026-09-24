@@ -78,8 +78,10 @@ try {
   const staged = git(['diff', '--cached', '--name-only']);
   if (!staged) { console.error(`${stamp} 反映完了（${secs}秒）／内容に差分なし`); process.exit(0); }
   const n = staged.split('\n').length;
+  /* **パスを明示して commit する。** 引数なしだと索引にある他のファイル（手作業の途中のコードなど）まで
+     巻き込んで公開してしまう（2026-09-24 に実際に起きた）。ここは生成物だけを出す約束 */
   git(['commit', '-q', '-m', `chore(odds): ${stamp} 時点のオッズを反映`,
-    '-m', 'tools/refresh.mjs による自動コミット（オッズ更新 → 印・期待値・買い目・TOPの再生成）']);
+    '-m', 'tools/refresh.mjs による自動コミット（オッズ更新 → 印・期待値・買い目・TOPの再生成）', '--', ...exists]);
   /* push はしない。publish.mjs（launchd 15分おき）がまとめて押す＝Render のデプロイ回数を抑える。NK_PUSH_NOW=1 でその場で push */
   if (process.env.NK_PUSH_NOW) { try { git(['push', 'origin', 'main']); } catch { git(['fetch', '-q', 'origin', 'main']); git(['rebase', '-q', '--autostash', 'origin/main']); git(['push', 'origin', 'main']); } }
   console.error(`${stamp} 反映＋commit 完了（${secs}秒・${n}ファイル${process.env.NK_PUSH_NOW ? '・push' : '・push は publish'}）`);

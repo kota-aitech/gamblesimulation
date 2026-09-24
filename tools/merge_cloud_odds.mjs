@@ -78,5 +78,6 @@ console.error(`${stamp()} クラウドのオッズを取り込み: ${wrote.join(
 if (process.env.NK_MERGE_NOCOMMIT) process.exit(0);
 try {
   git(['add', ...Object.values(OUT).filter(f => fs.existsSync(path.join(ROOT, f)))]);
-  if (git(['status', '--porcelain', '--', ...Object.values(OUT)]).trim()) git(['commit', '-q', '-m', `chore(odds): クラウドの締切前オッズを取り込み（${wrote.join('／')}）`]);
+  const paths = Object.values(OUT).filter(f => fs.existsSync(path.join(ROOT, f)));
+  if (git(['status', '--porcelain', '--', ...paths]).trim()) git(['commit', '-q', '-m', `chore(odds): クラウドの締切前オッズを取り込み（${wrote.join('／')}）`, '--', ...paths]);
 } catch (e) { console.error(`  ! commit 失敗: ${String(e.stderr || e.message).split('\n').slice(-1)}`); }
