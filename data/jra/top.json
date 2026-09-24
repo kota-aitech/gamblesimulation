@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-09-24T02:37:24.857Z",
+ "builtAt": "2026-09-24T05:45:19.322Z",
  "today": "2026-09-24",
  "model": {
   "built": "2026-09-24",
@@ -519,5 +519,56 @@
    }
   }
  },
- "days": []
+ "days": [
+  {
+   "date": "2026-09-27",
+   "venues": [
+    {
+     "venue": "中山",
+     "races": [
+      {
+       "r": 11,
+       "name": "スプリンターズステークス",
+       "grade": "GI",
+       "start": "15:40",
+       "surface": "芝",
+       "dist": 1200,
+       "n": 16,
+       "cls": 8,
+       "level": "base",
+       "conf": 0.11,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "スターアニス",
+         "p": 0.18,
+         "odds": null,
+         "jockey": "幸英明"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "パンジャタワー",
+         "p": 0.168,
+         "odds": null,
+         "jockey": "幸英明"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "レイピア",
+         "p": 0.125,
+         "odds": null,
+         "jockey": "幸英明"
+        }
+       ],
+       "box3": []
+      }
+     ]
+    }
+   ]
+  }
+ ]
 }
