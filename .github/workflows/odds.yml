@@ -4,19 +4,21 @@
 #
 #  - 記録は odds-cloud ブランチへ push する。main へ push すると Pages が毎回ビルドされ、
 #    「1時間に10ビルド」の制限に当たるため
-#  - cron は JST 8時から22時まで2時間おき。1本が2時間30分ループするので、次が始まるまで切れ目がない
+#  - **GitHub の予約実行は当てにならない。** 実測（2026-09-19〜23）では1日8回のうち実際に走ったのは3〜4回で、
+#    しかも最大1時間近く遅れた。落ちた回のぶんは丸ごと穴になり、土曜は 12:32〜16:54 の4時間半が空いた。
+#    対策は「cron を増やす」ではなく **1本を長く走らせる**こと（GitHub のジョブ上限は6時間）。
+#    3時間おきに仕掛けて1本5時間30分回すので、半分が落ちても切れ目が出ない
 #  - concurrency で前の実行を止めるため、同じ時間帯に2本走って二重に取ることはない
-#  - 取りこぼしを恐れて短い間隔で cron を増やさないこと（GitHub の予約実行は混雑時に5〜20分ずれる。
-#    長く走る1本のほうが確実）
+#  - 公開リポジトリなので実行時間の課金は無い
 name: odds
 on:
   schedule:
-    - cron: '0 23,1,3,5,7,9,11,13 * * *'      # UTC。JST では 8,10,12,14,16,18,20,22時
+    - cron: '0 21,0,3,6,9,12,15,18 * * *'     # UTC。JST では 6,9,12,15,18,21,0,3時（3時間おき）
   workflow_dispatch:
     inputs:
       minutes:
         description: 'ループする分数'
-        default: '150'
+        default: '330'
       lead:
         description: '締切の何分前を拾うか（試験用。ふだんは 8）'
         default: '8'
@@ -29,7 +31,7 @@ jobs:
       matrix:
         sport: [nankan, boat, jra]
     runs-on: ubuntu-latest
-    timeout-minutes: 175
+    timeout-minutes: 350
     concurrency:
       group: odds-${{ matrix.sport }}
       cancel-in-progress: true
@@ -44,7 +46,7 @@ jobs:
       - name: オッズを拾う
         env:
           CO_OUT_ROOT: ${{ github.workspace }}/cloud
-          CO_MINUTES: ${{ github.event.inputs.minutes || '150' }}
+          CO_MINUTES: ${{ github.event.inputs.minutes || '330' }}
           CO_LEAD: ${{ github.event.inputs.lead || '8' }}
           CO_PUSH_EVERY: '5'
         run: node tools/cloud_odds.mjs --sport=${{ matrix.sport }}

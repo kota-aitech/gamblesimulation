@@ -43,9 +43,28 @@ if (hour >= 10 && hour <= 21 && hasUpcoming()) {
   const b0 = fs.existsSync(rf) ? fs.statSync(rf).size : 0;
   if (run('banei_fetch.mjs', { BN_FROM: today, BN_TO: today, BN_KIND: 'results' })) { const a0 = fs.existsSync(rf) ? fs.statSync(rf).size : 0; if (a0 !== b0) changed = true; }
 }
-/* 2) 結果と指数：21:30 以降に1日1回（最終レースは 20:40 ごろ） */
-if ((hour > 21 || (hour === 21 && now.getMinutes() >= 30)) && prev.resultsDay !== today) {
-  if (run('banei_fetch.mjs', { BN_FROM: addDays(today, -2), BN_TO: today, BN_KIND: 'results' })) { prev.resultsDay = today; run('banei_build_db.mjs'); changed = true; }
+/* 2) 結果と指数：1日1回（最終レースは 20:40 ごろなので、ふだんは 21:30 以降の回で入る）。
+
+   **取り込む範囲は「持っている最後の日」から決める。** 以前は today−2 〜 today に固定していたので、
+   Mac が 21:30 に寝ている日が続くと穴が永久に埋まらなかった（2026-09-16〜09-21 の成績が9日ぶん欠けた）。
+   また 21:30 の窓を逃し続けても取り込めないので、**前回の取り込みから1日以上あいていれば時間帯を問わず**走らせる。 */
+const lastResultDay = () => {
+  const f = path.join(D, 'results.jsonl');
+  if (!fs.existsSync(f)) return null;
+  let last = null;
+  for (const l of fs.readFileSync(f, 'utf8').split('\n')) { const m = l.match(/"raceId":"(\d{8})/); if (m && (!last || m[1] > last)) last = m[1]; }
+  return last;
+};
+const lateEnough = hour > 21 || (hour === 21 && now.getMinutes() >= 30);
+const staleDays = prev.resultsAt ? (Date.now() - prev.resultsAt) / 86400000 : 99;
+if (prev.resultsDay !== today && (lateEnough || staleDays >= 1)) {
+  const last = lastResultDay();
+  /* 持っている最後の日の翌日から（前日ぶんの取りこぼしも拾えるよう2日戻す）。無ければ直近7日 */
+  const from = last ? addDays(last, -1) : addDays(today, -7);
+  if (run('banei_fetch.mjs', { BN_FROM: from, BN_TO: today, BN_KIND: 'results' })) {
+    prev.resultsDay = today; prev.resultsAt = Date.now();
+    run('banei_build_db.mjs'); changed = true;
+  }
 }
 /* 3) 週1回（月曜 22時以降）モデルを当てはめ直す */
 if (dow === 1 && hour >= 22 && prev.fitWeek !== today) {

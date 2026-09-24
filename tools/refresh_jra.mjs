@@ -39,9 +39,17 @@ if (cardsDue) {
   let horsesRunning = false; try { horsesRunning = !!execSync('pgrep -f jra_fetch_horses.mjs', { encoding: 'utf8' }).trim(); } catch { }
   if (!horsesRunning) run('jra_fetch_horses.mjs');
 }
-/* 2) 結果と指数：17:30 以降に1日1回 */
-if (hour >= 17 && prev.resultsDay !== today) {
-  if (run('jra_fetch_results.mjs')) { prev.resultsDay = today; run('jra_build_db.mjs'); changed = true; }
+/* 2) 結果と指数：1日1回（最終レースは 16:30 ごろなので、ふだんは 17 時以降の回で入る）。
+   17時の窓を寝て逃し続けても取り込めるよう、**前回から1日以上あいていれば時間帯を問わず**走らせる。
+   取得側（jra_fetch_results.mjs）の既定は直近30日なので、数日寝ていても穴は自然に埋まる */
+const staleDays = prev.resultsAt ? (Date.now() - prev.resultsAt) / 86400000 : 99;
+if (prev.resultsDay !== today && (hour >= 17 || staleDays >= 1)) {
+  if (run('jra_fetch_results.mjs')) { prev.resultsDay = today; prev.resultsAt = Date.now(); run('jra_build_db.mjs'); changed = true; }
+}
+/* 2b) 含水率・クッション値：当日の馬場情報（開催中のみ）と、今年のアーカイブ（開催後の木曜に更新）。1日1回。
+   **早期終了より前に置く**こと。あとに置くと「変化なしなら6時間に1回」で飛ばされ、開催日の値を取り逃す */
+if (prev.babaDay !== today) {
+  if (run('jra_fetch_baba.mjs', { JRA_BABA_FROM: String(new Date().getFullYear()), JRA_BABA_TO: String(new Date().getFullYear()) })) { prev.babaDay = today; changed = true; }
 }
 /* 3) 週1回（月曜 20時以降）モデルを当てはめ直す */
 if (dow === 1 && hour >= 20 && prev.fitWeek !== `${today}`) {
@@ -52,10 +60,6 @@ if (!changed && !hasUpcoming()) { process.exit(0); }
 if (!changed && prev.builtAt && Date.now() - prev.builtAt < 6 * 3600000) process.exit(0);   // 変化なしなら6時間に1回だけ作り直す
 
 const t0 = Date.now();
-/* 含水率・クッション値：当日の馬場情報（開催中のみ）と、今年のアーカイブ（開催後の木曜に更新）。1日1回 */
-if (prev.babaDay !== today) {
-  if (run('jra_fetch_baba.mjs', { JRA_BABA_FROM: String(new Date().getFullYear()), JRA_BABA_TO: String(new Date().getFullYear()) })) { prev.babaDay = today; changed = true; }
-}
 run('jra_build_results.mjs');                                   // 記録済みの予想 × 最新の結果（preds が無い初日は何もしない）
 if (!run('jra_build_races.mjs')) process.exit(1);
 if (!run('embed_db.mjs', { NK_EMBED_ONLY: 'jra' })) process.exit(1);

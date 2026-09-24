@@ -8,6 +8,7 @@ import path from 'node:path';
 import { ROOT, readJSON, writeJSON } from './lib/jra.mjs';
 import { NF, buildRaceIndex, buildHistory, buildAsOf, loadPed, raceFromResult, makeFeaturizer } from './lib/jfeat.mjs';
 import { loadBaba } from './lib/jbaba.mjs';
+import { buildBabaBias } from './lib/jbias.mjs';
 import { utilities } from './lib/bpl.mjs';
 import { combosOf } from './lib/jbets.mjs';
 
@@ -30,7 +31,8 @@ const PED = loadPed(fs.existsSync(path.join(ROOT, 'data/jra/horses.jsonl')) ? fs
 const RI = buildRaceIndex(results), H = buildHistory(results), ASOF = buildAsOf(results, PED);
 console.error(`  血統・馬主 ${PED.size} 頭`);
 const BABA_IDX = loadBaba();                       // 含水率・クッション値（場×芝ダで標準化して特徴量に効かせる）
-const featurize = makeFeaturizer(DB, RI, ASOF, BABA_IDX);
+const BIAS = buildBabaBias(results, BABA_IDX);     // 馬場の帯ごとの脚質・枠・騎手の得失（レース時点）
+const featurize = makeFeaturizer(DB, RI, ASOF, BABA_IDX, BIAS);
 
 const payOf = (r, kind, code) => { const h = (r.pay?.[kind] || []).find(x => x.c === code); return h ? h.y : 0; };
 const sortKey = a => a.slice().sort((x, y) => x - y).join('-');

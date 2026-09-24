@@ -15,6 +15,7 @@ import path from 'node:path';
 import { ROOT, readJSON, writeJSON } from './lib/jra.mjs';
 import { FEATURES, NF, MKT, buildRaceIndex, buildHistory, buildAsOf, loadPed, raceFromResult, makeFeaturizer } from './lib/jfeat.mjs';
 import { loadBaba } from './lib/jbaba.mjs';
+import { buildBabaBias } from './lib/jbias.mjs';
 import { utilities, plWin, plackettLuce, fitTau } from './lib/bpl.mjs';
 
 const SPLIT = process.env.JRA_FIT_SPLIT || '2026-06-01';
@@ -33,7 +34,8 @@ const PED = loadPed(fs.existsSync(path.join(ROOT, 'data/jra/horses.jsonl')) ? fs
 const RI = buildRaceIndex(results), H = buildHistory(results), ASOF = buildAsOf(results, PED);
 console.error(`  血統・馬主 ${PED.size} 頭`);
 const BABA_IDX = loadBaba();                       // 含水率・クッション値（場×芝ダで標準化して特徴量に効かせる）
-const featurize = makeFeaturizer(DB, RI, ASOF, BABA_IDX);
+const BIAS = buildBabaBias(results, BABA_IDX);     // 馬場の帯ごとの脚質・枠・騎手の得失（レース時点）
+const featurize = makeFeaturizer(DB, RI, ASOF, BABA_IDX, BIAS);
 const data = [];
 for (const r of results) {
   if (r.date < WARM) continue;

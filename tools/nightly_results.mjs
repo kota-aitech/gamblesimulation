@@ -17,7 +17,21 @@ import { ROOT } from './lib/nk.mjs';
 
 const ymd = d => d.toLocaleDateString('sv-SE');
 const today = new Date(), yest = new Date(today); yest.setDate(yest.getDate() - 1);
-const env = { NK_BT_TRACKS: process.env.NK_BT_TRACKS || '大井,川崎,船橋,浦和', NK_BT_FROM: ymd(yest), NK_BT_TO: ymd(today) };
+/* 取り込む範囲は「持っている最後の日」から決める。
+   以前は 昨日〜今日 に固定していたので、**Mac が寝て夜のジョブを飛ばした日が続くと穴が永久に残った**
+   （2026-09-19〜09-21 にかけて実際にそうなった）。最後の日の前日まで戻れば、何日寝ても自然に埋まる。
+   取得済みのレースは各 fetch が飛ばすので、範囲を広げても通信は増えない。 */
+const lastResultDay = () => {
+  const f = path.join(ROOT, 'data/nankan/results.jsonl');
+  if (!fs.existsSync(f)) return null;
+  let last = null;
+  for (const l of fs.readFileSync(f, 'utf8').split('\n')) { const m = l.match(/"date":"(\d{4}-\d{2}-\d{2})"/); if (m && (!last || m[1] > last)) last = m[1]; }
+  return last;
+};
+const last = lastResultDay();
+const back = new Date(today); back.setDate(back.getDate() - 14);          // 戻りすぎない上限
+const from = last && last > ymd(back) ? (d => { const t = new Date(d + 'T00:00:00'); t.setDate(t.getDate() - 1); return ymd(t); })(last) : ymd(back);
+const env = { NK_BT_TRACKS: process.env.NK_BT_TRACKS || '大井,川崎,船橋,浦和', NK_BT_FROM: process.env.NK_BT_FROM || (from < ymd(yest) ? from : ymd(yest)), NK_BT_TO: ymd(today) };
 const stamp = () => new Date().toLocaleString('ja-JP', { hour12: false }).replace(/\//g, '-');
 
 const run = (script, extra = {}) => {

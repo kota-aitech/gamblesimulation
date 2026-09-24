@@ -9,6 +9,7 @@ import path from 'node:path';
 import { ROOT, readJSON, writeJSON } from './lib/jra.mjs';
 import { FEATURES, NF, buildRaceIndex, buildHistory, buildAsOf, loadPed, raceFromCard, makeFeaturizer } from './lib/jfeat.mjs';
 import { loadBaba } from './lib/jbaba.mjs';
+import { buildBabaBias } from './lib/jbias.mjs';
 import { utilities } from './lib/bpl.mjs';
 import { combosOf } from './lib/jbets.mjs';
 
@@ -32,11 +33,15 @@ const round = (v, k = 3) => v == null || !Number.isFinite(v) ? null : Number(v.t
 
 const results = [];
 for (const l of fs.readFileSync(path.join(ROOT, 'data/jra/results.jsonl'), 'utf8').split('\n')) if (l) { const r = JSON.parse(l); if (r.surface !== '障') results.push(r); }
+/* 「そのレースより前だけ」で作る索引（buildAsOf / buildBabaBias）が要るので日付順にそろえる。
+   取り込みは追記なので、後から古い日を取り直すと並びが崩れる（実際に53行ぶん逆行していた） */
+results.sort((a, b) => a.date.localeCompare(b.date) || a.raceId.localeCompare(b.raceId));
 const PED = loadPed(fs.existsSync(path.join(ROOT, 'data/jra/horses.jsonl')) ? fs.readFileSync(path.join(ROOT, 'data/jra/horses.jsonl'), 'utf8') : '');
 const RI = buildRaceIndex(results), H = buildHistory(results), ASOF = buildAsOf(results, PED);
 console.error(`  血統・馬主 ${PED.size} 頭`);
 const BABA_IDX = loadBaba();                       // 含水率・クッション値（場×芝ダで標準化して特徴量に効かせる）
-const featurize = makeFeaturizer(DB, RI, ASOF, BABA_IDX);
+const BIAS = buildBabaBias(results, BABA_IDX);     // 馬場の帯ごとの脚質・枠・騎手の得失（レース時点）
+const featurize = makeFeaturizer(DB, RI, ASOF, BABA_IDX, BIAS);
 
 /* 発走が過ぎたレースの予想を記録する（回収率の算出用。jra_build_results.mjs が読む）。
    ボートと同じで後から作り直さない。JRA_RECORD_PAST=1 のときだけ過去日の出馬表からも「再現」として記録する

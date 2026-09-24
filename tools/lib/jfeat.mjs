@@ -55,6 +55,12 @@ export const FEATURES = [
        moistNew  … 今日の偏差 − その馬が経験してきた偏差（慣れていない条件か）
        cushPos / cushSpd … クッション値の偏差（芝のみ）× 位置取り／持ち時計 */
   'moistX', 'moistPosD', 'moistPosT', 'moistClose', 'moistSpd', 'moistBw', 'moistNew', 'cushPos', 'cushSpd',
+  /* 馬場から読み取る傾向（lib/jbias.mjs。含水率とクッション値の帯ごとに、実測から先に有利不利を作って当てる）。
+     上の moist* が「偏差 × 馬の性質」を1本の係数で効かせるのに対し、こちらは**効き方の形を実測が決める**
+       babaStyle  … その帯での脚質の得失（逃げ／先行／差し／追込 の3着内率の上振れ）を、その馬の脚質で引いた値
+       babaGate   … その帯での枠の得失
+       babaJockey … その騎手のその帯での上振れ（本人の平常値からのズレ。レース時点） */
+  'babaStyle', 'babaGate', 'babaJockey',
   /* 市場（単勝オッズ）の対数確率。レース内で中心化。オッズが無いレースは 0。
      base モデルではこの列を必ず 0 にして当てはめ、joint モデルだけが使う（jra_fit.mjs） */
   'mktLog',
@@ -316,7 +322,7 @@ function derive(h, race, RI, COURSE, BABA) {
   };
 }
 
-export function makeFeaturizer(DB, RI, ASOF, BABA) {
+export function makeFeaturizer(DB, RI, ASOF, BABA, BIAS) {
   if (!ASOF) throw new Error('makeFeaturizer には buildAsOf(results) の戻り値が要る（人的要因はレース時点の指数で作る）');
   const COURSE = (DB && DB.course) || {};
   return function featurize(race) {
@@ -331,6 +337,8 @@ export function makeFeaturizer(DB, RI, ASOF, BABA) {
     const MB = BABA ? BABA.of(race.date, race.venue, race.surface) : null;
     const mdev = MB && MB.dev != null ? MB.dev : null, cdev = MB && MB.cdev != null ? MB.cdev : null;
     const isDirt = /ダ/.test(race.surface || '') ? 1 : 0, isTurf = /芝/.test(race.surface || '') ? 1 : 0;
+    /* その馬場の帯で何が有利か（脚質・枠・騎手）。測定が無いレースでは null＝列は 0 */
+    const BS = BIAS ? BIAS.of(race) : null, BV = BS && BS.view;
     const bws = live.map(h => h.bw).filter(x => x > 0);
     const bwAvg = bws.length ? bws.reduce((a, b) => a + b, 0) / bws.length : 470;
     const ds = live.map(h => derive(h, race, RI, COURSE, BABA));
@@ -388,6 +396,9 @@ export function makeFeaturizer(DB, RI, ASOF, BABA) {
         moistNew: mdev != null && d.moistN ? clamp(mdev - d.moistExp, -3, 3) : 0,
         cushPos: cdev != null ? cdev * (0.5 - d.epos) * 2 : 0,
         cushSpd: cdev != null ? cdev * d.spdBest : 0,
+        babaStyle: BV && BV.style[d.style] != null ? BV.style[d.style] : 0,
+        babaGate: BV && h.waku && BV.gate[h.waku] != null ? BV.gate[h.waku] : 0,
+        babaJockey: BS && BIAS ? BIAS.jockeyOf(BS, h.jockeyId) : 0,
         mktLog: lq ? lq[hi] - lqm : 0,
       };
       const v = new Float64Array(NF);
