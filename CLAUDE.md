@@ -908,7 +908,7 @@ data/jra/races.json      ★今日以降の出馬表と予測（jra.html 用）�
 tools/lib/jra.mjs        取得共通（レート制限・キャッシュ・規制時の休止・jsonl の差し替え追記）
 tools/lib/jrapage.mjs    netkeiba のパーサ（規制が解けたときだけ）
 tools/lib/yahoo.mjs      Yahoo!スポーツのパーサ（parseMonthly / parseList / parseResult / parseDenma）
-tools/lib/jfeat.mjs      特徴量 66個（南関の feat.mjs を踏襲。学習も予測も raceFromResult / raceFromCard で同じ形にしてから featurize。レースレベル・基準タイム・市場の対数確率もここ）
+tools/lib/jfeat.mjs      特徴量 69個（南関の feat.mjs を踏襲。学習も予測も raceFromResult / raceFromCard で同じ形にしてから featurize。レースレベル・基準タイム・市場の対数確率もここ）
 tools/lib/jbets.mjs      組の確率（馬連・馬単・三連複・三連単・ワイド。3着までの並びを全列挙）
 tools/jra_fetch_results.mjs  結果を取る（JRA_FROM/JRA_TO、JRA_SRC=yahoo|netkeiba、取得済みは飛ばす）
 tools/jra_fetch_cards.mjs    出馬表を取る（今日〜3日後）
@@ -917,6 +917,7 @@ tools/jra_fit.mjs            当てはめ → model.json（JRA_FIT_SPLIT/WARM/DB
 tools/jra_backtest.mjs       検証 → backtest.json（JRA_BT_LEVEL=base|mix）
 tools/jra_build_races.mjs    出馬表に当てる → races.json / top.json
 tools/lib/jbaba.mjs          含水率・クッション値を「場×芝ダのふつうからのズレ」に直して引く索引（特徴量用）
+tools/lib/jbias.mjs          馬場の帯ごとの脚質・枠・騎手の得失（レース時点で積む。モデル用と表示用で段階が違う）
 tools/lib/jrapdf.mjs         JRA の PDF（含水率・クッション値）を表に起こす最小パーサ（zlib だけ）
 tools/jra_fetch_baba.mjs     含水率・クッション値の取り込み（アーカイブPDF＋当日ページ）→ baba.jsonl
 tools/jra_baba_stats.mjs     含水率・クッション値 × 結果の統計 → baba_stats.json
@@ -1086,6 +1087,34 @@ robots.txt は全面許可だが、**Referer と Accept を付けないと 200 �
 **価値は画面の読み物のほう**（レース見出しの含水率と「含水率と結果の傾向」の表）。
 切り分けは `JRA_FIT_DROP=moistX,moistPosD,moistPosT,moistClose,moistSpd,moistBw,moistNew,cushPos,cushSpd`、
 本番を上書きせずに試すときは `JRA_FIT_OUT=<書き出し先>`（**相対パスで渡すこと**。`writeJSON` が ROOT と結合するので絶対パスはリポジトリ内に落ちる）。
+
+#### 馬場から読み取る傾向を特徴量にする（2026-09-24、`lib/jbias.mjs`）
+含水率の偏差 × 馬の性質（上の `moist*`）は、**効き方の形をモデルが自分で見つける**しかなく係数が小さかった。
+そこで**実測から帯ごとの有利不利を先に作って**当てる形を足した。
+
+`buildBabaBias(results, BABA)` が結果を日付順に流し、**そのレースより前の結果だけ**で
+含水率の帯（芝5区分・ダート6区分）とクッション値の帯（芝4区分）ごとに
+**脚質4分類の3着内率・枠1〜8の3着内率・騎手のその帯での上振れ**を縮小推定で積む。段階は
+「芝ダ全体 → 芝ダ×帯 →（表示だけ）場×芝ダ×帯」で、各段はひとつ上の段を事前分布に置く。
+特徴量は `babaStyle`（その馬の脚質の得失）／`babaGate`（その馬の枠の得失）／`babaJockey`（騎手のその帯での上振れ）。
+
+**効かなかった。** 検証 1,073R（学習 16,412R）で3案を同じ手続きで比べた：
+
+| | base logloss | 1着的中 | 上位3頭 | joint logloss | joint 1着的中 |
+|---|---|---|---|---|---|
+| A なし | **2.0915** | 28.5% | 60.3% | **1.8746** | 35.5% |
+| B 芝ダ×帯（採用） | 2.0916 | 28.4% | **60.5%** | 1.8747 | 35.7% |
+| C 場×芝ダ×帯 | 2.0923 | 27.8% | 60.3% | 1.8756 | 35.7% |
+
+- **差はすべて誤差の範囲**（1,073R で logloss 0.001、1着的中は7レースぶん）
+- **場まで降りると悪くなる**（C）。場×帯のマスは標本が薄く、拾うのは雑音のほうが多い
+- 係数は `babaGate` +0.174／`babaJockey` +0.124 と向きは素直だが、**特徴量の値そのものが ±0.05 と小さい**ので
+  寄与は ±0.02 対数オッズにしかならない。市場はすでに馬場を織り込んでいる
+- **用途で分けた**：モデルの特徴量は芝ダ×帯まで（B）、画面の読みのポイントは場×芝ダ×帯（C の値）。
+  「中山のダート6〜8%では 逃げ +14／追込 −45」のように場ごとのほうが読み物として役に立つ
+- 実測の一例（3着内率の対数オッズ差 ×100）：中山ダート 6〜8% は 逃げ +14・追込 −45、
+  阪神芝 10〜12% は 逃げ −19・追込 +34、札幌芝 12〜14% は 逃げ +23・追込 −65。**場ごとに符号が逆になる**
+- 切り分けは `JRA_FIT_DROP=babaStyle,babaGate,babaJockey`
 
 ### 日別・場別の成績（`jra_build_results.mjs` → `results.json` → TOP の中央競馬面）
 ボートと同じ仕組み。`jra_build_races` が**発走の過ぎたレース**の予想（順位・1着確率・AIの上位N点・1番人気）を `preds.jsonl` に記録し、

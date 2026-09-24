@@ -218,14 +218,15 @@ for (const [date, V] of days) for (const [venue, races] of V) {
     r.points.push(line);
     /* その帯で実測されている脚質・枠の得失（lib/jbias.mjs）。モデルに入れている値そのものを言葉にする */
     const BS = BIAS.of({ raceId: r.raceId, date, venue, surface: r.surface });
-    if (BS && BS.view && BS.view.n >= 3000) {
-      const st = Object.entries(BS.view.style).sort((a, b) => b[1] - a[1]);
-      const gt = Object.entries(BS.view.gate).map(([k, v]) => [Number(k), v]).sort((a, b) => b[1] - a[1]);
+    const BVV = BS && BS.venueView;                 // 画面には場まで降りた値を出す（モデルは芝ダ×帯まで）
+    if (BVV && BVV.n >= 3000) {
+      const st = Object.entries(BVV.style).sort((a, b) => b[1] - a[1]);
+      const gt = Object.entries(BVV.gate).map(([k, v]) => [Number(k), v]).sort((a, b) => b[1] - a[1]);
       const pc = v => `${v >= 0 ? '+' : ''}${(v * 100).toFixed(0)}`;
       const bits = [];
       if (st.length >= 2 && Math.abs(st[0][1] - st.at(-1)[1]) >= 0.04) bits.push(`脚質は ${st[0][0]}（${pc(st[0][1])}）が有利で ${st.at(-1)[0]}（${pc(st.at(-1)[1])}）は不利`);
       if (gt.length >= 4 && Math.abs(gt[0][1] - gt.at(-1)[1]) >= 0.08) bits.push(`枠は ${gt[0][0]}枠（${pc(gt[0][1])}）が良く ${gt.at(-1)[0]}枠（${pc(gt.at(-1)[1])}）が悪い`);
-      if (bits.length) r.points.push(`この馬場の帯で実測される傾向（${BS.view.n.toLocaleString()}頭ぶん・3着内率の対数オッズ差を100倍）：${bits.join('、')}。予想にも同じ値を効かせている。`);
+      if (bits.length) r.points.push(`${venue}のこの馬場（${BS.mbin}${BS.cbin ? `・クッション ${BS.cbin}` : ''}）で実測される傾向（${BVV.n.toLocaleString()}頭ぶん・3着内率の対数オッズ差を100倍）：${bits.join('、')}。予想にも馬場ごとの得失を効かせている。`);
     }
   }
 }

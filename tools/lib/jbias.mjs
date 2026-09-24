@@ -48,34 +48,43 @@ export function buildBabaBias(results, BABA) {
   const cell = (m, k) => { let v = m.get(k); if (!v) m.set(k, v = { n: 0, w: 0 }); return v; };
   const box = (m, k) => { let v = m.get(k); if (!v) m.set(k, v = mk()); return v; };
 
-  /* いまの状態から「その帯の有利不利」を1つ作る */
-  const view = (surf, mbin, cbin) => {
+  /* いまの状態から「その帯の有利不利」を1つ作る。
+
+     **馬場バイアスは場ごとに違う**（中山の芝の内、東京のダートの外…）ので、段階を踏んで縮小する。
+       1段目 … 芝ダ全体（母集団）
+       2段目 … 芝ダ × 帯（湿ると前、など競技ぜんたいの傾向）
+       3段目 … 場 × 芝ダ × 帯（その場のクセ。標本が薄ければ2段目に寄る）
+     各段は「ひとつ上の段の値」を事前分布に置いて縮小するので、場の標本が少なくても暴れない。 */
+  const edgeOf = (key, kind, id, prior, k) => {
+    const A = acc.get(key); if (!A) return null;
+    const g = (kind === 'style' ? A.style : A.gate).get(id);
+    if (!g || g.n < 40) return null;
+    return { v: shrunk(g.w, g.n, prior, k), n: g.n, p: (g.w + prior * k) / (g.n + k) };
+  };
+  const view = (surf, venue, mbin, cbin, useVenue) => {
     const T = top.get(surf);
     if (!T || T.n < 400) return null;                          // 芝ダ全体の標本がまだ薄い（学習の最初のころ）
     const p0 = T.w / T.n;                                      // 3着内の基準（およそ 3/頭数）
     const out = { style: {}, gate: {}, n: 0 };
-    const mix = (key, sub) => {
-      const A = acc.get(key);
-      if (!A) return;
-      out.n += A.n;
-      for (const s of STYLES) {
-        const g = A.style.get(s), G = T.style.get(s);
-        if (!g || !G || G.n < 200) continue;
-        /* その脚質の全体値を事前分布に置いて、帯のなかでの上振れだけを残す */
-        const base = G.w / G.n;
-        out.style[s] = (out.style[s] || 0) + sub * shrunk(g.w, g.n, base, 400);
-      }
-      for (let k = 1; k <= 8; k++) {
-        const g = A.gate.get(k), G = T.gate.get(k);
-        if (!g || !G || G.n < 200) continue;
-        const base = G.w / G.n;
-        out.gate[k] = (out.gate[k] || 0) + sub * shrunk(g.w, g.n, base, 400);
-      }
+    /* 1つの区分（脚質 or 枠）について、全体 → 帯 → 場×帯 と降りていく */
+    const chain = (kind, id) => {
+      const G = (kind === 'style' ? T.style : T.gate).get(id);
+      if (!G || G.n < 200) return null;
+      const base = G.w / G.n;                                  // 1段目：芝ダ全体でのその区分の3着内率
+      let p = base, sum = 0;
+      const step = (key, k) => {
+        const e = edgeOf(key, kind, id, p, k);
+        if (!e) return;
+        sum += e.v; p = e.p;                                   // 次の段はここを事前分布にする
+      };
+      step(`${surf}|M|${mbin}`, 400);                          // 2段目：芝ダ × 含水率の帯
+      if (surf === '芝' && cbin) step(`${surf}|C|${cbin}`, 600);//        （芝はクッション値の帯も）
+      if (useVenue) step(`${surf}|${venue}|M|${mbin}`, 250);   // 3段目：場 × 芝ダ × 帯
+      return sum;
     };
-    /* 含水率の帯とクッション値の帯を足す（クッション値は芝だけ。両方あるときは半々） */
-    const hasC = surf === '芝' && cbin;
-    mix(`${surf}|M|${mbin}`, hasC ? 0.6 : 1);
-    if (hasC) mix(`${surf}|C|${cbin}`, 0.4);
+    for (const s of STYLES) { const v = chain('style', s); if (v != null) out.style[s] = v; }
+    for (let k = 1; k <= 8; k++) { const v = chain('gate', k); if (v != null) out.gate[k] = v; }
+    for (const key of [`${surf}|M|${mbin}`, `${surf}|${venue}|M|${mbin}`]) { const A = acc.get(key); if (A) out.n += A.n; }
     out.p0 = p0;
     return out;
   };
@@ -100,17 +109,24 @@ export function buildBabaBias(results, BABA) {
     if (!surf) continue;
     const { mbin, cbin } = babaOf(r);
     /* まず読む（このレースより前の状態） */
-    snap.set(r.raceId, { surf, mbin, cbin, view: view(surf, mbin, cbin), jockey: new Map(r.entries.filter(e => e.jockeyId).map(e => [e.jockeyId, jWet(e.jockeyId, surf, mbin)])) });
+    /* view … モデルの特徴量に使う（芝ダ×帯まで）。venueView … 画面に出す（場まで降りる）。
+       **場まで降りた値をモデルに入れると当てはめが悪くなった**（検証 1,073R で base logloss 2.0915 → 2.0923）。
+       場×帯のマスは標本が薄く、拾うのは雑音のほうが多い。読み物としては場ごとのほうが役に立つので、用途で分ける */
+    snap.set(r.raceId, { surf, venue: r.venue, mbin, cbin,
+      view: view(surf, r.venue, mbin, cbin, false),
+      venueView: view(surf, r.venue, mbin, cbin, true),
+      jockey: new Map(r.entries.filter(e => e.jockeyId).map(e => [e.jockeyId, jWet(e.jockeyId, surf, mbin)])) });
     /* それから足す */
     const T = box(top, surf);
     const A = mbin ? box(acc, `${surf}|M|${mbin}`) : null;
     const C = (surf === '芝' && cbin) ? box(acc, `${surf}|C|${cbin}`) : null;
+    const V = mbin ? box(acc, `${surf}|${r.venue}|M|${mbin}`) : null;
     for (const e of r.entries) {
       if (typeof e.pos !== 'number') continue;
       const in3 = e.pos <= 3 ? 1 : 0;
       const st = styleOf(posOf(e.pass, r.n));
       const wk = Number(e.waku) || null;
-      for (const X of [T, A, C]) {
+      for (const X of [T, A, C, V]) {
         if (!X) continue;
         X.n++; X.w += in3;
         if (st) { const c = cell(X.style, st); c.n++; c.w += in3; }
@@ -128,7 +144,10 @@ export function buildBabaBias(results, BABA) {
     const surf = surfOf(race.surface);
     if (!surf) return null;
     const { mbin, cbin } = babaOf(race);
-    return { surf, mbin, cbin, view: view(surf, mbin, cbin), jockey: null, _mbin: mbin };
+    return { surf, venue: race.venue, mbin, cbin,
+      view: view(surf, race.venue, mbin, cbin, false),
+      venueView: view(surf, race.venue, mbin, cbin, true),
+      jockey: null, _mbin: mbin };
   };
   return {
     /* レース1件ぶんの馬場バイアス。学習時は記録した状態、未来のレースは最新 */
