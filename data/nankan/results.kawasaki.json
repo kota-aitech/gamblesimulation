@@ -1,7 +1,7 @@
 {
  "track": "川崎",
  "meta": {
-  "builtAt": "2026-09-25T08:27:59.511Z",
+  "builtAt": "2026-09-25T08:56:11.722Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -44,11 +44,11 @@
    "tally": {
     "ev_umaren": {
      "races": 118,
-     "cost": 27100,
+     "cost": 27000,
      "ret": 18160,
      "hits": 6,
-     "pts": 271,
-     "roi": 0.6701,
+     "pts": 270,
+     "roi": 0.6726,
      "hitRate": 0.0508,
      "avgPts": 2.3
     },
@@ -550,11 +550,11 @@
      "tally": {
       "ev_umaren": {
        "races": 11,
-       "cost": 1700,
+       "cost": 1600,
        "ret": 3840,
        "hits": 1,
-       "pts": 17,
-       "roi": 2.2588,
+       "pts": 16,
+       "roi": 2.4,
        "hitRate": 0.0909,
        "avgPts": 1.5
       },
@@ -15272,14 +15272,13 @@
     },
     "betResult": {
      "umaren": {
-      "pts": 3,
-      "cost": 300,
+      "pts": 2,
+      "cost": 200,
       "ret": 0,
       "hit": false,
       "buy": [
        "5-9",
-       "7-9",
-       "3-5"
+       "7-9"
       ]
      },
      "sanpuku": {
@@ -31266,7 +31265,7 @@
     "jockey": "笹川翼",
     "trainer": "高月賢",
     "mark": "△",
-    "win": 0.047,
+    "win": 0.046,
     "odds": 10.3,
     "pop": 3,
     "pos": null,
@@ -34190,7 +34189,7 @@
     "jockey": "Ｆ．ゴンサルベス",
     "trainer": "小久智",
     "mark": "◎",
-    "win": 0.202,
+    "win": 0.203,
     "odds": 5,
     "pop": 2,
     "pos": 3,
@@ -34288,7 +34287,7 @@
     "jockey": "笹川翼",
     "trainer": "加藤誠",
     "mark": "△",
-    "win": 0.081,
+    "win": 0.08,
     "odds": 16.2,
     "pop": 8,
     "pos": null,
@@ -36244,7 +36243,7 @@
     "jockey": "鷹見陸",
     "trainer": "山下之",
     "mark": "",
-    "win": 0.025,
+    "win": 0.026,
     "odds": 35.6,
     "pop": 10,
     "pos": 4,
