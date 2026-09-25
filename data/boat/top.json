@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-09-25T20:04:45.395Z",
+ "builtAt": "2026-09-25T23:40:37.040Z",
  "today": "20260926",
  "nat1": 0.5498,
  "model": {
@@ -519,7 +519,7 @@
        "close": "12:14",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [],
@@ -573,7 +573,7 @@
        "close": "12:44",
        "cls": "ウインウイン",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [],
@@ -627,7 +627,7 @@
        "close": "13:14",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [],
@@ -637,28 +637,28 @@
          "name": "鈴木雅希",
          "grade": "A2",
          "p": 0.253,
-         "o": null
+         "o": 0
         },
         {
          "lane": 5,
          "name": "長岡良也",
          "grade": "A2",
          "p": 0.197,
-         "o": null
+         "o": 0
         },
         {
          "lane": 2,
          "name": "中村将隆",
          "grade": "B1",
          "p": 0.188,
-         "o": null
+         "o": 0
         }
        ],
        "tri": {
         "k": "3-1-5",
         "p": 0.0244,
-        "o": null,
-        "ev": null
+        "o": 34.6,
+        "ev": 0.84
        },
        "box3": "2-3-5",
        "ai": {
@@ -673,7 +673,14 @@
          "2-3"
         ],
         "cum3": 0.066,
-        "ev": []
+        "ev": [
+         "2-3-5",
+         "2-1-3",
+         "3-1-2",
+         "3-1-6",
+         "1-3-5",
+         "1-3-2"
+        ]
        }
       },
       {
@@ -1176,7 +1183,7 @@
        "close": "12:08",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [],
@@ -1230,7 +1237,7 @@
        "close": "12:35",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [],
@@ -1284,7 +1291,7 @@
        "close": "13:02",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [],
@@ -1941,7 +1948,7 @@
        "close": "12:33",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [],
@@ -1995,7 +2002,7 @@
        "close": "13:04",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [],
@@ -2005,28 +2012,28 @@
          "name": "深川麻奈",
          "grade": "B1",
          "p": 0.428,
-         "o": null
+         "o": 0
         },
         {
          "lane": 2,
          "name": "和田兼輔",
          "grade": "A1",
          "p": 0.333,
-         "o": null
+         "o": 0
         },
         {
          "lane": 4,
          "name": "前野竜一",
          "grade": "A2",
          "p": 0.124,
-         "o": null
+         "o": 0
         }
        ],
        "tri": {
         "k": "1-2-3",
         "p": 0.0968,
-        "o": null,
-        "ev": null
+        "o": 86,
+        "ev": 8.32
        },
        "box3": "1-2-4",
        "ai": {
@@ -2041,7 +2048,14 @@
          "1-3"
         ],
         "cum3": 0.257,
-        "ev": []
+        "ev": [
+         "1-2-3",
+         "1-2-4",
+         "2-1-3",
+         "2-1-4",
+         "1-3-2",
+         "2-3-1"
+        ]
        }
       },
       {
@@ -2772,7 +2786,7 @@
        "close": "12:30",
        "cls": "三A傑戦",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -2826,7 +2840,7 @@
        "close": "12:59",
        "cls": "昼トコ小判R",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -3537,7 +3551,7 @@
        "close": "12:26",
        "cls": "5ールドレー",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": true,
        "shobu": [
@@ -3595,7 +3609,7 @@
        "close": "12:56",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": true,
        "shobu": [],
@@ -4324,7 +4338,7 @@
        "close": "12:19",
        "cls": "一般",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -4378,7 +4392,7 @@
        "close": "12:49",
        "cls": "一般",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -5075,7 +5089,7 @@
        "close": "12:22",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [
@@ -5133,7 +5147,7 @@
        "close": "12:53",
        "cls": "昼どきピンク",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [
@@ -6481,28 +6495,28 @@
          "name": "村松修二",
          "grade": "A2",
          "p": 0.721,
-         "o": null
+         "o": 1
         },
         {
          "lane": 2,
          "name": "中村尊",
          "grade": "B2",
          "p": 0.128,
-         "o": null
+         "o": 0
         },
         {
          "lane": 4,
          "name": "四宮与寛",
          "grade": "A2",
          "p": 0.088,
-         "o": null
+         "o": 0
         }
        ],
        "tri": {
         "k": "1-2-4",
         "p": 0.1568,
-        "o": null,
-        "ev": null
+        "o": 5.5,
+        "ev": 0.86
        },
        "box3": "1-2-4",
        "ai": {
@@ -6517,7 +6531,14 @@
          "2-1"
         ],
         "cum3": 0.327,
-        "ev": []
+        "ev": [
+         "1-4-2",
+         "1-2-6",
+         "1-2-3",
+         "1-2-5",
+         "2-1-4",
+         "1-6-2"
+        ]
        }
       },
       {
@@ -6535,28 +6556,28 @@
          "name": "堀本和也",
          "grade": "A2",
          "p": 0.88,
-         "o": null
+         "o": 1
         },
         {
          "lane": 2,
          "name": "古田祐貴",
          "grade": "B1",
          "p": 0.044,
-         "o": null
+         "o": 0
         },
         {
          "lane": 4,
          "name": "重冨勇哉",
          "grade": "B1",
          "p": 0.027,
-         "o": null
+         "o": 0
         }
        ],
        "tri": {
         "k": "1-2-4",
         "p": 0.108,
-        "o": null,
-        "ev": null
+        "o": 14.6,
+        "ev": 1.58
        },
        "box3": "1-2-4",
        "ai": {
@@ -6571,7 +6592,14 @@
          "1-3"
         ],
         "cum3": 0.287,
-        "ev": []
+        "ev": [
+         "1-2-4",
+         "1-2-3",
+         "1-2-5",
+         "1-4-2",
+         "1-3-2",
+         "1-5-2"
+        ]
        }
       },
       {
@@ -6849,7 +6877,7 @@
        "close": "12:24",
        "cls": "推しトク特選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -6903,7 +6931,7 @@
        "close": "12:59",
        "cls": "のんた選抜",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -8669,12 +8697,12 @@
      "name": "芦屋",
      "title": "９月２６日オールレディースマ",
      "day": "第３日",
-     "exCount": 0,
+     "exCount": 1,
      "win1": 0.5924,
      "band": "morning",
      "trend": {
       "label": "堅め",
-      "text": "予想の本命勝率の平均 61% → 堅め",
+      "text": "予想の本命勝率の平均 62% → 堅め",
       "src": "model"
      },
      "rec": null,
@@ -8751,8 +8779,8 @@
        "r": 1,
        "close": "08:44",
        "cls": "サンライズV",
-       "level": "pre",
-       "oddsKind": "pre",
+       "level": "ex",
+       "oddsKind": "snap",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [
@@ -8768,44 +8796,51 @@
          "lane": 1,
          "name": "岩崎芳美",
          "grade": "A2",
-         "p": 0.812,
-         "o": null
+         "p": 0.84,
+         "o": 1
         },
         {
          "lane": 3,
          "name": "中村かな",
          "grade": "B2",
-         "p": 0.086,
-         "o": null
+         "p": 0.074,
+         "o": 9.2
         },
         {
          "lane": 4,
          "name": "宮崎安奈",
          "grade": "B1",
-         "p": 0.043,
-         "o": null
+         "p": 0.039,
+         "o": 22.2
         }
        ],
        "tri": {
         "k": "1-3-4",
-        "p": 0.1296,
-        "o": null,
-        "ev": null
+        "p": 0.1379,
+        "o": 5.7,
+        "ev": 0.79
        },
        "box3": "1-3-4",
        "ai": {
         "tri3": [
          "1-3-4",
          "1-4-3",
-         "1-3-6"
+         "1-3-5"
         ],
         "ex3": [
          "1-3",
          "1-4",
          "1-2"
         ],
-        "cum3": 0.293,
-        "ev": []
+        "cum3": 0.31,
+        "ev": [
+         "1-4-3",
+         "1-3-2",
+         "1-2-3",
+         "1-5-3",
+         "1-4-5",
+         "1-6-3"
+        ]
        }
       },
       {
@@ -8827,29 +8862,29 @@
          "lane": 4,
          "name": "田口節子",
          "grade": "A1",
-         "p": 0.462,
-         "o": null
+         "p": 0.454,
+         "o": 5.5
         },
         {
          "lane": 1,
          "name": "山口真喜",
          "grade": "A2",
-         "p": 0.417,
-         "o": null
+         "p": 0.426,
+         "o": 1
         },
         {
          "lane": 2,
          "name": "真子奈津",
          "grade": "B1",
          "p": 0.051,
-         "o": null
+         "o": 27.7
         }
        ],
        "tri": {
         "k": "1-4-2",
-        "p": 0.0962,
-        "o": null,
-        "ev": null
+        "p": 0.0986,
+        "o": 11.1,
+        "ev": 1.09
        },
        "box3": "1-2-4",
        "ai": {
@@ -8863,8 +8898,15 @@
          "1-4",
          "1-2"
         ],
-        "cum3": 0.266,
-        "ev": []
+        "cum3": 0.27,
+        "ev": [
+         "1-4-2",
+         "4-1-2",
+         "4-1-3",
+         "4-1-6",
+         "1-2-4",
+         "4-2-1"
+        ]
        }
       },
       {
@@ -8884,29 +8926,29 @@
          "lane": 1,
          "name": "今井裕梨",
          "grade": "A2",
-         "p": 0.501,
-         "o": null
+         "p": 0.511,
+         "o": 4
         },
         {
          "lane": 3,
          "name": "大山千広",
          "grade": "A2",
-         "p": 0.336,
-         "o": null
+         "p": 0.331,
+         "o": 1
         },
         {
          "lane": 5,
          "name": "山川美由",
          "grade": "A2",
-         "p": 0.087,
-         "o": null
+         "p": 0.085,
+         "o": 0
         }
        ],
        "tri": {
         "k": "1-3-5",
-        "p": 0.1057,
-        "o": null,
-        "ev": null
+        "p": 0.1076,
+        "o": 11.5,
+        "ev": 1.24
        },
        "box3": "1-3-5",
        "ai": {
@@ -8920,8 +8962,15 @@
          "3-1",
          "1-5"
         ],
-        "cum3": 0.256,
-        "ev": []
+        "cum3": 0.258,
+        "ev": [
+         "1-3-5",
+         "1-3-2",
+         "1-3-4",
+         "1-5-3",
+         "3-1-2",
+         "1-3-6"
+        ]
        }
       },
       {
@@ -8941,27 +8990,27 @@
          "lane": 1,
          "name": "寺田千恵",
          "grade": "A2",
-         "p": 0.777,
+         "p": 0.784,
          "o": null
         },
         {
          "lane": 3,
          "name": "内山七海",
          "grade": "A2",
-         "p": 0.103,
+         "p": 0.1,
          "o": null
         },
         {
          "lane": 6,
          "name": "土屋南",
          "grade": "A2",
-         "p": 0.054,
+         "p": 0.052,
          "o": null
         }
        ],
        "tri": {
         "k": "1-3-5",
-        "p": 0.1149,
+        "p": 0.1163,
         "o": null,
         "ev": null
        },
@@ -8977,7 +9026,7 @@
          "1-5",
          "1-6"
         ],
-        "cum3": 0.294,
+        "cum3": 0.297,
         "ev": []
        }
       },
@@ -8999,27 +9048,27 @@
          "lane": 1,
          "name": "川野芽唯",
          "grade": "A1",
-         "p": 0.934,
+         "p": 0.936,
          "o": null
         },
         {
          "lane": 2,
          "name": "安井瑞紀",
          "grade": "A2",
-         "p": 0.031,
+         "p": 0.03,
          "o": null
         },
         {
          "lane": 6,
          "name": "武井莉里",
          "grade": "A2",
-         "p": 0.014,
+         "p": 0.013,
          "o": null
         }
        ],
        "tri": {
         "k": "1-2-3",
-        "p": 0.1409,
+        "p": 0.1421,
         "o": null,
         "ev": null
        },
@@ -9035,7 +9084,7 @@
          "1-3",
          "1-6"
         ],
-        "cum3": 0.374,
+        "cum3": 0.376,
         "ev": []
        }
       },
@@ -9059,14 +9108,14 @@
          "lane": 5,
          "name": "三浦永理",
          "grade": "A1",
-         "p": 0.396,
+         "p": 0.389,
          "o": null
         },
         {
          "lane": 1,
          "name": "宮崎安奈",
          "grade": "B1",
-         "p": 0.275,
+         "p": 0.283,
          "o": null
         },
         {
@@ -9079,7 +9128,7 @@
        ],
        "tri": {
         "k": "5-1-2",
-        "p": 0.0689,
+        "p": 0.0683,
         "o": null,
         "ev": null
        },
@@ -9095,7 +9144,7 @@
          "5-2",
          "1-2"
         ],
-        "cum3": 0.17,
+        "cum3": 0.171,
         "ev": []
        }
       },
@@ -9118,14 +9167,14 @@
          "lane": 4,
          "name": "松田真実",
          "grade": "B1",
-         "p": 0.249,
+         "p": 0.247,
          "o": null
         },
         {
          "lane": 5,
          "name": "中田夕貴",
          "grade": "B1",
-         "p": 0.19,
+         "p": 0.187,
          "o": null
         },
         {
@@ -9138,7 +9187,7 @@
        ],
        "tri": {
         "k": "4-5-3",
-        "p": 0.0269,
+        "p": 0.0265,
         "o": null,
         "ev": null
        },
@@ -9151,10 +9200,10 @@
         ],
         "ex3": [
          "4-5",
-         "4-3",
-         "1-2"
+         "1-2",
+         "4-3"
         ],
-        "cum3": 0.072,
+        "cum3": 0.071,
         "ev": []
        }
       },
@@ -9163,7 +9212,7 @@
        "close": "12:07",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [
@@ -9176,27 +9225,27 @@
          "lane": 4,
          "name": "土屋南",
          "grade": "A2",
-         "p": 0.395,
+         "p": 0.393,
          "o": null
         },
         {
          "lane": 5,
          "name": "小野生奈",
          "grade": "A1",
-         "p": 0.342,
+         "p": 0.338,
          "o": null
         },
         {
          "lane": 1,
          "name": "稲生夏季",
          "grade": "B1",
-         "p": 0.196,
+         "p": 0.203,
          "o": null
         }
        ],
        "tri": {
         "k": "4-5-1",
-        "p": 0.1011,
+        "p": 0.1009,
         "o": null,
         "ev": null
        },
@@ -9212,7 +9261,7 @@
          "5-4",
          "5-1"
         ],
-        "cum3": 0.232,
+        "cum3": 0.23,
         "ev": []
        }
       },
@@ -9221,7 +9270,7 @@
        "close": "12:41",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [
@@ -9234,27 +9283,27 @@
          "lane": 1,
          "name": "魚谷香織",
          "grade": "A2",
-         "p": 0.62,
+         "p": 0.63,
          "o": null
         },
         {
          "lane": 5,
          "name": "田口節子",
          "grade": "A1",
-         "p": 0.289,
+         "p": 0.28,
          "o": null
         },
         {
          "lane": 4,
          "name": "中村かな",
          "grade": "B2",
-         "p": 0.037,
+         "p": 0.036,
          "o": null
         }
        ],
        "tri": {
         "k": "1-5-4",
-        "p": 0.1133,
+        "p": 0.1148,
         "o": null,
         "ev": null
        },
@@ -9270,7 +9319,7 @@
          "5-1",
          "1-2"
         ],
-        "cum3": 0.271,
+        "cum3": 0.275,
         "ev": []
        }
       },
@@ -9292,27 +9341,27 @@
          "lane": 1,
          "name": "山川美由",
          "grade": "A2",
-         "p": 0.666,
+         "p": 0.674,
          "o": null
         },
         {
          "lane": 2,
          "name": "三浦永理",
          "grade": "A1",
-         "p": 0.263,
+         "p": 0.258,
          "o": null
         },
         {
          "lane": 6,
          "name": "安井瑞紀",
          "grade": "A2",
-         "p": 0.032,
+         "p": 0.031,
          "o": null
         }
        ],
        "tri": {
         "k": "1-2-6",
-        "p": 0.1771,
+        "p": 0.1789,
         "o": null,
         "ev": null
        },
@@ -9328,7 +9377,7 @@
          "2-1",
          "1-6"
         ],
-        "cum3": 0.39,
+        "cum3": 0.394,
         "ev": []
        }
       },
@@ -9349,27 +9398,27 @@
          "lane": 1,
          "name": "内山七海",
          "grade": "A2",
-         "p": 0.658,
+         "p": 0.668,
          "o": null
         },
         {
          "lane": 5,
          "name": "大山千広",
          "grade": "A2",
-         "p": 0.18,
+         "p": 0.174,
          "o": null
         },
         {
          "lane": 3,
          "name": "石原凪紗",
          "grade": "B1",
-         "p": 0.054,
+         "p": 0.053,
          "o": null
         }
        ],
        "tri": {
         "k": "1-5-3",
-        "p": 0.0624,
+        "p": 0.0633,
         "o": null,
         "ev": null
        },
@@ -9385,7 +9434,7 @@
          "1-2",
          "1-3"
         ],
-        "cum3": 0.178,
+        "cum3": 0.181,
         "ev": []
        }
       },
@@ -9408,27 +9457,27 @@
          "lane": 1,
          "name": "小野生奈",
          "grade": "A1",
-         "p": 0.889,
+         "p": 0.893,
          "o": null
         },
         {
          "lane": 3,
          "name": "中田夕貴",
          "grade": "B1",
-         "p": 0.034,
+         "p": 0.033,
          "o": null
         },
         {
          "lane": 5,
          "name": "武井莉里",
          "grade": "A2",
-         "p": 0.032,
+         "p": 0.03,
          "o": null
         }
        ],
        "tri": {
         "k": "1-3-4",
-        "p": 0.1078,
+        "p": 0.1088,
         "o": null,
         "ev": null
        },
@@ -9444,7 +9493,7 @@
          "1-4",
          "1-5"
         ],
-        "cum3": 0.289,
+        "cum3": 0.291,
         "ev": []
        }
       }
@@ -9658,7 +9707,7 @@
        "close": "12:11",
        "cls": "一般戦",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -9712,7 +9761,7 @@
        "close": "12:38",
        "cls": "カタメン3一",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -9766,7 +9815,7 @@
        "close": "13:09",
        "cls": "一般戦",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -9776,28 +9825,28 @@
          "name": "浅見昌克",
          "grade": "A2",
          "p": 0.584,
-         "o": null
+         "o": 0
         },
         {
          "lane": 2,
          "name": "山下夏鈴",
          "grade": "B1",
          "p": 0.145,
-         "o": null
+         "o": 0
         },
         {
          "lane": 4,
          "name": "古川健",
          "grade": "B1",
          "p": 0.088,
-         "o": null
+         "o": 0
         }
        ],
        "tri": {
         "k": "1-2-4",
         "p": 0.0725,
-        "o": null,
-        "ev": null
+        "o": 59.7,
+        "ev": 4.33
        },
        "box3": "1-2-4",
        "ai": {
@@ -9812,7 +9861,13 @@
          "1-5"
         ],
         "cum3": 0.204,
-        "ev": []
+        "ev": [
+         "1-2-4",
+         "1-2-5",
+         "1-2-6",
+         "1-4-2",
+         "1-4-5"
+        ]
        }
       },
       {
