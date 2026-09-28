@@ -27,19 +27,20 @@ const out = { built: new Date().toISOString(), bets: BETS, days: [], total: null
 const TOTAL = mk(), VEN = {};
 let matched = 0, pending = 0;
 for (const date of dates) {
-  const DAY = mk(); let late = 0, joint = 0;
+  const DAY = mk(); let late = 0, joint = 0, repro = 0;
   for (const p of preds.values()) {
     if (p.date !== date) continue;
     const k = K.get(p.raceId); if (!k) { pending++; continue; }
     const S = settle(p, k); if (!S) { pending++; continue; }
-    matched++; merge(DAY, S); merge(TOTAL, S); merge(VEN[k.venue] ||= mk(), S);
-    if (p.late > 60) late++; if (p.level === 'joint') joint++;
+    matched++; merge(DAY, S); merge(TOTAL, S); const V = (VEN[k.venue] ||= mk()); merge(V, S); (V.days ||= new Set()).add(date);
+    if (p.late === 9999) repro++; else if (p.late > 60) late++; if (p.level === 'joint') joint++;
   }
-  out.days.push({ date, late, joint, ...fin(DAY) });
+  out.days.push({ date, late, repro, joint, ...fin(DAY) });
 }
 out.total = fin(TOTAL);
-out.byVenue = Object.fromEntries(Object.entries(VEN).map(([k, v]) => [k, fin(v)]));
-out.note = '予想は締切後に記録したもの（late＝締切から60分以上あとに記録したレース数。再現＝後から同じ入力で作り直したもの）。払戻は楽天Kドリームスの結果ページ。';
+/* 場別（TOP の「場別の成績」。他競技と同じ配列の形） */
+out.byVenue = Object.entries(VEN).map(([k, v]) => ({ venue: k, days: v.days.size, ...fin(v) })).sort((a, b) => b.races - a.races);
+out.note = '予想は締切10分前〜締切に記録したもの（late＝締切から60分以上あとに記録したレース数、repro＝記録の仕組みができる前のレースを後から学習に使っていないモデルで作り直した「再現」の数）。払戻は楽天Kドリームスの結果ページ。';
 writeJSON('data/keirin/results.json', out);
 const T = out.total;
 console.error(`${dates.length}日 ${matched}R を精算（未確定 ${pending}R）。◎1着 ${T.hit1 != null ? (T.hit1 * 100).toFixed(1) : '—'}%／3車BOX3連複 回収 ${T.bets['3車BOX 3連複'].roi != null ? (T.bets['3車BOX 3連複'].roi * 100).toFixed(1) : '—'}%`);

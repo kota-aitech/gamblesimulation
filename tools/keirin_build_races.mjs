@@ -2,7 +2,8 @@
    ばんえい（banei_build_races.mjs）と同じ作り。3連単オッズが出ていれば joint、無ければ base。2着・3着は段階モデル（ライン決着を表せる）。
    締切10分前を過ぎたレースの予想は preds.jsonl に1行ずつ記録する（後から作り直さない。日別成績の元）。
      KR_TODAY       … 基準日（既定 今日、YYYYMMDD）。これ以降の開催日だけ載せる
-     KR_RECORD_PAST=1 … 過去日の出走表からも予想を「再現」として記録する（late=9999） */
+     KR_RECORD_FROM=YYYYMMDD … その日から昨日までの（学習に使っていない）レースも、予想を「再現」として記録する（late=9999）。
+                             記録の仕組みができる前の実績を埋める用。オッズは確定値なので実戦よりやや有利。既に記録のあるレースは触らない */
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, readJSON, writeJSON, ymdOf, venueByName } from './lib/kr.mjs';
@@ -13,7 +14,8 @@ const TODAY = process.env.KR_TODAY || ymdOf(new Date());
 const M = readJSON('data/keirin/model.json');
 let DB = {}; try { DB = readJSON('data/keirin/index.json'); } catch { }
 let BT = null; try { BT = readJSON('data/keirin/backtest.json'); } catch { }
-const RECORD_PAST = !!process.env.KR_RECORD_PAST;
+const RECORD_FROM = process.env.KR_RECORD_FROM || null;
+if (RECORD_FROM && RECORD_FROM <= M.meta.split) console.error(`  ! KR_RECORD_FROM（${RECORD_FROM}）が学習期間（〜${M.meta.split}）に掛かっている。学習に使ったレースの再現は実績として意味が無い`);
 const beta = new Float64Array(NF), betaJ = M.joint ? new Float64Array(NF) : null;
 {
   const missing = [];
@@ -29,7 +31,7 @@ const pc = (v, d = 0) => v == null ? '—' : (v * 100).toFixed(d) + '%';
 /* レースを読む。keirin_build_db が保存した「一昨日まで」の積み上げ（asof.json）があれば、それより後のレースだけを読んで足す。
    今日以降（と記録の再現）はオッズと文章を残す */
 let INIT = null;
-if (!RECORD_PAST) try { INIT = readJSON('data/keirin/asof.json'); } catch { }
+if (!RECORD_FROM) try { INIT = readJSON('data/keirin/asof.json'); } catch { }
 const races = [];
 {
   const text = fs.readFileSync(path.join(ROOT, 'data/keirin/races.jsonl'), 'utf8');
@@ -39,7 +41,7 @@ const races = [];
     if (INIT && d && d <= INIT.upto) continue;
     let r; try { r = JSON.parse(l); } catch { continue; }
     if (!r.date || !r.riders?.length) continue;
-    const up = d >= TODAY || (RECORD_PAST && !r.result);
+    const up = d >= TODAY || (RECORD_FROM && d >= RECORD_FROM);
     races.push(slim(r, up ? { odds: true, text: true, pay: true } : {}));
   }
   races.sort((a, b) => a.date.localeCompare(b.date) || a.jcd.localeCompare(b.jcd) || a.r - b.r);
@@ -59,11 +61,11 @@ function recordPred(race, date) {
   const late = t ? (nowJ - t) / 60000 : null;
   /* 記録は締切10分前から（反映係は10分おきなので、締切前に必ず1回は通る）。締切後に記録すると確定オッズで予想することになり、実戦より有利になる。
      結果がもう出ているレース（反映係が寝ていて遅れた）も記録はするが、late に締切からの遅れが残る */
-  if (!RECORD_PAST) { if (process.env.KR_TODAY || !t || late < -10) return; }
-  else if (date >= TODAY) return;
+  const repro = RECORD_FROM && date < TODAY;
+  if (!repro && (process.env.KR_TODAY || !t || late < -10)) return;
   const top = race.riders.slice().sort((a, b) => b.p1 - a.p1);
   fs.appendFileSync(PREDS, JSON.stringify({
-    raceId: race.raceId, date, venue: race.venue, r: race.r, at: nowJ.toISOString(), late: RECORD_PAST ? 9999 : Math.round(late), level: race.level,
+    raceId: race.raceId, date, venue: race.venue, r: race.r, at: nowJ.toISOString(), late: repro ? 9999 : Math.round(late), level: race.level,
     top: top.map(h => h.no), p1: Object.fromEntries(top.map(h => [h.no, h.p1])), mkt: race.mktOrder || null, mktE3: race.mktE3 || null,
     ai: { e3: race.e3.slice(0, 10).map(x => x.k), q3: race.q3.slice(0, 5).map(x => x.k), e2: race.e2.slice(0, 5).map(x => x.k), q2: race.q2.slice(0, 3).map(x => x.k), wide: race.wide.slice(0, 3).map(x => x.k),
       ev: race.ev.map(x => x.k), line: race.lineBet || null },
@@ -88,8 +90,7 @@ const HOME = DB.home?.all;
 const days = new Map();
 let nR = 0, nJ = 0;
 for (const r0 of races) {
-  if (r0.date < TODAY && !(RECORD_PAST && !r0.result)) continue;
-  if (r0.date < TODAY && RECORD_PAST) { /* 再現：過去日の結果の無いレースは無い想定。何もしない */ }
+  if (r0.date < TODAY && !(RECORD_FROM && r0.date >= RECORD_FROM)) continue;
   /* 時点の値は「このレースの直前」（of）を使う。latest だと締切後に記録する予想にこのレース自身の結果が当日の傾向として混ざる */
   const f = featurize(r0);
   if (!f) continue;
@@ -221,7 +222,7 @@ const out = {
     model: { built: M.meta.built, split: M.meta.split, train: M.meta.train, test: M.meta.test, from: M.meta.from, to: M.meta.to, base: M.base.test, joint: M.joint?.test || null, mktOnly: M.mktOnly, baseSame: M.baseSame,
       coef: M.base.coef.slice(0, 14), jointCoef: M.joint?.coef?.slice(0, 14) || null, homeMult: M.homeMult, stage: M.base.stage },
     index: DB.meta ? { from: DB.meta.from, to: DB.meta.to, races: DB.meta.races, slots: DB.slots, lineOneTwo: DB.lineOneTwo, home: DB.home, kimarite: DB.kimarite, venues: DB.venues } : null,
-    backtest: BT ? { level: BT.meta.level, from: BT.meta.from, to: BT.meta.to, races: BT.meta.races, table: BT.table, note: BT.meta.note } : null,
+    backtest: BT ? { level: BT.meta.level, from: BT.meta.from, to: BT.meta.to, races: BT.meta.races, table: BT.table, note: BT.meta.note, byVenue: BT.byVenue } : null,
   },
   days: [...days].sort((a, b) => a[0].localeCompare(b[0])).map(([date, vs]) => ({ date, venues: [...vs.values()].sort((a, b) => (a.races[0]?.post || '').localeCompare(b.races[0]?.post || '')).map(v => ({ ...v, races: v.races.sort((a, b) => a.r - b.r) })) })),
 };

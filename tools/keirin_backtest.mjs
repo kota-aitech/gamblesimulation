@@ -27,6 +27,7 @@ races.sort((a, b) => a.date.localeCompare(b.date) || a.jcd.localeCompare(b.jcd) 
 const ASOF = buildAsOf(races), featurize = makeFeaturizer(ASOF);
 const T = Object.fromEntries(BETS.map(b => [b, { races: 0, bet: 0, ret: 0, hit: 0 }]));
 const byMonth = {}, byGrade = {}, byVenue = {};
+const VB = ['◎-○ 2車複', '◎→○ 2車単', '3車BOX 3連複', '4車BOX 3連複', 'ライン 2車単 表裏2点', 'AI 3連単 上位5点', 'AI 2車単 上位3点', 'AI 3連複 上位3点'];
 let nR = 0, hit1 = 0, in3 = 0, lastDate = null;
 for (const r of races) {
   if (r.date < FROM || r.date > TO || !r.pay) continue;
@@ -44,13 +45,15 @@ for (const r of races) {
   if (!S) continue;
   nR++; hit1 += S.hit1; in3 += S.in3; if (!lastDate || r.date > lastDate) lastDate = r.date;
   for (const [b, x] of Object.entries(S.bets)) { const t = T[b]; t.races++; t.bet += x.bet; t.ret += x.ret; t.hit += x.hit; }
+  /* 月・グレード・場ごと：◎1着と、主な買い方の回収率（TOP の「場別の成績」の右端＝検証の同型） */
   for (const [key, G] of [[r.date.slice(0, 6), byMonth], [r.grade || '?', byGrade], [r.venue, byVenue]]) {
-    const g = G[key] ||= { races: 0, hit1: 0, q3box: { bet: 0, ret: 0 }, e3top5: { bet: 0, ret: 0 } };
-    g.races++; g.hit1 += S.hit1; g.q3box.bet += S.bets['3車BOX 3連複'].bet; g.q3box.ret += S.bets['3車BOX 3連複'].ret; g.e3top5.bet += S.bets['AI 3連単 上位5点'].bet; g.e3top5.ret += S.bets['AI 3連単 上位5点'].ret;
+    const g = G[key] ||= { races: 0, hit1: 0, bets: {} };
+    g.races++; g.hit1 += S.hit1;
+    for (const b of VB) { const x = S.bets[b]; if (!x || !x.bet) continue; const y = (g.bets[b] ||= { bet: 0, ret: 0 }); y.bet += x.bet; y.ret += x.ret; }
   }
 }
 const table = Object.fromEntries(Object.entries(T).filter(([, v]) => v.races).map(([k, v]) => [k, { races: v.races, hit: +(100 * v.hit / v.races).toFixed(1), roi: v.bet ? +(100 * v.ret / v.bet).toFixed(1) : null, bet: v.bet, ret: v.ret }]));
-const fin = G => Object.fromEntries(Object.entries(G).map(([k, g]) => [k, { races: g.races, hit1: +(g.hit1 / g.races).toFixed(3), q3box: g.q3box.bet ? +(g.q3box.ret / g.q3box.bet).toFixed(3) : null, e3top5: g.e3top5.bet ? +(g.e3top5.ret / g.e3top5.bet).toFixed(3) : null }]));
+const fin = G => Object.fromEntries(Object.entries(G).map(([k, g]) => [k, { races: g.races, hit1: +(g.hit1 / g.races).toFixed(3), ...Object.fromEntries(Object.entries(g.bets).map(([b, y]) => [b, +(y.ret / y.bet).toFixed(3)])) }]));
 writeJSON('data/keirin/backtest.json', { meta: { level: LEVEL, from: FROM, to: TO === '99999999' ? lastDate : TO, races: nR, hit1: +(hit1 / nR).toFixed(4), in3: +(in3 / nR).toFixed(4), note: '3連単オッズは結果ページの確定値（締切前の値ではない）なので、joint と期待値の買い方は実戦よりやや有利' }, table, byMonth: fin(byMonth), byGrade: fin(byGrade), byVenue: fin(byVenue) });
 console.error(`検証 ${nR}R（${LEVEL}）◎1着 ${(100 * hit1 / nR).toFixed(1)}%／上位3車に1着 ${(100 * in3 / nR).toFixed(1)}%`);
 for (const [k, v] of Object.entries(table)) if (v.bet) console.error(`  ${k.padEnd(18)} 的中 ${String(v.hit).padStart(5)}%  回収 ${String(v.roi).padStart(6)}%`);

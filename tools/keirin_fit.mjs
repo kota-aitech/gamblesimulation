@@ -4,8 +4,8 @@
      joint … 市場の対数確率（3連単オッズから逆算した1着確率、mktLog）を特徴量に入れて同時に当てはめる（オッズの出たレース用）
      stage … 2着・3着の段階モデル（1着との同ライン・番手・ワンツーなど。lib/krfeat.mjs の stage2X / stage3X）。base と joint で別に持つ
    環境変数
-     KR_FIT_SPLIT … 学習と検証を切る日付（既定 20260701）
-     KR_FIT_WARM  … 履歴の助走期間（既定 データ先頭から60日。この間は自前の指標を積むだけ）
+     KR_FIT_SPLIT … 学習と検証を切る日付（既定 データの末尾20%＝10〜90日）
+     KR_FIT_WARM  … 履歴の助走期間（既定 データの先頭15%＝14〜60日。この間は自前の指標を積むだけ）
      KR_FIT_EPOCH / KR_FIT_LR / KR_FIT_L2 / KR_FIT_DROP / KR_FIT_OUT */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -13,7 +13,7 @@ import { ROOT, writeJSON, addDays } from './lib/kr.mjs';
 import { FEATURES, NF, MKT, loadRaces, buildAsOf, makeFeaturizer, stageCtx, stage2X, stage3X, STAGE2, STAGE3, combos } from './lib/krfeat.mjs';
 import { utilities, plWin, fitTau } from './lib/bpl.mjs';
 
-const SPLIT = process.env.KR_FIT_SPLIT || '20260701';
+
 const EPOCH = Number(process.env.KR_FIT_EPOCH || 250), LR = Number(process.env.KR_FIT_LR || 0.05), L2 = Number(process.env.KR_FIT_L2 || 1e-2);
 const W23 = Number(process.env.KR_FIT_W23 ?? 0);   // 2026-09-28 の比較（検証428R）：1→joint 1.330、0.3→1.305、0→1.288（人気だけ 1.291）
 const DROP = new Set((process.env.KR_FIT_DROP || '').split(',').map(s => s.trim()).filter(Boolean));
@@ -21,8 +21,12 @@ const DROPI = [...DROP].map(k => FEATURES.indexOf(k)).filter(i => i >= 0);
 
 console.error('レースを読む…');
 const races = loadRaces(fs.readFileSync(path.join(ROOT, 'data/keirin/races.jsonl'), 'utf8'), {}, l => /"result":\{/.test(l));
-const first = races[0].date;
-const WARM = process.env.KR_FIT_WARM || addDays(first, 60);
+const first = races[0].date, last = races.at(-1).date;
+/* 既定の期間はデータの範囲から決める（取り込みを遡っている間も当て直せるように）：
+   助走＝先頭の15%（14〜60日。自前の時点指標を積むだけ）、検証＝末尾の20%（10〜90日） */
+const span = Math.round((Date.parse(`${last.slice(0, 4)}-${last.slice(4, 6)}-${last.slice(6, 8)}`) - Date.parse(`${first.slice(0, 4)}-${first.slice(4, 6)}-${first.slice(6, 8)}`)) / 86400000);
+const WARM = process.env.KR_FIT_WARM || addDays(first, Math.min(60, Math.max(14, Math.round(span * 0.15))));
+const SPLIT = process.env.KR_FIT_SPLIT || addDays(last, -Math.min(90, Math.max(10, Math.round(span * 0.2))));
 const ASOF = buildAsOf(races);
 const featurize = makeFeaturizer(ASOF);
 console.error(`  ${races.length}R（${first}〜${races.at(-1).date}）`);
