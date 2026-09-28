@@ -47,7 +47,30 @@ for (const [code, name, key] of NK) {
     console.error(`${name}: コース ${courses.length}・直線 ${nk[key].straight}m・レコード ${recs.length}`);
   } catch (e) { console.error(`! ${name} ${e.message}`); }
 }
+/* 地方競馬の公式サイト keiba.go.jp の「コース一覧」：全地方競馬場の 回り・1周距離・直線距離（ゴールまで）・幅員・高低差・フルゲート。
+   nankankeiba のページには直線が大井しか書かれていないので、直線はこちらを使う。帯広（ばんえい）の形（直線200m・障害の高さ）もここ（UTF-8） */
+const NAR = {};
+{
+  const gap = Date.now() - last; if (gap < 1500) await sleep(1500 - gap);
+  const f = path.join(CACHE, 'nar_course.html');
+  let h;
+  if (fs.existsSync(f) && (Date.now() - fs.statSync(f).mtimeMs) / 86400000 < 30) h = fs.readFileSync(f, 'utf8');
+  else { const res = await fetch('https://www.keiba.go.jp/guide/course/', { headers: { 'User-Agent': UA, 'Accept-Language': 'ja' }, signal: AbortSignal.timeout(30000) }); h = await res.text(); fs.writeFileSync(f, h); last = Date.now(); }
+  const IDS = { uraw: '浦和', funa: '船橋', ooi: '大井', kawa: '川崎', obi: '帯広' };
+  for (const [id, name] of Object.entries(IDS)) {
+    const i = h.indexOf(`id="course_${id}"`); if (i < 0) continue;
+    const j = h.indexOf('id="course_', i + 20), t = text(h.slice(i, j > 0 ? j : i + 6000).replace(/^[^>]*>/, ''));
+    const field = k => { const m = t.match(new RegExp(k + '\\s+(.*?)\\s+(?:回り|1周距離|直線距離|全長|幅員|高低差|フルゲート|$)')); return m ? m[1].trim() : null; };
+    const st = field('直線距離');
+    /* 「外回りコース(右)／486m （ゴールまで386m）」「300m（ゴールまで220m）」を分解 */
+    const straight = st ? [...st.matchAll(/(?:([^／\s]*コース(?:\([右左]\))?)／)?\s*([\d,]+)m\s*（ゴールまで([\d,]+)m）/g)].map(m => ({ course: m[1] || null, full: num(m[2]), goal: num(m[3]) })) : [];
+    NAR[name] = { intro: t.slice(t.indexOf(name + '競馬場') + name.length + 3, t.indexOf('データ名')).trim(), turn: field('回り'), len: field('1周距離'), total: field('全長'), straight, straightText: st, width: field('幅員'), height: field('高低差'), fullgate: field('フルゲート'), src: 'https://www.keiba.go.jp/guide/course/' };
+    console.error(`${name}（NAR）：直線 ${straight.map(x => `${x.course || ''}${x.goal}m`).join('・') || st || '—'}／高低差 ${NAR[name].height}`);
+  }
+}
+for (const t of Object.values(nk)) { const n = NAR[t.name]; if (!n) continue; t.nar = n; const g = n.straight.map(x => x.goal).filter(Boolean); if (g.length) t.straight = Math.max(...g); }
 write('data/nankan/course.json', { built: new Date().toISOString(), tracks: nk });
+if (NAR['帯広']) write('data/banei/course.json', { built: new Date().toISOString(), ...NAR['帯広'] });
 
 /* ---- 中央 ---- */
 const JR = [['01', '札幌', 'sapporo'], ['02', '函館', 'hakodate'], ['03', '福島', 'fukushima'], ['04', '新潟', 'niigata'], ['05', '東京', 'tokyo'], ['06', '中山', 'nakayama'], ['07', '中京', 'chukyo'], ['08', '京都', 'kyoto'], ['09', '阪神', 'hanshin'], ['10', '小倉', 'kokura']];

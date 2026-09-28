@@ -162,16 +162,17 @@ if (ONLY !== 'boat') {
     const front3 = wsum ? ds.reduce((a, x) => a + x.front3 * x.n, 0) / wsum : null;
     const style = wsum ? [0, 1, 2, 3].map(i => r3(ds.reduce((a, x) => a + (x.style?.[i] || 0) * x.n, 0) / wsum)) : null;
     const gate = wsum ? [0, 1, 2].map(i => r3(ds.reduce((a, x) => a + (x.gateEdge?.[i] || 1) * x.n, 0) / wsum)) : null;
-    out.nankan.push({ key, name: c.name, code: c.code, courses: c.courses, straight: c.straight, notes: c.notes, records: c.records, src: c.src,
+    out.nankan.push({ key, name: c.name, code: c.code, courses: c.courses, straight: c.straight, straights: c.nar?.straight || [], height: c.nar?.height || null, narIntro: c.nar?.intro || null, notes: c.notes, records: c.records, src: c.src,
       races: v?.races || 0, fav: v?.fav[1] ? r3(v.fav[0] / v.fav[1]) : null, heavy: v ? r3(v.heavy / v.races) : null, rain: v ? r3(v.rain / v.races) : null,
       agari3: v ? r3(med(v.agari3)) : null, ten3: v ? r3(med(v.ten3)) : null, e3Med: p ? med(p.e3) : null, man: p?.e3.length ? r3(p.man / p.e3.length) : null,
       front3: r3(front3), style, gate, byDist });
   }
   out.nankan.sort((a, b) => a.code.localeCompare(b.code));
-  { const K = ranker(out.nankan); K.rank('front3', o => o.front3); K.rank('fav', o => o.fav); K.rank('e3Med', o => o.e3Med); K.rank('inner', o => o.gate ? o.gate[0] - o.gate[2] : null); K.rank('len', o => Math.max(...(o.courses || []).map(c => c.len || 0)));
+  { const K = ranker(out.nankan); K.rank('front3', o => o.front3); K.rank('fav', o => o.fav); K.rank('e3Med', o => o.e3Med); K.rank('inner', o => o.gate ? o.gate[0] - o.gate[2] : null); K.rank('len', o => Math.max(...(o.courses || []).map(c => c.len || 0))); K.rank('straight', o => o.straight);
     for (const o of out.nankan) {
       const t = [], c = o.courses || [];
-      if (c.length) t.push(`${c[0].turn}・一周 ${[...new Set(c.map(x => x.len))].join('／')}m${o.straight ? `・直線 ${o.straight}m` : ''}${c.length > 1 ? `（${c.map(x => `${x.inout || '本'}${x.turn !== c[0].turn ? x.turn : ''}`).join('・')}コース）` : ''}`);
+      if (c.length) t.push(`${c[0].turn}・一周 ${[...new Set(c.map(x => x.len))].join('／')}m${o.straight ? `・直線 ${o.straight}m（ゴールまで）` : ''}${o.height ? `・高低差 ${o.height}` : ''}${c.length > 1 ? `（${c.map(x => `${x.inout || '本'}${x.turn !== c[0].turn ? x.turn : ''}`).join('・')}コース）` : ''}`);
+      if (K.top(o, 'straight', 1)) t.push(`直線が4場でいちばん長い（${o.straight}m）`); else if (K.bottom(o, 'straight', 1)) t.push(`直線が4場でいちばん短い（${o.straight}m）＝前が止まりにくい`);
       if (K.top(o, 'front3', 1)) t.push(`前が残りやすい（3着内のうち3角で前方にいた割合 ${pc(o.front3)}、4場で1位）`); else if (K.bottom(o, 'front3', 1)) t.push(`4場の中では差しが届く（前方の割合 ${pc(o.front3)}）`);
       if (o.gate) { const d = o.gate[0] - o.gate[2]; if (d >= 0.06) t.push(`内枠有利（3着内シェア÷出走シェア 内 ${o.gate[0]}／外 ${o.gate[2]}）`); else if (d <= -0.06) t.push(`外枠が不利にならない（内 ${o.gate[0]}／外 ${o.gate[2]}）`); }
       if (K.top(o, 'fav', 1)) t.push(`1番人気が強い（1着率 ${pc(o.fav)}）`); else if (K.bottom(o, 'fav', 1)) t.push(`1番人気が勝ちにくい（${pc(o.fav)}）`);
@@ -189,7 +190,9 @@ if (ONLY !== 'boat') {
     const t = ['直線200m・障害2つ（第2障害が勝負どころ）を、重いソリを曳いて走る。時計は馬場水分で丸ごと変わる'];
     if (best.length >= 2) t.push(`馬番の得失：${best[0][0]}番が良く（${best[0][1].edge.toFixed(2)}）、${best.at(-1)[0]}番が悪い（${best.at(-1)[1].edge.toFixed(2)}）`);
     if (mk.length >= 2) { const dry = mk[0], wet = mk.at(-1); t.push(`馬場水分 ${dry[0]}% では1番人気の1着率 ${pc(dry[1].favWin)}・勝ち時計 ${dry[1].winTime?.toFixed(1)}秒、${wet[0]}% では ${pc(wet[1].favWin)}・${wet[1].winTime?.toFixed(1)}秒（水分が多いほど速く、荒れやすい）`); }
-    out.banei = { name: '帯広', races, fav: fav[1] ? r3(fav[0] / fav[1]) : null, e3Med: med(e3), gate: G, moist: M, summary: t, from: BI.meta?.from, to: BI.meta?.to };
+    const BC = rd('data/banei/course.json');
+    if (BC) t.unshift(`${BC.turn || '直線コース'}・全長 ${BC.total || '200m'}・幅員 ${BC.width || '—'}・${BC.height || ''}（公式）`);
+    out.banei = { name: '帯広', course: BC ? { total: BC.total, width: BC.width, height: BC.height, intro: BC.intro, src: BC.src } : null, races, fav: fav[1] ? r3(fav[0] / fav[1]) : null, e3Med: med(e3), gate: G, moist: M, summary: t, from: BI.meta?.from, to: BI.meta?.to };
   }
   wr('data/guide_horse.json', out);
   console.error(`競馬：中央 ${out.jra.length}場・南関 ${out.nankan.length}場・ばんえい ${out.banei ? 1 : 0}`);

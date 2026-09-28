@@ -1862,7 +1862,8 @@ node tools/keirin_build_races.mjs && node tools/keirin_build_results.mjs && NK_E
 ### 競艇場・競馬場ガイド（`bbank.html` / `hbank.html`、2026-09-28）
 こたの依頼「競輪場ガイドと同様に競馬場や競艇場でも」。作りは競輪場ガイドと同じ（形は公式、特徴は実測、一言は同じ競技の場どうしの順位から自動）。
 - `tools/fetch_course_info.mjs` … コースの形（月1、キャッシュ 30日、Shift_JIS）
-  - 南関 `nankankeiba.com/course_info/{18|19|20|21}.do` → `data/nankan/course.json`（回り・内外・一周・幅員・見どころの文・距離別レコード。**直線の長さは大井しか書かれていない**）
+  - 南関 `nankankeiba.com/course_info/{18|19|20|21}.do` → `data/nankan/course.json`（回り・内外・一周・幅員・見どころの文・距離別レコード。直線は大井しか書かれていない）
+  - 地方競馬の公式 `keiba.go.jp/guide/course/`（全地方競馬場のコース一覧、UTF-8）→ **直線は全場こちら**（「300m（ゴールまで220m）」＝4角出口からの全長とゴールまで。画面の「直線」はゴールまで：浦和220・船橋308・大井 外386／内286／左300・川崎300）、高低差、帯広の形（全長200m・障害1.0m／1.6m → `data/banei/course.json`）
   - 中央 `jra.go.jp/facilities/race/{場}/course/` → `data/jra/course.json`（芝・ダートの一周・幅員・直線・高低差・発走距離・紹介文）。
     **場によって表の組み方が違う**（内回り・外回りで表が2つ、1つのセルに「328.4m(内回り)<br>403.7m(外回り)」）ので、「芝コース」「ダートコース」の区画ごとに全部の表を読み、直線と高低差は [最小, 最大] で持つ。コメント内の古い表があるので `<!-- -->` を先に消す
 - `tools/build_guides.mjs` … `data/boat/guide.json`（stadium.json＋results.jsonl 3年。1コース1着率・決まり手・風と波・風が強い日のインの崩れ・安定板・万舟・季節別）と
