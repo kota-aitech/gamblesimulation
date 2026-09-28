@@ -27,6 +27,7 @@ const JOBS = [
   ['com.boat.refresh', 180, ['data/boat/refresh.log', 'data/boat/.refresh-stamp'], 'ボートの反映'],
   ['com.jra.refresh', 1200, ['data/jra/refresh.log', 'data/jra/.refresh-stamp'], '中央の取得と反映'],
   ['com.banei.refresh', 900, ['data/banei/refresh.log', 'data/banei/.refresh-stamp'], 'ばんえいの取得と反映'],
+  ['com.keirin.refresh', 600, ['data/keirin/refresh.log', 'data/keirin/.refresh-stamp'], '競輪の取得と反映'],
   ['com.nankan.publish', 900, ['data/publish.log'], '公開（GitHub へ push）'],
 ];
 const listed = sh('launchctl', ['list']);
@@ -49,7 +50,7 @@ for (const [label, sec, rels, name] of JOBS) {
 const psOut = sh('ps', ['-ax', '-o', 'etime=,command=']);
 const stuck = [];
 for (const l of psOut.split('\n')) {
-  const m = l.match(/^\s*([\d-]+:[\d:]+)\s+(.*tools\/(?:refresh|nightly|watch|fetch|build)[^\s]*\.mjs).*$/);
+  const m = l.match(/^\s*([\d-]+:[\d:]+)\s+(.*tools\/(?:refresh|nightly|watch|fetch|build|keirin_fetch|keirin_build)[^\s]*\.mjs).*$/);
   if (!m) continue;
   const p = m[1].split(/[-:]/).map(Number);                    // [日-]時:分:秒 または 分:秒
   const mins = p.length === 4 ? p[0] * 1440 + p[1] * 60 + p[2] : p.length === 3 ? p[0] * 60 + p[1] : p[0];

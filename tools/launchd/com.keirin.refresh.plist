@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  競輪版の反映（tools/refresh_keirin.mjs）。10分おき。出走表・オッズ・結果の取り直し→予想→keirin.html/TOP へ埋め込み→commit。
+  1日1回 取りこぼしの埋め直しと集計、月曜夜にモデルの当てはめ直し。
+  導入は tools/launchd/install.sh。ログ: __REPO__/data/keirin/refresh.log
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.keirin.refresh</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__NODE__</string>
+    <string>__REPO__/tools/refresh_keirin.mjs</string>
+  </array>
+  <key>WorkingDirectory</key><string>__REPO__</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key><string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin</string>
+    <key>KR_WAIT</key><string>1500</string>
+  </dict>
+  <key>StartInterval</key><integer>600</integer>
+  <key>StandardOutPath</key><string>__REPO__/data/keirin/refresh.log</string>
+  <key>StandardErrorPath</key><string>__REPO__/data/keirin/refresh.log</string>
+  <key>RunAtLoad</key><false/>
+</dict>
+</plist>

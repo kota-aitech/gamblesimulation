@@ -123,6 +123,7 @@ sim.html                予想シミュレーション＋3D（?track=oi / kawasa
 race.html               出馬表（競馬新聞の馬柱。横型／縦型を切替。?track=…&day=…&r=…）※新聞配色
 data.html               データブラウザ（騎手・調教師・コンビ・馬主・種牡馬の一覧）※新聞配色
 boat.html               ボートレース版（全24場・今日と明日・条件付きロジット。下の専用節を参照）※ダーク配色
+keirin.html             競輪版（全43場・今日と明日・競走得点／ライン／地元の条件付きロジット＋2着3着の段階モデル。下の専用節を参照）※新聞配色
 
 data/
   cache/                取得した生ページ（Shift_JIS のまま）。.gitignore 済み・再取得で作り直せる
@@ -215,6 +216,8 @@ node tools/ui_check.mjs  oi && node tools/ui_check.mjs  kawasaki
 node tools/data_check.mjs && node tools/race_check.mjs oi && node tools/race_check.mjs kawasaki
 
 # 見た目の確認（playwright は入っていない。Chrome のヘッドレスで十分）
+# ※ ヘッドレス Chrome はウィンドウ幅の下限が 500px。--window-size=390 は「500px で組んだ画面の左390px」を撮るだけなので、
+#    スマホ幅を見るときは幅390の iframe に入れたページを 500px で撮る（2026-09-28 に競輪版で踏んだ）
 CH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 "$CH" --headless=new --disable-gpu --hide-scrollbars --virtual-time-budget=4000 \
   --screenshot=/tmp/pc.png --window-size=1400,1200 "file://$PWD/race.html?track=oi"
@@ -1692,3 +1695,114 @@ backtest でも AI 3連単 上位3点の的中 22.9 → 23.7%、上位8点 44.1 
   止まる（係数を位置で読むと、特徴量を足した直後に別の係数が当たる）。特徴量を変えたら必ず `fit_boat.mjs` を回し直す
 - **「そのレースより前」の指標は必ず読んでから足す。** `makeRolling` は `read()` → `push()` の順。
   逆にすると当日の結果が当日の予測に入る（先読み）
+
+---
+
+## 競輪版（全43場）— 2026-09-28 着手
+
+南関・JRA・ばんえい・ボートと同じ構成（データ層 `data/keirin/` ＋ ツール層 `tools/keirin_*.mjs` ＋ 1ファイルの `keirin.html`、TOP のタブ）。他と混ぜない。
+単位（対数オッズ差）、「そのレースより前」だけで積む時点指標、「モデルは1つ・検証も同じ式」の約束は他と同じ。
+
+### データ元：楽天Kドリームス（keirin.kdreams.jp）
+サーバ描画・UTF-8・JavaScript 不要。robots.txt は無い（HTML が返る）。**keirin.jp（JKA）は robots.txt で出走表を禁止しているので使わない。**
+netkeiba 競輪は robots 全許可だが、JRA で IP ごと規制された前例があるので使わない。
+
+| 用途 | URL | 備考 |
+|---|---|---|
+| 日付の一覧 | `/racecard/YYYY/MM/DD/` | その日の全場・全レースの racedetail へのリンク（1日 約95R） |
+| **レース詳細** | `/{場}/racedetail/{場2}{初日8}{日目2}00{R2}/` | 1ページに全部入っている：出走表・コメント・今場所/前場所/前々場所・年間勝利度数・同走路・当所5年・**並び予想**・記者の印と総評・**オッズ（3連単210通り・2車単・3連複・2車複・ワイド）**・結果（着順・着差・上り・決まり手・S/B・天候/風速）・払戻 |
+
+- raceId は16桁＝場2＋**開催初日**8＋日目2＋"00"＋R2。**実際の開催日はページの「YYYY年MM月DD日 レース詳細」から取る**（raceId の日付は初日）
+- **過去のページも「当時の値」で残っている**（2025年のページの競走得点は当時の値で、今の値ではない）。2023年まで遡れることを確認済み。だから出走表の数字をそのまま学習に使っても先読みにならない
+- 選手IDはページに無い。**「氏名｜期別」で識別**する（`riderKey`）
+- 表はどれも `<tr class="nX">` が車番。枠番のセルは rowspan で抜ける
+- 3連単の表は1着ごと（`odds_table bt5`）で **列＝2着・行＝3着**。2車単は **列＝1着・行＝2着**（逆なので注意。人気順の一覧と突き合わせて確認済み）。3連複・2車複・ワイドは人気順の一覧（`oddspop_table_wrapper`）から読む
+- 払戻の表は並びが固定：1行目＝2枠複・2車複・3連複（＋ワイド）、2行目＝2枠単・2車単・3連単。`<td>複|単</td>` の次のセルを順に読む
+- 1ページ約250KB。**キャッシュは gzip**（`data/cache/keirin/*.html.gz`）。1レース1行の `races.jsonl` は約15KB/行で1年 約500MB（.gitignore）
+- **ヘッドレス取得は 1.5秒間隔・単一スレッド**（`lib/kr.mjs`）。サーバの応答は0.25秒。1年ぶん約3.7万ページで約16時間
+
+### ファイル
+```
+keirin.html                出走表（新聞配色）＋並び予想の図＋予想＋地元とラインの実測。NKKEIRIN マーカーに races.json
+data/keirin/races.jsonl    レース詳細を1レース1行（.gitignore。キャッシュから作り直せる）
+data/keirin/index.json     ★集計：場ごとのラインの位置別1着率・決まり手・ライン決着率・人気1位の1着率・3連単の中央値、地元の実測
+data/keirin/banks.json     ★全43場のバンクの形（Kドリームスの場のページの「バンクデータ」）
+data/keirin/asof.json      「一昨日まで」の時点指標の積み上げ（予想生成が全期間を読み直さないため。keirin_build_db が書く。.gitignore。無ければ全期間を読む）
+data/keirin/model.json     ★条件付きロジット（base・joint）と2着・3着の段階モデル／backtest.json／races.json／top.json／preds.jsonl／results.json
+tools/lib/kr.mjs           取得共通（43場の表：場コード・URL名・府県・地区、gzip キャッシュ、追記型の upsertJsonl）
+tools/lib/krpage.mjs       パーサ（parseDay / parseRace）
+tools/lib/krfeat.mjs       特徴量・ライン・市場確率・時点指標（buildAsOf）・段階モデル・全通りの確率（combos）
+tools/lib/krsettle.mjs     精算（検証と日別成績の共用）
+tools/keirin_fetch_banks.mjs 全43場のバンクの形（周長・見なし直線・カント・幅員・バンクの特徴の文）→ banks.json（月1で十分）
+tools/keirin_fetch.mjs     取り込み（KR_FROM/KR_TO、KR_ORDER=desc で新しい順、結果の無いレースは30分おき・締切12分前〜は4分おき）
+tools/keirin_build_db.mjs  集計 → index.json ＋ asof.json
+tools/keirin_fit.mjs       当てはめ → model.json（KR_FIT_SPLIT/WARM/EPOCH/L2/DROP/MIN）
+tools/keirin_backtest.mjs  検証 → backtest.json
+tools/keirin_build_races.mjs 今日以降の出走表に当てる → races.json / top.json、締切の過ぎたレースを preds.jsonl に記録
+tools/keirin_build_results.mjs 日別成績 → results.json
+tools/keirin_check.mjs     DOM スタブで keirin.html の全レースを描画して検査
+tools/refresh_keirin.mjs   反映係（launchd: com.keirin.refresh、10分おき）
+```
+
+### パイプライン
+```bash
+KR_FROM=20250901 KR_TO=20260928 KR_ORDER=desc node tools/keirin_fetch.mjs   # 過去ぶん（一度きり。約16時間／年）
+node tools/keirin_build_db.mjs                                              # 集計と積み上げ
+node --max-old-space-size=6000 tools/keirin_fit.mjs                         # 当てはめ
+node --max-old-space-size=6000 tools/keirin_backtest.mjs                    # 検証
+node tools/keirin_build_races.mjs && node tools/keirin_build_results.mjs && NK_EMBED_ONLY=keirin node tools/embed_db.mjs && node tools/keirin_check.mjs
+```
+
+### 競輪で足している「プラスアルファ」（`lib/krfeat.mjs`）
+| 群 | 特徴量 | 中身 |
+|---|---|---|
+| 得点 | `scoreRel` `scoreRank` `scoreTop` `clsRel` | 競走得点はレース内の相対（平均との差・順位・最上位との差）。級で水準が違うので絶対値は使わない |
+| ライン | `single` `lineHead` `lineSecond` `lineThird` `lineSize` `lineScore` | 並び予想のライン内の位置（先頭／番手／3番手以降／単騎）、ラインの車数・平均得点 |
+| | `headPower` `secondBehindStrong` | 先頭の自力の強さ（逃・捲の比率＋得点）。**番手は先頭の先行力に乗る**ので番手だけに掛けた項も持つ |
+| | `rivalHeads` `nLines` `bigLine` | 他ラインの先行型の数（主導権争い）、何分戦か、3車以上の大きなライン |
+| 地元 | `home` `homeRegion` `homeInLine` `homeHead` `homeX` | 登録府県＝開催場の府県（「地元3割増し」）、同じ地区、ラインに地元がいる、地元の先頭の番手、準決勝・決勝での地元 |
+| 当所 | `venueFit` `bankFit` | 当所5年・同走路（333/400/500）の3着内率の上振れ（縮小） |
+| 近況 | `formAvg` `formLast` `curMeet` | 今場所・前場所・前々場所の着順（新しい順に重み） |
+| 記者 | `tip` `evalRel` | 記者の印と総評（レース前の公開情報） |
+| 時点指標 | `rIdx` `rPosFit` | 自前の結果から：選手の勝率（縮小）、**ライン内のその位置での3着内の上振れ**（マーク屋・自力屋の得手不得手） |
+| バンク | `venueHeadEdge` `venueSecondEdge` | 場ごとの「先頭／番手の1着率」の全体からのズレ（先行が残る場か、番手が届く場か） |
+| 当日 | `dayHeadEdge` `dayJiriki` `windNige` | その日・その開催のここまでのレースで先頭が勝った割合・自力決着の割合、直前のレースの風速×逃げ比率 |
+| 選手の癖 | `rLineFin` | 自前の結果から：**先頭／番手のとき、先頭と番手がそろって2着内（ライン決着）になった割合**の上振れ。2着の段階モデルの `mateFin` にも入る（「この選手が番手のときはラインで決まりやすい」） |
+| | `initLead` `initSecond` | **主導権**：各ラインの先頭の B（バック）の比率・逃げの比率・自力の比率で、前を取りそうなラインを決め、その先頭と番手に付ける（2番目のラインとの差が大きいほど強く）。試運転で `initSecond` +0.30＝主導権ラインの番手が有利 |
+| | `rBankFit` | バンク周長（333／400／500。前橋 335m は 333）ごとの3着内の上振れ（本人の平常値を事前分布に）。画面に「333得意」などの札 |
+| バンクの形 | `venueStyleFit` | 場ごとの決まり手（逃・捲・差・マ）の割合（場→周長→全体の順に縮める）×選手の決まり手の型 |
+| | `straightX` `cantX` | 見なし直線の長さ×（差し・マーク−逃げ）、カント角×捲りの比率。試運転で `cantX` +0.20＝カントがきついほど捲りが決まる |
+| 市場 | `mktLog` | **3連単オッズ210通りから逆算した1着確率**（競輪は単勝が無いレースが大半）。joint だけ |
+
+**第1段は1着だけで当てはめる**（`KR_FIT_W23`、既定 0）。2・3着は段階モデルで別に扱うので、第1段に2・3着の尤度を混ぜると
+市場の係数が 0.75 に縮んで joint が人気だけに負けた（検証428R：W23=1 で 1.330、0.3 で 1.305、0 で 1.288、人気だけ 1.291）。市場の項は L2 で縮めない。
+
+**2着・3着の段階モデル**（`STAGE2` / `STAGE3`）：競輪は「ライン決着」があるので、1着の決まり方で2着の分布が大きく変わる。
+2着は 1着と同じライン・1着のすぐ後ろ（番手）・1着のすぐ前（番手が差したときの先頭）・単騎・強さ U・得点差、3着は 1着／2着と同じライン・2着のすぐ後ろ・U で、
+条件付きロジットを別に学習する。PL のままより3連単の的中が大きく伸びる（試運転 147R で本線 10.9% → 19.1%、2着 logloss 1.38 → 1.16）。
+
+**地元の実測**（`index.json` の `home`）：同じレースで競走得点の順位が同じ選手どうしで、地元（登録府県＝開催場の府県）の1着率・3着内率が
+他の選手の何倍かを出す（「地元3割増し」の検証）。グレード別・段階別・ガールズも持つ。画面の「地元とラインの実測」に出す。
+
+### 最初の検証（2026-09-28、データ 8/12〜9/28 の3,531R。助走 8/12〜8/25、学習 8/26〜9/18 の1,858R／検証 9/19〜9/28 の648R）
+| | logloss | 1着的中 | 上位3車に1着 | 3連単 本線／上位5点／10点 | 2着 logloss |
+|---|---|---|---|---|---|
+| base（PL のまま） | 1.427 | 43.5% | 82.1% | 6.6%／22.2%／35.3% | 1.501 |
+| base（段階モデル） | 1.427 | 43.5% | 82.1% | 11.7%／31.2%／45.4% | 1.315 |
+| 人気だけ（3連単から逆算） | **1.335** | **48.8%** | 85.0% | 人気1位の3連単 **15.1%** | — |
+| joint（市場＋全特徴量） | 1.339 | 48.0% | **85.8%** | 13.4%／34.7%／47.4% | **1.277** |
+
+- **段階モデル（ライン関係で2着を決める）の効きが大きい**：3連単の本線 6.6% → 11.7%、2着 logloss 1.50 → 1.32
+- **joint は人気とほぼ互角**（logloss で 0.003 負け、上位3車は勝ち）。3連単の本線は人気1位の組（15.1%）に届かない
+- 地元の実測：1,652走で1着率 20.0%、同じ得点順位の他の選手なら 13.8% → **1.45倍**（3着内は 1.33倍）。「地元3割増し」は1着率ではそれ以上
+- ライン：先頭 1着20.6%／番手 15.2%／3番手以降 2.5%／単騎 6.6%、ライン決着（1・2着が同じライン）56.7%
+- 回収率（joint、確定オッズ、1点100円）：AI 2車単上位3点 87.6%、ライン2車単表裏 87.8%、◎→○▲ 2車単 85.9%、3車BOX 3連複 75.7%、人気1位の3連単 93.3%。**100%超えなし**
+- 係数（base）の上位：勝率 +0.78・自前の選手指数 +0.63・2連対率・自力の比率・近況・記者の印、ラインでは「強い先頭の番手」+0.35・主導権ラインの番手 +0.26・3番手以降 −0.27、バンク周長の得手不得手 +0.26
+- 選手ごとのライン決着率（`mateFin`）は −0.01 で効いていない。積み上げの履歴がまだ3週間しかない。**1年ぶんの取り込み後に当て直して測り直す**
+
+### 守ること（競輪）
+- **raceId の日付は開催初日**。日付で絞るときは各行の `date` を使う（`races.jsonl` の2番目のキー）
+- 市場の確率は **車番の辞書**で持つ（`marketProbs().byNo`）。欠車があると配列の位置がずれる
+- `races.jsonl` は追記型（`upsertJsonl` は新しい raceId だけなら追記、差し替えがあるときだけ全体を書き直す）。**行の並びは保証しない**（読む側が並べ直す）
+- 予想生成は `asof.json`（一昨日まで）＋それ以降のレースで時点指標を作る。**全期間から作った場合と完全に一致することを確認済み**（604人ぶん差0）。`buildAsOf` を変えたら `keirin_build_db` を回し直す
+- ガールズ（L級）はラインが無い（全員単騎）。ライン関係の特徴量・集計からは外している

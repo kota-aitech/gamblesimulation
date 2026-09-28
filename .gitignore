@@ -21,3 +21,11 @@ data/banei/cards.jsonl
 data/banei/*.log
 # クラウド側（odds-cloud ブランチ）の作業用。手元では使い捨て
 data/odds_cloud/
+# 競輪：レース詳細を1レース1行にしたもの（Kドリームスのキャッシュから作り直せる。1年で数百MB）
+data/keirin/races.jsonl
+data/keirin/*.log
+data/keirin/.refresh-stamp
+data/keirin/.fetch.lock
+data/keirin/.pause
+data/keirin/.backfill
+data/keirin/asof.json

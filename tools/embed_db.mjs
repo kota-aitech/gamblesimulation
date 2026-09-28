@@ -35,6 +35,16 @@ function embedBanei() {
   try { inject('top.html', 'NKBANEIREC', 'NKBNR', readJSON('data/banei/results.json')); }
   catch (e) { console.error('  (top.html のばんえい成績はスキップ: ' + e.message + ')'); }
 }
+/* 競輪版（keirin.html）。tools/keirin_build_races.mjs の races.json を NKKEIRIN に埋める */
+function embedKeirin() {
+  try { inject('keirin.html', 'NKKEIRIN', 'NKKEIRIN', readJSON('data/keirin/races.json')); }
+  catch (e) { console.error('  (keirin.html はスキップ: ' + e.message + ')'); }
+  try { inject('top.html', 'NKKEIRINTOP', 'NKKRT', readJSON('data/keirin/top.json')); }
+  catch (e) { console.error('  (top.html の競輪面はスキップ: ' + e.message + ')'); }
+  try { inject('top.html', 'NKKEIRINREC', 'NKKRR', readJSON('data/keirin/results.json')); }
+  catch (e) { console.error('  (top.html の競輪の成績はスキップ: ' + e.message + ')'); }
+}
+if (process.env.NK_EMBED_ONLY === 'keirin') { embedKeirin(); process.exit(0); }
 if (process.env.NK_EMBED_ONLY === 'boat') { embedBoat(); process.exit(0); }
 if (process.env.NK_EMBED_ONLY === 'jra') { embedJra(); process.exit(0); }
 if (process.env.NK_EMBED_ONLY === 'banei') { embedBanei(); process.exit(0); }
@@ -88,3 +98,4 @@ try {
 embedBoat();
 embedJra();
 embedBanei();
+embedKeirin();
