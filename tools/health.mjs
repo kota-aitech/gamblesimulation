@@ -42,6 +42,26 @@ for (const [label, sec, rels, name] of JOBS) {
   const stale = m && (now - m) > Math.max(sec * 1000 * 6, 6 * 3600000) ? ' ←要確認' : '';
   console.log(`${label.padEnd(24)} ${state.padEnd(9)} ${ago(m ? now - m : null).padEnd(14)} ${String(sec).padStart(5)}秒  ${name}${stale}`);
 }
+/* 居座っているジョブ（いちばん見つけにくい壊れ方）
+   launchd の StartInterval は前の実行が残っている間は次を起こさないので、1本ハングすると以後ずっと止まる。
+   `launchctl print` は state=running / last exit code=0 と出るだけで、ログも書かれないので気づけない。
+   2026-09-28 に refresh_banei が9日20時間居座っていた。経過時間で見つける */
+const psOut = sh('ps', ['-ax', '-o', 'etime=,command=']);
+const stuck = [];
+for (const l of psOut.split('\n')) {
+  const m = l.match(/^\s*([\d-]+:[\d:]+)\s+(.*tools\/(?:refresh|nightly|watch|fetch|build)[^\s]*\.mjs).*$/);
+  if (!m) continue;
+  const p = m[1].split(/[-:]/).map(Number);                    // [日-]時:分:秒 または 分:秒
+  const mins = p.length === 4 ? p[0] * 1440 + p[1] * 60 + p[2] : p.length === 3 ? p[0] * 60 + p[1] : p[0];
+  if (mins >= 45) stuck.push([Math.round(mins), m[2].split('/').pop()]);
+}
+if (stuck.length) {
+  console.log('\n■ 45分以上そのまま動いているジョブ（ハングの疑い。kill すると次の周回から動き出す）');
+  for (const [mins, name] of stuck) console.log(`  ${name}  経過 ${mins >= 1440 ? (mins / 1440).toFixed(1) + '日' : mins + '分'}`);
+} else {
+  console.log('\n居座っているジョブ: なし');
+}
+
 /* スリープの空白（10分以上） */
 const log = sh('pmset', ['-g', 'log']);
 const ev = [];
