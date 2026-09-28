@@ -68,6 +68,9 @@ if (dow === 1 && hour >= 22 && prev.fitWeek !== today) {
   if (run('keirin_fit.mjs', {}, 6000)) { run('keirin_backtest.mjs', {}, 6000); prev.fitWeek = today; changed = true; }
 }
 fs.writeFileSync(stampFile, JSON.stringify(prev));
+/* 開催時間中は毎回作り直す。予想の記録は「締切10分前〜締切」の窓で行うので、データが変わった時だけにすると
+   （結果の無いレースの取り直しは25分おき）窓を逃すレースが出る（2026-09-28 の初日に1時間で5件しか記録できなかった） */
+if (hour >= 8 && hour <= 23) changed = true;
 if (!changed && prev.builtAt && Date.now() - prev.builtAt < 3 * 3600000) process.exit(0);
 
 const t0 = Date.now();
