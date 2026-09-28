@@ -50,5 +50,8 @@ export function raceExtras(TRACKS) {
       }),
     })) };
   }
-  return { record, results };
+  /* 競馬場ガイド（tools/build_guides.mjs）：場ごとのコースの形と特徴の一言。馬柱の見出しの下に出す */
+  let guide = {};
+  try { const G = readJSON('data/guide_horse.json'); for (const o of G.nankan || []) guide[o.key] = { summary: o.summary, straights: o.straights, height: o.height }; } catch { }
+  return { record, results, guide };
 }

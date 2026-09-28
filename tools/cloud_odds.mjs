@@ -39,7 +39,7 @@ const MINUTES = Number(process.env.CO_MINUTES || 0);
 const TICK = Number(process.env.CO_TICK || 30) * 1000;
 const DAYS = Number(process.env.CO_DAYS || 1);
 const PUSH = process.env.CO_PUSH !== '0';
-if (!['nankan', 'boat', 'jra'].includes(SPORT)) { console.error('--sport=nankan|boat|jra が要る'); process.exit(2); }
+if (!['nankan', 'boat', 'jra', 'keirin'].includes(SPORT)) { console.error('--sport=nankan|boat|jra|keirin が要る'); process.exit(2); }
 
 const today = () => new Date().toLocaleDateString('sv-SE');
 const addDays = (d, n) => { const t = new Date(d + 'T00:00:00'); t.setDate(t.getDate() + n); return t.toLocaleDateString('sv-SE'); };
@@ -151,7 +151,40 @@ const jra = {
     return { status: j.status, updated: j?.data?.official_datetime, tan };
   },
 };
-const SRC = { nankan, boat, jra }[SPORT];
+/* ---- 競輪（楽天Kドリームス）----
+   番組：日付ページ（全場のリンク）→ 場の「一覧」ページ（全レースの発走・締切が並ぶ）。1日 1＋場の数 リクエスト
+   締切前：レース詳細ページ（約250KB）を1回取り、3連単210通り・2車単・3連複・2車複のオッズだけ残す。
+   Mac が寝ていても、あとで起きたときにこのオッズで予想を記録できる（keirin_build_races が odds_live の T-8 を使う） */
+const KR = 'https://keirin.kdreams.jp';
+const krGetRaw = async url => { const res = await fetch(url, { headers: { 'User-Agent': UA, 'Accept-Language': 'ja' }, signal: AbortSignal.timeout(40000) }); if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.text(); };
+let krLast = 0;
+const krGet = async url => { const gap = Date.now() - krLast; if (gap < 1500) await wait(1500 - gap); krLast = Date.now(); return krGetRaw(url); };
+const keirin = {
+  async races(date) {
+    const [y, m, d] = date.split('-');
+    const day = await krGet(`${KR}/racecard/${y}/${m}/${d}/`);
+    const cards = [...new Set([...day.matchAll(/https:\/\/keirin\.kdreams\.jp\/([a-z]+)\/racecard\/(\d{14})\//g)].map(x => `${x[1]}|${x[2]}`))];
+    const out = [];
+    for (const c of cards) {
+      const [slug, cid] = c.split('|');
+      /* その日に開催している場だけ（日付ページには前日初日の開催も載る。一覧ページの中のレースIDで日を確かめる） */
+      let html; try { html = await krGet(`${KR}/${slug}/racecard/${cid}/`); } catch (e) { log(`  ! ${slug} 一覧 ${e.message}`); continue; }
+      for (const b of html.matchAll(/racedetail\/(\d{16})\/"><span class="num">(\d+)R<\/span>[\s\S]{0,400}?<dt>発走<\/dt><dd>(\d{1,2}:\d{2})<\/dd><dt>締切<\/dt><dd>(\d{1,2}:\d{2})<\/dd>/g)) {
+        const rid = b[1]; if (out.some(o => o.key === rid)) continue;
+        out.push({ key: rid, date, slug, label: `${slug}${b[2]}R`, post: b[3], close: at(date, b[4]).getTime() });
+      }
+    }
+    /* 日付ページには当日開催の場だけが載るので、ここで拾ったレースは全部その日のもの */
+    return out;
+  },
+  async snap(r) {
+    const { parseRace } = await import('./lib/krpage.mjs');
+    const p = parseRace(await krGetRaw(`${KR}/${r.slug}/racedetail/${r.key}/`), r.slug, r.key);
+    if (!p.odds?.e3 || Object.keys(p.odds.e3).length < 20) return null;
+    return { raceId: r.key, slug: r.slug, oddsAt: p.oddsAt, odds: { e3: p.odds.e3, e2: p.odds.e2 || null, q3: p.odds.q3 || null, q2: p.odds.q2 || null } };
+  },
+};
+const SRC = { nankan, boat, jra, keirin }[SPORT];
 
 /* ---- git（Actions のトークンで押す。Mac 側はこのファイルを書かないので衝突しない）----
 
@@ -266,7 +299,7 @@ async function tick() {
     if (left > 0) nearest = Math.min(nearest, left);
     /* 締切 LEAD 分前（少し過ぎても拾う）と、レース後の最終オッズ */
     const tag = (left <= LEAD + 0.6 && left >= LEAD - 4) ? 'pre'
-      : (SPORT !== 'boat' && left <= -22 && left >= -90) ? 'final' : null;
+      : (SPORT !== 'boat' && SPORT !== 'keirin' && left <= -22 && left >= -90) ? 'final' : null;   // 競輪の確定オッズは結果ページに残るので取らない
     if (!tag || seen.has(`${r.date}|${r.key}|${tag}`)) continue;
     try {
       const o = await SRC.snap(r);

@@ -88,7 +88,7 @@ export function buildPicks(ROOT) {
   for (const sp of Object.keys(sports)) {
     if (sp === 'nankan') { sports[sp].thresholds = NK.thresholds?.evUmaren ? { S: NK.thresholds.evUmaren.p10, A: NK.thresholds.evUmaren.p25, B: NK.thresholds.evUmaren.p50 } : null; continue; }
     const G = readGrade(ROOT, sp);
-    if (G?.thresholds && rows.some(r => r.sport === sp && r.grade)) {
+    if (G?.thresholds && (rows.some(r => r.sport === sp && r.grade) || !rows.some(r => r.sport === sp))) {   // レースが無い日も閾値は出す
       sports[sp].thresholds = { S: G.thresholds.p10, A: G.thresholds.p25, B: G.thresholds.p50, n: G.thresholds.n };
       sports[sp].gradeBy = G.src === 'backtest' ? `検証期間（${G.from}〜）の確定オッズでの${G.kind}の期待値の分布` : G.src === 'rolling' ? `直近14日の締切時点の${G.kind}の期待値の分布` : `${G.kind}の期待値の分布（記録が貯まるまでの暫定）`;
       sports[sp].byGrade = G.byGrade || null;
@@ -102,5 +102,20 @@ export function buildPicks(ROOT) {
     for (const r of rows) if (r.sport === sp) r.grade = r.ev == null ? null : r.ev >= t10 ? 'S' : r.ev >= t25 ? 'A' : r.ev >= t50 ? 'B' : 'C';
   }
   rows.sort((a, b) => (a.date + (a.close || '')).localeCompare(b.date + (b.close || '')));
-  return { built: new Date().toISOString(), sports, races: rows };
+  /* 実戦の段位ごとの回収率：各競技の日別成績（締切前後に記録した予想を払戻で精算）の byGrade。形は {段位: {races, bets: {買い方: {n, hit, roi, bet, ret}}}} */
+  const actual = {};
+  for (const [sp, rel] of [['boat', 'data/boat/results.json'], ['keirin', 'data/keirin/results.json'], ['jra', 'data/jra/results.json'], ['banei', 'data/banei/results.json']]) { const R = load(ROOT, rel); if (R?.byGrade && Object.keys(R.byGrade).length) actual[sp] = R.byGrade; }
+  { /* 南関：results.<場>.json の summary.byGrade（当時の入力で予想を再現したもの。締切前オッズで予想した数 pre を添える）を4場ぶん足す */
+    const acc = {};
+    for (const key of ['oi', 'kawasaki', 'funabashi', 'urawa']) {
+      const R = load(ROOT, `data/nankan/results.${key}.json`); const B = R?.meta?.summary?.byGrade; if (!B) continue;
+      for (const [g, G] of Object.entries(B)) {
+        const A = acc[g] ||= { races: 0, pre: 0, bets: {} }; A.races += G.races; A.pre += G.pre || 0;
+        for (const [k, name] of [['box4_sanpuku', '本命4頭BOX 三連複'], ['ev_umaren', '期待値1.0超の馬連']]) { const e = G.tally?.[k]; if (!e) continue; const x = A.bets[name] ||= { n: 0, hits: 0, bet: 0, ret: 0 }; x.n += e.races; x.hits += e.hits; x.bet += e.cost; x.ret += e.ret; }
+      }
+    }
+    for (const A of Object.values(acc)) for (const x of Object.values(A.bets)) { x.hit = x.n ? r3(x.hits / x.n) : null; x.roi = x.bet ? r3(x.ret / x.bet) : null; delete x.hits; }
+    if (Object.keys(acc).length) actual.nankan = acc;
+  }
+  return { built: new Date().toISOString(), sports, races: rows, actual };
 }

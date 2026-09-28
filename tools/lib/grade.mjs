@@ -48,6 +48,20 @@ export function gradeBook() {
   return {
     add(g, name, bet, ret) { if (!g || !bet) return; const x = ((G[g] ||= { races: new Set(), bets: {} }).bets[name] ||= { n: 0, hit: 0, bet: 0, ret: 0 }); x.n++; x.bet += bet; x.ret += ret; x.hit += ret > 0 ? 1 : 0; },
     race(g, id) { if (g) (G[g] ||= { races: new Set(), bets: {} }).races.add(id); },
-    finish() { return Object.fromEntries(['S', 'A', 'B', 'C'].filter(g => G[g]).map(g => [g, { races: G[g].races.size, bets: Object.fromEntries(Object.entries(G[g].bets).map(([k, x]) => [k, { n: x.n, hit: r3(x.hit / x.n), roi: r3(x.ret / x.bet) }])) }])); },
+    finish() { return Object.fromEntries(['S', 'A', 'B', 'C'].filter(g => G[g]).map(g => [g, { races: G[g].races.size, bets: Object.fromEntries(Object.entries(G[g].bets).map(([k, x]) => [k, { n: x.n, hit: r3(x.hit / x.n), roi: r3(x.ret / x.bet), bet: x.bet, ret: x.ret }])) }])); },
+  };
+}
+/* 実戦（締切前後に記録した予想）の段位ごとの精算。各競技の build_*_results が使う。
+   p … 記録（grade または rank、bestK＝最良の買い目の組番）、payBest … その組の払戻（外れは 0）、box … 本命BOX の {bet, ret}（無ければ null） */
+export function liveGradeBook() {
+  const GB = gradeBook();
+  return {
+    add(p, id, payBest, boxName, box) {
+      const g = p.grade || p.rank; if (!g) return;
+      GB.race(g, id);
+      if (p.bestK) GB.add(g, '最良の買い目1点', 100, payBest || 0);
+      if (box && box.bet) GB.add(g, boxName, box.bet, box.ret);
+    },
+    finish: () => GB.finish(),
   };
 }

@@ -13,6 +13,11 @@ import { bestCombo, gradeOf, readGrade } from './lib/grade.mjs';
 const GRADE = readGrade(ROOT, 'keirin');   // 段位の閾値（keirin_backtest が検証期間から決める。南関の racepick と同じ）
 
 const TODAY = process.env.KR_TODAY || ymdOf(new Date());
+const YESTERDAY = (() => { const d = new Date(`${TODAY.slice(0, 4)}-${TODAY.slice(4, 6)}-${TODAY.slice(6, 8)}T00:00:00`); d.setDate(d.getDate() - 1); return ymdOf(d); })();
+/* 締切前オッズのスナップショット（T-8。クラウド＝GitHub Actions が取り、merge_cloud_odds が odds_live.jsonl に入れる）。
+   Mac が寝ていて締切前に予想を記録できなかったレースは、起きたときにこのオッズで予想を作って記録する（締切後や確定のオッズは使わない） */
+const SNAP = new Map();
+try { for (const l of fs.readFileSync(path.join(ROOT, 'data/keirin/odds_live.jsonl'), 'utf8').split('\n')) { if (!l) continue; try { const o = JSON.parse(l); if (o.odds?.e3) SNAP.set(o.raceId, o); } catch { } } } catch { }
 const M = readJSON('data/keirin/model.json');
 let DB = {}; try { DB = readJSON('data/keirin/index.json'); } catch { }
 let BT = null; try { BT = readJSON('data/keirin/backtest.json'); } catch { }
@@ -44,7 +49,7 @@ const races = [];
     if (INIT && d && d <= INIT.upto) continue;
     let r; try { r = JSON.parse(l); } catch { continue; }
     if (!r.date || !r.riders?.length) continue;
-    const up = d >= TODAY || (RECORD_FROM && d >= RECORD_FROM);
+    const up = d >= TODAY || (RECORD_FROM && d >= RECORD_FROM) || (d >= YESTERDAY && SNAP.has(r.raceId));
     races.push(slim(r, up ? { odds: true, text: true, pay: true } : {}));
   }
   races.sort((a, b) => a.date.localeCompare(b.date) || a.jcd.localeCompare(b.jcd) || a.r - b.r);
@@ -73,6 +78,7 @@ function recordPred(race, date) {
     ai: { e3: race.e3.slice(0, 10).map(x => x.k), q3: race.q3.slice(0, 5).map(x => x.k), e2: race.e2.slice(0, 5).map(x => x.k), q2: race.q2.slice(0, 3).map(x => x.k), wide: race.wide.slice(0, 3).map(x => x.k),
       ev: race.ev.map(x => x.k), line: race.lineBet || null },
     grade: race.grade || null, evBest: race.best?.ev ?? null, bestK: race.best?.k ?? null, bestO: race.best?.o ?? null,
+    oddsSrc: race.oddsSrc || 'live', oddsAt: race.oddsAt || null,   // live＝その時点の最新（締切10分前〜）、T-8＝締切8分前のスナップショット（クラウド）
   }) + '\n');
   recorded.add(race.raceId);
 }
@@ -94,7 +100,15 @@ const HOME = DB.home?.all;
 const days = new Map();
 let nR = 0, nJ = 0;
 for (const r0 of races) {
-  if (r0.date < TODAY && !(RECORD_FROM && r0.date >= RECORD_FROM)) continue;
+  /* 昨日のレースは「まだ記録が無く、締切前のスナップショットがある」ときだけ（記録のためだけに作る。ページには載せない） */
+  const catchUp = r0.date >= YESTERDAY && r0.date < TODAY && SNAP.has(r0.raceId) && !recorded.has(r0.raceId);
+  if (r0.date < TODAY && !(RECORD_FROM && r0.date >= RECORD_FROM) && !catchUp) continue;
+  /* 締切を過ぎてから記録することになったレース（結果が出ている／締切後に取り直したオッズしか無い）は、
+     締切前のスナップショットのオッズに差し替えて予想を作る。確定オッズで予想すると実戦より有利になるため */
+  let oddsSrc = 'live';
+  { const s = SNAP.get(r0.raceId), cl = r0.close || r0.post;
+    const closeT = cl ? new Date(`${r0.date.slice(0, 4)}-${r0.date.slice(4, 6)}-${r0.date.slice(6, 8)}T${cl.padStart(5, '0')}:00`).getTime() : null;
+    if (s && !recorded.has(r0.raceId) && (r0.result || (closeT && (r0.fetchedAt || 0) > closeT))) { r0.odds = s.odds; delete r0.mkt; slim(r0, { odds: true, text: true, pay: true }); r0.oddsAt = s.oddsAt || s.capturedAt; oddsSrc = 'T-8'; } }   // slim が市場確率を取り直す
   /* 時点の値は「このレースの直前」（of）を使う。latest だと締切後に記録する予想にこのレース自身の結果が当日の傾向として混ざる */
   const f = featurize(r0);
   if (!f) continue;
@@ -205,7 +219,7 @@ for (const r0 of races) {
   const mktOrder = f.mkt ? f.mkt.map((q, i) => [q, nos[i]]).sort((a, b) => b[0] - a[0]).map(x => x[1]) : null, mktTop = mktOrder ? mktOrder[0] : null;
   const mktE3 = r0.odds?.e3 ? Object.entries(r0.odds.e3).filter(([, v]) => v > 0 && v < 9999).sort((a, b) => a[1] - b[1])[0]?.[0] || null : null;
   const race1 = {
-    raceId: r0.raceId, r: r0.r, title: r0.title, kind: r0.kind, stage: race.stage, girls: race.girls, cond: r0.cond, post: r0.post, close: r0.close, n: riders.length, level,
+    raceId: r0.raceId, oddsSrc, r: r0.r, title: r0.title, kind: r0.kind, stage: race.stage, girls: race.girls, cond: r0.cond, post: r0.post, close: r0.close, n: riders.length, level,
     venue: r0.venue, day: r0.day, grade: r0.grade, meetName: r0.meetName, bank: r0.bank || DB.venues?.[r0.venue]?.bank || null,
     bankInfo: BANKS[r0.venue] ? { straight: BANKS[r0.venue].straight, cant: BANKS[r0.venue].cant } : null, initLine: f.initLine, reporter: r0.reporter, review: r0.review || null,
     lines: f.known ? f.lines : [], lineRole: r0.lineRole || [], riders, mktTop, mktOrder, mktE3, oddsAt: r0.oddsAt, oddsConfirmed: r0.oddsConfirmed,

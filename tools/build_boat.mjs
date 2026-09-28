@@ -25,6 +25,8 @@ import { bestCombo, thresholdsOf, gradeOf, readGrade } from './lib/grade.mjs';
 /* 段位（南関と同じ S/A/B/C）。閾値は data/boat/grade.json：締切時に記録した「最良の3連単の期待値」が直近14日で500R 貯まればその分布、
    それまではこの回に作った全レースの分布で代用（src='today'）。過去のオッズが無いので検証期間からは決められない */
 const GRADE0 = readGrade(ROOT, 'boat');
+/* 競艇場ガイド（tools/build_guides.mjs）。読みのポイントに水面の特徴を出す */
+const BGUIDE = (() => { try { return Object.fromEntries(readJSON('data/boat/guide.json').venues.map(v => [v.jcd, v])); } catch { return {}; } })();
 const GT0 = GRADE0?.thresholds || null;
 
 const TODAY = process.env.BT_TODAY || ymdOf(new Date());
@@ -217,6 +219,10 @@ function buildRace(date, jcd, prog, live, venueWeather) {
   const V = DB.venues?.[jcd], c1 = V?.course?.[0];
   const pts = [];
   if (c1) pts.push(`${VNAME[jcd]}の1コース1着率は ${(c1.win * 100).toFixed(1)}%（全国 ${(NAT1 * 100).toFixed(1)}%）。1コースの逃げ率 ${(c1.kim[0] * 100).toFixed(0)}%、2コースは差し ${(V.course[1].kim[2] * 100).toFixed(0)}%／まくり ${(V.course[1].kim[1] * 100).toFixed(0)}%。`);
+  /* 競艇場ガイド（build_guides.mjs）：水面の特徴の一言と、今日の風の強さでのインの実績 */
+  const GV = BGUIDE?.[jcd];
+  if (GV?.summary?.length) pts.push(`${VNAME[jcd]}の水面の特徴（競艇場ガイド）：${GV.summary.filter(t => !/^イン|インが/.test(t)).slice(0, 3).join('／')}。`);
+  if (GV?.windC1 && wx?.wind != null) { const b = wx.wind <= 2 ? 'calm' : wx.wind <= 4 ? 'mid' : 'strong', x = GV.windC1[b]; if (x) pts.push(`今日の風 ${wx.wind}m は「${b === 'calm' ? '2m以下' : b === 'mid' ? '3〜4m' : '5m以上'}」の帯。${VNAME[jcd]}のこの帯での1コース1着率は ${(x.win * 100).toFixed(0)}%（3年・${x.n.toLocaleString()}R）。`); }
   if (before) {
     const ent = [...stBy.values()].sort((a, b) => a.course - b.course).map(s => s.lane).join('');
     const fast = boats.filter(b => b.ex != null).sort((a, b) => a.ex - b.ex)[0];

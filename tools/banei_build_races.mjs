@@ -9,7 +9,9 @@ import { FEATURES, NF, buildRaceIndex, buildHistory, buildAsOf, buildLaneIndex, 
 import { utilities } from './lib/bpl.mjs';
 import { combosOf } from './lib/jbets.mjs';
 import { bestWin, gradeOf, readGrade } from './lib/grade.mjs';
-const GRADE = readGrade(ROOT, 'banei');   // 段位の閾値（banei_backtest が検証期間の確定単勝オッズから決める。南関の racepick と同じ）
+const GRADE = readGrade(ROOT, 'banei');
+/* 帯広のコースの形（tools/fetch_course_info.mjs が地方競馬の公式コース一覧から取る） */
+const BCOURSE = (() => { try { return readJSON('data/banei/course.json'); } catch { return null; } })();   // 段位の閾値（banei_backtest が検証期間の確定単勝オッズから決める。南関の racepick と同じ）
 
 const TODAY = process.env.BN_TODAY || ymdOf(new Date());
 const DB = readJSON('data/banei/index.json');
@@ -121,6 +123,7 @@ for (const c of cards) {
   const nn = h => `${h.no} ${h.name}`;
   const pts = [];
   pts.push(`本命 ${nn(top(0))}（1着 ${(C.p1[order[0]] * 100).toFixed(1)}%）、対抗 ${nn(top(1))}（${(C.p1[order[1]] * 100).toFixed(1)}%）、単穴 ${nn(top(2))}。`);
+  if (BCOURSE) pts.push(`コース（競馬場ガイド）：${BCOURSE.turn || '直線コース'}・全長 ${BCOURSE.total || '200m'}・幅員 ${BCOURSE.width || '—'}・${BCOURSE.height || ''}。第2障害を越えてからの脚が勝負を分ける。`);
   const mb = moistBand(c.moist), mi = mb ? DB.moist?.[mb] : null;
   if (c.moist != null) pts.push(`馬場水分 ${c.moist}%（${moistWord(c.moist)}）${mi ? `。同じ水分帯の過去 ${mi.races}レースでは 1番人気の勝率 ${mi.favWin != null ? (mi.favWin * 100).toFixed(0) : '—'}%・3連単の平均配当 ${mi.santanAvg != null ? mi.santanAvg.toLocaleString() + '円' : '—'}・万馬券率 ${mi.man != null ? (mi.man * 100).toFixed(0) : '—'}%${mi.winTime ? `・勝ち時計の平均 ${mi.winTime.toFixed(1)}秒` : ''}` : ''}。`);
   const fitW = horses.filter(h => h.moistFitN >= 2 && ((c.moist >= 2 && h.moistFit >= 0.15) || (c.moist <= 1.2 && h.moistFit <= -0.15))).map(nn);

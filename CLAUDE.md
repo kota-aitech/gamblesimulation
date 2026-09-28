@@ -1870,3 +1870,16 @@ node tools/keirin_build_races.mjs && node tools/keirin_build_results.mjs && NK_E
   `data/guide_horse.json`（中央＝course.json＋results 5年を場×芝ダで。南関＝course.json＋trend.<場>.json＋results/payouts。ばんえい＝index.json の水分帯と馬番）。4秒
 - 競輪の反映係が1日1回（集計と一緒に）build_guides を回し、30日おきに fetch_course_info。埋め込みは embed_db の終了時（picks と同じ）なので、どの反映係でも更新される
 - ばんえいの公式サイトはコースの説明が動画だけで文字が無い。帯広は実測（水分帯・馬番）中心
+
+### 段位ごとの実戦の成績・場ガイドの連動・競輪のクラウド記録（2026-09-28）
+- **段位ごとの実戦の回収率**：各競技の日別成績（build_boat_results / keirin_build_results / jra_build_results / banei_build_results）が `results.json` に `byGrade` を出す。
+  中身は `lib/grade.mjs` の `liveGradeBook`：記録（preds）の段位（`grade` か `rank`）ごとに「最良の買い目1点（`bestK`）」と本命BOXを精算。再現（late=9999）は入れない。
+  南関は `build_results.mjs` の `summary.byGrade`（当時の入力で予想を再現した日別成績。締切前オッズの数 `pre` つき）。
+  `lib/picks.mjs` が `actual` にまとめ、picks.html の「実戦の段位ごとの回収率」と TOP の各競技の「日別の成績」の下に出す。**段位を信用してよいかはこちらで判断する**
+- **場ガイドの連動**：ボートの読みのポイントに水面の特徴と「今日の風の帯での1コース1着率」、中央に場×芝ダのコースの形と特徴、ばんえいにコースの形、
+  南関の馬柱の見出しの下に「コースの特徴」（`raceExtras()` の `guide`。build_marks と embed_db の両方がここを通す）
+- **競輪の締切前オッズもクラウドで取る**：`cloud_odds.mjs --sport=keirin`（odds.yml の matrix に keirin）。番組は日付ページ→場の一覧ページ（発走・締切が並ぶ）、
+  締切8分前にレース詳細を1回取って3連単・2車単・3連複・2車複のオッズを odds-cloud に残す（1件 約4.4KB）。`merge_cloud_odds.mjs` が `data/keirin/odds_live.jsonl`（T-8）へ。
+  `keirin_build_races` は、**締切後に記録することになったレース（Mac が寝ていた）は、このスナップショットのオッズに差し替えて予想を作って記録**する（`oddsSrc: 'T-8'`）。
+  昨日のレースも、記録が無くスナップショットがあれば記録する。日別の表では「遅れ」ではなく「クラウドn」と数える。
+  **GitHub の米国IPから Kドリームスが見えるかは、初回の Actions の実行で確かめること**（他の取得元は確認済み、Kドリームスは未確認）

@@ -13,7 +13,9 @@ import { buildBabaBias } from './lib/jbias.mjs';
 import { utilities } from './lib/bpl.mjs';
 import { combosOf } from './lib/jbets.mjs';
 import { bestWin, gradeOf, readGrade } from './lib/grade.mjs';
-const GRADE = readGrade(ROOT, 'jra');   // 段位の閾値（jra_backtest が検証期間の確定単勝オッズから決める。南関の racepick と同じ）
+const GRADE = readGrade(ROOT, 'jra');
+/* 競馬場ガイド（tools/build_guides.mjs）。読みのポイントにコースの形と特徴を出す */
+const HGUIDE = (() => { try { return Object.fromEntries(readJSON('data/guide_horse.json').jra.map(v => [v.name, v])); } catch { return {}; } })();   // 段位の閾値（jra_backtest が検証期間の確定単勝オッズから決める。南関の racepick と同じ）
 
 const TODAY = process.env.JRA_TODAY || new Date().toLocaleDateString('sv-SE');
 const DB = readJSON('data/jra/index.json');
@@ -148,6 +150,9 @@ for (const c of cards) {
   const pts = [];
   if (!gates) pts.push('枠順確定前（金曜夕方に確定）。馬番・枠・組の確率は確定後に出す。');
   pts.push(`本命 ${nn(top(0))}（1着 ${(C.p1[order[0]] * 100).toFixed(1)}%）、対抗 ${nn(top(1))}（${(C.p1[order[1]] * 100).toFixed(1)}%）、単穴 ${nn(top(2))}。`);
+  /* 競馬場ガイド（build_guides.mjs）：コースの形（直線・高低差）と、場×芝ダの特徴の一言 */
+  { const G = HGUIDE[c.venue], g = G?.[c.surface === '芝' ? 'turf' : 'dirt'];
+    if (g) pts.push(`${c.venue}${c.surface}コース（競馬場ガイド）：${G.turn ? G.turn + '回り・' : ''}直線 ${g.straight ? (g.straight[0] === g.straight[1] ? g.straight[0] : `${g.straight[0]}〜${g.straight[1]}`) + 'm' : '—'}・高低差 ${g.height ? g.height[1] + 'm' : '—'}${g.summary?.length ? '。' + g.summary.filter(t => !/直線|高低差|平坦/.test(t)).slice(0, 3).join('／') : ''}。`); }
   const K = DB.course?.[`${c.venue}|${c.surface}|${c.dist}`];
   if (K) {
     const st = K.style ? Object.entries(K.style).filter(([, v]) => v.n >= 30).map(([k, v]) => `${k}${(v.p3 * 100).toFixed(0)}%`).join('・') : '';

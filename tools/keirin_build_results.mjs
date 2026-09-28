@@ -5,6 +5,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, writeJSON } from './lib/kr.mjs';
 import { BETS, settle } from './lib/krsettle.mjs';
+import { liveGradeBook } from './lib/grade.mjs';
+const LG = liveGradeBook();
 
 const DAYS = Number(process.env.KR_REC_DAYS || 60);
 const PREDS = path.join(ROOT, 'data/keirin/preds.jsonl');
@@ -27,17 +29,20 @@ const out = { built: new Date().toISOString(), bets: BETS, days: [], total: null
 const TOTAL = mk(), VEN = {};
 let matched = 0, pending = 0;
 for (const date of dates) {
-  const DAY = mk(); let late = 0, joint = 0, repro = 0;
+  const DAY = mk(); let late = 0, joint = 0, repro = 0, cloud = 0;
   for (const p of preds.values()) {
     if (p.date !== date) continue;
     const k = K.get(p.raceId); if (!k) { pending++; continue; }
     const S = settle(p, k); if (!S) { pending++; continue; }
     matched++; merge(DAY, S); merge(TOTAL, S); const V = (VEN[k.venue] ||= mk()); merge(V, S); (V.days ||= new Set()).add(date);
-    if (p.late === 9999) repro++; else if (p.late > 60) late++; if (p.level === 'joint') joint++;
+    /* 段位ごと（実戦・再現は除く）：最良の3連単1点と、本命3車BOX 3連複 */
+    if (p.late !== 9999) LG.add(p, p.raceId, p.bestK ? ((k.pay?.e3 || []).find(x => x.c === p.bestK)?.y || 0) : 0, '本命3車BOX 3連複', S.bets['3車BOX 3連複']);
+    if (p.late === 9999) repro++; else if (p.oddsSrc === 'T-8') cloud++; else if (p.late > 60) late++; if (p.level === 'joint') joint++;
   }
-  out.days.push({ date, late, repro, joint, ...fin(DAY) });
+  out.days.push({ date, late, repro, cloud, joint, ...fin(DAY) });
 }
 out.total = fin(TOTAL);
+out.byGrade = LG.finish();   // 段位ごとの実戦の回収率（2026-09-28 以降に締切前に記録したレース）
 /* 場別（TOP の「場別の成績」。他競技と同じ配列の形） */
 out.byVenue = Object.entries(VEN).map(([k, v]) => ({ venue: k, days: v.days.size, ...fin(v) })).sort((a, b) => b.races - a.races);
 out.note = '予想は締切10分前〜締切に記録したもの（late＝締切から60分以上あとに記録したレース数、repro＝記録の仕組みができる前のレースを後から学習に使っていないモデルで作り直した「再現」の数）。払戻は楽天Kドリームスの結果ページ。';

@@ -5,6 +5,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, writeJSON } from './lib/jra.mjs';
+import { liveGradeBook } from './lib/grade.mjs';
+const LG = liveGradeBook();
 
 const DAYS = Number(process.env.JRA_REC_DAYS || 60);
 const PREDS = path.join(ROOT, 'data/jra/preds.jsonl');
@@ -62,6 +64,8 @@ for (const date of dates) {
     const k = K.get(p.raceId); if (!k) { pending++; continue; }
     const S = settle(p, k); if (!S) { pending++; continue; }
     matched++;
+    /* 段位ごと（実戦）：最良の単勝1点と、本命3頭BOX 三連複 */
+    if (p.late !== 9999) LG.add(p, p.raceId, p.bestK ? payOf(k, 'win', p.bestK) : 0, '本命3頭BOX 三連複', S.bets['3頭BOX三連複']);
     let V = byV.get(p.venue); if (!V) byV.set(p.venue, V = { S: mk(), late: 0, mix: 0 });
     merge(V.S, S); merge(DAY, S); merge(TOTAL, S); if (p.late > 60) V.late++; if (p.level === 'mix') V.mix++;
     let W = VEN.get(p.venue); if (!W) VEN.set(p.venue, W = { S: mk(), days: new Set(), late: 0 });
@@ -71,6 +75,7 @@ for (const date of dates) {
 }
 out.byVenue = [...VEN.keys()].sort().map(venue => ({ venue, days: VEN.get(venue).days.size, late: VEN.get(venue).late, ...fin(VEN.get(venue).S) }));
 out.total = fin(TOTAL);
+out.byGrade = LG.finish();   // 段位ごとの実戦の回収率（記録に段位が残っているレース。2026-09-28〜）
 out.note = '予想は発走後に記録したもの（late＝発走から60分以上あとに記録したレース数。再現＝後から同じ入力で作り直したもの）。払戻は Yahoo!スポーツの結果ページ。';
 writeJSON('data/jra/results.json', out);
 const T = out.total;

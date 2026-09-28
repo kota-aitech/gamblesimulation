@@ -169,7 +169,19 @@ for (const [jaName, key] of WANT) {
     D.winRate = D.races ? +(D.win / D.races).toFixed(4) : 0;
     D.top3Rate = D.races ? +(D.top3 / D.races).toFixed(4) : 0;
   }
-  const summary = { races: nR, winRate: nR ? +(nWin / nR).toFixed(4) : 0, winInTop3: nR ? +(nT3 / nR).toFixed(4) : 0, tally, byDay };
+  /* 段位ごと（全競技の段位表の「実戦の段位ごとの回収率」）：本命4頭BOX三連複と、期待値1.0超の馬連。締切前オッズで予想したレースの数も残す */
+  const byGrade = {};
+  for (const l of Object.values(days)) for (const x of l) {
+    if (!x.grade) continue;
+    const G = byGrade[x.grade] ||= { races: 0, pre: 0, tally: {} };
+    G.races++; if (x.oddsSrc && x.oddsSrc.startsWith('締切前')) G.pre++;
+    const b = x.betResult || {};
+    if (b.box4) bump2(G.tally, 'box4_sanpuku', b.box4.sanpuku);
+    if (b.box3) bump2(G.tally, 'box3_sanpuku', b.box3.sanpuku);
+    if (b.umaren) bump2(G.tally, 'ev_umaren', b.umaren);
+  }
+  for (const G of Object.values(byGrade)) fin2(G.tally);
+  const summary = { races: nR, winRate: nR ? +(nWin / nR).toFixed(4) : 0, winInTop3: nR ? +(nT3 / nR).toFixed(4) : 0, tally, byDay, byGrade };
   const meta = { builtAt: new Date().toISOString(), model: MDL ? MODELFILE : null, payLabels: JA_PAY, summary };
   writeJSON(`data/nankan/results.${key}.json`, { track: jaName, meta, days, races });
   console.error(`${jaName}: ${Object.keys(days).length}日 ${nR}レース ／ ◎的中 ${(summary.winRate * 100).toFixed(0)}% ／ 上位3頭に勝ち馬 ${(summary.winInTop3 * 100).toFixed(0)}%`);

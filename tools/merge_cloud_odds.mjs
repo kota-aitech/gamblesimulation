@@ -35,12 +35,13 @@ const load = rel => {
   const p = path.join(ROOT, rel);
   return fs.existsSync(p) ? fs.readFileSync(p, 'utf8').split('\n').filter(Boolean) : [];
 };
-const keys = { nankan: new Set(), boat: new Set(), jra: new Set() };
+const keys = { nankan: new Set(), boat: new Set(), jra: new Set(), keirin: new Set() };
+for (const l of load('data/keirin/odds_live.jsonl')) { try { const o = JSON.parse(l); keys.keirin.add(`${o.raceId}|${o.tag}`); } catch { } }
 for (const l of load('data/nankan/odds_live.jsonl')) { try { const o = JSON.parse(l); keys.nankan.add(`${o.raceId}|${o.tag}`); } catch { } }
 for (const l of load('data/boat/odds_live.jsonl')) { try { const o = JSON.parse(l); keys.boat.add(`${o.date}|${o.jcd}|${o.r}|${o.kind}`); } catch { } }
 for (const l of load('data/jra/odds_live.jsonl')) { try { const o = JSON.parse(l); keys.jra.add(`${o.raceId}|${o.tag}`); } catch { } }
 
-const add = { nankan: [], boat: [], jra: [] };
+const add = { nankan: [], boat: [], jra: [], keirin: [] };
 for (const f of files) {
   const sport = f.split('/')[2];
   let body = ''; try { body = git(['show', `${BR}:${f}`]); } catch { continue; }
@@ -56,6 +57,10 @@ for (const f of files) {
       const ymd = o.date.replace(/-/g, ''), k = `${ymd}|${o.jcd}|${o.r}|T-8`;
       if (keys.boat.has(k)) continue; keys.boat.add(k);
       add.boat.push({ date: ymd, jcd: o.jcd, r: o.r, kind: 'T-8', win: o.win, place: o.place, ex3: o.tri, at: o.capturedAt, left: o.minsToClose, src: 'cloud' });
+    } else if (sport === 'keirin') {
+      /* 競輪：締切前の3連単などのオッズ。keirin_build_races が、Mac が寝ていて締切前に予想を記録できなかったレースに使う */
+      const k = `${o.key}|T-8`; if (keys.keirin.has(k)) continue; keys.keirin.add(k);
+      add.keirin.push({ raceId: o.key, date: o.date.replace(/-/g, ''), slug: o.slug, tag: 'T-8', post: o.post, close: o.close, capturedAt: o.capturedAt, minsToClose: o.minsToClose, oddsAt: o.oddsAt, odds: o.odds, src: 'cloud' });
     } else if (sport === 'jra') {
       const k = `${o.key}|${tag}`; if (keys.jra.has(k)) continue; keys.jra.add(k);
       add.jra.push({ raceId: o.key, date: o.date, R: Number(o.key.slice(10, 12)), tag, post: o.post,
@@ -63,7 +68,7 @@ for (const f of files) {
     }
   }
 }
-const OUT = { nankan: 'data/nankan/odds_live.jsonl', boat: 'data/boat/odds_live.jsonl', jra: 'data/jra/odds_live.jsonl' };
+const OUT = { nankan: 'data/nankan/odds_live.jsonl', boat: 'data/boat/odds_live.jsonl', jra: 'data/jra/odds_live.jsonl', keirin: 'data/keirin/odds_live.jsonl' };
 const wrote = [];
 for (const [sport, rows] of Object.entries(add)) {
   if (!rows.length) continue;

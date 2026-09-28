@@ -9,7 +9,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, writeJSON, VNAME } from './lib/bt.mjs';
-import { BETS, mk, settle, merge, fin } from './lib/bsettle.mjs';
+import { BETS, mk, settle, merge, fin, payOf } from './lib/bsettle.mjs';
+import { liveGradeBook } from './lib/grade.mjs';
+const LG = liveGradeBook();
 
 const DAYS = Number(process.env.BT_REC_DAYS || 30);
 const PREDS = path.join(ROOT, 'data/boat/preds.jsonl');
@@ -44,6 +46,8 @@ for (const date of dates) {
     const S = settle(p, k);
     if (!S) { pending++; continue; }
     matched++;
+    /* 段位ごと（実戦）：最良の3連単1点と、本命3艇BOX 3連複 */
+    LG.add(p, `${p.date}|${p.jcd}|${p.r}`, p.bestK ? payOf(k, 'ex3', p.bestK) : 0, '本命3艇BOX 3連複', S.bets['3艇BOX3連複']);
     let V = byV.get(p.jcd); if (!V) byV.set(p.jcd, V = { S: mk(), preds: 0, late: 0 });
     merge(V.S, S); merge(DAY, S); merge(TOTAL, S);
     V.preds++; if (p.late > 30) V.late++;
@@ -55,6 +59,7 @@ for (const date of dates) {
 }
 out.byVenue = [...VEN.keys()].sort().map(jcd => ({ jcd, name: VNAME[jcd], days: VEN.get(jcd).days.size, late: VEN.get(jcd).late, ...fin(VEN.get(jcd).S) }));
 out.total = fin(TOTAL);
+out.byGrade = LG.finish();   // 段位ごとの実戦の回収率（記録に段位が残っているレースだけ。2026-09-28〜）
 out.note = `予想は締切後に記録したもの（late＝締切30分以上あとに記録したレース数。モデルはオッズを使わないので中身は同じ）。成績は公式ダウンロードデータ（K）。`;
 writeJSON('data/boat/results.json', out);
 const T = out.total;
