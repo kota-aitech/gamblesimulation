@@ -49,6 +49,8 @@ function embedKeirin() {
   catch (e) { console.error('  (keirin.html はスキップ: ' + e.message + ')'); }
   try { inject('top.html', 'NKKEIRINTOP', 'NKKRT', readJSON('data/keirin/top.json')); }
   catch (e) { console.error('  (top.html の競輪面はスキップ: ' + e.message + ')'); }
+  try { inject('kbank.html', 'NKKV', 'NKKV', readJSON('data/keirin/venues.json')); }
+  catch (e) { console.error('  (kbank.html はスキップ: ' + e.message + ')'); }
   try { inject('top.html', 'NKKEIRINREC', 'NKKRR', readJSON('data/keirin/results.json')); }
   catch (e) { console.error('  (top.html の競輪の成績はスキップ: ' + e.message + ')'); }
 }

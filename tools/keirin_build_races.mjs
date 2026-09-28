@@ -16,6 +16,7 @@ const TODAY = process.env.KR_TODAY || ymdOf(new Date());
 const M = readJSON('data/keirin/model.json');
 let DB = {}; try { DB = readJSON('data/keirin/index.json'); } catch { }
 let BT = null; try { BT = readJSON('data/keirin/backtest.json'); } catch { }
+let KV = null; try { KV = readJSON('data/keirin/venues.json'); } catch { }   // 競輪場ガイド（keirin_build_venues）：ドーム・風・形と実測の一言
 const RECORD_FROM = process.env.KR_RECORD_FROM || null;
 if (RECORD_FROM && RECORD_FROM <= M.meta.split) console.error(`  ! KR_RECORD_FROM（${RECORD_FROM}）が学習期間（〜${M.meta.split}）に掛かっている。学習に使ったレースの再現は実績として意味が無い`);
 const beta = new Float64Array(NF), betaJ = M.joint ? new Float64Array(NF) : null;
@@ -183,6 +184,8 @@ for (const r0 of races) {
   const D = f.day || {};
   if (D.dRaw?.n >= 2) pts.push(`本日の${race.venue}ここまで ${D.dRaw.n}R：ラインの先頭が ${D.dRaw.head}勝・自力（逃げ・捲り）決着 ${D.dRaw.jiri}回${D.wind != null ? `、直前のレースの風速 ${D.wind}m` : ''}。${D.dRaw.head / D.dRaw.n >= 0.55 ? '前が残っている。' : D.dRaw.head / D.dRaw.n <= 0.25 ? '先頭が残れていない（番手・差しが届く）。' : ''}`);
   if (D.mRaw?.n >= 6) pts.push(`この開催（${race.day}日目までの ${D.mRaw.n}R）は先頭 ${D.mRaw.head}勝・自力決着 ${D.mRaw.jiri}回。`);
+  const KVV = KV?.venues?.[race.venue];
+  if (KVV?.summary?.length) pts.push(`${race.venue}の特徴（競輪場ガイド）：${KVV.summary.slice(0, 4).join('／')}。`);
   const BK = BANKS[race.venue];
   if (BK) {
     const bc = bankCls(race.bank || BK.len);

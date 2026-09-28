@@ -52,7 +52,7 @@ if (prev.fillDay !== today && (hour >= 1 || !prev.fillAt || Date.now() - prev.fi
   let last = null;
   if (fs.existsSync(rf)) for (const l of fs.readFileSync(rf, 'utf8').split('\n')) { if (!/"result":\{/.test(l)) continue; const m = l.match(/"date":"(\d{8})"/); if (m && (!last || m[1] > last)) last = m[1]; }
   const from = last ? (last < addDays(today, -14) ? addDays(today, -14) : addDays(last, -1)) : addDays(today, -7);
-  if (run('keirin_fetch.mjs', { KR_FROM: from, KR_TO: addDays(today, -1) })) { prev.fillDay = today; prev.fillAt = Date.now(); run('keirin_build_db.mjs', {}, 6000); changed = true; }
+  if (run('keirin_fetch.mjs', { KR_FROM: from, KR_TO: addDays(today, -1) })) { prev.fillDay = today; prev.fillAt = Date.now(); run('keirin_build_db.mjs', {}, 6000); run('keirin_build_venues.mjs', {}, 6000); changed = true; }
 }
 /* 2b) バンクの形（周長・見なし直線・カント）は30日に1回取り直す */
 { const bf = path.join(D, 'banks.json'); if (!fs.existsSync(bf) || Date.now() - fs.statSync(bf).mtimeMs > 30 * 86400000) run('keirin_fetch_banks.mjs'); }
@@ -83,7 +83,7 @@ const secs = ((Date.now() - t0) / 1000).toFixed(0);
 if (process.env.NK_REFRESH_NOPUSH) { console.error(`${stamp()} 反映完了（${secs}秒・commit なし）`); process.exit(0); }
 
 const git = (args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
-const TARGETS = ['keirin.html', 'top.html', 'picks.html', 'data/keirin/banks.json', 'data/keirin/races.json', 'data/keirin/top.json', 'data/keirin/index.json', 'data/keirin/model.json', 'data/keirin/backtest.json', 'data/keirin/preds.jsonl', 'data/keirin/results.json'];
+const TARGETS = ['keirin.html', 'kbank.html', 'data/keirin/venues.json', 'top.html', 'picks.html', 'data/keirin/banks.json', 'data/keirin/races.json', 'data/keirin/top.json', 'data/keirin/index.json', 'data/keirin/model.json', 'data/keirin/backtest.json', 'data/keirin/preds.jsonl', 'data/keirin/results.json'];
 try {
   if (git(['rev-parse', '--abbrev-ref', 'HEAD']) !== 'main') { console.error(`${stamp()} main ではないので commit しない`); process.exit(0); }
   const files = TARGETS.filter(f => fs.existsSync(path.join(ROOT, f)));
