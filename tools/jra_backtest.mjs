@@ -11,6 +11,7 @@ import { loadBaba } from './lib/jbaba.mjs';
 import { buildBabaBias } from './lib/jbias.mjs';
 import { utilities } from './lib/bpl.mjs';
 import { combosOf } from './lib/jbets.mjs';
+import { bestWin, thresholdsOf, gradeOf, gradeBook } from './lib/grade.mjs';
 
 const M = readJSON('data/jra/model.json');
 const DB = readJSON(M.meta.db || 'data/jra/index.json');
@@ -37,7 +38,9 @@ const featurize = makeFeaturizer(DB, RI, ASOF, BABA_IDX, BIAS);
 const payOf = (r, kind, code) => { const h = (r.pay?.[kind] || []).find(x => x.c === code); return h ? h.y : 0; };
 const sortKey = a => a.slice().sort((x, y) => x - y).join('-');
 const P = {};
-const add = (name, bet, ret, hit) => { const o = P[name] ||= { bet: 0, ret: 0, hit: 0, races: 0 }; o.bet += bet; o.ret += ret; o.hit += hit ? 1 : 0; o.races++; };
+const add = (name, bet, ret, hit) => { const o = P[name] ||= { bet: 0, ret: 0, hit: 0, races: 0 }; o.bet += bet; o.ret += ret; o.hit += hit ? 1 : 0; o.races++; if (CUR) CUR[name] = { bet, ret }; };
+let CUR = null;
+const EVR = [];   // 段位用：レースごとの最良の単勝の期待値と精算
 const byMonth = {}, byVenue = {};
 let nR = 0, hit1 = 0, in3 = 0;
 for (const r of results) {
@@ -56,6 +59,7 @@ for (const r of results) {
   }
   const lanes = f.rows.map(x => x.no);
   const C = combosOf(Um, tauR, lanes);
+  CUR = {};
   const ord = C.p1.map((p, i) => [p, i]).sort((a, b) => b[0] - a[0]).map(x => lanes[x[1]]);
   const [f1, f2, f3] = race.order.map(i => race.horses[i].no);
   const w1 = f1, e2k = `${f1}-${f2}`, q2 = sortKey([f1, f2]), s3 = sortKey([f1, f2, f3]), e3k = `${f1}-${f2}-${f3}`;
@@ -90,6 +94,8 @@ for (const r of results) {
     const b3v = ord.slice(0, 3), h3v = b3v.includes(f1) && b3v.includes(f2) && b3v.includes(f3);
     v.box3.bet += 100; v.box3.ret += h3v ? payOf(r, 'sanpuku', s3) : 0; v.box3.hit += h3v ? 1 : 0;
   }
+  /* 段位：オッズのあるレースだけ。最良の単勝（モデルの1着確率×確定の単勝オッズ） */
+  if (f.rows.every(x => x.odds > 0)) { const best = bestWin(f.rows.map((x, i) => ({ no: lanes[i], p: C.p1[i], odds: x.odds }))); if (best) EVR.push({ id: r.raceId, ev: best.ev, best: best.k === String(w1) ? payOf(r, 'win', best.k) : 0, S: CUR }); }
   const mo = byMonth[r.date.slice(0, 7)] ||= { races: 0, hit1: 0, in3: 0, win: { bet: 0, ret: 0 }, box4: { bet: 0, ret: 0 } };
   mo.races++; if (ord[0] === w1) mo.hit1++; if (ord.slice(0, 3).includes(w1)) mo.in3++;
   mo.win.bet += 100; mo.win.ret += t1 === w1 ? payOf(r, 'win', String(t1)) : 0;
@@ -97,6 +103,13 @@ for (const r of results) {
 }
 const table = Object.fromEntries(Object.entries(P).map(([k, v]) => [k, { races: v.races, hit: +(100 * v.hit / v.races).toFixed(1), roi: +(100 * v.ret / v.bet).toFixed(1), bet: v.bet, ret: v.ret }]));
 const out = { meta: { level: LEVEL, from: FROM, to: TO, races: nR, hit1: +(hit1 / nR).toFixed(4), in3: +(in3 / nR).toFixed(4), note: LEVEL !== 'base' ? '単勝オッズは結果ページの確定値。締切前の値ではないので実戦よりやや有利' : '' }, table, byVenue: Object.fromEntries(Object.entries(byVenue).map(([k, v]) => [k, { races: v.races, hit1: +(100 * v.hit1 / v.races).toFixed(1), in3: +(100 * v.in3 / v.races).toFixed(1), winRoi: +(100 * v.win.ret / v.win.bet).toFixed(1), winHit: +(100 * v.win.hit / v.races).toFixed(1), box4Roi: +(100 * v.box4.ret / v.box4.bet).toFixed(1), box4Hit: +(100 * v.box4.hit / v.races).toFixed(1), box3Roi: +(100 * v.box3.ret / v.box3.bet).toFixed(1), box3Hit: +(100 * v.box3.hit / v.races).toFixed(1) }])), byMonth };
+/* 段位（南関の racepick と同じ）：検証期間の最良の期待値の分布で閾値を決め、段位ごとの回収率を出す */
+const GT = thresholdsOf(EVR.map(x => x.ev));
+const GB = gradeBook();
+for (const x of EVR) { const g = gradeOf(x.ev, GT); GB.race(g, x.id); GB.add(g, '期待値最良の単勝1点', 100, x.best); for (const b of ['◎単勝', '3頭BOX三連複', 'AI 三連複 上位3点', '◎○馬連']) { const y = x.S[b]; if (y) GB.add(g, b, y.bet, y.ret); } }
+out.grade = { sport: 'jra', kind: '単勝', thresholds: GT, src: 'backtest', from: FROM, to: TO, byGrade: GB.finish(), note: '閾値は検証期間の確定オッズでの最良の単勝の期待値の分布（上位1割 S／1/4 A／半分 B）' };
+writeJSON('data/jra/grade.json', out.grade);
+for (const [g, v] of Object.entries(out.grade.byGrade)) console.error(`  段位${g} ${v.races}R：${Object.entries(v.bets).map(([k, b]) => `${k} ${(b.roi * 100).toFixed(0)}%`).join('／')}`);
 writeJSON('data/jra/backtest.json', out);
 console.error(`検証 ${nR}R（${LEVEL}）1着的中 ${(100 * hit1 / nR).toFixed(1)}%／上位3頭に勝ち馬 ${(100 * in3 / nR).toFixed(1)}%`);
 for (const [k, v] of Object.entries(table)) console.error(`  ${k.padEnd(16)} 的中 ${String(v.hit).padStart(5)}%  回収 ${String(v.roi).padStart(6)}%`);

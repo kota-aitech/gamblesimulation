@@ -21,6 +21,11 @@ import { windCompass } from './lib/web.mjs';
 import { raceProbs, packTri } from './lib/bpl.mjs';
 import { settle, finishOf, payOf } from './lib/bsettle.mjs';
 import { ORIGEX } from './lib/origex.mjs';
+import { bestCombo, thresholdsOf, gradeOf, readGrade } from './lib/grade.mjs';
+/* 段位（南関と同じ S/A/B/C）。閾値は data/boat/grade.json：締切時に記録した「最良の3連単の期待値」が直近14日で500R 貯まればその分布、
+   それまではこの回に作った全レースの分布で代用（src='today'）。過去のオッズが無いので検証期間からは決められない */
+const GRADE0 = readGrade(ROOT, 'boat');
+const GT0 = GRADE0?.thresholds || null;
 
 const TODAY = process.env.BT_TODAY || ymdOf(new Date());
 const AHEAD = Number(process.env.BT_AHEAD ?? 1);
@@ -187,6 +192,8 @@ function buildRace(date, jcd, prog, live, venueWeather) {
     const o = odds?.ex3.get(k) ?? null;
     return { k, p: round(p, 4), o, ev: o ? round(p * o, 2) : null };
   });
+  /* 期待値が最良の3連単（120通りすべてから。確率1%未満・300倍超は除く）→ 段位 */
+  const best = odds?.ex3?.size ? bestCombo(use.tri.map(([a, b, c, p]) => { const k = `${lanes[a]}-${lanes[b]}-${lanes[c]}`; return { k, p, o: odds.ex3.get(k) ?? null }; }), '3連単') : null;
   /* 3連複（同じ3艇の並び6通りの和）上位 */
   const trioMap = new Map();
   for (const [a, b, c, p] of use.tri) { const k = [lanes[a], lanes[b], lanes[c]].sort().join('-'); trioMap.set(k, (trioMap.get(k) || 0) + p); }
@@ -273,7 +280,7 @@ function buildRace(date, jcd, prog, live, venueWeather) {
       racer: b.racer, motorIdx: b.motorIdx,
     })),
     pre: stripTri(pre), ex: ex ? stripTri(ex) : null,
-    marks, tri, trio, ex2: ex2.slice(0, 6), ai,
+    marks, tri, trio, ex2: ex2.slice(0, 6), ai, best, grade: gradeOf(best?.ev ?? null, GT0),
     odds: odds ? { win: odds.win, place: odds.place, at: odds.at, left: odds.left, kind: odds.kind } : null,
     points: pts,
   };
@@ -390,6 +397,7 @@ function recordPred(date, jcd, race) {
     tri1: race.tri[0]?.k || null, tri1p: race.tri[0]?.p ?? null, tri1o: race.tri[0]?.o ?? null,
     win1o: race.odds?.win?.[order[0]] ?? null,
     ai: race.ai,                                            // AI の買い目（締切時点）
+    evBest: race.best?.ev ?? null, bestK: race.best?.k ?? null, bestO: race.best?.o ?? null, grade: race.grade || null,   // 段位（締切時点のオッズ）
   };
   fs.appendFileSync(PREDS, JSON.stringify(rec) + '\n');
   recorded.set(key, rec);
@@ -645,6 +653,21 @@ for (const date of dates) {
   out.days.push({ date, venues });
   console.error(`  ${date}: ${venues.length}場 ${venues.reduce((a, v) => a + v.races.length, 0)}R（直前情報あり ${venues.reduce((a, v) => a + v.exCount, 0)}R）`);
 }
+/* ---- 段位の閾値を更新し、全レースに段位を付け直す ---- */
+{
+  const since = (() => { const d = new Date(); d.setDate(d.getDate() - 14); return ymdOf(d); })();
+  const evs = [...recorded.values()].filter(o => o.date >= since && o.evBest != null).map(o => o.evBest);
+  let G = null;
+  if (evs.length >= 500) G = { sport: 'boat', kind: '3連単', thresholds: thresholdsOf(evs), src: 'rolling', since, note: '閾値は直近14日に締切時点で記録した最良の3連単の期待値の分布（上位1割 S／1/4 A／半分 B）' };
+  else if (!GRADE0 || GRADE0.src === 'today') {
+    const cur = out.days.flatMap(d => d.venues.flatMap(v => v.races.map(r => r.best?.ev))).filter(v => v != null);
+    if (cur.length >= 30) G = { sport: 'boat', kind: '3連単', thresholds: thresholdsOf(cur), src: 'today', note: `記録が貯まるまでの暫定：この回の全レース（${cur.length}R）の最良の3連単の期待値の分布。記録が直近14日で500R を超えたら記録の分布に切り替わる（いま ${evs.length}R）` };
+  }
+  if (G) writeJSON('data/boat/grade.json', G);
+  const GT = (G || GRADE0)?.thresholds || null;
+  for (const d of out.days) for (const v of d.venues) for (const r of v.races) r.grade = gradeOf(r.best?.ev ?? null, GT);
+  out.meta.grade = G || GRADE0 || null;
+}
 /* ---- TOP（top.html）用のたたんだ版。1レースあたり数百バイトに抑える ---- */
 const PICK = ['◎単勝', '◎複勝', '本命3艇BOX 3連複', '◎○の2連単1点', '［基準］1号艇の単勝', '［基準］1号艇の複勝', '［基準］123の3連複'];
 const top = {
@@ -666,6 +689,7 @@ const top = {
           phase: r.stage?.phase || null, lastPrelim: !!r.stage?.lastPrelim, shobu: r.boats.filter(b => b.shobu?.label === '勝負駆け').map(b => b.lane),
           top: ord.map(([p, i]) => ({ lane: r.boats[i].lane, name: r.boats[i].name, grade: r.boats[i].grade, p: round(p, 3), o: r.odds?.win?.[r.boats[i].lane] ?? null })),
           tri: r.tri[0] ? { k: r.tri[0].k, p: r.tri[0].p, o: r.tri[0].o, ev: r.tri[0].ev } : null,
+          grade: r.grade || null, best: r.best || null,
           box3: ord.map(([, i]) => r.boats[i].lane).sort().join('-'),
           ai: { tri3: r.ai.tri3, ex3: r.ai.ex3, cum3: r.ai.triCum[0], ev: r.ai.ev.map(x => x.k) },
         };

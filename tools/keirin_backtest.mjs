@@ -8,6 +8,7 @@ import { ROOT, readJSON, writeJSON } from './lib/kr.mjs';
 import { FEATURES, NF, slim, buildAsOf, makeFeaturizer, stageCtx, combos, lineInfo } from './lib/krfeat.mjs';
 import { utilities } from './lib/bpl.mjs';
 import { BETS, settle } from './lib/krsettle.mjs';
+import { bestCombo, thresholdsOf, gradeOf, gradeBook } from './lib/grade.mjs';
 
 const M = readJSON('data/keirin/model.json');
 const FROM = process.env.KR_BT_FROM || M.meta.split, TO = process.env.KR_BT_TO || '99999999';
@@ -29,6 +30,7 @@ const T = Object.fromEntries(BETS.map(b => [b, { races: 0, bet: 0, ret: 0, hit: 
 const byMonth = {}, byGrade = {}, byVenue = {};
 const VB = ['◎-○ 2車複', '◎→○ 2車単', '3車BOX 3連複', '4車BOX 3連複', 'ライン 2車単 表裏2点', 'AI 3連単 上位5点', 'AI 2車単 上位3点', 'AI 3連複 上位3点'];
 let nR = 0, hit1 = 0, in3 = 0, lastDate = null;
+const EVR = [];   // 段位用：レースごとの最良の3連単の期待値と精算
 for (const r of races) {
   if (r.date < FROM || r.date > TO || !r.pay) continue;
   const f = featurize(r); if (!f || !f.order || f.order.some(i => i < 0)) continue;
@@ -44,6 +46,8 @@ for (const r of races) {
   const S = settle({ top, ai: { e3: C.e3.slice(0, 10).map(x => x[0]), q3: C.q3.slice(0, 3).map(x => x[0]), e2: C.e2.slice(0, 3).map(x => x[0]), q2: C.q2.slice(0, 3).map(x => x[0]), ev, line }, mkt, mktE3: r.mktE3?.[0]?.[0] || null }, r);
   if (!S) continue;
   nR++; hit1 += S.hit1; in3 += S.in3; if (!lastDate || r.date > lastDate) lastDate = r.date;
+  { const best = r.odds?.e3 ? bestCombo(C.e3.slice(0, 80).map(([k, p]) => ({ k, p, o: r.odds.e3[k] })), '3連単') : null;
+    if (best) { const e3 = r.pay?.e3?.find(x => x.c === best.k); EVR.push({ id: r.raceId, ev: best.ev, best: e3 ? e3.y : 0, S }); } }
   for (const [b, x] of Object.entries(S.bets)) { const t = T[b]; t.races++; t.bet += x.bet; t.ret += x.ret; t.hit += x.hit; }
   /* 月・グレード・場ごと：◎1着と、主な買い方の回収率（TOP の「場別の成績」の右端＝検証の同型） */
   for (const [key, G] of [[r.date.slice(0, 6), byMonth], [r.grade || '?', byGrade], [r.venue, byVenue]]) {
@@ -54,6 +58,17 @@ for (const r of races) {
 }
 const table = Object.fromEntries(Object.entries(T).filter(([, v]) => v.races).map(([k, v]) => [k, { races: v.races, hit: +(100 * v.hit / v.races).toFixed(1), roi: v.bet ? +(100 * v.ret / v.bet).toFixed(1) : null, bet: v.bet, ret: v.ret }]));
 const fin = G => Object.fromEntries(Object.entries(G).map(([k, g]) => [k, { races: g.races, hit1: +(g.hit1 / g.races).toFixed(3), ...Object.fromEntries(Object.entries(g.bets).map(([b, y]) => [b, +(y.ret / y.bet).toFixed(3)])) }]));
-writeJSON('data/keirin/backtest.json', { meta: { level: LEVEL, from: FROM, to: TO === '99999999' ? lastDate : TO, races: nR, hit1: +(hit1 / nR).toFixed(4), in3: +(in3 / nR).toFixed(4), note: '3連単オッズは結果ページの確定値（締切前の値ではない）なので、joint と期待値の買い方は実戦よりやや有利' }, table, byMonth: fin(byMonth), byGrade: fin(byGrade), byVenue: fin(byVenue) });
+/* 段位（南関の racepick と同じ）：検証期間の最良の期待値の分布で閾値を決め、段位ごとの回収率を出す */
+const GT = thresholdsOf(EVR.map(x => x.ev));
+const GB = gradeBook();
+for (const x of EVR) {
+  const g = gradeOf(x.ev, GT); GB.race(g, x.id);
+  GB.add(g, '期待値最良の3連単1点', 100, x.best);
+  for (const b of ['3車BOX 3連複', 'AI 3連単 上位5点', 'AI 2車単 上位3点', '◎-○ 2車複']) { const y = x.S.bets[b]; if (y) GB.add(g, b, y.bet, y.ret); }
+}
+const GRADE = { sport: 'keirin', kind: '3連単', thresholds: GT, src: 'backtest', from: FROM, to: lastDate, byGrade: GB.finish(), note: '閾値は検証期間の確定オッズでの最良の3連単の期待値の分布（上位1割 S／1/4 A／半分 B）' };
+writeJSON('data/keirin/grade.json', GRADE);
+for (const [g, v] of Object.entries(GRADE.byGrade)) console.error(`  段位${g} ${v.races}R：${Object.entries(v.bets).map(([k, b]) => `${k} ${(b.roi * 100).toFixed(0)}%`).join('／')}`);
+writeJSON('data/keirin/backtest.json', { grade: GRADE, meta: { level: LEVEL, from: FROM, to: TO === '99999999' ? lastDate : TO, races: nR, hit1: +(hit1 / nR).toFixed(4), in3: +(in3 / nR).toFixed(4), note: '3連単オッズは結果ページの確定値（締切前の値ではない）なので、joint と期待値の買い方は実戦よりやや有利' }, table, byMonth: fin(byMonth), byGrade: fin(byGrade), byVenue: fin(byVenue) });
 console.error(`検証 ${nR}R（${LEVEL}）◎1着 ${(100 * hit1 / nR).toFixed(1)}%／上位3車に1着 ${(100 * in3 / nR).toFixed(1)}%`);
 for (const [k, v] of Object.entries(table)) if (v.bet) console.error(`  ${k.padEnd(18)} 的中 ${String(v.hit).padStart(5)}%  回収 ${String(v.roi).padStart(6)}%`);

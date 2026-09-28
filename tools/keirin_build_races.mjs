@@ -9,6 +9,8 @@ import path from 'node:path';
 import { ROOT, readJSON, writeJSON, ymdOf, venueByName } from './lib/kr.mjs';
 import { FEATURES, NF, slim, buildAsOf, makeFeaturizer, stageCtx, combos, raceOf, lineInfo, TIP, bankCls, BANKS } from './lib/krfeat.mjs';
 import { utilities } from './lib/bpl.mjs';
+import { bestCombo, gradeOf, readGrade } from './lib/grade.mjs';
+const GRADE = readGrade(ROOT, 'keirin');   // 段位の閾値（keirin_backtest が検証期間から決める。南関の racepick と同じ）
 
 const TODAY = process.env.KR_TODAY || ymdOf(new Date());
 const M = readJSON('data/keirin/model.json');
@@ -69,6 +71,7 @@ function recordPred(race, date) {
     top: top.map(h => h.no), p1: Object.fromEntries(top.map(h => [h.no, h.p1])), mkt: race.mktOrder || null, mktE3: race.mktE3 || null,
     ai: { e3: race.e3.slice(0, 10).map(x => x.k), q3: race.q3.slice(0, 5).map(x => x.k), e2: race.e2.slice(0, 5).map(x => x.k), q2: race.q2.slice(0, 3).map(x => x.k), wide: race.wide.slice(0, 3).map(x => x.k),
       ev: race.ev.map(x => x.k), line: race.lineBet || null },
+    grade: race.grade || null, evBest: race.best?.ev ?? null, bestK: race.best?.k ?? null, bestO: race.best?.o ?? null,
   }) + '\n');
   recorded.add(race.raceId);
 }
@@ -138,6 +141,9 @@ for (const r0 of races) {
   if (odds.e3) for (const [k, p] of C.e3.slice(0, 60)) { const o = odds.e3[k]; if (o && o < 9999 && p >= 0.01 && o <= 300) ev.push({ k, p: round(p, 4), o, ev: round(p * o, 2) }); }
   ev.sort((a, b) => b.ev - a.ev);
   const evPick = ev.filter(x => x.ev >= 1.0).slice(0, 6);
+  /* 段位：最良の3連単の期待値（確率1%未満・300倍超は除く）を検証期間の閾値に当てる */
+  const best = odds.e3 ? bestCombo(C.e3.slice(0, 80).map(([k, p]) => ({ k, p, o: odds.e3[k] })), '3連単') : null;
+  const grade = gradeOf(best?.ev ?? null, GRADE?.thresholds);
   const top = i => riders[order[i]];
   const nn = h => `${h.no} ${h.name}`;
   const pts = [];
@@ -204,6 +210,7 @@ for (const r0 of races) {
     e3: C.e3.slice(0, 10).map(([k, p]) => ({ k, p: round(p, 4), o: odds.e3?.[k] ?? null })), q3: C.q3.slice(0, 6).map(([k, p]) => ({ k, p: round(p, 4), o: typeof odds.q3?.[k] === 'number' ? odds.q3[k] : null })),
     e2: C.e2.slice(0, 6).map(([k, p]) => ({ k, p: round(p, 4), o: odds.e2?.[k] ?? null })), q2: C.q2.slice(0, 5).map(([k, p]) => ({ k, p: round(p, 4), o: typeof odds.q2?.[k] === 'number' ? odds.q2[k] : null })),
     wide: C.wide.slice(0, 5).map(([k, p]) => ({ k, p: round(p, 4) })), ev: evPick, lineBet,
+    grade, best,
     conf: round(1 - (-C.p1.reduce((a, p) => a + (p > 0 ? p * Math.log(p) : 0), 0)) / Math.log(C.p1.length), 3),
     result: r0.result ? { order: r0.result.order.filter(o => typeof o.pos === 'number' && o.pos <= 3).map(o => [o.pos, o.no, o.kimarite]), e3: r0.pay?.e3?.[0] || null, q3: r0.pay?.q3?.[0] || null, e2: r0.pay?.e2?.[0] || null, weather: r0.result.weather, wind: r0.result.wind } : null,
     points: pts,
@@ -222,16 +229,17 @@ const out = {
     model: { built: M.meta.built, split: M.meta.split, train: M.meta.train, test: M.meta.test, from: M.meta.from, to: M.meta.to, base: M.base.test, joint: M.joint?.test || null, mktOnly: M.mktOnly, baseSame: M.baseSame,
       coef: M.base.coef.slice(0, 14), jointCoef: M.joint?.coef?.slice(0, 14) || null, homeMult: M.homeMult, stage: M.base.stage },
     index: DB.meta ? { from: DB.meta.from, to: DB.meta.to, races: DB.meta.races, slots: DB.slots, lineOneTwo: DB.lineOneTwo, home: DB.home, kimarite: DB.kimarite, venues: DB.venues } : null,
+    grade: GRADE ? { thresholds: GRADE.thresholds, byGrade: GRADE.byGrade, from: GRADE.from, to: GRADE.to, kind: GRADE.kind } : null,
     backtest: BT ? { level: BT.meta.level, from: BT.meta.from, to: BT.meta.to, races: BT.meta.races, table: BT.table, note: BT.meta.note, byVenue: BT.byVenue } : null,
   },
   days: [...days].sort((a, b) => a[0].localeCompare(b[0])).map(([date, vs]) => ({ date, venues: [...vs.values()].sort((a, b) => (a.races[0]?.post || '').localeCompare(b.races[0]?.post || '')).map(v => ({ ...v, races: v.races.sort((a, b) => a.r - b.r) })) })),
 };
 writeJSON('data/keirin/races.json', out);
 const top = {
-  builtAt: out.meta.built, today: TODAY, model: { train: M.meta.train, test: M.meta.test, base: M.base.test, joint: M.joint?.test || null, mktOnly: M.mktOnly }, backtest: out.meta.backtest,
+  builtAt: out.meta.built, today: TODAY, grade: out.meta.grade, model: { train: M.meta.train, test: M.meta.test, base: M.base.test, joint: M.joint?.test || null, mktOnly: M.mktOnly }, backtest: out.meta.backtest,
   days: out.days.map(d => ({ date: d.date, venues: d.venues.map(v => ({ venue: v.venue, jcd: v.jcd, grade: v.grade, meetName: v.meetName, day: v.day, bank: v.bank, races: v.races.map(r => {
     const t = r.riders.slice().sort((a, b) => b.p1 - a.p1).slice(0, 3);
-    return { r: r.r, kind: r.kind, post: r.post, close: r.close, n: r.n, level: r.level, conf: r.conf, girls: r.girls, lines: r.lines,
+    return { r: r.r, kind: r.kind, post: r.post, close: r.close, n: r.n, level: r.level, conf: r.conf, girls: r.girls, lines: r.lines, grade: r.grade, best: r.best,
       top: t.map(h => ({ no: h.no, name: h.name, p: round(h.p1, 3), home: h.home, score: h.score, slot: h.line?.slot || null })),
       e3: r.e3[0], q3: r.q3[0], box3: r.box3, res: r.result ? r.result.order.map(o => o[1]) : null };
   }) })) })),

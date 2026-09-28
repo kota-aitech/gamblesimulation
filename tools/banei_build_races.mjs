@@ -8,6 +8,8 @@ import { ROOT, readJSON, writeJSON, ymdOf } from './lib/bn.mjs';
 import { FEATURES, NF, buildRaceIndex, buildHistory, buildAsOf, buildLaneIndex, loadPed, raceFromCard, makeFeaturizer } from './lib/bnfeat.mjs';
 import { utilities } from './lib/bpl.mjs';
 import { combosOf } from './lib/jbets.mjs';
+import { bestWin, gradeOf, readGrade } from './lib/grade.mjs';
+const GRADE = readGrade(ROOT, 'banei');   // 段位の閾値（banei_backtest が検証期間の確定単勝オッズから決める。南関の racepick と同じ）
 
 const TODAY = process.env.BN_TODAY || ymdOf(new Date());
 const DB = readJSON('data/banei/index.json');
@@ -50,6 +52,7 @@ function recordPred(race, date) {
   fs.appendFileSync(PREDS, JSON.stringify({
     raceId: race.raceId, date, r: race.r, at: nowJ.toISOString(), late: RECORD_PAST ? 9999 : Math.round(late), level: race.level,
     top: top.map(h => h.no), p1: Object.fromEntries(top.map(h => [h.no, h.p1])), pop1,
+    rank: race.rank || null, evBest: race.best?.ev ?? null, bestK: race.best?.k ?? null, bestO: race.best?.o ?? null,
     ai: { umaren3: race.umaren.slice(0, 3).map(x => x.k), sanpuku3: race.sanpuku.slice(0, 3).map(x => x.k), santan5: race.santan.slice(0, 5).map(x => x.k) },
   }) + '\n');
   recorded.add(race.raceId);
@@ -147,6 +150,7 @@ for (const c of cards) {
     horses, box3: box(3), box4: box(4), box5: box(5),
     umaren: C.umaren.slice(0, 6).map(([k, p]) => ({ k, p: round(p, 4) })), umatan: C.umatan.slice(0, 5).map(([k, p]) => ({ k, p: round(p, 4) })),
     sanpuku: C.sanpuku.slice(0, 6).map(([k, p]) => ({ k, p: round(p, 4) })), santan: C.santan.slice(0, 8).map(([k, p]) => ({ k, p: round(p, 4) })), wide: C.wide.slice(0, 5).map(([k, p]) => ({ k, p: round(p, 4) })),
+    ...(() => { const best = bestWin(horses.map(h => ({ no: h.no, p: h.p1, odds: h.odds }))); return { rank: gradeOf(best?.ev ?? null, GRADE?.thresholds), best }; })(),
     conf: round(1 - (-C.p1.reduce((a, p) => a + (p > 0 ? p * Math.log(p) : 0), 0)) / Math.log(C.p1.length), 3),
     points: pts,
   };
@@ -157,7 +161,7 @@ for (const c of cards) {
 }
 const out = {
   meta: {
-    built: new Date().toISOString(), today: TODAY, groups: GROUPS,
+    built: new Date().toISOString(), today: TODAY, groups: GROUPS, rankInfo: GRADE ? { thresholds: GRADE.thresholds, byGrade: GRADE.byGrade, from: GRADE.from, to: GRADE.to, kind: GRADE.kind } : null,
     model: { built: M.meta.built, split: M.meta.split, train: M.meta.train, test: M.meta.test, base: M.base.test, joint: M.joint?.test || null, jointCoef: M.joint?.coef?.slice(0, 12) || null, popOnly: M.popOnly },
     index: { from: DB.meta.from, to: DB.meta.to, races: DB.meta.races, runs: DB.meta.runs, moist: DB.moist, gate: DB.gate, bw: DB.bw },
     backtest: BT ? { level: BT.meta.level, from: BT.meta.from, to: BT.meta.to, races: BT.meta.races, table: BT.table, note: BT.meta.note, byMoist: BT.byMoist } : null,
@@ -166,12 +170,12 @@ const out = {
 };
 writeJSON('data/banei/races.json', out);
 const top = {
-  builtAt: out.meta.built, today: TODAY, model: out.meta.model, backtest: out.meta.backtest,
+  builtAt: out.meta.built, today: TODAY, model: out.meta.model, backtest: out.meta.backtest, rankInfo: GRADE ? { thresholds: GRADE.thresholds, byGrade: GRADE.byGrade, from: GRADE.from, to: GRADE.to, kind: GRADE.kind } : null,
   days: out.days.map(d => ({ date: d.date, races: d.races.map(r => {
     const t = r.horses.slice().sort((a, b) => b.p1 - a.p1).slice(0, 3);
     return { r: r.r, name: r.name, kind: r.kind, start: r.start, moist: r.moist, n: r.n, level: r.level, conf: r.conf,
       top: t.map(h => ({ no: h.no, waku: h.waku, name: h.name, p: round(h.p1, 3), odds: h.odds, jockey: h.jockey, load: h.load, bw: h.bw })),
-      box3: r.box3, umaren: r.umaren[0], sanpuku: r.sanpuku[0] };
+      box3: r.box3, umaren: r.umaren[0], sanpuku: r.sanpuku[0], rank: r.rank || null, best: r.best || null };
   }) })),
 };
 writeJSON('data/banei/top.json', top);

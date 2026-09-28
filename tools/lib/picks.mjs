@@ -5,10 +5,12 @@
                  南関＝馬連・三連複（lib/bets.mjs の既存の計算）、ボート・競輪＝3連単、中央・ばんえい＝単勝。
                  極端な低確率の組で決まらないよう、確率1%未満（単勝は3%未満）・オッズ300倍超（単勝は100倍超）は除く
      自信度 conf … 本命の1着確率
-     段位 grade … 競技ごとに期待値の相対順位で付ける（上位1割 S／1/4 A／半分 B／残り C）。券種で期待値の水準が違うので競技をまたいで比べない。
-                 南関だけは検証で決めた既存の段位（racepick.json の閾値）をそのまま使う */
+     段位 grade … 各競技の予想生成が付けた段位をそのまま使う（南関と同じ作り：過去の分布で決めた閾値。lib/grade.mjs）。
+                 南関＝racepick.json、競輪・中央・ばんえい＝検証期間の確定オッズ（data/<競技>/grade.json）、ボート＝締切時の記録の積み上げ。
+                 券種で期待値の水準が違うので閾値は競技ごと。付いていない競技だけ、その日の相対順位で代用する */
 import fs from 'node:fs';
 import path from 'node:path';
+import { readGrade } from './grade.mjs';
 
 const LIM = { p: 0.01, o: 300, pWin: 0.03, oWin: 100 };
 const r3 = v => v == null || !Number.isFinite(v) ? null : +v.toFixed(3);
@@ -37,8 +39,8 @@ export function buildPicks(ROOT) {
   const JR = load(ROOT, 'data/jra/top.json');
   if (JR) {
     for (const d of JR.days || []) for (const v of d.venues || []) for (const r of v.races || []) {
-      const best = winBest(r.top), f = r.top?.[0];
-      rows.push({ sport: 'jra', venue: v.venue, r: r.r, date: ymd(d.date), close: r.start, post: r.start, cls: [r.grade, r.cls].filter(Boolean).join(' ') || r.name, n: r.n,
+      const best = r.best || winBest(r.top), f = r.top?.[0];
+      rows.push({ sport: 'jra', grade: r.rank || null, venue: v.venue, r: r.r, date: ymd(d.date), close: r.start, post: r.start, cls: [r.grade, r.cls].filter(Boolean).join(' ') || r.name, n: r.n,
         ev: best?.ev ?? null, best, conf: r3(f?.p), fav: f ? { no: f.no, name: f.name, p: r3(f.p) } : null, market: r.level === 'mix' || r.level === 'joint' ? '単勝オッズ' : null,
         url: `jra.html?date=${d.date}&venue=${encodeURIComponent(v.venue)}&r=${r.r}` });
     }
@@ -47,8 +49,8 @@ export function buildPicks(ROOT) {
   const BN = load(ROOT, 'data/banei/top.json');
   if (BN) {
     for (const d of BN.days || []) for (const r of d.races || []) {
-      const best = winBest(r.top), f = r.top?.[0];
-      rows.push({ sport: 'banei', venue: '帯広', r: r.r, date: ymd(d.date), close: r.start, post: r.start, cls: r.name, n: r.n,
+      const best = r.best || winBest(r.top), f = r.top?.[0];
+      rows.push({ sport: 'banei', grade: r.rank || null, venue: '帯広', r: r.r, date: ymd(d.date), close: r.start, post: r.start, cls: r.name, n: r.n,
         ev: best?.ev ?? null, best, conf: r3(f?.p), fav: f ? { no: f.no, name: f.name, p: r3(f.p) } : null, market: r.level === 'joint' ? '単勝オッズ' : null,
         url: `banei.html?date=${d.date}&r=${r.r}` });
     }
@@ -60,10 +62,10 @@ export function buildPicks(ROOT) {
     const topOf = new Map();
     for (const d of BTT?.days || []) for (const v of d.venues || []) for (const r of v.races || []) topOf.set(`${d.date}|${v.jcd}|${r.r}`, r);
     for (const d of BT.days || []) for (const v of d.venues || []) for (const r of v.races || []) {
-      let best = null;
-      for (const t of r.tri || []) { if (!(t.p >= LIM.p) || !(t.o > 0) || t.o > LIM.o) continue; const ev = t.p * t.o; if (!best || ev > best.ev) best = { kind: '3連単', k: t.k, p: t.p, o: t.o, ev: r3(ev) }; }
+      let best = r.best || null;
+      if (!best) for (const t of r.tri || []) { if (!(t.p >= LIM.p) || !(t.o > 0) || t.o > LIM.o) continue; const ev = t.p * t.o; if (!best || ev > best.ev) best = { kind: '3連単', k: t.k, p: t.p, o: t.o, ev: r3(ev) }; }
       const tp = topOf.get(`${d.date}|${v.jcd}|${r.r}`), f = tp?.top?.[0];
-      rows.push({ sport: 'boat', venue: v.name, r: r.r, date: ymd(d.date), close: r.close, post: r.close, cls: r.cls || '', n: 6,
+      rows.push({ sport: 'boat', grade: r.grade || null, venue: v.name, r: r.r, date: ymd(d.date), close: r.close, post: r.close, cls: r.cls || '', n: 6,
         ev: best?.ev ?? null, best, conf: r3(f?.p), fav: f ? { no: f.lane, name: f.name, p: r3(f.p) } : null, market: r.odds?.kind === 'snap' ? '締切前オッズ' : r.odds ? '暫定オッズ' : null,
         res: r.result?.order ? r.result.order.slice(0, 3) : null, url: `boat.html?date=${d.date}&jcd=${v.jcd}&r=${r.r}` });
     }
@@ -73,18 +75,26 @@ export function buildPicks(ROOT) {
   const KR = load(ROOT, 'data/keirin/races.json');
   if (KR) {
     for (const d of KR.days || []) for (const v of d.venues || []) for (const r of v.races || []) {
-      let best = null;
-      for (const t of [...(r.e3 || []), ...(r.ev || [])]) { if (!(t.p >= LIM.p) || !(t.o > 0) || t.o > LIM.o) continue; const ev = t.p * t.o; if (!best || ev > best.ev) best = { kind: '3連単', k: t.k, p: t.p, o: t.o, ev: r3(ev) }; }
+      let best = r.best || null;
+      if (!best) for (const t of [...(r.e3 || []), ...(r.ev || [])]) { if (!(t.p >= LIM.p) || !(t.o > 0) || t.o > LIM.o) continue; const ev = t.p * t.o; if (!best || ev > best.ev) best = { kind: '3連単', k: t.k, p: t.p, o: t.o, ev: r3(ev) }; }
       const f = r.riders.slice().sort((a, b) => b.p1 - a.p1)[0];
-      rows.push({ sport: 'keirin', venue: v.venue, r: r.r, date: d.date, close: r.close, post: r.post, cls: r.kind, n: r.n,
+      rows.push({ sport: 'keirin', grade: r.grade || null, venue: v.venue, r: r.r, date: d.date, close: r.close, post: r.post, cls: r.kind, n: r.n,
         ev: best?.ev ?? null, best, conf: r3(f?.p1), fav: f ? { no: f.no, name: f.name, p: r3(f.p1) } : null, market: r.level === 'joint' ? (r.oddsConfirmed ? '確定オッズ' : '3連単オッズ') : null,
         res: r.result ? r.result.order.map(o => o[1]) : null, url: `keirin.html?date=${d.date}&v=${v.slug}&r=${r.r}` });
     }
     sports.keirin = { label: '競輪', gradeBy: '3連単の期待値の相対順位', bt: KR.meta?.backtest?.table ? { '3車BOX 3連複': KR.meta.backtest.table['3車BOX 3連複'], 'AI 2車単 上位3点': KR.meta.backtest.table['AI 2車単 上位3点'] } : null };
   }
-  /* 段位（南関以外）：競技ごとに期待値の順位で。期待値の無いレース（オッズ前）は段位なし */
+  /* 各競技の閾値（画面の説明用）。段位が1本も付いていない競技だけ、その日の相対順位で代用する */
   for (const sp of Object.keys(sports)) {
-    if (sp === 'nankan') continue;
+    if (sp === 'nankan') { sports[sp].thresholds = NK.thresholds?.evUmaren ? { S: NK.thresholds.evUmaren.p10, A: NK.thresholds.evUmaren.p25, B: NK.thresholds.evUmaren.p50 } : null; continue; }
+    const G = readGrade(ROOT, sp);
+    if (G?.thresholds && rows.some(r => r.sport === sp && r.grade)) {
+      sports[sp].thresholds = { S: G.thresholds.p10, A: G.thresholds.p25, B: G.thresholds.p50, n: G.thresholds.n };
+      sports[sp].gradeBy = G.src === 'backtest' ? `検証期間（${G.from}〜）の確定オッズでの${G.kind}の期待値の分布` : G.src === 'rolling' ? `直近14日の締切時点の${G.kind}の期待値の分布` : `${G.kind}の期待値の分布（記録が貯まるまでの暫定）`;
+      sports[sp].byGrade = G.byGrade || null;
+      continue;
+    }
+    sports[sp].gradeBy += '（その日の相対順位で代用）';
     const xs = rows.filter(r => r.sport === sp && r.ev != null).map(r => r.ev).sort((a, b) => b - a);
     const q = f => xs.length ? xs[Math.min(xs.length - 1, Math.max(0, Math.ceil(xs.length * f) - 1))] : Infinity;
     const t10 = q(0.10), t25 = q(0.25), t50 = q(0.50);

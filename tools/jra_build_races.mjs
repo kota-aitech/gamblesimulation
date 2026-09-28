@@ -12,6 +12,8 @@ import { loadBaba } from './lib/jbaba.mjs';
 import { buildBabaBias } from './lib/jbias.mjs';
 import { utilities } from './lib/bpl.mjs';
 import { combosOf } from './lib/jbets.mjs';
+import { bestWin, gradeOf, readGrade } from './lib/grade.mjs';
+const GRADE = readGrade(ROOT, 'jra');   // 段位の閾値（jra_backtest が検証期間の確定単勝オッズから決める。南関の racepick と同じ）
 
 const TODAY = process.env.JRA_TODAY || new Date().toLocaleDateString('sv-SE');
 const DB = readJSON('data/jra/index.json');
@@ -62,6 +64,7 @@ function recordPred(race, date, venue) {
   fs.appendFileSync(PREDS, JSON.stringify({
     raceId: race.raceId, date, venue, r: race.r, at: nowJ.toISOString(), late: RECORD_PAST ? 9999 : Math.round(late), level: race.level,
     top: top.map(h => h.no), p1: Object.fromEntries(top.map(h => [h.no, h.p1])), pop1,
+    rank: race.rank || null, evBest: race.best?.ev ?? null, bestK: race.best?.k ?? null, bestO: race.best?.o ?? null,
     ai: { umaren3: race.umaren.slice(0, 3).map(x => x.k), sanpuku3: race.sanpuku.slice(0, 3).map(x => x.k), santan5: race.santan.slice(0, 5).map(x => x.k) },
   }) + '\n');
   recorded.add(race.raceId);
@@ -168,6 +171,7 @@ for (const c of cards) {
     horses, box3: box(3), box4: box(4), box5: box(5),
     umaren: C.umaren.slice(0, 6).map(([k, p]) => ({ k, p: round(p, 4) })), umatan: C.umatan.slice(0, 5).map(([k, p]) => ({ k, p: round(p, 4) })),
     sanpuku: C.sanpuku.slice(0, 6).map(([k, p]) => ({ k, p: round(p, 4) })), santan: C.santan.slice(0, 8).map(([k, p]) => ({ k, p: round(p, 4) })), wide: C.wide.slice(0, 5).map(([k, p]) => ({ k, p: round(p, 4) })),
+    ...(() => { const best = bestWin(horses.map(h => ({ no: h.no, p: h.p1, odds: h.odds }))); return { rank: gradeOf(best?.ev ?? null, GRADE?.thresholds), best }; })(),
     conf: round(1 - (-C.p1.reduce((a, p) => a + (p > 0 ? p * Math.log(p) : 0), 0)) / Math.log(C.p1.length), 3),
     points: pts,
   };
@@ -233,7 +237,7 @@ for (const [date, V] of days) for (const [venue, races] of V) {
 
 const out = {
   meta: {
-    built: new Date().toISOString(), today: TODAY, groups: GROUPS,
+    built: new Date().toISOString(), today: TODAY, groups: GROUPS, rankInfo: GRADE ? { thresholds: GRADE.thresholds, byGrade: GRADE.byGrade, from: GRADE.from, to: GRADE.to, kind: GRADE.kind } : null,
     model: { built: M.meta.built, split: M.meta.split, train: M.meta.train, test: M.meta.test, base: M.base.test, mix: M.mix?.test || null, mixCoef: mix ? { a: mix.a, b: mix.b } : null, joint: M.joint?.test || null, jointCoef: M.joint?.coef?.slice(0, 12) || null, popOnly: M.popOnly },
     index: { from: DB.meta.from, to: DB.meta.to, races: DB.meta.races, runs: DB.meta.runs },
     backtest: BT ? { level: BT.meta.level, from: BT.meta.from, to: BT.meta.to, races: BT.meta.races, table: BT.table, note: BT.meta.note, byVenue: BT.byVenue || null } : null,
@@ -244,12 +248,12 @@ const out = {
 writeJSON('data/jra/races.json', out);
 /* TOP（top.html）用のたたんだ版 */
 const top = {
-  builtAt: out.meta.built, today: TODAY, model: out.meta.model, backtest: out.meta.backtest,
+  builtAt: out.meta.built, today: TODAY, model: out.meta.model, backtest: out.meta.backtest, rankInfo: GRADE ? { thresholds: GRADE.thresholds, byGrade: GRADE.byGrade, from: GRADE.from, to: GRADE.to, kind: GRADE.kind } : null,
   days: out.days.map(d => ({ date: d.date, venues: d.venues.map(v => ({ venue: v.venue, races: v.races.map(r => {
     const t = r.horses.slice().sort((a, b) => b.p1 - a.p1).slice(0, 3);
     return { r: r.r, name: r.name, grade: r.grade, start: r.start, surface: r.surface, dist: r.dist, n: r.n, cls: r.cls, level: r.level, conf: r.conf, gates: r.gates,
       top: t.map(h => ({ no: h.no, waku: h.waku, name: h.name, p: r.horses.length ? round(h.p1, 3) : null, odds: h.odds, jockey: (h.jockey || '').replace(/\s/g, '') })),
-      box3: r.box3, umaren: r.umaren[0], sanpuku: r.sanpuku[0] };
+      box3: r.box3, umaren: r.umaren[0], sanpuku: r.sanpuku[0], rank: r.rank || null, best: r.best || null };
   }) })) })),
 };
 writeJSON('data/jra/top.json', top);
