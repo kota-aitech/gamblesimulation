@@ -13,6 +13,11 @@ function embedPicks() {
   catch (e) { console.error('  (picks.html はスキップ: ' + e.message + ')'); }
 }
 process.on('exit', embedPicks);
+/* 場のガイド（競艇場・競馬場）。tools/build_guides.mjs の出力を埋める（軽いので毎回） */
+process.on('exit', () => {
+  try { inject('bbank.html', 'NKBG', 'NKBG', readJSON('data/boat/guide.json')); } catch (e) { console.error('  (bbank.html はスキップ: ' + e.message + ')'); }
+  try { inject('hbank.html', 'NKHG', 'NKHG', readJSON('data/guide_horse.json')); } catch (e) { console.error('  (hbank.html はスキップ: ' + e.message + ')'); }
+});
 
 /* ボートレース版（boat.html）。tools/build_boat.mjs の today.json を NKBOAT に埋める。
    NK_EMBED_ONLY=boat なら南関側は触らずこれだけ行う（refresh_boat.mjs が使う） */

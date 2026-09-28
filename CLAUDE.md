@@ -123,6 +123,8 @@ sim.html                予想シミュレーション＋3D（?track=oi / kawasa
 race.html               出馬表（競馬新聞の馬柱。横型／縦型を切替。?track=…&day=…&r=…）※新聞配色
 data.html               データブラウザ（騎手・調教師・コンビ・馬主・種牡馬の一覧）※新聞配色
 boat.html               ボートレース版（全24場・今日と明日・条件付きロジット。下の専用節を参照）※ダーク配色
+bbank.html              **競艇場ガイド**（24場。公式の場データ＋3年の実測。tools/build_guides.mjs → data/boat/guide.json、NKBG）※新聞配色
+hbank.html              **競馬場ガイド**（南関4場・中央10場・帯広のタブ。公式のコース情報＋実測。tools/build_guides.mjs → data/guide_horse.json、NKHG）※新聞配色
 kbank.html              **競輪場ガイド**（全43場のバンクの形・天候の実測・決まり方・一言の特徴。tools/keirin_build_venues.mjs → venues.json、NKKV）※新聞配色
 picks.html              **全競技の段位表**（南関・中央・ばんえい・ボート・競輪の締切前のレースを、段位 S/A/B/C・期待値・自信度で1枚に。下の専用節）※新聞配色
 keirin.html             競輪版（全43場・今日と明日・競走得点／ライン／地元の条件付きロジット＋2着3着の段階モデル。下の専用節を参照）※新聞配色
@@ -1856,3 +1858,14 @@ node tools/keirin_build_races.mjs && node tools/keirin_build_results.mjs && NK_E
 - 風は各レースの結果の風速（向きは発表なし）。風が強い場の1位は小松島（平均 2.05m）、函館3位。全場まとめの風速帯ごとの決まり手も出す（3m以上で逃げ・先頭がむしろ上がった。430R しかないので目安）
 - 一言の特徴（`summary`）は全場の中での順位から自動で作る（直線が長い上位8場→「差し・追込が届きやすい形」など）。keirin_build_races が読みのポイントの先頭に4つまで入れる
 - 反映係が1日1回（集計と一緒に）作り直す。向日町・福井・高松は取り込み済みの期間に開催が無く、実測は遡った取り込みで入る
+
+### 競艇場・競馬場ガイド（`bbank.html` / `hbank.html`、2026-09-28）
+こたの依頼「競輪場ガイドと同様に競馬場や競艇場でも」。作りは競輪場ガイドと同じ（形は公式、特徴は実測、一言は同じ競技の場どうしの順位から自動）。
+- `tools/fetch_course_info.mjs` … コースの形（月1、キャッシュ 30日、Shift_JIS）
+  - 南関 `nankankeiba.com/course_info/{18|19|20|21}.do` → `data/nankan/course.json`（回り・内外・一周・幅員・見どころの文・距離別レコード。**直線の長さは大井しか書かれていない**）
+  - 中央 `jra.go.jp/facilities/race/{場}/course/` → `data/jra/course.json`（芝・ダートの一周・幅員・直線・高低差・発走距離・紹介文）。
+    **場によって表の組み方が違う**（内回り・外回りで表が2つ、1つのセルに「328.4m(内回り)<br>403.7m(外回り)」）ので、「芝コース」「ダートコース」の区画ごとに全部の表を読み、直線と高低差は [最小, 最大] で持つ。コメント内の古い表があるので `<!-- -->` を先に消す
+- `tools/build_guides.mjs` … `data/boat/guide.json`（stadium.json＋results.jsonl 3年。1コース1着率・決まり手・風と波・風が強い日のインの崩れ・安定板・万舟・季節別）と
+  `data/guide_horse.json`（中央＝course.json＋results 5年を場×芝ダで。南関＝course.json＋trend.<場>.json＋results/payouts。ばんえい＝index.json の水分帯と馬番）。4秒
+- 競輪の反映係が1日1回（集計と一緒に）build_guides を回し、30日おきに fetch_course_info。埋め込みは embed_db の終了時（picks と同じ）なので、どの反映係でも更新される
+- ばんえいの公式サイトはコースの説明が動画だけで文字が無い。帯広は実測（水分帯・馬番）中心

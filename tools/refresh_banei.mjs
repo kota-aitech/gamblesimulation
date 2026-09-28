@@ -92,7 +92,7 @@ const secs = ((Date.now() - t0) / 1000).toFixed(0);
 if (process.env.NK_REFRESH_NOPUSH) { console.error(`${stamp()} 反映完了（${secs}秒・push なし）`); process.exit(0); }
 
 const git = (args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
-const TARGETS = ['banei.html', 'top.html', 'picks.html', 'data/banei/races.json', 'data/banei/top.json', 'data/banei/index.json', 'data/banei/model.json', 'data/banei/backtest.json', 'data/banei/preds.jsonl', 'data/banei/results.json'];
+const TARGETS = ['banei.html', 'top.html', 'picks.html', 'bbank.html', 'hbank.html', 'kbank.html', 'data/boat/guide.json', 'data/guide_horse.json', 'data/jra/course.json', 'data/nankan/course.json', 'data/banei/races.json', 'data/banei/top.json', 'data/banei/index.json', 'data/banei/model.json', 'data/banei/backtest.json', 'data/banei/preds.jsonl', 'data/banei/results.json'];
 try {
   if (git(['rev-parse', '--abbrev-ref', 'HEAD']) !== 'main') { console.error(`${stamp()} main ではないので push しない`); process.exit(0); }
   git(['add', '--', ...TARGETS.filter(f => fs.existsSync(path.join(ROOT, f)))]);
