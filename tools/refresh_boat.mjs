@@ -22,10 +22,19 @@ const STAMP = path.join(D, '.refresh-stamp');
 const OD2STAMP = path.join(D, '.od2-stamp');
 const addDays = (ymd, n) => { const d = new Date(`${ymd.slice(0, 4)}-${ymd.slice(4, 6)}-${ymd.slice(6, 8)}T00:00:00`); d.setDate(d.getDate() + n); return ymdOf(d); };
 
+/* 子プロセスには必ず実行時間の上限を付ける（NK_STEP_TIMEOUT 分、既定 20）。
+   上限が無いと取得が通信待ちで固まったとき親も固まり、**launchd は前の実行が残っている間は次を起こさない**ので
+   以後ずっと動かなくなる（2026-09-28 に refresh_banei が9日20時間ハングして居座っていた）。 */
+/* **自分自身の見張り**：全体がこの時間を超えたら、道連れにせず自分を終わらせる（NK_JOB_TIMEOUT 分、既定 25）。
+   launchd の StartInterval は前の実行が残っている間は次を起こさないので、
+   1本ハングすると以後ずっと止まる。子プロセスの上限（STEP_TIMEOUT）で拾えない固まり方への保険。 */
+setTimeout(() => { console.error(`${new Date().toLocaleString('ja-JP', { hour12: false })} 時間切れで打ち切り（25分）`); process.exit(0); },
+  Number(process.env.NK_JOB_TIMEOUT || 25) * 60000).unref();
+const STEP_TIMEOUT = Number(process.env.NK_STEP_TIMEOUT || 20) * 60000;
 const run = (script, env) => {
   try {
     execFileSync(process.execPath, [path.join(ROOT, 'tools', script)],
-      { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'], env: { ...process.env, ...env } });
+      { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'], env: { ...process.env, ...env }, timeout: STEP_TIMEOUT, killSignal: 'SIGKILL' });
     return true;
   } catch (e) {
     console.error(`! ${script} 失敗: ${String(e.stderr || e.message).split('\n').filter(Boolean).slice(-3).join(' ')}`);

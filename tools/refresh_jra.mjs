@@ -15,8 +15,17 @@ const D = path.join(ROOT, 'data', 'jra');
 const now = new Date();
 const today = now.toLocaleDateString('sv-SE');
 const stamp = () => new Date().toLocaleString('ja-JP', { hour12: false }).replace(/\//g, '-');
+/* 子プロセスには必ず実行時間の上限を付ける（NK_STEP_TIMEOUT 分、既定 20）。
+   上限が無いと取得が通信待ちで固まったとき親も固まり、**launchd は前の実行が残っている間は次を起こさない**ので
+   以後ずっと動かなくなる（2026-09-28 に refresh_banei が9日20時間ハングして居座っていた）。 */
+/* **自分自身の見張り**：全体がこの時間を超えたら、道連れにせず自分を終わらせる（NK_JOB_TIMEOUT 分、既定 30）。
+   launchd の StartInterval は前の実行が残っている間は次を起こさないので、
+   1本ハングすると以後ずっと止まる。子プロセスの上限（STEP_TIMEOUT）で拾えない固まり方への保険。 */
+setTimeout(() => { console.error(`${new Date().toLocaleString('ja-JP', { hour12: false })} 時間切れで打ち切り（30分）`); process.exit(0); },
+  Number(process.env.NK_JOB_TIMEOUT || 30) * 60000).unref();
+const STEP_TIMEOUT = Number(process.env.NK_STEP_TIMEOUT || 20) * 60000;
 const run = (script, env = {}) => {
-  try { execFileSync(process.execPath, ['--max-old-space-size=4000', path.join(ROOT, 'tools', script)], { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'], env: { ...process.env, ...env } }); return true; }
+  try { execFileSync(process.execPath, ['--max-old-space-size=4000', path.join(ROOT, 'tools', script)], { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'], env: { ...process.env, ...env }, timeout: STEP_TIMEOUT, killSignal: 'SIGKILL' }); return true; }
   catch (e) { console.error(`! ${script} 失敗: ${String(e.stderr || e.message).split('\n').filter(Boolean).slice(-3).join(' ')}`); return false; }
 };
 /* 長い取得が走っていたら何もしない */
