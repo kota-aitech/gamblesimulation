@@ -5,6 +5,14 @@ import path from 'node:path';
 import { ROOT, readJSON } from './lib/nk.mjs';
 import { inject } from './lib/embed.mjs';
 import { raceExtras } from './lib/nkresults.mjs';
+import { buildPicks } from './lib/picks.mjs';
+
+/* 全競技まとめ（picks.html）。どの反映係が来ても最後に作り直す（各競技の生成物を読むだけなので軽い） */
+function embedPicks() {
+  try { inject('picks.html', 'NKPICKS', 'NKPICKS', buildPicks(ROOT)); }
+  catch (e) { console.error('  (picks.html はスキップ: ' + e.message + ')'); }
+}
+process.on('exit', embedPicks);
 
 /* ボートレース版（boat.html）。tools/build_boat.mjs の today.json を NKBOAT に埋める。
    NK_EMBED_ONLY=boat なら南関側は触らずこれだけ行う（refresh_boat.mjs が使う） */

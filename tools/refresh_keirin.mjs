@@ -83,7 +83,7 @@ const secs = ((Date.now() - t0) / 1000).toFixed(0);
 if (process.env.NK_REFRESH_NOPUSH) { console.error(`${stamp()} 反映完了（${secs}秒・commit なし）`); process.exit(0); }
 
 const git = (args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
-const TARGETS = ['keirin.html', 'top.html', 'data/keirin/banks.json', 'data/keirin/races.json', 'data/keirin/top.json', 'data/keirin/index.json', 'data/keirin/model.json', 'data/keirin/backtest.json', 'data/keirin/preds.jsonl', 'data/keirin/results.json'];
+const TARGETS = ['keirin.html', 'top.html', 'picks.html', 'data/keirin/banks.json', 'data/keirin/races.json', 'data/keirin/top.json', 'data/keirin/index.json', 'data/keirin/model.json', 'data/keirin/backtest.json', 'data/keirin/preds.jsonl', 'data/keirin/results.json'];
 try {
   if (git(['rev-parse', '--abbrev-ref', 'HEAD']) !== 'main') { console.error(`${stamp()} main ではないので commit しない`); process.exit(0); }
   const files = TARGETS.filter(f => fs.existsSync(path.join(ROOT, f)));
