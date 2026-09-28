@@ -153,27 +153,75 @@ const jra = {
 };
 const SRC = { nankan, boat, jra }[SPORT];
 
-/* ---- git（Actions のトークンで押す。Mac 側はこのファイルを書かないので衝突しない）---- */
-const git = args => execFileSync('git', args, { cwd: OUT_ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
-let lastPush = 0;
+/* ---- git（Actions のトークンで押す。Mac 側はこのファイルを書かないので衝突しない）----
+
+   **3競技が同じ枝（odds-cloud）へ同時に押すので、ほぼ毎回 rebase が要る。**
+   2026-09-27 に、その rebase が `fatal: empty ident name` で失敗し続けた。
+   commit には `-c user.name` を渡していたが **rebase にも識別子が要る**のを見落としていた。
+   しかも一度こけると `.git/rebase-merge` が残り、以後の commit が全部失敗して
+   「push 失敗（空のメッセージ）」が延々と出る＝**拾ったオッズが1件も保存されない**。
+   実際に 9/27 のボートは12時〜16時のぶんが丸ごと失われた。
+   対策：識別子は最初に一度 config に書き込む／失敗したら rebase を中断して畳み直す／原因を必ず表に出す。 */
+const gitRaw = (args, opts = {}) => execFileSync('git', args, { cwd: OUT_ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], ...opts });
+const git = args => gitRaw(args).trim();
+/* 失敗の中身を必ず読めるようにする（stderr が空のことがあるので stdout も見る） */
+const errText = e => [e.stderr, e.stdout, e.message].map(x => String(x || '').trim()).filter(Boolean).join(' / ').split('\n').filter(Boolean).slice(-3).join(' ') || '（出力なし）';
+if (PUSH) {
+  try {
+    git(['config', 'user.name', 'odds-bot']);
+    git(['config', 'user.email', 'odds-bot@users.noreply.github.com']);
+    git(['config', 'rebase.autoStash', 'true']);
+  } catch (e) { log(`git の設定に失敗: ${errText(e)}`); }
+}
+/* 途中で止まった rebase / merge を畳む。残っていると以後の commit が全部失敗する */
+const unstick = () => {
+  for (const a of [['rebase', '--abort'], ['merge', '--abort'], ['cherry-pick', '--abort']]) {
+    try { gitRaw(a); } catch { /* 進行中でなければ失敗して当然 */ }
+  }
+};
+let lastPush = 0, failStreak = 0;
 function publish(force) {
   if (!PUSH || !dirty) return;
   if (!force && Date.now() - lastPush < Number(process.env.CO_PUSH_EVERY || 3) * 60000) return;
   try {
-    git(['add', `data/odds_cloud/${SPORT}`]);
+    unstick();
+    git(['add', '--', `data/odds_cloud/${SPORT}`]);
     if (!git(['status', '--porcelain', '--', `data/odds_cloud/${SPORT}`])) { dirty = false; return; }
-    git(['-c', 'user.name=odds-bot', '-c', 'user.email=odds-bot@users.noreply.github.com', 'commit', '-q', '-m', `chore(odds): ${SPORT} 締切前オッズ ${new Date().toLocaleString('ja-JP', { hour12: false })}`]);
-    for (let i = 0; ; i++) {
-      try { git(['push', 'origin', `HEAD:${BRANCH}`]); break; }
+    git(['commit', '-q', '-m', `chore(odds): ${SPORT} 締切前オッズ ${new Date().toLocaleString('ja-JP', { hour12: false })}`, '--', `data/odds_cloud/${SPORT}`]);
+    let pushed = false;
+    for (let i = 0; i < 5 && !pushed; i++) {
+      try { git(['push', 'origin', `HEAD:${BRANCH}`]); pushed = true; }
       catch (e) {
-        if (i >= 3) throw e;
-        git(['fetch', '-q', 'origin', BRANCH]);
-        git(['rebase', '-q', `origin/${BRANCH}`]);
+        if (i === 4) throw e;
+        /* 他の競技が先に押していたら、取り直して自分のコミットを載せ替える */
+        try { git(['fetch', '-q', 'origin', BRANCH]); git(['rebase', '-q', `origin/${BRANCH}`]); }
+        catch (e2) { unstick(); log(`rebase をやり直す: ${errText(e2)}`); Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 3000); }
       }
     }
-    dirty = false; lastPush = Date.now();
+    dirty = false; lastPush = Date.now(); failStreak = 0;
     log('push 完了');
-  } catch (e) { log(`push 失敗: ${String(e.stderr || e.message).split('\n').slice(-2).join(' ')}`); }
+  } catch (e) {
+    failStreak++;
+    log(`push 失敗（${failStreak}回目）: ${errText(e)}`);
+    unstick();
+    /* 続けて失敗するなら枝を取り直してやり直す（手元の記録は残したまま載せ替える） */
+    if (failStreak >= 3) {
+      try {
+        const keep = fs.readdirSync(path.join(OUT_ROOT, 'data/odds_cloud', SPORT)).map(f => [f, fs.readFileSync(path.join(OUT_ROOT, 'data/odds_cloud', SPORT, f))]);
+        git(['fetch', '-q', 'origin', BRANCH]);
+        git(['reset', '-q', '--hard', `origin/${BRANCH}`]);
+        for (const [f, buf] of keep) {                    // 取り直した枝の上に、手元の記録を足し直す
+          const q = path.join(OUT_ROOT, 'data/odds_cloud', SPORT, f);
+          if (!f.endsWith('.jsonl')) { fs.writeFileSync(q, buf); continue; }
+          const have = new Set((fs.existsSync(q) ? fs.readFileSync(q, 'utf8') : '').split('\n').filter(Boolean));
+          const add = String(buf).split('\n').filter(Boolean).filter(l => !have.has(l));
+          if (add.length) fs.appendFileSync(q, add.join('\n') + '\n');
+        }
+        failStreak = 0; dirty = true;
+        log('枝を取り直して記録を載せ直した');
+      } catch (e2) { log(`取り直しにも失敗: ${errText(e2)}`); }
+    }
+  }
 }
 
 /* ---- 見回り ---- */

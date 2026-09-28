@@ -43,6 +43,14 @@ jobs:
           path: cloud
       - uses: actions/setup-node@v4
         with: { node-version: '22' }
+      - name: git の識別子（rebase に要る）
+        # commit だけでなく **rebase も識別子を要求する**。無いと
+        # `fatal: empty ident name` で落ち、以後 .git/rebase-merge が残って全部失敗する（2026-09-27 に発生）
+        working-directory: cloud
+        run: |
+          git config user.name  'odds-bot'
+          git config user.email 'odds-bot@users.noreply.github.com'
+          git config rebase.autoStash true
       - name: オッズを拾う
         env:
           CO_OUT_ROOT: ${{ github.workspace }}/cloud
