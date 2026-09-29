@@ -1,7 +1,7 @@
 {
  "track": "大井",
  "meta": {
-  "builtAt": "2026-09-29T06:36:35.380Z",
+  "builtAt": "2026-09-29T06:44:48.389Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -54,11 +54,11 @@
     },
     "ev_sanpuku": {
      "races": 117,
-     "cost": 61300,
+     "cost": 61400,
      "ret": 35810,
      "hits": 7,
-     "pts": 613,
-     "roi": 0.5842,
+     "pts": 614,
+     "roi": 0.5832,
      "hitRate": 0.0598,
      "avgPts": 5.2
     },
@@ -709,13 +709,13 @@
       },
       "ev_sanpuku": {
        "races": 11,
-       "cost": 4200,
+       "cost": 4300,
        "ret": 0,
        "hits": 0,
-       "pts": 42,
+       "pts": 43,
        "roi": 0,
        "hitRate": 0,
-       "avgPts": 3.8
+       "avgPts": 3.9
       },
       "box3_umaren": {
        "races": 12,
@@ -19506,7 +19506,7 @@
      "umaren": 1.09,
      "sanpuku": 1.39
     },
-    "conf": 0.123,
+    "conf": 0.124,
     "oddsSrc": "暫定(発走79分前)",
     "hit": {
      "win": true,
@@ -19527,8 +19527,8 @@
       ]
      },
      "sanpuku": {
-      "pts": 10,
-      "cost": 1000,
+      "pts": 11,
+      "cost": 1100,
       "ret": 0,
       "hit": false,
       "buy": [
@@ -19541,7 +19541,8 @@
        "4-9-10",
        "3-4-6",
        "3-4-7",
-       "4-5-8"
+       "4-5-8",
+       "3-4-9"
       ]
      },
      "box3": {
@@ -39351,7 +39352,7 @@
     "jockey": "御神本訓史",
     "trainer": "須田和",
     "mark": "◎",
-    "win": 0.267,
+    "win": 0.266,
     "odds": 2.3,
     "pop": 1,
     "pos": 1,
@@ -39477,7 +39478,7 @@
     "jockey": "笹川翼",
     "trainer": "上杉昌",
     "mark": "○",
-    "win": 0.238,
+    "win": 0.239,
     "odds": 4.3,
     "pop": 2,
     "pos": null,
