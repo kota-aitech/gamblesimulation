@@ -1,6 +1,6 @@
 {
  "track": "船橋",
- "builtAt": "2026-09-28T22:02:26.139Z",
+ "builtAt": "2026-09-29T21:31:58.126Z",
  "source": "nankankeiba.com 出馬表の前5走欄＋レース傾向",
  "trendRef": {
   "1000": {
@@ -281,24 +281,17 @@
   }
  },
  "calib": {
-  "frontMid": 0.688,
-  "meetMid": 0.742,
-  "frontSd": 0.103,
+  "frontMid": 0.689,
+  "meetMid": 0.744,
+  "frontSd": 0.102,
   "gateMid": 0.28,
   "gateSd": 0.087
  },
  "meet": {
   "track": "船橋",
   "source": "nankankeiba.com レース傾向（3着内回数ベスト3枠 / 1〜3着馬の3角位置）",
-  "name": "7/2(木)〜9/28(月) の14日",
+  "name": "7/3(金)〜9/29(火) の14日",
   "days": [
-   {
-    "d": "7/2(木)",
-    "front": 25,
-    "back": 11,
-    "best": [],
-    "partial": "12レース終了時"
-   },
    {
     "d": "7/3(金)",
     "front": 24,
@@ -387,6 +380,13 @@
     "d": "9/28(月)",
     "front": 30,
     "back": 6,
+    "best": [],
+    "partial": "12レース終了時"
+   },
+   {
+    "d": "9/29(火)",
+    "front": 26,
+    "back": 10,
     "best": [],
     "partial": "12レース終了時"
    }
