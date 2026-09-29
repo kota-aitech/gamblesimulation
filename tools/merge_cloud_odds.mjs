@@ -81,8 +81,17 @@ for (const [sport, rows] of Object.entries(add)) {
 if (!wrote.length) process.exit(0);
 console.error(`${stamp()} クラウドのオッズを取り込み: ${wrote.join('／')}`);
 if (process.env.NK_MERGE_NOCOMMIT) process.exit(0);
-try {
-  git(['add', ...Object.values(OUT).filter(f => fs.existsSync(path.join(ROOT, f)))]);
-  const paths = Object.values(OUT).filter(f => fs.existsSync(path.join(ROOT, f)));
-  if (git(['status', '--porcelain', '--', ...paths]).trim()) git(['commit', '-q', '-m', `chore(odds): クラウドの締切前オッズを取り込み（${wrote.join('／')}）`, '--', ...paths]);
-} catch (e) { console.error(`  ! commit 失敗: ${String(e.stderr || e.message).split('\n').slice(-1)}`); }
+/* 反映係（南関・ボート・中央・ばんえい・競輪）も同じリポジトリに commit するので、git の索引のロック（index.lock）とぶつかることがある。
+   ぶつかったら少し待って1回だけやり直す。失敗の中身は空行を除いて必ず出す（2026-09-29 に中身の無い「commit 失敗」が出た） */
+const paths = Object.values(OUT).filter(f => fs.existsSync(path.join(ROOT, f)));
+const errText = e => [e.stderr, e.stdout, e.message].map(x => String(x || '').trim()).filter(Boolean).join(' / ').split('\n').filter(Boolean).slice(-2).join(' ') || '（出力なし）';
+for (let i = 0; i < 2; i++) {
+  try {
+    git(['add', '--', ...paths]);
+    if (git(['status', '--porcelain', '--', ...paths]).trim()) git(['commit', '-q', '-m', `chore(odds): クラウドの締切前オッズを取り込み（${wrote.join('／')}）`, '--', ...paths]);
+    break;
+  } catch (e) {
+    console.error(`  ! commit 失敗（${i + 1}回目）: ${errText(e)}`);
+    if (i === 0) Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 5000);
+  }
+}
