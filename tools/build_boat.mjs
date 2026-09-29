@@ -287,6 +287,8 @@ function buildRace(date, jcd, prog, live, venueWeather) {
     })),
     pre: stripTri(pre), ex: ex ? stripTri(ex) : null,
     marks, tri, trio, ex2: ex2.slice(0, 6), ai, best, grade: gradeOf(best?.ev ?? null, GT0),
+    /* 自信度＝1−正規化エントロピー（他の競技と同じ定義。1艇に確率が集まっているほど大きい）と、本命の1着確率 */
+    conf: round(1 - (-use.p1.reduce((a, p) => a + (p > 0 ? p * Math.log(p) : 0), 0)) / Math.log(use.p1.length), 3), pTop: round(Math.max(...use.p1), 3),
     odds: odds ? { win: odds.win, place: odds.place, at: odds.at, left: odds.left, kind: odds.kind } : null,
     points: pts,
   };
@@ -695,7 +697,7 @@ const top = {
           phase: r.stage?.phase || null, lastPrelim: !!r.stage?.lastPrelim, shobu: r.boats.filter(b => b.shobu?.label === '勝負駆け').map(b => b.lane),
           top: ord.map(([p, i]) => ({ lane: r.boats[i].lane, name: r.boats[i].name, grade: r.boats[i].grade, p: round(p, 3), o: r.odds?.win?.[r.boats[i].lane] ?? null })),
           tri: r.tri[0] ? { k: r.tri[0].k, p: r.tri[0].p, o: r.tri[0].o, ev: r.tri[0].ev } : null,
-          grade: r.grade || null, best: r.best || null,
+          grade: r.grade || null, best: r.best || null, conf: r.conf ?? null,
           box3: ord.map(([, i]) => r.boats[i].lane).sort().join('-'),
           ai: { tri3: r.ai.tri3, ex3: r.ai.ex3, cum3: r.ai.triCum[0], ev: r.ai.ev.map(x => x.k) },
         };
