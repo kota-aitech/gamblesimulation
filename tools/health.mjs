@@ -28,6 +28,7 @@ const JOBS = [
   ['com.jra.refresh', 1200, ['data/jra/refresh.log', 'data/jra/.refresh-stamp'], '中央の取得と反映'],
   ['com.banei.refresh', 900, ['data/banei/refresh.log', 'data/banei/.refresh-stamp'], 'ばんえいの取得と反映'],
   ['com.keirin.refresh', 600, ['data/keirin/refresh.log', 'data/keirin/.refresh-stamp'], '競輪の取得と反映'],
+  ['com.keirin.backfill', 300, ['data/keirin/backfill.log', 'data/keirin/fetch.log'], '競輪の過去データの取り込み（遡り）'],
   ['com.nankan.publish', 900, ['data/publish.log'], '公開（GitHub へ push）'],
 ];
 const listed = sh('launchctl', ['list']);
@@ -35,7 +36,9 @@ const now = Date.now();
 console.log(`点検 ${new Date().toLocaleString('ja-JP', { hour12: false })}\n`);
 console.log('ジョブ                     状態      前回の書き込み   間隔   中身');
 for (const [label, sec, rels, name] of JOBS) {
-  const line = listed.split('\n').find(l => l.endsWith('\t' + label) || l.split('\t')[2] === label);
+  let line = listed.split('\n').find(l => l.endsWith('\t' + label) || l.split('\t')[2] === label);
+  /* LaunchDaemon（install_daemons.sh で入れた、ログイン不要の常駐）は launchctl list に出ないので system ドメインを見る */
+  if (!line) { const p = sh('launchctl', ['print', `system/${label}`]); if (p) { const m = p.match(/last exit code = (\d+)/); line = `-\t${m ? m[1] : '0'}\t${label}`; } }
   const exit = line ? line.split('\t')[1] : null;
   let m = null;
   for (const rel of rels) { const f = path.join(ROOT, rel); if (fs.existsSync(f)) { const t = fs.statSync(f).mtimeMs; if (m == null || t > m) m = t; } }

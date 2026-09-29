@@ -13,6 +13,10 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { ROOT } from './lib/nk.mjs';
 
+/* 子プロセスの上限は、最初に子プロセスを呼ぶ（開催中の結果の取得）より前に決めておく。
+   2026-09-28 に下で定義したまま上で使っていて、「Cannot access 'STEP_TIMEOUT' before initialization」で
+   開催中の結果・払戻の取得が毎回失敗していた（9/29 に修正） */
+const STEP_TIMEOUT = Number(process.env.NK_STEP_TIMEOUT || 20) * 60000;
 const STAMP = path.join(ROOT, 'data', 'nankan', '.refresh-stamp');
 const watch = ['odds_pre.json', 'odds_live.jsonl'].map(f => path.join(ROOT, 'data/nankan', f));
 const sig = watch.map(f => { try { const s = fs.statSync(f); return `${f}:${s.mtimeMs}:${s.size}`; } catch { return f + ':-'; } }).join('|');
@@ -42,7 +46,6 @@ if (sig === prev && !resultsChanged && !process.env.NK_REFRESH_FORCE) { process.
    1本ハングすると以後ずっと止まる。子プロセスの上限（STEP_TIMEOUT）で拾えない固まり方への保険。 */
 setTimeout(() => { console.error(`${new Date().toLocaleString('ja-JP', { hour12: false })} 時間切れで打ち切り（25分）`); process.exit(0); },
   Number(process.env.NK_JOB_TIMEOUT || 25) * 60000).unref();
-const STEP_TIMEOUT = Number(process.env.NK_STEP_TIMEOUT || 20) * 60000;
 function run2(script, env) {
   try { execFileSync(process.execPath, [path.join(ROOT, 'tools', script)], { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'], env: { ...process.env, ...env }, timeout: STEP_TIMEOUT, killSignal: 'SIGKILL' }); return true; }
   catch (e) { console.error(`! ${script} 失敗: ${String(e.stderr || e.message).split('\n').slice(-3).join(' ')}`); return false; }

@@ -72,6 +72,19 @@ Mac が毎晩その時刻に寝ていると、窓を逃し続けて**穴が永�
   含水率の取得も**早期終了より前**に移した（後ろにあると「変化なしなら6時間に1回」で飛ばされ、開催日の値を取り逃す）
 - 取得済みのレースは各 fetch が飛ばすので、範囲を広げても通信量は増えない
 
+**ログインしていなくても取得を続ける（2026-09-29 に追加）。**
+install.sh で入れるのは LaunchAgent で、**ログインしている間しか動かない**（ログアウト・再起動後の未ログインで全部止まる）。
+`sudo sh tools/launchd/install_daemons.sh on` で、取得・反映の9本を **LaunchDaemon（ログイン不要）** に入れ直し、nosleep も一緒に入れる。
+ジョブは root ではなく本人のユーザーで動く（plist に UserName・HOME を足す）。**公開 com.nankan.publish だけは LaunchAgent のまま**
+（GitHub の認証がログイン中のキーチェーンにあるため。ログアウト中の commit は次のログインでまとめて push）。戻すのは `off`。
+点検（health.mjs）は LaunchDaemon も `launchctl print system/<label>` で見る。
+競輪の遡りの取り込みも `com.keirin.backfill`（tools/keirin_backfill.mjs、5分おき・1回最大25分）にした。シェルから nohup で回していた頃は
+ログアウトで止まった。最古の日から KR_BACKFILL_FROM（既定 20240101）へ、取得済みを飛ばしながら続きから進む。
+
+**定数は最初の使用より前に定義する（2026-09-29）。** refresh.mjs で STEP_TIMEOUT を下で定義したまま上で使っていて、
+「Cannot access 'STEP_TIMEOUT' before initialization」で**開催中の結果・払戻の取得が毎回失敗**していた（9/28 夜〜9/29 昼）。
+時間の打ち切りを足すときは、最初の子プロセス呼び出しより上に置くこと。
+
 **ジョブは必ず時間で打ち切る（2026-09-28 に追加）。**
 `launchd` の `StartInterval` は**前の実行が残っている間は次を起こさない**。だから1本ハングすると以後ずっと止まる。
 実際に `refresh_banei` が **9日20時間ハングして居座り**、9/18〜9/28 の ばんえいの取得と予想の記録が丸ごと欠けた

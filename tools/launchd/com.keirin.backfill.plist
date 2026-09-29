@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  競輪の過去データの取り込み（tools/keirin_backfill.mjs）。5分おき、1回最大25分。最古の日から 2024-01-01 へ遡る。反映係とは .pause で譲り合う。
+  取り込み済みは飛ばすので、切れても次の回が続きから進む。
+  導入は tools/launchd/install.sh。ログ: __REPO__/data/keirin/backfill.log
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.keirin.backfill</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__NODE__</string>
+    <string>__REPO__/tools/keirin_backfill.mjs</string>
+  </array>
+  <key>WorkingDirectory</key><string>__REPO__</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key><string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin</string>
+    <key>KR_WAIT</key><string>1500</string>
+  </dict>
+  <key>StartInterval</key><integer>300</integer>
+  <key>StandardOutPath</key><string>__REPO__/data/keirin/backfill.log</string>
+  <key>StandardErrorPath</key><string>__REPO__/data/keirin/backfill.log</string>
+  <key>RunAtLoad</key><false/>
+</dict>
+</plist>
