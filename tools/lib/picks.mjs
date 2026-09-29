@@ -4,7 +4,7 @@
      期待値 ev … モデルの確率×オッズが最も高い買い目の値（1.00 が損得なし）。券種は競技で違う：
                  南関＝馬連・三連複（lib/bets.mjs の既存の計算）、ボート・競輪＝3連単、中央・ばんえい＝単勝。
                  極端な低確率の組で決まらないよう、確率1%未満（単勝は3%未満）・オッズ300倍超（単勝は100倍超）は除く
-     自信度 conf … 本命の1着確率
+     自信度 conf … 各競技の自信度（1−正規化エントロピー。1着の確率が1頭・1艇・1車に集まっているほど大きい）。本命の1着確率は fav.p
      段位 grade … 各競技の予想生成が付けた段位をそのまま使う（南関と同じ作り：過去の分布で決めた閾値。lib/grade.mjs）。
                  南関＝racepick.json、競輪・中央・ばんえい＝検証期間の確定オッズ（data/<競技>/grade.json）、ボート＝締切時の記録の積み上げ。
                  券種で期待値の水準が違うので閾値は競技ごと。付いていない競技だけ、その日の相対順位で代用する */
@@ -29,7 +29,7 @@ export function buildPicks(ROOT) {
       const best = r.ev ? ((r.ev.sanpuku ?? 0) > (r.ev.umaren ?? 0) ? (bs && { kind: '三連複', k: bs.c.join('-'), p: bs.p, o: bs.odds, ev: bs.ev }) : (bu && { kind: '馬連', k: bu.c.join('-'), p: bu.p, o: bu.odds, ev: bu.ev })) : null;
       const f = r.top?.[0];
       rows.push({ sport: 'nankan', venue: t.track, r: r.r, date: ymd(r.date), close: minus(r.time, 1), post: r.time, cls: r.cls, n: r.n,
-        grade: r.grade || null, ev: r3(ev), best, conf: r3(r.pTop ?? f?.win), fav: f ? { no: f.no, name: f.name, p: r3(f.win) } : null,
+        grade: r.grade || null, ev: r3(ev), best, conf: r3(r.conf ?? null), fav: f ? { no: f.no, name: f.name, p: r3(f.win) } : null,
         market: /締切前|最終|暫定/.test(r.oddsSrc || '') ? r.oddsSrc : r.oddsSrc || null, url: `race.html?track=${key}&day=${encodeURIComponent(dayKey)}&r=${r.r}` });
     }
     sports.nankan = { label: '南関東競馬', gradeBy: '検証で決めた馬連の期待値の閾値（上位1割 S／1/4 A／半分 B）', bt: NK.backtest || null };
@@ -41,7 +41,7 @@ export function buildPicks(ROOT) {
     for (const d of JR.days || []) for (const v of d.venues || []) for (const r of v.races || []) {
       const best = r.best || winBest(r.top), f = r.top?.[0];
       rows.push({ sport: 'jra', grade: r.rank || null, venue: v.venue, r: r.r, date: ymd(d.date), close: r.start, post: r.start, cls: [r.grade, r.cls].filter(Boolean).join(' ') || r.name, n: r.n,
-        ev: best?.ev ?? null, best, conf: r3(f?.p), fav: f ? { no: f.no, name: f.name, p: r3(f.p) } : null, market: r.level === 'mix' || r.level === 'joint' ? '単勝オッズ' : null,
+        ev: best?.ev ?? null, best, conf: r3(r.conf ?? null), fav: f ? { no: f.no, name: f.name, p: r3(f.p) } : null, market: r.level === 'mix' || r.level === 'joint' ? '単勝オッズ' : null,
         url: `jra.html?date=${d.date}&venue=${encodeURIComponent(v.venue)}&r=${r.r}` });
     }
     sports.jra = { label: '中央競馬', gradeBy: '単勝の期待値の相対順位', bt: JR.backtest?.table ? { '◎単勝': JR.backtest.table['◎単勝'], '3頭BOX三連複': JR.backtest.table['3頭BOX三連複'] } : null };
@@ -51,7 +51,7 @@ export function buildPicks(ROOT) {
     for (const d of BN.days || []) for (const r of d.races || []) {
       const best = r.best || winBest(r.top), f = r.top?.[0];
       rows.push({ sport: 'banei', grade: r.rank || null, venue: '帯広', r: r.r, date: ymd(d.date), close: r.start, post: r.start, cls: r.name, n: r.n,
-        ev: best?.ev ?? null, best, conf: r3(f?.p), fav: f ? { no: f.no, name: f.name, p: r3(f.p) } : null, market: r.level === 'joint' ? '単勝オッズ' : null,
+        ev: best?.ev ?? null, best, conf: r3(r.conf ?? null), fav: f ? { no: f.no, name: f.name, p: r3(f.p) } : null, market: r.level === 'joint' ? '単勝オッズ' : null,
         url: `banei.html?date=${d.date}&r=${r.r}` });
     }
     sports.banei = { label: 'ばんえい', gradeBy: '単勝の期待値の相対順位', bt: BN.backtest?.table ? { '◎単勝': BN.backtest.table['◎単勝'], '3頭BOX三連複': BN.backtest.table['3頭BOX三連複'] } : null };
@@ -66,7 +66,7 @@ export function buildPicks(ROOT) {
       if (!best) for (const t of r.tri || []) { if (!(t.p >= LIM.p) || !(t.o > 0) || t.o > LIM.o) continue; const ev = t.p * t.o; if (!best || ev > best.ev) best = { kind: '3連単', k: t.k, p: t.p, o: t.o, ev: r3(ev) }; }
       const tp = topOf.get(`${d.date}|${v.jcd}|${r.r}`), f = tp?.top?.[0];
       rows.push({ sport: 'boat', grade: r.grade || null, venue: v.name, r: r.r, date: ymd(d.date), close: r.close, post: r.close, cls: r.cls || '', n: 6,
-        ev: best?.ev ?? null, best, conf: r3(f?.p), fav: f ? { no: f.lane, name: f.name, p: r3(f.p) } : null, market: r.odds?.kind === 'snap' ? '締切前オッズ' : r.odds ? '暫定オッズ' : null,
+        ev: best?.ev ?? null, best, conf: r3(r.conf ?? null), fav: f ? { no: f.lane, name: f.name, p: r3(f.p) } : null, market: !best ? null : r.odds?.kind === 'snap' ? '締切前オッズ' : '暫定オッズ',   // 3連単のオッズが無いと期待値を計算できない（オッズ前と同じ扱い）
         res: r.result?.order ? r.result.order.slice(0, 3) : null, url: `boat.html?date=${d.date}&jcd=${v.jcd}&r=${r.r}` });
     }
     sports.boat = { label: 'ボートレース', gradeBy: '3連単の期待値の相対順位', bt: BTT?.backtest?.table ? { '◎単勝': BTT.backtest.table['◎単勝'], '3艇BOX3連複': BTT.backtest.table['3艇BOX3連複'] } : null };
@@ -79,7 +79,7 @@ export function buildPicks(ROOT) {
       if (!best) for (const t of [...(r.e3 || []), ...(r.ev || [])]) { if (!(t.p >= LIM.p) || !(t.o > 0) || t.o > LIM.o) continue; const ev = t.p * t.o; if (!best || ev > best.ev) best = { kind: '3連単', k: t.k, p: t.p, o: t.o, ev: r3(ev) }; }
       const f = r.riders.slice().sort((a, b) => b.p1 - a.p1)[0];
       rows.push({ sport: 'keirin', grade: r.grade || null, venue: v.venue, r: r.r, date: d.date, close: r.close, post: r.post, cls: r.kind, n: r.n,
-        ev: best?.ev ?? null, best, conf: r3(f?.p1), fav: f ? { no: f.no, name: f.name, p: r3(f.p1) } : null, market: r.level === 'joint' ? (r.oddsConfirmed ? '確定オッズ' : '3連単オッズ') : null,
+        ev: best?.ev ?? null, best, conf: r3(r.conf ?? null), fav: f ? { no: f.no, name: f.name, p: r3(f.p1) } : null, market: r.level === 'joint' ? (r.oddsConfirmed ? '確定オッズ' : '3連単オッズ') : null,
         res: r.result ? r.result.order.map(o => o[1]) : null, url: `keirin.html?date=${d.date}&v=${v.slug}&r=${r.r}` });
     }
     sports.keirin = { label: '競輪', gradeBy: '3連単の期待値の相対順位', bt: KR.meta?.backtest?.table ? { '3車BOX 3連複': KR.meta.backtest.table['3車BOX 3連複'], 'AI 2車単 上位3点': KR.meta.backtest.table['AI 2車単 上位3点'] } : null };
