@@ -11,7 +11,7 @@ import path from 'node:path';
 import { ROOT, writeJSON, VENUES, regionOf } from './lib/kr.mjs';
 import { loadRaces, raceOf, lineInfo, mktFor, BANKS, bankCls } from './lib/krfeat.mjs';
 
-const races = loadRaces(fs.readFileSync(path.join(ROOT, 'data/keirin/races.jsonl'), 'utf8'), { pay: true }, l => /"result":\{/.test(l));
+const races = loadRaces('data/keirin/races.jsonl', { pay: true }, l => /"result":\{/.test(l));
 const r3 = v => v == null || !Number.isFinite(v) ? null : +v.toFixed(3);
 const KIM = ['逃', '捲', '差', 'マ'];
 const kimOf = k => KIM.findIndex(x => String(k || '').includes(x));

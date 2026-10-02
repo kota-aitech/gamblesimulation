@@ -3,7 +3,7 @@
      KR_REC_DAYS … 何日ぶんを載せるか（既定 60） */
 import fs from 'node:fs';
 import path from 'node:path';
-import { ROOT, writeJSON } from './lib/kr.mjs';
+import { ROOT, writeJSON, eachLine } from './lib/kr.mjs';
 import { BETS, settle } from './lib/krsettle.mjs';
 import { liveGradeBook } from './lib/grade.mjs';
 const LG = liveGradeBook();
@@ -16,11 +16,11 @@ for (const l of fs.readFileSync(PREDS, 'utf8').split('\n')) if (l) { try { const
 const dates = [...new Set([...preds.values()].map(o => o.date))].sort().slice(-DAYS);
 const want = new Set(dates);
 const K = new Map();
-for (const line of fs.readFileSync(path.join(ROOT, 'data/keirin/races.jsonl'), 'utf8').split('\n')) {
+eachLine('data/keirin/races.jsonl', line => {
   const m = line.match(/^\{"raceId":"(\d{16})","date":"(\d{8})"/);
-  if (!m || !preds.has(m[1]) || !want.has(m[2]) || !/"result":\{/.test(line)) continue;
+  if (!m || !preds.has(m[1]) || !want.has(m[2]) || !/"result":\{/.test(line)) return;
   const o = JSON.parse(line); K.set(o.raceId, { result: o.result, pay: o.pay, venue: o.venue });
-}
+});
 const mk = () => ({ races: 0, hit1: 0, in3: 0, bets: Object.fromEntries(BETS.map(b => [b, { n: 0, hit: 0, bet: 0, ret: 0 }])) });
 const merge = (A, S) => { A.races++; A.hit1 += S.hit1; A.in3 += S.in3; for (const [b, x] of Object.entries(S.bets)) { const o = A.bets[b]; if (!o) continue; o.n++; o.hit += x.hit; o.bet += x.bet; o.ret += x.ret; } };
 const fin = S => ({ races: S.races, hit1: S.races ? +(S.hit1 / S.races).toFixed(3) : null, in3: S.races ? +(S.in3 / S.races).toFixed(3) : null,

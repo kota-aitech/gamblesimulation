@@ -10,7 +10,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync, execSync } from 'node:child_process';
-import { ROOT, ymdOf, addDays, PAUSE } from './lib/kr.mjs';
+import { ROOT, ymdOf, addDays, PAUSE, eachLine } from './lib/kr.mjs';
 
 const D = path.join(ROOT, 'data', 'keirin');
 const now = new Date();
@@ -50,7 +50,7 @@ if (liveHours || !prev.cardsAt || Date.now() - prev.cardsAt > 3600000) {
 /* 2) 取りこぼしを埋める＋集計：1日1回（持っている最後の結果の日から） */
 if (prev.fillDay !== today && (hour >= 1 || !prev.fillAt || Date.now() - prev.fillAt > 86400000)) {
   let last = null;
-  if (fs.existsSync(rf)) for (const l of fs.readFileSync(rf, 'utf8').split('\n')) { if (!/"result":\{/.test(l)) continue; const m = l.match(/"date":"(\d{8})"/); if (m && (!last || m[1] > last)) last = m[1]; }
+  eachLine(rf, l => { if (!/"result":\{/.test(l)) return; const m = l.match(/"date":"(\d{8})"/); if (m && (!last || m[1] > last)) last = m[1]; });
   const from = last ? (last < addDays(today, -14) ? addDays(today, -14) : addDays(last, -1)) : addDays(today, -7);
   if (run('keirin_fetch.mjs', { KR_FROM: from, KR_TO: addDays(today, -1) })) { prev.fillDay = today; prev.fillAt = Date.now(); run('keirin_build_db.mjs', {}, 6000); run('keirin_build_venues.mjs', {}, 6000); run('build_guides.mjs', {}, 4000); changed = true; }
 }

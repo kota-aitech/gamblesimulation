@@ -8,7 +8,7 @@
    「前回の取得から KR_STALE 分（既定30）」たっていれば取り直す。 */
 import fs from 'node:fs';
 import path from 'node:path';
-import { ROOT, get, freshTtl, ymdOf, addDays, dayUrl, raceUrl, upsertJsonl, stats, dateRange } from './lib/kr.mjs';
+import { ROOT, get, freshTtl, ymdOf, addDays, dayUrl, raceUrl, upsertJsonl, stats, dateRange, eachLine } from './lib/kr.mjs';
 import { parseDay, parseRace } from './lib/krpage.mjs';
 
 const TODAY = ymdOf(new Date());
@@ -23,11 +23,11 @@ const REL = 'data/keirin/races.jsonl';
 const done = new Set(), pending = new Map(), closeOf = new Map();
 {
   const f = path.join(ROOT, REL);
-  if (fs.existsSync(f)) for (const l of fs.readFileSync(f, 'utf8').split('\n')) {
-    const m = l.match(/^\{"raceId":"(\d{16})"/); if (!m) continue;
+  eachLine(f, l => {
+    const m = l.match(/^\{"raceId":"(\d{16})"/); if (!m) return;
     if (/"result":\{/.test(l)) done.add(m[1]);
     else { pending.set(m[1], Number((l.match(/"fetchedAt":(\d+)/) || [])[1] || 0)); const c = l.match(/"date":"(\d{8})"[\s\S]*?"close":"(\d{1,2}:\d{2})"/); if (c) closeOf.set(m[1], new Date(`${c[1].slice(0, 4)}-${c[1].slice(4, 6)}-${c[1].slice(6, 8)}T${c[2].padStart(5, '0')}:00`).getTime()); }
-  }
+  });
 }
 console.error(`${FROM}〜${TO}${DESC ? '（新しい順）' : ''} 取得済み 結果あり ${done.size}R／結果なし ${pending.size}R`);
 const buf = [];

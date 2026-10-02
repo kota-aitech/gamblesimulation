@@ -20,7 +20,7 @@ const DROP = new Set((process.env.KR_FIT_DROP || '').split(',').map(s => s.trim(
 const DROPI = [...DROP].map(k => FEATURES.indexOf(k)).filter(i => i >= 0);
 
 console.error('レースを読む…');
-const races = loadRaces(fs.readFileSync(path.join(ROOT, 'data/keirin/races.jsonl'), 'utf8'), {}, l => /"result":\{/.test(l));
+const races = loadRaces('data/keirin/races.jsonl', {}, l => /"result":\{/.test(l));
 const first = races[0].date, last = races.at(-1).date;
 /* 既定の期間はデータの範囲から決める（取り込みを遡っている間も当て直せるように）：
    助走＝先頭の15%（14〜60日。自前の時点指標を積むだけ）、検証＝末尾の20%（10〜90日） */

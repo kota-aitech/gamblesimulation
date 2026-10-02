@@ -12,7 +12,7 @@
    学習（keirin_fit）も予測（keirin_build_races）も raceOf(r) で同じ形にしてから featurize する。 */
 import fs from 'node:fs';
 import path from 'node:path';
-import { ROOT, venueByName, regionOf } from './kr.mjs';
+import { ROOT, venueByName, regionOf, eachLine } from './kr.mjs';
 
 /* 全43場のバンクの形（keirin_fetch_banks.mjs が作る banks.json）。学習・検証・予想で同じ表を使う */
 export const BANKS = (() => { try { return JSON.parse(fs.readFileSync(path.join(ROOT, 'data/keirin/banks.json'), 'utf8')); } catch { return {}; } })();
@@ -118,9 +118,11 @@ export function slim(r, keep = {}) {
   if (!keep.text) { delete r.review; delete r.cond; delete r.reporter; for (const h of r.riders) delete h.comment; }
   return r;
 }
-export function loadRaces(text, keep = {}, filter) {
+/* src はファイルの場所（data/keirin/races.jsonl。1GB を超えるので1行ずつ読む）か、jsonl の文字列 */
+export function loadRaces(src, keep = {}, filter) {
   const out = [];
-  for (const l of text.split('\n')) { if (!l) continue; if (filter && !filter(l)) continue; let r; try { r = JSON.parse(l); } catch { continue; } if (!r.date || !r.riders?.length) continue; out.push(slim(r, keep)); }
+  const one = l => { if (filter && !filter(l)) return; let r; try { r = JSON.parse(l); } catch { return; } if (!r.date || !r.riders?.length) return; out.push(slim(r, keep)); };
+  if (/\.jsonl$/.test(src) && !src.includes('\n')) eachLine(src, one); else for (const l of String(src).split('\n')) if (l) one(l);
   out.sort((a, b) => a.date.localeCompare(b.date) || a.jcd.localeCompare(b.jcd) || a.r - b.r);
   return out;
 }

@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync, execSync } from 'node:child_process';
-import { ROOT, ymdOf, addDays } from './lib/kr.mjs';
+import { ROOT, ymdOf, addDays, eachLine } from './lib/kr.mjs';
 
 const FROM = process.env.KR_BACKFILL_FROM || '20240101';
 const MIN = Number(process.env.KR_BACKFILL_MINUTES || 25);
@@ -21,7 +21,7 @@ try {
 /* 持っている最も古い日（結果つき） */
 let oldest = null;
 const rf = path.join(ROOT, 'data/keirin/races.jsonl');
-if (fs.existsSync(rf)) for (const l of fs.readFileSync(rf, 'utf8').split('\n')) { const m = l.match(/"date":"(\d{8})"/); if (m && /"result":\{/.test(l) && (!oldest || m[1] < oldest)) oldest = m[1]; }
+eachLine(rf, l => { const m = l.match(/"date":"(\d{8})"/); if (m && /"result":\{/.test(l) && (!oldest || m[1] < oldest)) oldest = m[1]; });
 if (oldest && oldest <= FROM) { console.error(`${stamp()} ${FROM} まで取り込み済み（最古 ${oldest}）`); process.exit(0); }
 /* 途中で切れた日を取りこぼさないよう、最古の日の2日後から遡る */
 const to = oldest ? addDays(oldest, 2) : ymdOf(new Date());
@@ -36,5 +36,5 @@ try {
   if (e.signal !== 'SIGTERM') console.error(`${stamp()} ! ${String(e.stderr || e.message).split('\n').filter(Boolean).slice(-2).join(' ')}`);
 }
 let now = null;
-for (const l of fs.readFileSync(rf, 'utf8').split('\n')) { const m = l.match(/"date":"(\d{8})"/); if (m && /"result":\{/.test(l) && (!now || m[1] < now)) now = m[1]; }
+eachLine(rf, l => { const m = l.match(/"date":"(\d{8})"/); if (m && /"result":\{/.test(l) && (!now || m[1] < now)) now = m[1]; });
 console.error(`${stamp()} 最古の日 ${oldest} → ${now}`);

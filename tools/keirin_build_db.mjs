@@ -11,7 +11,7 @@ import path from 'node:path';
 import { ROOT, writeJSON, venueByName, ymdOf, addDays } from './lib/kr.mjs';
 import { loadRaces, raceOf, lineInfo, stageOf, mktFor, buildAsOf } from './lib/krfeat.mjs';
 
-const races = loadRaces(fs.readFileSync(path.join(ROOT, 'data/keirin/races.jsonl'), 'utf8'), { pay: true }, l => /"result":\{/.test(l));
+const races = loadRaces('data/keirin/races.jsonl', { pay: true }, l => /"result":\{/.test(l));
 console.error(`${races.length}R（${races[0]?.date}〜${races.at(-1)?.date}）`);
 const r3 = v => v == null ? null : +v.toFixed(3);
 const slotName = ['先頭', '番手', '3番手以降', '単騎'];

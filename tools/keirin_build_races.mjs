@@ -6,7 +6,7 @@
                              記録の仕組みができる前の実績を埋める用。オッズは確定値なので実戦よりやや有利。既に記録のあるレースは触らない */
 import fs from 'node:fs';
 import path from 'node:path';
-import { ROOT, readJSON, writeJSON, ymdOf, venueByName } from './lib/kr.mjs';
+import { ROOT, readJSON, writeJSON, ymdOf, venueByName, eachLine } from './lib/kr.mjs';
 import { FEATURES, NF, slim, buildAsOf, makeFeaturizer, stageCtx, combos, raceOf, lineInfo, TIP, bankCls, BANKS } from './lib/krfeat.mjs';
 import { utilities } from './lib/bpl.mjs';
 import { bestCombo, gradeOf, readGrade } from './lib/grade.mjs';
@@ -42,16 +42,14 @@ let INIT = null;
 if (!RECORD_FROM) try { INIT = readJSON('data/keirin/asof.json'); } catch { }
 const races = [];
 {
-  const text = fs.readFileSync(path.join(ROOT, 'data/keirin/races.jsonl'), 'utf8');
-  for (const l of text.split('\n')) {
-    if (!l) continue;
+  eachLine('data/keirin/races.jsonl', l => {   // 1GB を超えるので1行ずつ（lib/kr.mjs の eachLine）
     const d = (l.match(/"date":"(\d{8})"/) || [])[1];
-    if (INIT && d && d <= INIT.upto) continue;
-    let r; try { r = JSON.parse(l); } catch { continue; }
-    if (!r.date || !r.riders?.length) continue;
+    if (INIT && d && d <= INIT.upto) return;
+    let r; try { r = JSON.parse(l); } catch { return; }
+    if (!r.date || !r.riders?.length) return;
     const up = d >= TODAY || (RECORD_FROM && d >= RECORD_FROM) || (d >= YESTERDAY && SNAP.has(r.raceId));
     races.push(slim(r, up ? { odds: true, text: true, pay: true } : {}));
-  }
+  });
   races.sort((a, b) => a.date.localeCompare(b.date) || a.jcd.localeCompare(b.jcd) || a.r - b.r);
 }
 const ASOF = buildAsOf(races, INIT);

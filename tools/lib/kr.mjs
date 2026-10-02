@@ -11,6 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
+import { StringDecoder } from 'node:string_decoder';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
@@ -139,6 +140,24 @@ export function writeJSON(rel, obj) {
   fs.writeFileSync(f, JSON.stringify(obj));
   console.error(`-> ${rel} (${(fs.statSync(f).size / 1024).toFixed(0)} KB)`);
 }
+/* 大きな jsonl を1行ずつ読む（同期）。races.jsonl は遡りの取り込みで 1GB を超え、readFileSync(…,'utf8') が
+   Node の文字列の上限（約512MB）を超えて ERR_STRING_TOO_LONG で落ちた（2026-10-01〜02、競輪の反映と遡りが止まった）。
+   **races.jsonl は必ずこれで読む。** fn(line) が false を返したら打ち切る。絶対パスも相対パスも受ける */
+export function eachLine(file, fn) {
+  const f = path.isAbsolute(file) ? file : path.join(ROOT, file);
+  if (!fs.existsSync(f)) return;
+  const fd = fs.openSync(f, 'r'), buf = Buffer.alloc(16 << 20), dec = new StringDecoder('utf8');
+  let rest = '', n;
+  try {
+    while ((n = fs.readSync(fd, buf, 0, buf.length, null)) > 0) {
+      const parts = (rest + dec.write(buf.subarray(0, n))).split('\n');
+      rest = parts.pop();
+      for (const l of parts) if (l && fn(l) === false) return;
+    }
+    rest += dec.end();
+    if (rest) fn(rest);
+  } finally { fs.closeSync(fd); }
+}
 export function readJSON(rel) { return JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8')); }
 /* jsonl に差し替え追記（同じ raceId は新しいもので置き換える）。全行数を返す。
    ファイルは1年で数百MBになるので、**新しい raceId だけなら追記で済ませる**（全体の読み直しは差し替えがあるときだけ）。
@@ -147,7 +166,7 @@ const idCache = new Map();
 function idsOf(f) {
   if (idCache.has(f)) return idCache.get(f);
   const s = new Set();
-  if (fs.existsSync(f)) for (const l of fs.readFileSync(f, 'utf8').split('\n')) { const m = l.match(/^\{"raceId":"(\d+)"/); if (m) s.add(m[1]); }
+  eachLine(f, l => { const m = l.match(/^\{"raceId":"(\d+)"/); if (m) s.add(m[1]); });
   idCache.set(f, s); return s;
 }
 export function upsertJsonl(rel, rows, keyOf = o => o.raceId) {
@@ -158,7 +177,7 @@ export function upsertJsonl(rel, rows, keyOf = o => o.raceId) {
   if (repl.length) {
     const rep = new Map(repl.map(o => [keyOf(o), JSON.stringify(o)]));
     const tmp = f + '.tmp', out = fs.openSync(tmp, 'w');
-    for (const l of fs.readFileSync(f, 'utf8').split('\n')) { if (!l) continue; const m = l.match(/^\{"raceId":"(\d+)"/); fs.writeSync(out, (m && rep.has(m[1]) ? rep.get(m[1]) : l) + '\n'); }
+    eachLine(f, l => { const m = l.match(/^\{"raceId":"(\d+)"/); fs.writeSync(out, (m && rep.has(m[1]) ? rep.get(m[1]) : l) + '\n'); });
     fs.closeSync(out); fs.renameSync(tmp, f);
   }
   if (fresh.length) fs.appendFileSync(f, fresh.map(o => JSON.stringify(o)).join('\n') + '\n');
@@ -168,6 +187,6 @@ export function upsertJsonl(rel, rows, keyOf = o => o.raceId) {
 export function readJsonl(rel, filter) {
   const f = path.join(ROOT, rel), out = [];
   if (!fs.existsSync(f)) return out;
-  for (const l of fs.readFileSync(f, 'utf8').split('\n')) { if (!l) continue; if (filter && !filter(l)) continue; try { out.push(JSON.parse(l)); } catch { } }
+  eachLine(f, l => { if (filter && !filter(l)) return; try { out.push(JSON.parse(l)); } catch { } });
   return out;
 }

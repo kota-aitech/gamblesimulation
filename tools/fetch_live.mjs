@@ -37,7 +37,11 @@ const B = 'https://www.boatrace.jp/owpc/pc/race/';
 const state = fs.existsSync(LIVE) ? JSON.parse(fs.readFileSync(LIVE, 'utf8')) : { date: DATE, races: {} };
 
 /* 開催場は「本日のレース」から拾う */
-const idx = await get(`${B}index?hd=${DATE}`, { ttlDays: freshTtl(DATE, 30) });
+/* スリープ明けで Wi-Fi が上がる前などに通信が落ちることがある。次の周回（1分後）で取り直せるので、
+   ここでは失敗として終わらせず記録だけ残して抜ける（失敗で終わると health に「前回失敗」が残る） */
+let idx;
+try { idx = await get(`${B}index?hd=${DATE}`, { ttlDays: freshTtl(DATE, 30) }); }
+catch (e) { console.error(`${DATE} 本日のレースが取れない（次の周回で取り直す）: ${e.cause?.code || e.message}`); process.exit(0); }
 const jcds = [...new Set([...idx.matchAll(/jcd=(\d\d)/g)].map(m => m[1]))].sort();
 console.error(`${DATE} 開催 ${jcds.length}場: ${jcds.map(j => VNAME[j]).join(' ')}`);
 

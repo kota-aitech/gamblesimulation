@@ -4,7 +4,7 @@
    精算は lib/krsettle.mjs（日別成績と同じ式）。オッズは結果ページの確定値なので、期待値の買い方は実戦よりやや有利に出る。 */
 import fs from 'node:fs';
 import path from 'node:path';
-import { ROOT, readJSON, writeJSON } from './lib/kr.mjs';
+import { ROOT, readJSON, writeJSON, eachLine } from './lib/kr.mjs';
 import { FEATURES, NF, slim, buildAsOf, makeFeaturizer, stageCtx, combos, lineInfo } from './lib/krfeat.mjs';
 import { utilities } from './lib/bpl.mjs';
 import { BETS, settle } from './lib/krsettle.mjs';
@@ -16,14 +16,14 @@ const LEVEL = process.env.KR_BT_LEVEL || (M.joint ? 'joint' : 'base');
 const beta = new Float64Array(NF), betaJ = new Float64Array(NF);
 FEATURES.forEach((k, i) => { const j = M.meta.feats.indexOf(k); if (j >= 0) { beta[i] = M.base.beta[j]; if (M.joint) betaJ[i] = M.joint.beta[j]; } });
 const races = [];
-for (const l of fs.readFileSync(path.join(ROOT, 'data/keirin/races.jsonl'), 'utf8').split('\n')) {
-  if (!l || !/"result":\{/.test(l)) continue;
+eachLine('data/keirin/races.jsonl', l => {
+  if (!/"result":\{/.test(l)) return;
   const d = (l.match(/"date":"(\d{8})"/) || [])[1];
-  let r; try { r = JSON.parse(l); } catch { continue; }
-  if (!r.date || !r.riders?.length) continue;
+  let r; try { r = JSON.parse(l); } catch { return; }
+  if (!r.date || !r.riders?.length) return;
   const inTest = d >= FROM && d <= TO;
   races.push(slim(r, inTest ? { pay: true, odds: true } : {}));
-}
+});
 races.sort((a, b) => a.date.localeCompare(b.date) || a.jcd.localeCompare(b.jcd) || a.r - b.r);
 const ASOF = buildAsOf(races), featurize = makeFeaturizer(ASOF);
 const T = Object.fromEntries(BETS.map(b => [b, { races: 0, bet: 0, ret: 0, hit: 0 }]));
