@@ -15,6 +15,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { ROOT, ymdOf } from './lib/bt.mjs';
+import { watchdog } from './lib/watchdog.mjs';
 
 const TODAY = process.env.BT_TODAY || ymdOf(new Date());
 const D = path.join(ROOT, 'data', 'boat');
@@ -30,6 +31,8 @@ const addDays = (ymd, n) => { const d = new Date(`${ymd.slice(0, 4)}-${ymd.slice
    1本ハングすると以後ずっと止まる。子プロセスの上限（STEP_TIMEOUT）で拾えない固まり方への保険。 */
 setTimeout(() => { console.error(`${new Date().toLocaleString('ja-JP', { hour12: false })} 時間切れで打ち切り（25分）`); process.exit(0); },
   Number(process.env.NK_JOB_TIMEOUT || 25) * 60000).unref();
+/* process.exit そのものが固まると上の見張りは効かない（lib/watchdog.mjs）。外の sh が5分あとに SIGKILL する */
+watchdog(Number(process.env.NK_JOB_TIMEOUT || 25) + 5);
 const STEP_TIMEOUT = Number(process.env.NK_STEP_TIMEOUT || 20) * 60000;
 const run = (script, env) => {
   try {

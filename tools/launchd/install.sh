@@ -9,6 +9,7 @@
 #   com.banei.refresh    … 15分おきにばんえいの出馬表を取り直して予想を banei.html / TOP に反映・push。夜に結果と指数、月曜にモデル
 #   com.keirin.refresh   … 10分おきに競輪の出走表・オッズ・結果を取り直して予想を keirin.html / TOP に反映・commit。1日1回 取りこぼしと集計、月曜にモデル
 #   com.keirin.backfill  … 5分おきに競輪の過去データを少しずつ遡って取り込む（1回最大25分・2024-01-01 まで）
+#   com.arc.refresh      … 凱旋門賞の週末だけ（既定の一覧に入れない）。10分おきにロンシャン全レース・馬場を arc.html / longchamp.html へ。sh tools/launchd/install.sh com.arc.refresh
 #   com.nankan.publish   … 15分おきに、溜まったコミットをまとめて push（Render のデプロイ回数を抑える。各 refresh は commit だけ）
 # 引数に Label を並べると、そのぶんだけ登録し直す（例: sh tools/launchd/install.sh com.boat.live）
 set -e

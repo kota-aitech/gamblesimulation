@@ -28,6 +28,7 @@ const JOBS = [
   ['com.jra.refresh', 1200, ['data/jra/refresh.log', 'data/jra/.refresh-stamp'], '中央の取得と反映'],
   ['com.banei.refresh', 900, ['data/banei/refresh.log', 'data/banei/.refresh-stamp'], 'ばんえいの取得と反映'],
   ['com.keirin.refresh', 600, ['data/keirin/refresh.log', 'data/keirin/.refresh-stamp'], '競輪の取得と反映'],
+  ['com.arc.refresh', 600, ['data/arc/refresh.log', 'data/arc/meet.json'], '凱旋門賞の週末（ロンシャン全レース）'],
   ['com.keirin.backfill', 300, ['data/keirin/backfill.log', 'data/keirin/fetch.log'], '競輪の過去データの取り込み（遡り）'],
   ['com.nankan.publish', 900, ['data/publish.log'], '公開（GitHub へ push）'],
 ];

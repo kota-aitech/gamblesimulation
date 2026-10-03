@@ -1896,3 +1896,34 @@ node tools/keirin_build_races.mjs && node tools/keirin_build_results.mjs && NK_E
   `keirin_build_races` は、**締切後に記録することになったレース（Mac が寝ていた）は、このスナップショットのオッズに差し替えて予想を作って記録**する（`oddsSrc: 'T-8'`）。
   昨日のレースも、記録が無くスナップショットがあれば記録する。日別の表では「遅れ」ではなく「クラウドn」と数える。
   **GitHub の米国IPから Kドリームスが見えるかは、初回の Actions の実行で確かめること**（他の取得元は確認済み、Kドリームスは未確認）
+
+---
+
+## 凱旋門賞・パリロンシャン（2026-10-02〜04）
+こたの依頼「凱旋門賞の情報追加」「当日のその他のレースと前日の開催の出馬表・結果も取り、馬場の予測に役立てる」「馬柱を新しいページで」「パリロンシャンの特徴」。
+他の競技と混ぜない（`data/arc/` ＋ `tools/arc_*.mjs` ＋ `arc.html` / `longchamp.html`）。
+
+| ページ | マーカー | 中身 |
+|---|---|---|
+| `arc.html` | `ARC` | 凱旋門賞16頭の出馬表・比較指数の印（乾いた／標準／渋った馬場の3通り）・ロンシャンの天気と馬場硬度の回帰・歴代104回・日本馬38走 |
+| `longchamp.html` | `LC` | 凱旋門賞の前日・当日のロンシャン全レース（2026 は 10/3 土 9R・10/4 日 10R、金曜はロンシャン開催なし）の馬柱・結果・払戻・馬場の見立て・競馬場の特徴 |
+
+- `tools/arc_fetch.mjs` … JRA の海外特設（確定出馬表 PDF・各馬・過去の結果・歴史）、netkeiba の馬柱、海外オッズ（Sporting Life）、Open-Meteo（予報・ERA5）、Wikipedia／Wikidata（歴代の全着順・血統）。
+  `tools/arc_build.mjs` が `data/arc/analysis.json` と arc.html を作る（**PDF の読み取りに `pdftotext`（poppler）を使う**。この Mac には入っている）
+- `tools/arc_meet_fetch.mjs` … **PMU（フランスの公式の馬券主催者）の公開 JSON**（`online.turfinfo.api.pmu.fr/rest/client/1/programme/{DDMMYYYY}[/R/C/participants|performances-detaillees/pretty|rapports-definitifs]`）。
+  キー不要。出走表（ゲート・斤量・騎手・調教師・血統・近走の記号・単勝オッズ）、前走の詳細（場・距離・馬場・勝ち時計・着順）、結果、確定払戻、**ペネトロメーター（当日朝の公式の硬度）**、レース後コメント。
+  直近は10〜15分の TTL（開催前の空の中身を抱えない）。過去のロンシャン（2025-04〜、4〜10月だけ）はプログラムからロンシャンの開催だけを残して `data/cache/arc/pmu/hist/` に置く
+- `tools/arc_meet_build.mjs` … `data/arc/meet.json` と longchamp.html。**馬場の見立て**は
+  「1km あたりの勝ち時計＝コース（距離×走路）の基準＋クラス補正＋b×硬度」を過去のロンシャンで当てはめ、確定したレースの時計から硬度を逆算して上下1割を落として平均する。
+  開催日を1日ずつ外した検証の誤差と、季節の平均を当てるだけの誤差を必ず並べる。翌日の硬度の変化の分布（連続開催）で日曜の幅を出す。
+  上位3頭の位置取りはレース後コメント（DATAHIPPIQUE）の決まり文句（à la corde／à l'extérieur／en tête／en queue…）から機械的に拾う
+- 凱旋門賞のレースだけ arc.html の印を載せる（当日の公式の硬度で 乾いた ≤3.3／標準 ≤3.8／渋った を選ぶ）。他のレースに AI の予想は付けない
+- 馬場の呼び名（Bon／Bon souple／Souple／Très souple／Collant／Lourd）は日本の 良／稍重／重／不良 と**同じ物差しではない**。画面に但し書きを出す
+- 競馬場の形は JRA「パリロンシャン競馬場（競馬場・コース紹介）」の記述（右回り・外回り1周2,750m・高低差10m・フォルスストレート約250m・平坦な直線533m・オープンストレッチ）
+- 反映係 `tools/refresh_arc.mjs`（LaunchAgent `com.arc.refresh`、10分おき、`sh tools/launchd/install.sh com.arc.refresh` で登録）。ARC_DAY の3日後からは何もしない。
+  来年使うときは `ARC_DAY`／`ARC_YEAR` と `tools/lib/arc.mjs` の `DAY`・`RACE_TIME`・`SOURCES`（netkeiba の race_id、JRA の PDF 番号）を直す
+
+## ジョブの見張り（2026-10-03 追加）
+`refresh_banei` が **process.exit の中で21時間固まった**（Node 24 の後片付けでワーカースレッドの join と GC 待ちがデッドロック。CPU 0・子プロセスなし。`sample <pid>` で
+`node::Environment::Exit → NodePlatform::Shutdown → uv_thread_join` が見える）。JS のタイマーは動かないので `setTimeout(process.exit)` の見張りでは救えない。
+`tools/lib/watchdog.mjs` の `watchdog(分)` が起動時に別の sh を立て、時間切れに `kill -9` する（同じ PID が同じスクリプトのときだけ）。反映係7本すべてに入れた。

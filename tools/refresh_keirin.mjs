@@ -11,6 +11,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync, execSync } from 'node:child_process';
 import { ROOT, ymdOf, addDays, PAUSE, eachLine } from './lib/kr.mjs';
+import { watchdog } from './lib/watchdog.mjs';
 
 const D = path.join(ROOT, 'data', 'keirin');
 const now = new Date();
@@ -18,6 +19,8 @@ const today = ymdOf(now);
 const stamp = () => new Date().toLocaleString('ja-JP', { hour12: false }).replace(/\//g, '-');
 /* 自分自身の見張り（CLAUDE.md「ジョブは必ず時間で打ち切る」）。launchd は前の実行が残っている間は次を起こさない */
 setTimeout(() => { console.error(`${stamp()} 時間切れで打ち切り`); process.exit(0); }, Number(process.env.NK_JOB_TIMEOUT || 30) * 60000).unref();
+/* process.exit そのものが固まると上の見張りは効かない（lib/watchdog.mjs）。外の sh が5分あとに SIGKILL する */
+watchdog(Number(process.env.NK_JOB_TIMEOUT || 30) + 5);
 const STEP_TIMEOUT = Number(process.env.NK_STEP_TIMEOUT || 20) * 60000;
 const run = (script, env = {}, heap = 4000) => {
   try { execFileSync(process.execPath, [`--max-old-space-size=${heap}`, path.join(ROOT, 'tools', script)], { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'], env: { ...process.env, ...env }, timeout: STEP_TIMEOUT, killSignal: 'SIGKILL' }); return true; }

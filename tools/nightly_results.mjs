@@ -14,6 +14,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { ROOT } from './lib/nk.mjs';
+import { watchdog } from './lib/watchdog.mjs';
 
 const ymd = d => d.toLocaleDateString('sv-SE');
 const today = new Date(), yest = new Date(today); yest.setDate(yest.getDate() - 1);
@@ -42,6 +43,8 @@ const stamp = () => new Date().toLocaleString('ja-JP', { hour12: false }).replac
    1本ハングすると以後ずっと止まる。子プロセスの上限（STEP_TIMEOUT）で拾えない固まり方への保険。 */
 setTimeout(() => { console.error(`${new Date().toLocaleString('ja-JP', { hour12: false })} 時間切れで打ち切り（200分）`); process.exit(0); },
   Number(process.env.NK_JOB_TIMEOUT || 200) * 60000).unref();
+/* process.exit そのものが固まると上の見張りは効かない（lib/watchdog.mjs）。外の sh が5分あとに SIGKILL する */
+watchdog(Number(process.env.NK_JOB_TIMEOUT || 200) + 5);
 const STEP_TIMEOUT = Number(process.env.NK_STEP_TIMEOUT || 45) * 60000;
 const run = (script, extra = {}) => {
   try {
