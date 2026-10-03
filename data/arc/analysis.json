@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "builtAt": "2026-10-03T09:20:53.638Z",
+  "builtAt": "2026-10-03T09:31:13.698Z",
   "race": {
     "name": "2026 凱旋門賞",
     "day": "2026-10-04",
@@ -8702,26 +8702,26 @@
       },
       {
         "date": "2026-10-03",
-        "rain": 0.2,
-        "et": 2.47,
+        "rain": 0.1,
+        "et": 2.54,
         "min": 10.5,
-        "max": 22,
-        "prob": 5,
-        "wind": 8.2
+        "max": 22.1,
+        "prob": 3,
+        "wind": 9.2
       },
       {
         "date": "2026-10-04",
-        "rain": 2.7,
-        "et": 2.23,
+        "rain": 0,
+        "et": 2.27,
         "min": 14.9,
-        "max": 24,
-        "prob": 10,
-        "wind": 7.6
+        "max": 24.5,
+        "prob": 5,
+        "wind": 8.6
       },
       {
         "date": "2026-10-05",
         "rain": 0,
-        "et": 2.23,
+        "et": 2.24,
         "min": 13.3,
         "max": 25,
         "prob": 0,
@@ -8733,7 +8733,7 @@
         "et": 1.75,
         "min": 15,
         "max": 24.6,
-        "prob": 16,
+        "prob": 22,
         "wind": 6.3
       },
       {
@@ -8742,7 +8742,7 @@
         "et": 1.16,
         "min": 15.5,
         "max": 19.9,
-        "prob": 40,
+        "prob": 51,
         "wind": 14.5
       },
       {
@@ -8751,7 +8751,7 @@
         "et": 2.37,
         "min": 9.6,
         "max": 15.6,
-        "prob": 23,
+        "prob": 21,
         "wind": 19.5
       },
       {
@@ -8765,9 +8765,9 @@
       }
     ],
     "current": {
-      "rain": 20,
-      "et": 16.64,
-      "balance": 3.3599999999999994
+      "rain": 19.900000000000002,
+      "et": 16.71,
+      "balance": 3.1900000000000013
     },
     "fit": {
       "slope": 0.027868125678254654,
@@ -9085,19 +9085,19 @@
     ],
     "mae": 0.33919590900284846,
     "baselineMAE": 0.43731237724896127,
-    "estimate": 3.6927191632117236,
+    "estimate": 3.68798158184642,
     "range": [
-      3.1109804097505713,
-      4.274457916672876
+      3.106242828385268,
+      4.269720335307572
     ],
     "useful": true,
     "soil": [
-      0.22,
-      0.223,
-      0.225
+      0.209,
+      0.213,
+      0.218
     ],
-    "rainRaceDay": 2.7,
-    "rainBeforeStart": 2.7,
+    "rainRaceDay": 0,
+    "rainBeforeStart": 0,
     "hour": "2026-10-04T16:00",
     "timezone": "Europe/Paris"
   },
@@ -9105,7 +9105,7 @@
     {
       "key": "card",
       "url": "https://www.jra.go.jp/news/202610/pdf/100204.pdf",
-      "fetchedAt": "2026-10-03T06:25:44.895Z"
+      "fetchedAt": "2026-10-03T09:30:58.466Z"
     },
     {
       "key": "horse",
@@ -9125,22 +9125,22 @@
     {
       "key": "form",
       "url": "https://race.netkeiba.com/race/shutuba_past.html?race_id=2026C8010105",
-      "fetchedAt": "2026-10-03T06:25:47.676Z"
+      "fetchedAt": "2026-10-03T09:31:01.232Z"
     },
     {
       "key": "netkeiba",
       "url": "https://race.netkeiba.com/race/shutuba_past_9.html?race_id=2026C8010105",
-      "fetchedAt": "2026-10-03T06:25:46.194Z"
+      "fetchedAt": "2026-10-03T09:30:59.791Z"
     },
     {
       "key": "overseas",
       "url": "https://www.sportinglife.com/racing/news/ryan-moore-rides-benvenuto-cellini-in-arc-de-triomphe/234599",
-      "fetchedAt": "2026-10-03T06:25:51.716Z"
+      "fetchedAt": "2026-10-03T09:31:05.228Z"
     },
     {
       "key": "meteo",
       "url": "https://open-meteo.com/en/docs",
-      "fetchedAt": "2026-10-03T06:25:59.687Z"
+      "fetchedAt": "2026-10-03T09:31:13.505Z"
     },
     {
       "key": "era5",
