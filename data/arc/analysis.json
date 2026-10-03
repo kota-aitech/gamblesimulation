@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "builtAt": "2026-10-03T03:09:42.628Z",
+  "builtAt": "2026-10-03T03:20:01.774Z",
   "race": {
     "name": "2026 凱旋門賞",
     "day": "2026-10-04",
@@ -8703,20 +8703,20 @@
       {
         "date": "2026-10-03",
         "rain": 0,
-        "et": 2.68,
+        "et": 2.49,
         "min": 10.9,
-        "max": 22.4,
+        "max": 22,
         "prob": 3,
-        "wind": 9
+        "wind": 8.9
       },
       {
         "date": "2026-10-04",
-        "rain": 0.6,
-        "et": 2.11,
-        "min": 14.1,
-        "max": 23.1,
+        "rain": 0,
+        "et": 2.22,
+        "min": 14,
+        "max": 23.6,
         "prob": 10,
-        "wind": 8.9
+        "wind": 9.4
       },
       {
         "date": "2026-10-05",
@@ -8766,8 +8766,8 @@
     ],
     "current": {
       "rain": 19.8,
-      "et": 16.85,
-      "balance": 2.9499999999999993
+      "et": 16.660000000000004,
+      "balance": 3.139999999999997
     },
     "fit": {
       "slope": 0.027868125678254654,
@@ -9085,19 +9085,19 @@
     ],
     "mae": 0.33919590900284846,
     "baselineMAE": 0.43731237724896127,
-    "estimate": 3.681293231683639,
+    "estimate": 3.6865881755625076,
     "range": [
-      3.099554478222487,
-      4.263031985144791
+      3.1048494221013554,
+      4.26832692902366
     ],
     "useful": true,
     "soil": [
-      0.213,
-      0.216,
-      0.219
+      0.211,
+      0.214,
+      0.218
     ],
-    "rainRaceDay": 0.6,
-    "rainBeforeStart": 0.6000000000000001,
+    "rainRaceDay": 0,
+    "rainBeforeStart": 0,
     "hour": "2026-10-04T16:00",
     "timezone": "Europe/Paris"
   },
@@ -9105,7 +9105,7 @@
     {
       "key": "card",
       "url": "https://www.jra.go.jp/news/202610/pdf/100204.pdf",
-      "fetchedAt": "2026-10-03T00:19:03.687Z"
+      "fetchedAt": "2026-10-03T03:19:47.141Z"
     },
     {
       "key": "horse",
@@ -9125,22 +9125,22 @@
     {
       "key": "form",
       "url": "https://race.netkeiba.com/race/shutuba_past.html?race_id=2026C8010105",
-      "fetchedAt": "2026-10-03T00:19:07.046Z"
+      "fetchedAt": "2026-10-03T03:19:49.849Z"
     },
     {
       "key": "netkeiba",
       "url": "https://race.netkeiba.com/race/shutuba_past_9.html?race_id=2026C8010105",
-      "fetchedAt": "2026-10-03T00:19:05.298Z"
+      "fetchedAt": "2026-10-03T03:19:48.519Z"
     },
     {
       "key": "overseas",
       "url": "https://www.sportinglife.com/racing/news/ryan-moore-rides-benvenuto-cellini-in-arc-de-triomphe/234599",
-      "fetchedAt": "2026-10-03T00:19:11.267Z"
+      "fetchedAt": "2026-10-03T03:19:53.434Z"
     },
     {
       "key": "meteo",
       "url": "https://open-meteo.com/en/docs",
-      "fetchedAt": "2026-10-03T00:19:25.642Z"
+      "fetchedAt": "2026-10-03T03:20:01.598Z"
     },
     {
       "key": "era5",
