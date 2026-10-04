@@ -53,6 +53,9 @@ const result={version:1,builtAt:new Date().toISOString(),race:{name:'2026 凱旋
   horses,predictions:Object.fromEntries(['dry','soft','heavy'].map(s=>[s,predict(horses,s)])),past,years:years.map(y=>({year:y.year,date:y.date,n:y.runners.length,venue:y.venue})),
   statistics:{countries,allWins,ages,draws,drawN:runners.filter(r=>r.draw).length,goingGroups,runnerN:runners.length,yearN:years.filter(y=>y.venue==='ロンシャン').length},japan,weather,sources,warnings};
 fs.mkdirSync(OUT,{recursive:true});
+// 中身（builtAt・取得時刻を除く）が前回と同じなら書かない。10分おきの反映で無駄なコミットを積まないため
+const strip=o=>JSON.stringify({...o,builtAt:null,sources:(o.sources||[]).map(x=>({...x,fetchedAt:null}))});
+try{if(strip(JSON.parse(fs.readFileSync(path.join(OUT,'analysis.json'),'utf8')))===strip(result)){console.log('arc: 変化なし');process.exit(0);}}catch{}
 function atomic(file,s){fs.writeFileSync(file+'.tmp',s);fs.renameSync(file+'.tmp',file);}
 atomic(path.join(OUT,'analysis.json'),JSON.stringify(result,null,2)+'\n');
 const page=path.join(ROOT,'arc.html');

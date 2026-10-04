@@ -70,7 +70,12 @@ for (const d of [addDays(RACE_DAY, -2), addDays(RACE_DAY, -1), RACE_DAY]) {
     const done = !!c.arriveeDefinitive;
     const key = `${d}.C${c.numOrdre}`;
     /* 出走馬：確定後は長く、確定前は15分（オッズ・取消が動く） */
-    await getJSON(`${base}/participants`, path.join(DIR, `part.${key}.json`), done ? 60 * 24 * 30 : 15);
+    /* 確定の直後は出走馬の着順・レース後コメントがまだ空のことがある（実際に 10/3 の9R すべてで空のまま30日抱えた）。
+       着順と上位3頭のコメントがそろうまでは20分で取り直す */
+    const pf = path.join(DIR, `part.${key}.json`);
+    let complete = false;
+    try { const ps = JSON.parse(fs.readFileSync(pf, 'utf8')).participants || []; complete = ps.some(p => p.ordreArrivee) && ps.filter(p => p.ordreArrivee && p.ordreArrivee <= 3).every(p => p.commentaireApresCourse); } catch { }
+    await getJSON(`${base}/participants`, pf, done && complete ? 60 * 24 * 30 : done ? 20 : 15);
     await getJSON(`${base}/performances-detaillees/pretty`, path.join(DIR, `perf.${key}.json`), done ? 60 * 24 * 30 : 60 * 6);
     if (c.rapportsDefinitifsDisponibles) await getJSON(`${base}/rapports-definitifs`, path.join(DIR, `pay.${key}.json`), 60 * 24 * 30);
   }

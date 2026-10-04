@@ -132,6 +132,8 @@ for (const day of meetDays) {
   for (const c of lon.courses) {
     const key = `${day}.C${c.numOrdre}`;
     const part = rd(`part.${key}.json`), perf = rd(`perf.${key}.json`), pay = rd(`pay.${key}.json`);
+    /* 出走馬のページに着順がまだ無いときはレースの着順（ordreArrivee）から補う */
+    const placeBy = new Map(); (c.ordreArrivee || []).forEach((g, i) => g.forEach(no => placeBy.set(no, i + 1)));
     const perfBy = new Map((perf?.participants || []).map(p => [p.numPmu, p.coursesCourues || []]));
     const done = !!c.arriveeDefinitive || c.statut?.startsWith('ARRIVEE');
     const runners = (part?.participants || []).map(p => {
@@ -157,7 +159,7 @@ for (const day of meetDays) {
         musique: p.musique || null, starts: p.nombreCourses ?? null, wins: p.nombreVictoires ?? null, places: p.nombrePlaces ?? null,
         earn: p.gainsParticipant?.gainsCarriere != null ? Math.round(p.gainsParticipant.gainsCarriere / 100) : null,
         odds: p.dernierRapportDirect?.rapport ?? null, oddsRef: p.dernierRapportReference?.rapport ?? null, fav: !!p.dernierRapportDirect?.favoris,
-        out: p.statut && p.statut !== 'PARTANT' ? p.statut : null, place: p.ordreArrivee ?? null,
+        out: p.statut && p.statut !== 'PARTANT' ? p.statut : null, place: p.ordreArrivee ?? placeBy.get(p.numPmu) ?? null,
         comment: p.commentaireApresCourse?.texte || null, pos: posTags(p.commentaireApresCourse?.texte), softRel: rel(soft), softN: soft.filter(x => x.place).length, firmRel: rel(firm), form: rd5,
       };
     }).sort((a, b) => a.no - b.no);
@@ -219,6 +221,10 @@ const out = {
   ],
 };
 fs.mkdirSync(OUT, { recursive: true });
+/* 中身が前回と同じなら書かない（builtAt だけ変わって10分ごとに自動コミットされていた） */
+const strip = o => JSON.stringify({ ...o, builtAt: null });
+let same = false; try { same = strip(JSON.parse(fs.readFileSync(path.join(OUT, 'meet.json'), 'utf8'))) === strip(out); } catch { }
+if (same) { console.log('ロンシャン 変化なし'); process.exit(0); }
 fs.writeFileSync(path.join(OUT, 'meet.json.tmp'), JSON.stringify(out)); fs.renameSync(path.join(OUT, 'meet.json.tmp'), path.join(OUT, 'meet.json'));
 const page = path.join(ROOT, 'longchamp.html');
 if (fs.existsSync(page)) {
