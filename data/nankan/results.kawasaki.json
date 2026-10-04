@@ -1,7 +1,7 @@
 {
  "track": "川崎",
  "meta": {
-  "builtAt": "2026-10-04T07:43:01.823Z",
+  "builtAt": "2026-10-04T08:17:21.178Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -44,11 +44,11 @@
    "tally": {
     "ev_umaren": {
      "races": 118,
-     "cost": 27000,
+     "cost": 27100,
      "ret": 18160,
      "hits": 6,
-     "pts": 270,
-     "roi": 0.6726,
+     "pts": 271,
+     "roi": 0.6701,
      "hitRate": 0.0508,
      "avgPts": 2.3
     },
@@ -550,11 +550,11 @@
      "tally": {
       "ev_umaren": {
        "races": 11,
-       "cost": 1600,
+       "cost": 1700,
        "ret": 3840,
        "hits": 1,
-       "pts": 16,
-       "roi": 2.4,
+       "pts": 17,
+       "roi": 2.2588,
        "hitRate": 0.0909,
        "avgPts": 1.5
       },
@@ -939,11 +939,11 @@
       },
       "ev_umaren": {
        "races": 29,
-       "cost": 7800,
+       "cost": 7900,
        "ret": 8250,
        "hits": 2,
-       "pts": 78,
-       "roi": 1.0577,
+       "pts": 79,
+       "roi": 1.0443,
        "hitRate": 0.069,
        "avgPts": 2.7
       }
@@ -15418,13 +15418,14 @@
     },
     "betResult": {
      "umaren": {
-      "pts": 2,
-      "cost": 200,
+      "pts": 3,
+      "cost": 300,
       "ret": 0,
       "hit": false,
       "buy": [
        "5-9",
-       "7-9"
+       "7-9",
+       "3-5"
       ]
      },
      "sanpuku": {
@@ -21570,7 +21571,7 @@
     "weather": "曇",
     "grade": "C",
     "ev": {
-     "umaren": 1.07,
+     "umaren": 1.06,
      "sanpuku": 0.98
     },
     "conf": 0.115,
@@ -31411,7 +31412,7 @@
     "jockey": "笹川翼",
     "trainer": "高月賢",
     "mark": "△",
-    "win": 0.046,
+    "win": 0.047,
     "odds": 10.3,
     "pop": 3,
     "pos": null,
@@ -34433,7 +34434,7 @@
     "jockey": "笹川翼",
     "trainer": "加藤誠",
     "mark": "△",
-    "win": 0.08,
+    "win": 0.081,
     "odds": 16.2,
     "pop": 8,
     "pos": null,
@@ -40231,7 +40232,7 @@
     "jockey": "本橋孝太",
     "trainer": "長友豊",
     "mark": "",
-    "win": 0.034,
+    "win": 0.033,
     "odds": 32.1,
     "pop": 8,
     "pos": 8,
