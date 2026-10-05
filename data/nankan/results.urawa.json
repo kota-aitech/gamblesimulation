@@ -1,7 +1,7 @@
 {
  "track": "浦和",
  "meta": {
-  "builtAt": "2026-10-04T21:31:04.708Z",
+  "builtAt": "2026-10-05T06:52:33.250Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -54,11 +54,11 @@
     },
     "ev_sanpuku": {
      "races": 113,
-     "cost": 56700,
+     "cost": 56600,
      "ret": 45950,
      "hits": 9,
-     "pts": 567,
-     "roi": 0.8104,
+     "pts": 566,
+     "roi": 0.8118,
      "hitRate": 0.0796,
      "avgPts": 5
     },
@@ -341,11 +341,11 @@
       },
       "ev_sanpuku": {
        "races": 12,
-       "cost": 8200,
+       "cost": 8100,
        "ret": 9880,
        "hits": 2,
-       "pts": 82,
-       "roi": 1.2049,
+       "pts": 81,
+       "roi": 1.2198,
        "hitRate": 0.1667,
        "avgPts": 6.8
       },
@@ -8956,16 +8956,15 @@
       ]
      },
      "sanpuku": {
-      "pts": 5,
-      "cost": 500,
+      "pts": 4,
+      "cost": 400,
       "ret": 0,
       "hit": false,
       "buy": [
        "2-3-7",
        "2-3-9",
        "4-5-7",
-       "3-9-10",
-       "4-7-9"
+       "3-9-10"
       ]
      },
      "box3": {
@@ -36258,7 +36257,7 @@
     "jockey": "保園翔也",
     "trainer": "小久智",
     "mark": "◎",
-    "win": 0.382,
+    "win": 0.381,
     "odds": 2,
     "pop": 1,
     "pos": 1,
@@ -36314,7 +36313,7 @@
     "jockey": "藤本現暉",
     "trainer": "酒井一",
     "mark": "○",
-    "win": 0.122,
+    "win": 0.124,
     "odds": 5.1,
     "pop": null,
     "pos": null,
@@ -36370,7 +36369,7 @@
     "jockey": "福原杏",
     "trainer": "平山真",
     "mark": "▲",
-    "win": 0.112,
+    "win": 0.111,
     "odds": 7.6,
     "pop": null,
     "pos": null,
@@ -37266,7 +37265,7 @@
     "jockey": "笹川翼",
     "trainer": "繁田健",
     "mark": "◎",
-    "win": 0.252,
+    "win": 0.251,
     "odds": 2.7,
     "pop": 1,
     "pos": 2,
