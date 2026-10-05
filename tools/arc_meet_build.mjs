@@ -115,6 +115,8 @@ const dsort = nextDay.map(x => x.d).sort((a, b) => a - b), q = p => dsort.length
 /* ── 2) 週末の各レース ── */
 const arc = (() => { try { return JSON.parse(fs.readFileSync(path.join(OUT, 'analysis.json'), 'utf8')); } catch { return null; } })();
 const jaName = new Map((arc?.horses || []).map(h => [norm(h.en), h.name]));
+/* PMU の paysEntrainement は日本馬を「France」と返す（現地の滞在厩舎）。凱旋門賞の出走馬は JRA の確定出馬表の調教国を使う */
+const arcCountry = new Map((arc?.horses || []).map(h => [norm(h.en), h.country]));
 const BET = { SIMPLE_GAGNANT: '単勝', SIMPLE_PLACE: '複勝', COUPLE_GAGNANT: '馬連', COUPLE_PLACE: 'ワイド', COUPLE_ORDRE: '馬単', TRIO: '三連複', TIERCE: 'ティエルセ（三連単）', TRIO_ORDRE: '三連単' };
 /* レース後コメントから通った位置を拾う（フランス語の決まり文句） */
 const POS = [
@@ -154,7 +156,7 @@ for (const day of meetDays) {
         no: p.numPmu, name: p.nom, ja: jaName.get(norm(p.nom)) || null, age: p.age, sex: p.sexe === 'FEMELLES' ? '牝' : p.sexe === 'HONGRES' ? 'セ' : '牡',
         draw: p.placeCorde ?? null, kg: p.handicapPoids ? p.handicapPoids / 10 : null, rating: p.handicapValeur ?? null,
         jockey: p.driver || null, trainer: p.entraineur || null, owner: p.proprietaire || null, breeder: p.eleveur || null,
-        country: ja(COUNTRY, p.paysEntrainement), bred: ja(COUNTRY, p.pays), sire: p.nomPere || null, dam: p.nomMere || null, bms: p.nomPereMere || null,
+        country: arcCountry.get(norm(p.nom)) || ja(COUNTRY, p.paysEntrainement), bred: ja(COUNTRY, p.pays), sire: p.nomPere || null, dam: p.nomMere || null, bms: p.nomPereMere || null,
         blinkers: p.oeilleres && p.oeilleres !== 'SANS_OEILLERES' ? p.oeilleres.replace(/^OEILLERES_/, '') : null,
         musique: p.musique || null, starts: p.nombreCourses ?? null, wins: p.nombreVictoires ?? null, places: p.nombrePlaces ?? null,
         earn: p.gainsParticipant?.gainsCarriere != null ? Math.round(p.gainsParticipant.gainsCarriere / 100) : null,
