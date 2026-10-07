@@ -1,7 +1,7 @@
 {
  "track": "浦和",
  "meta": {
-  "builtAt": "2026-10-07T07:35:43.689Z",
+  "builtAt": "2026-10-07T08:11:28.129Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -54,11 +54,11 @@
     },
     "ev_sanpuku": {
      "races": 113,
-     "cost": 56600,
+     "cost": 56700,
      "ret": 45950,
      "hits": 9,
-     "pts": 566,
-     "roi": 0.8118,
+     "pts": 567,
+     "roi": 0.8104,
      "hitRate": 0.0796,
      "avgPts": 5
     },
@@ -708,13 +708,13 @@
       },
       "ev_sanpuku": {
        "races": 11,
-       "cost": 3400,
+       "cost": 3500,
        "ret": 0,
        "hits": 0,
-       "pts": 34,
+       "pts": 35,
        "roi": 0,
        "hitRate": 0,
-       "avgPts": 3.1
+       "avgPts": 3.2
       },
       "box3_umaren": {
        "races": 12,
@@ -17848,7 +17848,7 @@
     "grade": "C",
     "ev": {
      "umaren": 0.91,
-     "sanpuku": 1.04
+     "sanpuku": 1.07
     },
     "conf": 0.197,
     "oddsSrc": "締切前(発走8分前)",
@@ -17866,11 +17866,12 @@
       "buy": []
      },
      "sanpuku": {
-      "pts": 1,
-      "cost": 100,
+      "pts": 2,
+      "cost": 200,
       "ret": 0,
       "hit": false,
       "buy": [
+       "2-7-11",
        "3-9-11"
       ]
      },
@@ -18997,7 +18998,7 @@
      "umaren": 0.97,
      "sanpuku": 1.07
     },
-    "conf": 0.1,
+    "conf": 0.101,
     "oddsSrc": "締切前(発走10分前)",
     "hit": {
      "win": false,
@@ -36313,7 +36314,7 @@
     "jockey": "藤本現暉",
     "trainer": "酒井一",
     "mark": "○",
-    "win": 0.123,
+    "win": 0.122,
     "odds": 5.1,
     "pop": null,
     "pos": null,
