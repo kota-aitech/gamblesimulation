@@ -1,7 +1,7 @@
 {
  "track": "大井",
  "meta": {
-  "builtAt": "2026-10-07T14:00:28.256Z",
+  "builtAt": "2026-10-07T21:31:31.301Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -54,11 +54,11 @@
     },
     "ev_sanpuku": {
      "races": 109,
-     "cost": 54300,
+     "cost": 54400,
      "ret": 27800,
      "hits": 8,
-     "pts": 543,
-     "roi": 0.512,
+     "pts": 544,
+     "roi": 0.511,
      "hitRate": 0.0734,
      "avgPts": 5
     },
@@ -711,13 +711,13 @@
       },
       "ev_sanpuku": {
        "races": 11,
-       "cost": 5300,
+       "cost": 5400,
        "ret": 2540,
        "hits": 1,
-       "pts": 53,
-       "roi": 0.4792,
+       "pts": 54,
+       "roi": 0.4704,
        "hitRate": 0.0909,
-       "avgPts": 4.8
+       "avgPts": 4.9
       },
       "box3_umaren": {
        "races": 12,
@@ -17744,7 +17744,7 @@
     "grade": "B",
     "ev": {
      "umaren": 1.23,
-     "sanpuku": 1.15
+     "sanpuku": 1.55
     },
     "conf": 0.149,
     "oddsSrc": "締切前(発走8分前)",
@@ -17764,11 +17764,12 @@
       ]
      },
      "sanpuku": {
-      "pts": 1,
-      "cost": 100,
+      "pts": 2,
+      "cost": 200,
       "ret": 0,
       "hit": false,
       "buy": [
+       "2-7-8",
        "5-7-8"
       ]
      },
@@ -31063,7 +31064,7 @@
     "jockey": "Ｆ．ゴンサルベス",
     "trainer": "上杉昌",
     "mark": "△",
-    "win": 0.061,
+    "win": 0.062,
     "odds": 19,
     "pop": 4,
     "pos": null,
