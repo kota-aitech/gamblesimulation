@@ -1,7 +1,7 @@
 {
  "track": "大井",
  "meta": {
-  "builtAt": "2026-10-07T21:31:31.301Z",
+  "builtAt": "2026-10-08T05:44:41.453Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -54,11 +54,11 @@
     },
     "ev_sanpuku": {
      "races": 109,
-     "cost": 54400,
+     "cost": 54300,
      "ret": 27800,
      "hits": 8,
-     "pts": 544,
-     "roi": 0.511,
+     "pts": 543,
+     "roi": 0.512,
      "hitRate": 0.0734,
      "avgPts": 5
     },
@@ -638,13 +638,13 @@
       },
       "ev_sanpuku": {
        "races": 9,
-       "cost": 2600,
+       "cost": 2500,
        "ret": 4290,
        "hits": 1,
-       "pts": 26,
-       "roi": 1.65,
+       "pts": 25,
+       "roi": 1.716,
        "hitRate": 0.1111,
-       "avgPts": 2.9
+       "avgPts": 2.8
       },
       "box3_umaren": {
        "races": 10,
@@ -11199,8 +11199,8 @@
        "3-4-10",
        "4-6-10",
        "4-9-10",
-       "3-4-7",
        "3-4-6",
+       "3-4-7",
        "4-5-8",
        "3-4-9"
       ]
@@ -15824,7 +15824,7 @@
     "grade": "A",
     "ev": {
      "umaren": 1.37,
-     "sanpuku": 1
+     "sanpuku": 0.99
     },
     "conf": 0.114,
     "oddsSrc": "締切前(発走10分前)",
@@ -15846,13 +15846,11 @@
       ]
      },
      "sanpuku": {
-      "pts": 1,
-      "cost": 100,
+      "pts": 0,
+      "cost": 0,
       "ret": 0,
       "hit": false,
-      "buy": [
-       "1-4-6"
-      ]
+      "buy": []
      },
      "box3": {
       "umaren": {
@@ -16699,7 +16697,7 @@
      "umaren": 1.05,
      "sanpuku": 1.51
     },
-    "conf": 0.151,
+    "conf": 0.152,
     "oddsSrc": "締切前(発走9分前)",
     "hit": {
      "win": false,
@@ -29248,7 +29246,7 @@
     "jockey": "安藤洋一",
     "trainer": "坂井英",
     "mark": "○",
-    "win": 0.239,
+    "win": 0.24,
     "odds": 2.9,
     "pop": null,
     "pos": null,
@@ -30254,7 +30252,7 @@
     "jockey": "笹川翼",
     "trainer": "上杉昌",
     "mark": "○",
-    "win": 0.243,
+    "win": 0.244,
     "odds": 4.3,
     "pop": 2,
     "pos": null,
@@ -31858,7 +31856,7 @@
     "jockey": "藤田凌",
     "trainer": "中道啓",
     "mark": "",
-    "win": 0.05,
+    "win": 0.051,
     "odds": null,
     "pop": null,
     "pos": null,
@@ -34172,7 +34170,7 @@
     "jockey": "藤田凌",
     "trainer": "中道啓",
     "mark": "▲",
-    "win": 0.126,
+    "win": 0.124,
     "odds": 7.5,
     "pop": null,
     "pos": null,
@@ -34952,7 +34950,7 @@
     "jockey": "野畑凌",
     "trainer": "堀千亜",
     "mark": "○",
-    "win": 0.254,
+    "win": 0.253,
     "odds": 2.8,
     "pop": 2,
     "pos": 1,
@@ -35036,7 +35034,7 @@
     "jockey": "笹川翼",
     "trainer": "荒井朋",
     "mark": "◎",
-    "win": 0.33,
+    "win": 0.331,
     "odds": 2.1,
     "pop": 1,
     "pos": null,
@@ -36242,7 +36240,7 @@
     "jockey": "坂井瑠星",
     "trainer": "坂井英",
     "mark": "○",
-    "win": 0.094,
+    "win": 0.095,
     "odds": 2.1,
     "pop": 1,
     "pos": 1,
