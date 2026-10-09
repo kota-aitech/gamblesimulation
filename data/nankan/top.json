@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-10-09T11:43:36.228Z",
+ "builtAt": "2026-10-09T12:05:58.617Z",
  "tracks": {
   "oi": {
    "track": "大井",
@@ -2439,68 +2439,68 @@
  },
  "record": {
   "大井": {
-   "races": 111,
-   "winRate": 0.4685,
-   "winInTop3": 0.7117,
+   "races": 112,
+   "winRate": 0.4643,
+   "winInTop3": 0.7054,
    "tally": {
     "ev_umaren": {
-     "races": 106,
+     "races": 107,
      "cost": 18200,
      "ret": 11470,
      "hits": 4,
      "pts": 182,
      "roi": 0.6302,
-     "hitRate": 0.0377,
+     "hitRate": 0.0374,
      "avgPts": 1.7
     },
     "ev_sanpuku": {
-     "races": 106,
+     "races": 107,
      "cost": 49900,
      "ret": 13530,
      "hits": 5,
      "pts": 499,
      "roi": 0.2711,
-     "hitRate": 0.0472,
+     "hitRate": 0.0467,
      "avgPts": 4.7
     },
     "box3_umaren": {
-     "races": 111,
-     "cost": 33300,
+     "races": 112,
+     "cost": 33600,
      "ret": 24110,
      "hits": 42,
-     "pts": 333,
-     "roi": 0.724,
-     "hitRate": 0.3784,
+     "pts": 336,
+     "roi": 0.7176,
+     "hitRate": 0.375,
      "avgPts": 3
     },
     "box3_sanpuku": {
-     "races": 111,
-     "cost": 11100,
+     "races": 112,
+     "cost": 11200,
      "ret": 7540,
      "hits": 15,
-     "pts": 111,
-     "roi": 0.6793,
-     "hitRate": 0.1351,
+     "pts": 112,
+     "roi": 0.6732,
+     "hitRate": 0.1339,
      "avgPts": 1
     },
     "box4_umaren": {
-     "races": 111,
-     "cost": 66600,
+     "races": 112,
+     "cost": 67200,
      "ret": 36790,
      "hits": 58,
-     "pts": 666,
-     "roi": 0.5524,
-     "hitRate": 0.5225,
+     "pts": 672,
+     "roi": 0.5475,
+     "hitRate": 0.5179,
      "avgPts": 6
     },
     "box4_sanpuku": {
-     "races": 111,
-     "cost": 44400,
+     "races": 112,
+     "cost": 44800,
      "ret": 31300,
      "hits": 30,
-     "pts": 444,
-     "roi": 0.705,
-     "hitRate": 0.2703,
+     "pts": 448,
+     "roi": 0.6987,
+     "hitRate": 0.2679,
      "avgPts": 4
     }
    },
@@ -3170,111 +3170,111 @@
     },
     "10/9(金) 第6日": {
      "date": "2026-10-09",
-     "races": 9,
+     "races": 10,
      "win": 4,
      "top3": 5,
      "tally": {
       "ev_umaren": {
-       "races": 9,
+       "races": 10,
        "cost": 2000,
        "ret": 0,
        "hits": 0,
        "pts": 20,
        "roi": 0,
        "hitRate": 0,
-       "avgPts": 2.2
+       "avgPts": 2
       },
       "ev_sanpuku": {
-       "races": 9,
+       "races": 10,
        "cost": 4700,
        "ret": 0,
        "hits": 0,
        "pts": 47,
        "roi": 0,
        "hitRate": 0,
-       "avgPts": 5.2
+       "avgPts": 4.7
       },
       "box3_umaren": {
-       "races": 9,
-       "cost": 2700,
+       "races": 10,
+       "cost": 3000,
        "ret": 2620,
        "hits": 4,
-       "pts": 27,
-       "roi": 0.9704,
-       "hitRate": 0.4444,
+       "pts": 30,
+       "roi": 0.8733,
+       "hitRate": 0.4,
        "avgPts": 3
       },
       "box3_sanpuku": {
-       "races": 9,
-       "cost": 900,
+       "races": 10,
+       "cost": 1000,
        "ret": 1120,
        "hits": 3,
-       "pts": 9,
-       "roi": 1.2444,
-       "hitRate": 0.3333,
+       "pts": 10,
+       "roi": 1.12,
+       "hitRate": 0.3,
        "avgPts": 1
       },
       "box4_umaren": {
-       "races": 9,
-       "cost": 5400,
+       "races": 10,
+       "cost": 6000,
        "ret": 3470,
        "hits": 6,
-       "pts": 54,
-       "roi": 0.6426,
-       "hitRate": 0.6667,
+       "pts": 60,
+       "roi": 0.5783,
+       "hitRate": 0.6,
        "avgPts": 6
       },
       "box4_sanpuku": {
-       "races": 9,
-       "cost": 3600,
+       "races": 10,
+       "cost": 4000,
        "ret": 2190,
        "hits": 5,
-       "pts": 36,
-       "roi": 0.6083,
-       "hitRate": 0.5556,
+       "pts": 40,
+       "roi": 0.5475,
+       "hitRate": 0.5,
        "avgPts": 4
       }
      },
      "oddsSrc": {
-      "締切前": 9
+      "締切前": 10
      },
-     "winRate": 0.4444,
-     "top3Rate": 0.5556
+     "winRate": 0.4,
+     "top3Rate": 0.5
     }
    },
    "byGrade": {
     "C": {
-     "races": 68,
-     "pre": 63,
+     "races": 69,
+     "pre": 64,
      "tally": {
       "box4_sanpuku": {
-       "races": 68,
-       "cost": 27200,
+       "races": 69,
+       "cost": 27600,
        "ret": 24970,
        "hits": 22,
-       "pts": 272,
-       "roi": 0.918,
-       "hitRate": 0.3235,
+       "pts": 276,
+       "roi": 0.9047,
+       "hitRate": 0.3188,
        "avgPts": 4
       },
       "box3_sanpuku": {
-       "races": 68,
-       "cost": 6800,
+       "races": 69,
+       "cost": 6900,
        "ret": 6570,
        "hits": 12,
-       "pts": 68,
-       "roi": 0.9662,
-       "hitRate": 0.1765,
+       "pts": 69,
+       "roi": 0.9522,
+       "hitRate": 0.1739,
        "avgPts": 1
       },
       "ev_umaren": {
-       "races": 68,
+       "races": 69,
        "cost": 7500,
        "ret": 2880,
        "hits": 1,
        "pts": 75,
        "roi": 0.384,
-       "hitRate": 0.0147,
+       "hitRate": 0.0145,
        "avgPts": 1.1
       }
      }
