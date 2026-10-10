@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-10-10T15:02:35.315Z",
+ "builtAt": "2026-10-10T17:12:18.475Z",
  "today": "20261011",
  "nat1": 0.5498,
  "model": {
@@ -328,20 +328,108 @@
      },
      "rec": null,
      "meet": {
-      "days": null,
-      "dayIdx": 85,
+      "days": 6,
+      "dayIdx": 5,
       "lastPrelim": false,
       "hasSemi": true,
       "hasFinal": false,
       "adv": 18,
       "dates": [
+       "20261007",
+       "20261008",
+       "20261009",
+       "20261010",
        "20261011"
       ]
      },
      "log": [
       {
-       "date": "20261011",
+       "date": "20261007",
        "dayIdx": 1,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 5,
+       "res": 12,
+       "sum": {
+        "hit1": 6,
+        "in3": 11,
+        "p": 8,
+        "b3": 4,
+        "a3": 2,
+        "retW": 1090,
+        "retP": 1040,
+        "retB3": 1410,
+        "retA3": 1620,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261008",
+       "dayIdx": 2,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 6,
+       "res": 12,
+       "sum": {
+        "hit1": 7,
+        "in3": 10,
+        "p": 10,
+        "b3": 2,
+        "a3": 2,
+        "retW": 1050,
+        "retP": 1150,
+        "retB3": 540,
+        "retA3": 1240,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261009",
+       "dayIdx": 3,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 6,
+       "res": 12,
+       "sum": {
+        "hit1": 7,
+        "in3": 11,
+        "p": 9,
+        "b3": 4,
+        "a3": 4,
+        "retW": 960,
+        "retP": 1190,
+        "retB3": 1420,
+        "retA3": 5600,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261010",
+       "dayIdx": 4,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 5,
+       "res": 12,
+       "sum": {
+        "hit1": 8,
+        "in3": 11,
+        "p": 10,
+        "b3": 3,
+        "a3": 3,
+        "retW": 1230,
+        "retP": 1250,
+        "retB3": 750,
+        "retA3": 1770,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261011",
+       "dayIdx": 5,
        "n": 12,
        "done": 0,
        "pred": 0,
@@ -1053,20 +1141,64 @@
      },
      "rec": null,
      "meet": {
-      "days": null,
-      "dayIdx": 113,
+      "days": 4,
+      "dayIdx": 3,
       "lastPrelim": false,
       "hasSemi": false,
       "hasFinal": false,
       "adv": 18,
       "dates": [
+       "20261009",
+       "20261010",
        "20261011"
       ]
      },
      "log": [
       {
-       "date": "20261011",
+       "date": "20261009",
        "dayIdx": 1,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 5,
+       "res": 12,
+       "sum": {
+        "hit1": 5,
+        "in3": 11,
+        "p": 10,
+        "b3": 3,
+        "a3": 2,
+        "retW": 1520,
+        "retP": 1380,
+        "retB3": 1200,
+        "retA3": 4120,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261010",
+       "dayIdx": 2,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 4,
+       "res": 12,
+       "sum": {
+        "hit1": 8,
+        "in3": 11,
+        "p": 11,
+        "b3": 4,
+        "a3": 2,
+        "retW": 1570,
+        "retP": 1650,
+        "retB3": 1430,
+        "retA3": 4060,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261011",
+       "dayIdx": 3,
        "n": 12,
        "done": 0,
        "pred": 0,
@@ -1082,15 +1214,10 @@
        "close": "10:47",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
-       "phase": "予選",
+       "oddsKind": "pre",
+       "phase": "一般",
        "lastPrelim": false,
-       "shobu": [
-        1,
-        3,
-        4,
-        5
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 1,
@@ -1144,13 +1271,10 @@
        "close": "11:16",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
-       "phase": "予選",
+       "oddsKind": "pre",
+       "phase": "一般",
        "lastPrelim": false,
-       "shobu": [
-        1,
-        6
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 2,
@@ -1205,13 +1329,9 @@
        "cls": "予選",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
-       "shobu": [
-        1,
-        2,
-        3
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 4,
@@ -1266,13 +1386,9 @@
        "cls": "予選",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
-       "shobu": [
-        2,
-        3,
-        4
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 3,
@@ -1327,12 +1443,9 @@
        "cls": "ウインウイン",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
-       "shobu": [
-        1,
-        2
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 1,
@@ -1387,12 +1500,9 @@
        "cls": "予選",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
-       "shobu": [
-        1,
-        6
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 4,
@@ -1447,13 +1557,9 @@
        "cls": "ウインウイン",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
-       "shobu": [
-        3,
-        4,
-        5
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 1,
@@ -1508,11 +1614,9 @@
        "cls": "予選",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
-       "shobu": [
-        6
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 4,
@@ -1567,13 +1671,9 @@
        "cls": "戸田特賞",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
-       "shobu": [
-        3,
-        4,
-        6
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 4,
@@ -1628,7 +1728,7 @@
        "cls": "戸田特賞",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
        "top": [
@@ -1685,11 +1785,9 @@
        "cls": "戸田特選",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
-       "shobu": [
-        6
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 1,
@@ -1744,13 +1842,9 @@
        "cls": "記者選抜戦",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
-       "shobu": [
-        3,
-        4,
-        5
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 1,
@@ -1816,7 +1910,7 @@
      },
      "rec": null,
      "meet": {
-      "days": null,
+      "days": 6,
       "dayIdx": 5,
       "lastPrelim": false,
       "hasSemi": true,
@@ -1955,7 +2049,7 @@
        "close": "11:14",
        "cls": "一般",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -2651,7 +2745,7 @@
      },
      "rec": null,
      "meet": {
-      "days": null,
+      "days": 6,
       "dayIdx": 2,
       "lastPrelim": false,
       "hasSemi": false,
@@ -2720,7 +2814,7 @@
        "close": "10:59",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [],
@@ -2777,7 +2871,7 @@
        "close": "11:29",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [],
@@ -3416,20 +3510,130 @@
      },
      "rec": null,
      "meet": {
-      "days": null,
+      "days": 6,
       "dayIdx": 6,
       "lastPrelim": false,
       "hasSemi": false,
       "hasFinal": true,
       "adv": 18,
       "dates": [
+       "20261006",
+       "20261007",
+       "20261008",
+       "20261009",
+       "20261010",
        "20261011"
       ]
      },
      "log": [
       {
-       "date": "20261011",
+       "date": "20261006",
        "dayIdx": 1,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 7,
+       "res": 12,
+       "sum": {
+        "hit1": 7,
+        "in3": 11,
+        "p": 7,
+        "b3": 3,
+        "a3": 3,
+        "retW": 1490,
+        "retP": 1050,
+        "retB3": 990,
+        "retA3": 3060,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261007",
+       "dayIdx": 2,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 6,
+       "res": 12,
+       "sum": {
+        "hit1": 9,
+        "in3": 12,
+        "p": 11,
+        "b3": 3,
+        "a3": 4,
+        "retW": 1500,
+        "retP": 1490,
+        "retB3": 780,
+        "retA3": 5940,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261008",
+       "dayIdx": 3,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 10,
+       "res": 12,
+       "sum": {
+        "hit1": 5,
+        "in3": 12,
+        "p": 9,
+        "b3": 5,
+        "a3": 3,
+        "retW": 880,
+        "retP": 1220,
+        "retB3": 1270,
+        "retA3": 2590,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261009",
+       "dayIdx": 4,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 6,
+       "res": 12,
+       "sum": {
+        "hit1": 8,
+        "in3": 12,
+        "p": 8,
+        "b3": 1,
+        "a3": 2,
+        "retW": 1460,
+        "retP": 1160,
+        "retB3": 190,
+        "retA3": 3200,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261010",
+       "dayIdx": 5,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 11,
+       "res": 12,
+       "sum": {
+        "hit1": 10,
+        "in3": 11,
+        "p": 10,
+        "b3": 2,
+        "a3": 5,
+        "retW": 1200,
+        "retP": 1140,
+        "retB3": 380,
+        "retA3": 5070,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261011",
+       "dayIdx": 6,
        "n": 12,
        "done": 0,
        "pred": 0,
@@ -3445,7 +3649,7 @@
        "close": "10:17",
        "cls": "朝トコ小判R",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -3502,7 +3706,7 @@
        "close": "10:45",
        "cls": "一般",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -3559,7 +3763,7 @@
        "close": "11:12",
        "cls": "一般",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -3616,7 +3820,7 @@
        "close": "11:39",
        "cls": "一般",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -4141,20 +4345,42 @@
      },
      "rec": null,
      "meet": {
-      "days": null,
-      "dayIdx": null,
+      "days": 3,
+      "dayIdx": 2,
       "lastPrelim": false,
       "hasSemi": false,
       "hasFinal": false,
       "adv": 18,
       "dates": [
+       "20261010",
        "20261011"
       ]
      },
      "log": [
       {
-       "date": "20261011",
+       "date": "20261010",
        "dayIdx": 1,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 5,
+       "res": 12,
+       "sum": {
+        "hit1": 5,
+        "in3": 11,
+        "p": 6,
+        "b3": 1,
+        "a3": 3,
+        "retW": 680,
+        "retP": 730,
+        "retB3": 290,
+        "retA3": 3660,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261011",
+       "dayIdx": 2,
        "n": 12,
        "done": 0,
        "pred": 0,
@@ -4170,8 +4396,8 @@
        "close": "10:29",
        "cls": "一般",
        "level": "pre",
-       "oddsKind": null,
-       "phase": "予選",
+       "oddsKind": "pre",
+       "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
        "top": [
@@ -4227,8 +4453,8 @@
        "close": "10:57",
        "cls": "一般",
        "level": "pre",
-       "oddsKind": null,
-       "phase": "予選",
+       "oddsKind": "pre",
+       "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
        "top": [
@@ -4284,8 +4510,8 @@
        "close": "11:25",
        "cls": "一般",
        "level": "pre",
-       "oddsKind": null,
-       "phase": "予選",
+       "oddsKind": "pre",
+       "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
        "top": [
@@ -4342,7 +4568,7 @@
        "cls": "一般",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
        "top": [
@@ -4399,7 +4625,7 @@
        "cls": "復活戦",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
        "top": [
@@ -4456,7 +4682,7 @@
        "cls": "復活戦",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
        "top": [
@@ -4513,7 +4739,7 @@
        "cls": "復活戦",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
        "top": [
@@ -4570,7 +4796,7 @@
        "cls": "復活戦",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
        "top": [
@@ -4627,7 +4853,7 @@
        "cls": "セミファイナ",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
        "top": [
@@ -4684,7 +4910,7 @@
        "cls": "セミファイナ",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
        "top": [
@@ -4741,7 +4967,7 @@
        "cls": "セミファイナ",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
        "top": [
@@ -4798,7 +5024,7 @@
        "cls": "セミファイナ",
        "level": "pre",
        "oddsKind": null,
-       "phase": "予選",
+       "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
        "top": [
@@ -4866,7 +5092,7 @@
      },
      "rec": null,
      "meet": {
-      "days": null,
+      "days": 6,
       "dayIdx": 2,
       "lastPrelim": false,
       "hasSemi": false,
@@ -5262,9 +5488,7 @@
        "oddsKind": null,
        "phase": "予選",
        "lastPrelim": false,
-       "shobu": [
-        5
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 4,
@@ -5435,9 +5659,7 @@
        "oddsKind": null,
        "phase": "予選",
        "lastPrelim": false,
-       "shobu": [
-        2
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 1,
@@ -5617,20 +5839,42 @@
      },
      "rec": null,
      "meet": {
-      "days": null,
+      "days": 6,
       "dayIdx": 2,
       "lastPrelim": false,
       "hasSemi": false,
       "hasFinal": false,
       "adv": 18,
       "dates": [
+       "20261010",
        "20261011"
       ]
      },
      "log": [
       {
-       "date": "20261011",
+       "date": "20261010",
        "dayIdx": 1,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 7,
+       "res": 12,
+       "sum": {
+        "hit1": 7,
+        "in3": 10,
+        "p": 10,
+        "b3": 4,
+        "a3": 5,
+        "retW": 940,
+        "retP": 1150,
+        "retB3": 990,
+        "retA3": 4040,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261011",
+       "dayIdx": 2,
        "n": 12,
        "done": 0,
        "pred": 0,
@@ -6070,9 +6314,7 @@
        "oddsKind": null,
        "phase": "予選",
        "lastPrelim": false,
-       "shobu": [
-        1
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 1,
@@ -6129,9 +6371,7 @@
        "oddsKind": null,
        "phase": "予選",
        "lastPrelim": false,
-       "shobu": [
-        3
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 1,
@@ -6188,10 +6428,7 @@
        "oddsKind": null,
        "phase": "予選",
        "lastPrelim": false,
-       "shobu": [
-        2,
-        4
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 1,
@@ -6248,9 +6485,7 @@
        "oddsKind": null,
        "phase": "予選",
        "lastPrelim": false,
-       "shobu": [
-        3
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 1,
@@ -6307,9 +6542,7 @@
        "oddsKind": null,
        "phase": "予選",
        "lastPrelim": false,
-       "shobu": [
-        2
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 1,
@@ -6375,20 +6608,108 @@
      },
      "rec": null,
      "meet": {
-      "days": null,
+      "days": 6,
       "dayIdx": 5,
       "lastPrelim": false,
       "hasSemi": true,
       "hasFinal": false,
       "adv": 18,
       "dates": [
+       "20261007",
+       "20261008",
+       "20261009",
+       "20261010",
        "20261011"
       ]
      },
      "log": [
       {
-       "date": "20261011",
+       "date": "20261007",
        "dayIdx": 1,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 6,
+       "res": 12,
+       "sum": {
+        "hit1": 4,
+        "in3": 10,
+        "p": 8,
+        "b3": 5,
+        "a3": 3,
+        "retW": 800,
+        "retP": 1030,
+        "retB3": 1640,
+        "retA3": 2900,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261008",
+       "dayIdx": 2,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 7,
+       "res": 12,
+       "sum": {
+        "hit1": 7,
+        "in3": 11,
+        "p": 9,
+        "b3": 2,
+        "a3": 1,
+        "retW": 1220,
+        "retP": 1260,
+        "retB3": 670,
+        "retA3": 970,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261009",
+       "dayIdx": 3,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 4,
+       "res": 12,
+       "sum": {
+        "hit1": 5,
+        "in3": 7,
+        "p": 5,
+        "b3": 1,
+        "a3": 1,
+        "retW": 2410,
+        "retP": 830,
+        "retB3": 410,
+        "retA3": 2570,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261010",
+       "dayIdx": 4,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 3,
+       "res": 12,
+       "sum": {
+        "hit1": 6,
+        "in3": 9,
+        "p": 8,
+        "b3": 2,
+        "a3": 1,
+        "retW": 1230,
+        "retP": 1110,
+        "retB3": 520,
+        "retA3": 700,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261011",
+       "dayIdx": 5,
        "n": 12,
        "done": 0,
        "pred": 0,
@@ -6426,7 +6747,7 @@
        "close": "10:51",
        "cls": "朝得ガァ～コ",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -6483,7 +6804,7 @@
        "close": "11:20",
        "cls": "一般",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -7122,20 +7443,42 @@
      },
      "rec": null,
      "meet": {
-      "days": null,
+      "days": 5,
       "dayIdx": 2,
       "lastPrelim": false,
       "hasSemi": false,
       "hasFinal": false,
       "adv": 18,
       "dates": [
+       "20261010",
        "20261011"
       ]
      },
      "log": [
       {
-       "date": "20261011",
+       "date": "20261010",
        "dayIdx": 1,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 8,
+       "res": 12,
+       "sum": {
+        "hit1": 7,
+        "in3": 10,
+        "p": 9,
+        "b3": 2,
+        "a3": 4,
+        "retW": 960,
+        "retP": 1060,
+        "retB3": 620,
+        "retA3": 4330,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261011",
+       "dayIdx": 2,
        "n": 12,
        "done": 0,
        "pred": 0,
@@ -7173,7 +7516,7 @@
        "close": "08:47",
        "cls": "朝トク予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [],
@@ -7230,7 +7573,7 @@
        "close": "09:13",
        "cls": "狙いトク特選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [],
@@ -7287,7 +7630,7 @@
        "close": "09:39",
        "cls": "決めトク特賞",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [],
@@ -7344,7 +7687,7 @@
        "close": "10:05",
        "cls": "ガチトク予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [],
@@ -7401,7 +7744,7 @@
        "close": "10:32",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [],
@@ -7458,7 +7801,7 @@
        "close": "11:02",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [],
@@ -7515,13 +7858,10 @@
        "close": "11:35",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
-       "shobu": [
-        2,
-        6
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 1,
@@ -7578,9 +7918,7 @@
        "oddsKind": null,
        "phase": "予選",
        "lastPrelim": false,
-       "shobu": [
-        5
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 1,
@@ -7637,9 +7975,7 @@
        "oddsKind": null,
        "phase": "予選",
        "lastPrelim": false,
-       "shobu": [
-        3
-       ],
+       "shobu": [],
        "top": [
         {
          "lane": 1,
@@ -7876,7 +8212,7 @@
      },
      "rec": null,
      "meet": {
-      "days": null,
+      "days": 4,
       "dayIdx": 1,
       "lastPrelim": false,
       "hasSemi": false,
@@ -8623,20 +8959,42 @@
      },
      "rec": null,
      "meet": {
-      "days": null,
+      "days": 6,
       "dayIdx": 2,
       "lastPrelim": false,
       "hasSemi": false,
       "hasFinal": false,
       "adv": 18,
       "dates": [
+       "20261010",
        "20261011"
       ]
      },
      "log": [
       {
-       "date": "20261011",
+       "date": "20261010",
        "dayIdx": 1,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 6,
+       "res": 12,
+       "sum": {
+        "hit1": 7,
+        "in3": 11,
+        "p": 8,
+        "b3": 3,
+        "a3": 3,
+        "retW": 1010,
+        "retP": 960,
+        "retB3": 880,
+        "retA3": 2410,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261011",
+       "dayIdx": 2,
        "n": 12,
        "done": 0,
        "pred": 0,
@@ -8674,7 +9032,7 @@
        "close": "11:07",
        "cls": "カタメン1予",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [],
@@ -8731,7 +9089,7 @@
        "close": "11:33",
        "cls": "予選",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [
@@ -8972,7 +9330,9 @@
        "oddsKind": null,
        "phase": "予選",
        "lastPrelim": false,
-       "shobu": [],
+       "shobu": [
+        4
+       ],
        "top": [
         {
          "lane": 2,
@@ -9030,7 +9390,8 @@
        "phase": "予選",
        "lastPrelim": false,
        "shobu": [
-        4
+        4,
+        5
        ],
        "top": [
         {
@@ -9390,20 +9751,86 @@
      },
      "rec": null,
      "meet": {
-      "days": null,
-      "dayIdx": 174,
+      "days": 5,
+      "dayIdx": 4,
       "lastPrelim": false,
       "hasSemi": true,
       "hasFinal": false,
       "adv": 18,
       "dates": [
+       "20261008",
+       "20261009",
+       "20261010",
        "20261011"
       ]
      },
      "log": [
       {
-       "date": "20261011",
+       "date": "20261008",
        "dayIdx": 1,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 9,
+       "res": 12,
+       "sum": {
+        "hit1": 11,
+        "in3": 11,
+        "p": 12,
+        "b3": 3,
+        "a3": 4,
+        "retW": 1830,
+        "retP": 1510,
+        "retB3": 1070,
+        "retA3": 3260,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261009",
+       "dayIdx": 2,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 9,
+       "res": 12,
+       "sum": {
+        "hit1": 9,
+        "in3": 11,
+        "p": 11,
+        "b3": 2,
+        "a3": 5,
+        "retW": 2080,
+        "retP": 1490,
+        "retB3": 490,
+        "retA3": 4340,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261010",
+       "dayIdx": 3,
+       "n": 12,
+       "done": 12,
+       "pred": 12,
+       "c1": 7,
+       "res": 12,
+       "sum": {
+        "hit1": 7,
+        "in3": 10,
+        "p": 9,
+        "b3": 3,
+        "a3": 2,
+        "retW": 1040,
+        "retP": 1460,
+        "retB3": 930,
+        "retA3": 1580,
+        "betA3": 3600
+       }
+      },
+      {
+       "date": "20261011",
+       "dayIdx": 4,
        "n": 12,
        "done": 0,
        "pred": 0,
@@ -9419,7 +9846,7 @@
        "close": "08:35",
        "cls": "朝1戦",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -9476,7 +9903,7 @@
        "close": "09:01",
        "cls": "モー2ング戦",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -9533,7 +9960,7 @@
        "close": "09:27",
        "cls": "3ライズ戦",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -9590,7 +10017,7 @@
        "close": "09:53",
        "cls": "おは4戦",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -9647,7 +10074,7 @@
        "close": "10:23",
        "cls": "レッツ5戦",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -9704,7 +10131,7 @@
        "close": "10:53",
        "cls": "一般",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
@@ -9761,7 +10188,7 @@
        "close": "11:22",
        "cls": "一般",
        "level": "pre",
-       "oddsKind": null,
+       "oddsKind": "pre",
        "phase": "一般",
        "lastPrelim": false,
        "shobu": [],
