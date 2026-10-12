@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-10-11T23:10:48.213Z",
+ "builtAt": "2026-10-12T10:12:53.440Z",
  "today": "2026-10-12",
  "model": {
   "built": "2026-10-05",
@@ -719,38 +719,56 @@
        "dist": 1400,
        "n": 16,
        "cls": 1,
-       "level": "base",
-       "conf": 0.391,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.422,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
-         "name": "イトウカカリチョウ",
-         "p": 0.374,
-         "odds": null,
-         "jockey": "武藤雅"
-        },
-        {
-         "no": null,
-         "waku": null,
+         "no": 6,
+         "waku": 3,
          "name": "アンバーバレット",
-         "p": 0.309,
-         "odds": null,
-         "jockey": "武藤雅"
+         "p": 0.413,
+         "odds": 2.2,
+         "jockey": "横山和生"
         },
         {
-         "no": null,
-         "waku": null,
+         "no": 15,
+         "waku": 8,
+         "name": "イトウカカリチョウ",
+         "p": 0.246,
+         "odds": 2.7,
+         "jockey": "丹内祐次"
+        },
+        {
+         "no": 4,
+         "waku": 2,
          "name": "オーケーエース",
-         "p": 0.146,
-         "odds": null,
-         "jockey": "武藤雅"
+         "p": 0.188,
+         "odds": 4.6,
+         "jockey": "石橋脩"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        4,
+        6,
+        15
+       ],
+       "umaren": {
+        "k": "6-15",
+        "p": 0.2719
+       },
+       "sanpuku": {
+        "k": "4-6-15",
+        "p": 0.3108
+       },
+       "rank": "C",
+       "best": {
+        "kind": "単勝",
+        "k": "6",
+        "p": 0.413,
+        "o": 2.2,
+        "ev": 0.909
+       }
       },
       {
        "r": 2,
@@ -759,40 +777,58 @@
        "start": "10:20",
        "surface": "芝",
        "dist": 1400,
-       "n": 13,
+       "n": 12,
        "cls": 1,
-       "level": "base",
-       "conf": 0.349,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.326,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
+         "no": 2,
+         "waku": 2,
          "name": "ソニックアイル",
-         "p": 0.5,
-         "odds": null,
-         "jockey": "遠藤汰月"
+         "p": 0.483,
+         "odds": 1.5,
+         "jockey": "C.ルメール"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "ゼーゲルン",
-         "p": 0.119,
-         "odds": null,
-         "jockey": "遠藤汰月"
+         "no": 11,
+         "waku": 8,
+         "name": "サンレガート",
+         "p": 0.141,
+         "odds": 7,
+         "jockey": "松岡正海"
         },
         {
-         "no": null,
-         "waku": null,
+         "no": 1,
+         "waku": 1,
          "name": "クラオルグジェシダ",
-         "p": 0.096,
-         "odds": null,
-         "jockey": "遠藤汰月"
+         "p": 0.115,
+         "odds": 5.9,
+         "jockey": "浜中俊"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        1,
+        2,
+        11
+       ],
+       "umaren": {
+        "k": "2-11",
+        "p": 0.1871
+       },
+       "sanpuku": {
+        "k": "1-2-11",
+        "p": 0.1216
+       },
+       "rank": "A",
+       "best": {
+        "kind": "単勝",
+        "k": "7",
+        "p": 0.096,
+        "o": 11.1,
+        "ev": 1.07
+       }
       },
       {
        "r": 3,
@@ -803,38 +839,56 @@
        "dist": 1800,
        "n": 11,
        "cls": 1,
-       "level": "base",
-       "conf": 0.457,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.415,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
+         "no": 8,
+         "waku": 7,
          "name": "マルスレジーナ",
-         "p": 0.662,
-         "odds": null,
-         "jockey": "原田和真"
+         "p": 0.624,
+         "odds": 1.2,
+         "jockey": "C.ルメール"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "マイネルリシャール",
-         "p": 0.075,
-         "odds": null,
-         "jockey": "原田和真"
+         "no": 4,
+         "waku": 4,
+         "name": "モンサンラパージュ",
+         "p": 0.079,
+         "odds": 10.1,
+         "jockey": "M.ミシェル"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "コスモバルムンク",
-         "p": 0.072,
-         "odds": null,
-         "jockey": "原田和真"
+         "no": 1,
+         "waku": 1,
+         "name": "ツェルプスト",
+         "p": 0.071,
+         "odds": 13.6,
+         "jockey": "柴田大知"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        1,
+        4,
+        8
+       ],
+       "umaren": {
+        "k": "4-8",
+        "p": 0.169
+       },
+       "sanpuku": {
+        "k": "1-4-8",
+        "p": 0.0841
+       },
+       "rank": "B",
+       "best": {
+        "kind": "単勝",
+        "k": "1",
+        "p": 0.071,
+        "o": 13.6,
+        "ev": 0.968
+       }
       },
       {
        "r": 5,
@@ -845,38 +899,56 @@
        "dist": 1600,
        "n": 12,
        "cls": 1,
-       "level": "base",
-       "conf": 0.048,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.304,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
+         "no": 10,
+         "waku": 7,
+         "name": "サントシャペル",
+         "p": 0.313,
+         "odds": 2.5,
+         "jockey": "荻野極"
+        },
+        {
+         "no": 6,
+         "waku": 5,
          "name": "フォンテキアーラ",
-         "p": 0.195,
-         "odds": null,
-         "jockey": "M.ミシェル"
+         "p": 0.271,
+         "odds": 2.8,
+         "jockey": "C.ルメール"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "ダンツトリノ",
-         "p": 0.113,
-         "odds": null,
-         "jockey": "M.ミシェル"
-        },
-        {
-         "no": null,
-         "waku": null,
+         "no": 12,
+         "waku": 8,
          "name": "スパリエーラ",
-         "p": 0.11,
-         "odds": null,
-         "jockey": "M.ミシェル"
+         "p": 0.22,
+         "odds": 3.7,
+         "jockey": "横山和生"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        6,
+        10,
+        12
+       ],
+       "umaren": {
+        "k": "6-10",
+        "p": 0.2126
+       },
+       "sanpuku": {
+        "k": "6-10-12",
+        "p": 0.2595
+       },
+       "rank": "C",
+       "best": {
+        "kind": "単勝",
+        "k": "7",
+        "p": 0.063,
+        "o": 14.4,
+        "ev": 0.913
+       }
       },
       {
        "r": 6,
@@ -887,38 +959,56 @@
        "dist": 1300,
        "n": 16,
        "cls": 1,
-       "level": "base",
-       "conf": 0.062,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.327,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
-         "name": "マインドブレイズ",
-         "p": 0.131,
-         "odds": null,
-         "jockey": "木幡巧也"
-        },
-        {
-         "no": null,
-         "waku": null,
+         "no": 14,
+         "waku": 7,
          "name": "サノノソルジャー",
-         "p": 0.118,
-         "odds": null,
-         "jockey": "木幡巧也"
+         "p": 0.464,
+         "odds": 1.7,
+         "jockey": "丹内祐次"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "クシャナーダ",
-         "p": 0.089,
-         "odds": null,
-         "jockey": "木幡巧也"
+         "no": 7,
+         "waku": 4,
+         "name": "マインドブレイズ",
+         "p": 0.137,
+         "odds": 5.7,
+         "jockey": "横山和生"
+        },
+        {
+         "no": 5,
+         "waku": 3,
+         "name": "ツジベン",
+         "p": 0.086,
+         "odds": 8.4,
+         "jockey": "石橋脩"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        5,
+        7,
+        14
+       ],
+       "umaren": {
+        "k": "7-14",
+        "p": 0.1655
+       },
+       "sanpuku": {
+        "k": "5-7-14",
+        "p": 0.0742
+       },
+       "rank": "B",
+       "best": {
+        "kind": "単勝",
+        "k": "16",
+        "p": 0.045,
+        "o": 21.7,
+        "ev": 0.985
+       }
       },
       {
        "r": 7,
@@ -929,38 +1019,56 @@
        "dist": 2100,
        "n": 16,
        "cls": 2,
-       "level": "base",
-       "conf": 0.113,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.192,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
+         "no": 13,
+         "waku": 7,
          "name": "ウィロークリーク",
-         "p": 0.204,
-         "odds": null,
-         "jockey": "杉原誠人"
+         "p": 0.217,
+         "odds": 2.5,
+         "jockey": "C.ルメール"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "クアッドフォルツァ",
-         "p": 0.127,
-         "odds": null,
-         "jockey": "杉原誠人"
+         "no": 8,
+         "waku": 4,
+         "name": "タマモトリノ",
+         "p": 0.211,
+         "odds": 3.9,
+         "jockey": "岩田康誠"
         },
         {
-         "no": null,
-         "waku": null,
+         "no": 10,
+         "waku": 5,
          "name": "ターフクリスタル",
-         "p": 0.11,
-         "odds": null,
-         "jockey": "杉原誠人"
+         "p": 0.144,
+         "odds": 7.9,
+         "jockey": "木幡巧也"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        8,
+        10,
+        13
+       ],
+       "umaren": {
+        "k": "8-13",
+        "p": 0.1012
+       },
+       "sanpuku": {
+        "k": "8-10-13",
+        "p": 0.0611
+       },
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "11",
+        "p": 0.054,
+        "o": 21.9,
+        "ev": 1.174
+       }
       },
       {
        "r": 8,
@@ -971,38 +1079,56 @@
        "dist": 1600,
        "n": 6,
        "cls": 2,
-       "level": "base",
-       "conf": 0.29,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.385,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
-         "name": "ウィンターブリーズ",
-         "p": 0.499,
-         "odds": null,
-         "jockey": "C.ルメール"
-        },
-        {
-         "no": null,
-         "waku": null,
+         "no": 1,
+         "waku": 1,
          "name": "レガメデルヴェント",
-         "p": 0.245,
-         "odds": null,
+         "p": 0.505,
+         "odds": 1.7,
+         "jockey": "横山和生"
+        },
+        {
+         "no": 5,
+         "waku": 5,
+         "name": "ウィンターブリーズ",
+         "p": 0.371,
+         "odds": 1.9,
          "jockey": "C.ルメール"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "ユイノリュウギ",
-         "p": 0.126,
-         "odds": null,
-         "jockey": "C.ルメール"
+         "no": 4,
+         "waku": 4,
+         "name": "リーチツモドライチ",
+         "p": 0.057,
+         "odds": 11.5,
+         "jockey": "荻野極"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        1,
+        4,
+        5
+       ],
+       "umaren": {
+        "k": "1-5",
+        "p": 0.6187
+       },
+       "sanpuku": {
+        "k": "1-4-5",
+        "p": 0.4068
+       },
+       "rank": "C",
+       "best": {
+        "kind": "単勝",
+        "k": "1",
+        "p": 0.505,
+        "o": 1.7,
+        "ev": 0.859
+       }
       },
       {
        "r": 9,
@@ -1013,38 +1139,56 @@
        "dist": 1600,
        "n": 14,
        "cls": 2,
-       "level": "base",
-       "conf": 0.269,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.354,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
+         "no": 8,
+         "waku": 5,
          "name": "サレジオ",
-         "p": 0.405,
-         "odds": null,
-         "jockey": "三浦皇成"
+         "p": 0.438,
+         "odds": 2,
+         "jockey": "C.ルメール"
         },
         {
-         "no": null,
-         "waku": null,
+         "no": 10,
+         "waku": 6,
          "name": "マツリダイコ",
-         "p": 0.164,
-         "odds": null,
-         "jockey": "三浦皇成"
+         "p": 0.24,
+         "odds": 3.4,
+         "jockey": "M.ミシェル"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "ゴバド",
-         "p": 0.093,
-         "odds": null,
-         "jockey": "三浦皇成"
+         "no": 4,
+         "waku": 3,
+         "name": "タイセイアストロ",
+         "p": 0.112,
+         "odds": 6.7,
+         "jockey": "杉原誠人"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        4,
+        8,
+        10
+       ],
+       "umaren": {
+        "k": "8-10",
+        "p": 0.2781
+       },
+       "sanpuku": {
+        "k": "4-8-10",
+        "p": 0.1814
+       },
+       "rank": "C",
+       "best": {
+        "kind": "単勝",
+        "k": "8",
+        "p": 0.438,
+        "o": 2,
+        "ev": 0.876
+       }
       },
       {
        "r": 10,
@@ -1055,38 +1199,56 @@
        "dist": 2400,
        "n": 11,
        "cls": 4,
-       "level": "base",
-       "conf": 0.094,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.268,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
+         "no": 11,
+         "waku": 8,
          "name": "レッドバンデ",
-         "p": 0.246,
-         "odds": null,
-         "jockey": "江田照男"
+         "p": 0.469,
+         "odds": 1.5,
+         "jockey": "C.ルメール"
         },
         {
-         "no": null,
-         "waku": null,
+         "no": 1,
+         "waku": 1,
          "name": "バドリナート",
-         "p": 0.146,
-         "odds": null,
-         "jockey": "江田照男"
+         "p": 0.172,
+         "odds": 5.7,
+         "jockey": "横山和生"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "ロードガレリア",
-         "p": 0.143,
-         "odds": null,
-         "jockey": "江田照男"
+         "no": 5,
+         "waku": 5,
+         "name": "オメガナビゲーター",
+         "p": 0.072,
+         "odds": 11,
+         "jockey": "岩田康誠"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        1,
+        5,
+        11
+       ],
+       "umaren": {
+        "k": "1-11",
+        "p": 0.2155
+       },
+       "sanpuku": {
+        "k": "1-5-11",
+        "p": 0.0874
+       },
+       "rank": "B",
+       "best": {
+        "kind": "単勝",
+        "k": "1",
+        "p": 0.172,
+        "o": 5.7,
+        "ev": 0.982
+       }
       },
       {
        "r": 11,
@@ -1097,38 +1259,56 @@
        "dist": 2000,
        "n": 18,
        "cls": 5,
-       "level": "base",
-       "conf": 0.103,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.151,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
+         "no": 2,
+         "waku": 1,
          "name": "アスクセクシーモア",
-         "p": 0.186,
-         "odds": null,
+         "p": 0.213,
+         "odds": 3.4,
          "jockey": "岩田康誠"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "ナムラエイハブ",
-         "p": 0.113,
-         "odds": null,
-         "jockey": "岩田康誠"
+         "no": 12,
+         "waku": 6,
+         "name": "ジュタ",
+         "p": 0.133,
+         "odds": 6.7,
+         "jockey": "荻野極"
         },
         {
-         "no": null,
-         "waku": null,
+         "no": 1,
+         "waku": 1,
          "name": "メイショウハチコウ",
-         "p": 0.097,
-         "odds": null,
-         "jockey": "岩田康誠"
+         "p": 0.118,
+         "odds": 7.5,
+         "jockey": "丹内祐次"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        1,
+        2,
+        12
+       ],
+       "umaren": {
+        "k": "2-12",
+        "p": 0.0602
+       },
+       "sanpuku": {
+        "k": "1-2-12",
+        "p": 0.0271
+       },
+       "rank": "C",
+       "best": {
+        "kind": "単勝",
+        "k": "5",
+        "p": 0.069,
+        "o": 13.8,
+        "ev": 0.948
+       }
       },
       {
        "r": 12,
@@ -1139,38 +1319,56 @@
        "dist": 1300,
        "n": 16,
        "cls": 2,
-       "level": "base",
-       "conf": 0.142,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.188,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
+         "no": 8,
+         "waku": 4,
          "name": "ロードトライデント",
-         "p": 0.246,
-         "odds": null,
-         "jockey": "松岡正海"
+         "p": 0.224,
+         "odds": 3.5,
+         "jockey": "横山和生"
         },
         {
-         "no": null,
-         "waku": null,
+         "no": 1,
+         "waku": 1,
          "name": "ピコレッド",
-         "p": 0.121,
-         "odds": null,
-         "jockey": "松岡正海"
+         "p": 0.18,
+         "odds": 4.3,
+         "jockey": "木幡巧也"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "アンプイットアップ",
-         "p": 0.105,
-         "odds": null,
-         "jockey": "松岡正海"
+         "no": 11,
+         "waku": 6,
+         "name": "エテオクロス",
+         "p": 0.14,
+         "odds": 6.5,
+         "jockey": "杉原誠人"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        1,
+        8,
+        11
+       ],
+       "umaren": {
+        "k": "1-8",
+        "p": 0.0889
+       },
+       "sanpuku": {
+        "k": "1-8-11",
+        "p": 0.0516
+       },
+       "rank": "B",
+       "best": {
+        "kind": "単勝",
+        "k": "7",
+        "p": 0.049,
+        "o": 20.6,
+        "ev": 1.011
+       }
       }
      ]
     },
@@ -1184,40 +1382,58 @@
        "start": "10:05",
        "surface": "ダ",
        "dist": 1400,
-       "n": 16,
+       "n": 15,
        "cls": 1,
-       "level": "base",
-       "conf": 0.186,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.418,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
+         "no": 14,
+         "waku": 8,
          "name": "パストザクラウン",
-         "p": 0.283,
-         "odds": null,
-         "jockey": "田口貫太"
+         "p": 0.597,
+         "odds": 1.5,
+         "jockey": "坂井瑠星"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "ナイスウーマン",
-         "p": 0.128,
-         "odds": null,
-         "jockey": "田口貫太"
-        },
-        {
-         "no": null,
-         "waku": null,
+         "no": 10,
+         "waku": 6,
          "name": "クリコキアナ",
-         "p": 0.114,
-         "odds": null,
-         "jockey": "田口貫太"
+         "p": 0.074,
+         "odds": 13.2,
+         "jockey": "森田誠也"
+        },
+        {
+         "no": 1,
+         "waku": 1,
+         "name": "ナイスウーマン",
+         "p": 0.06,
+         "odds": 10.2,
+         "jockey": "松山弘平"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        1,
+        10,
+        14
+       ],
+       "umaren": {
+        "k": "10-14",
+        "p": 0.1416
+       },
+       "sanpuku": {
+        "k": "1-10-14",
+        "p": 0.0533
+       },
+       "rank": "B",
+       "best": {
+        "kind": "単勝",
+        "k": "10",
+        "p": 0.074,
+        "o": 13.2,
+        "ev": 0.981
+       }
       },
       {
        "r": 2,
@@ -1228,38 +1444,56 @@
        "dist": 1800,
        "n": 12,
        "cls": 1,
-       "level": "base",
-       "conf": 0.365,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.323,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
+         "no": 11,
+         "waku": 8,
          "name": "ホシヲミテルンナ",
-         "p": 0.516,
-         "odds": null,
-         "jockey": "中井裕二"
+         "p": 0.39,
+         "odds": 2.5,
+         "jockey": "田口貫太"
         },
         {
-         "no": null,
-         "waku": null,
+         "no": 4,
+         "waku": 4,
          "name": "ケイアイトリノ",
-         "p": 0.162,
-         "odds": null,
-         "jockey": "中井裕二"
+         "p": 0.31,
+         "odds": 2.4,
+         "jockey": "藤懸貴志"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "サトノステラ",
-         "p": 0.089,
-         "odds": null,
-         "jockey": "中井裕二"
+         "no": 10,
+         "waku": 7,
+         "name": "ルボワ",
+         "p": 0.08,
+         "odds": 9.6,
+         "jockey": "北村友一"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        4,
+        10,
+        11
+       ],
+       "umaren": {
+        "k": "4-11",
+        "p": 0.3175
+       },
+       "sanpuku": {
+        "k": "4-10-11",
+        "p": 0.1529
+       },
+       "rank": "B",
+       "best": {
+        "kind": "単勝",
+        "k": "11",
+        "p": 0.39,
+        "o": 2.5,
+        "ev": 0.974
+       }
       },
       {
        "r": 3,
@@ -1270,38 +1504,56 @@
        "dist": 1400,
        "n": 12,
        "cls": 1,
-       "level": "base",
-       "conf": 0.149,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.145,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
-         "name": "ジャストワナフライ",
-         "p": 0.251,
-         "odds": null,
-         "jockey": "吉村誠之助"
-        },
-        {
-         "no": null,
-         "waku": null,
+         "no": 12,
+         "waku": 8,
          "name": "エアロクリスタ",
-         "p": 0.217,
-         "odds": null,
-         "jockey": "吉村誠之助"
+         "p": 0.265,
+         "odds": 3,
+         "jockey": "松山弘平"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "アヴァロン",
-         "p": 0.119,
-         "odds": null,
-         "jockey": "吉村誠之助"
+         "no": 6,
+         "waku": 5,
+         "name": "ジャストワナフライ",
+         "p": 0.141,
+         "odds": 6.2,
+         "jockey": "横山武史"
+        },
+        {
+         "no": 5,
+         "waku": 5,
+         "name": "メイショウスパーク",
+         "p": 0.136,
+         "odds": 7.5,
+         "jockey": "太宰啓介"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        5,
+        6,
+        12
+       ],
+       "umaren": {
+        "k": "6-12",
+        "p": 0.0853
+       },
+       "sanpuku": {
+        "k": "5-6-12",
+        "p": 0.0497
+       },
+       "rank": "B",
+       "best": {
+        "kind": "単勝",
+        "k": "5",
+        "p": 0.136,
+        "o": 7.5,
+        "ev": 1.022
+       }
       },
       {
        "r": 4,
@@ -1312,38 +1564,56 @@
        "dist": 1800,
        "n": 16,
        "cls": 1,
-       "level": "base",
-       "conf": 0.047,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.344,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
-         "name": "テーオータイタン",
-         "p": 0.156,
-         "odds": null,
-         "jockey": "横山武史"
-        },
-        {
-         "no": null,
-         "waku": null,
+         "no": 12,
+         "waku": 6,
          "name": "アメリカンソウル",
-         "p": 0.127,
-         "odds": null,
-         "jockey": "横山武史"
+         "p": 0.469,
+         "odds": 1.8,
+         "jockey": "坂井瑠星"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "マーゴットバサラ",
-         "p": 0.088,
-         "odds": null,
+         "no": 4,
+         "waku": 2,
+         "name": "テーオータイタン",
+         "p": 0.164,
+         "odds": 5.4,
+         "jockey": "鮫島克駿"
+        },
+        {
+         "no": 14,
+         "waku": 7,
+         "name": "アシュトン",
+         "p": 0.109,
+         "odds": 6.8,
          "jockey": "横山武史"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        4,
+        12,
+        14
+       ],
+       "umaren": {
+        "k": "4-12",
+        "p": 0.2013
+       },
+       "sanpuku": {
+        "k": "4-12-14",
+        "p": 0.119
+       },
+       "rank": "C",
+       "best": {
+        "kind": "単勝",
+        "k": "4",
+        "p": 0.164,
+        "o": 5.4,
+        "ev": 0.885
+       }
       },
       {
        "r": 5,
@@ -1354,38 +1624,56 @@
        "dist": 1800,
        "n": 9,
        "cls": 1,
-       "level": "base",
-       "conf": 0.069,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.228,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
+         "no": 2,
+         "waku": 2,
+         "name": "サンティエリュール",
+         "p": 0.337,
+         "odds": 2.3,
+         "jockey": "西村淳也"
+        },
+        {
+         "no": 4,
+         "waku": 4,
          "name": "ホウオウビースト",
-         "p": 0.259,
-         "odds": null,
-         "jockey": "鮫島克駿"
+         "p": 0.222,
+         "odds": 4,
+         "jockey": "坂井瑠星"
         },
         {
-         "no": null,
-         "waku": null,
+         "no": 6,
+         "waku": 6,
          "name": "レインインザスカイ",
-         "p": 0.17,
-         "odds": null,
-         "jockey": "鮫島克駿"
-        },
-        {
-         "no": null,
-         "waku": null,
-         "name": "コスモベネチア",
-         "p": 0.133,
-         "odds": null,
-         "jockey": "鮫島克駿"
+         "p": 0.192,
+         "odds": 4.2,
+         "jockey": "北村友一"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        2,
+        4,
+        6
+       ],
+       "umaren": {
+        "k": "2-4",
+        "p": 0.1905
+       },
+       "sanpuku": {
+        "k": "2-4-6",
+        "p": 0.1986
+       },
+       "rank": "C",
+       "best": {
+        "kind": "単勝",
+        "k": "4",
+        "p": 0.222,
+        "o": 4,
+        "ev": 0.888
+       }
       },
       {
        "r": 6,
@@ -1396,38 +1684,56 @@
        "dist": 1200,
        "n": 12,
        "cls": 1,
-       "level": "base",
-       "conf": 0.025,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.221,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
+         "no": 11,
+         "waku": 8,
+         "name": "クラストムーン",
+         "p": 0.289,
+         "odds": 3,
+         "jockey": "吉村誠之助"
+        },
+        {
+         "no": 12,
+         "waku": 8,
          "name": "メイショウギフト",
-         "p": 0.139,
-         "odds": null,
-         "jockey": "永島まなみ"
+         "p": 0.235,
+         "odds": 3.5,
+         "jockey": "武豊"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "ルーチェドンナ",
-         "p": 0.134,
-         "odds": null,
-         "jockey": "永島まなみ"
-        },
-        {
-         "no": null,
-         "waku": null,
-         "name": "クールガモーン",
-         "p": 0.106,
-         "odds": null,
-         "jockey": "永島まなみ"
+         "no": 3,
+         "waku": 3,
+         "name": "ベニーバローズ",
+         "p": 0.159,
+         "odds": 4.9,
+         "jockey": "河原田菜々"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        3,
+        11,
+        12
+       ],
+       "umaren": {
+        "k": "11-12",
+        "p": 0.1621
+       },
+       "sanpuku": {
+        "k": "3-11-12",
+        "p": 0.1244
+       },
+       "rank": "C",
+       "best": {
+        "kind": "単勝",
+        "k": "2",
+        "p": 0.084,
+        "o": 10.8,
+        "ev": 0.906
+       }
       },
       {
        "r": 7,
@@ -1438,38 +1744,56 @@
        "dist": 1900,
        "n": 16,
        "cls": 2,
-       "level": "base",
-       "conf": 0.198,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.166,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
-         "name": "ダイシンレアレア",
-         "p": 0.306,
-         "odds": null,
-         "jockey": "池添謙一"
-        },
-        {
-         "no": null,
-         "waku": null,
-         "name": "エクストラプッシュ",
-         "p": 0.137,
-         "odds": null,
-         "jockey": "池添謙一"
-        },
-        {
-         "no": null,
-         "waku": null,
+         "no": 15,
+         "waku": 8,
          "name": "ジーティーアメリカ",
-         "p": 0.096,
-         "odds": null,
+         "p": 0.191,
+         "odds": 4.3,
+         "jockey": "北村友一"
+        },
+        {
+         "no": 12,
+         "waku": 6,
+         "name": "ダイシンレアレア",
+         "p": 0.182,
+         "odds": 5.5,
+         "jockey": "西村淳也"
+        },
+        {
+         "no": 2,
+         "waku": 1,
+         "name": "アレンスター",
+         "p": 0.154,
+         "odds": 4.1,
          "jockey": "池添謙一"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        2,
+        12,
+        15
+       ],
+       "umaren": {
+        "k": "12-15",
+        "p": 0.0755
+       },
+       "sanpuku": {
+        "k": "2-12-15",
+        "p": 0.0468
+       },
+       "rank": "B",
+       "best": {
+        "kind": "単勝",
+        "k": "12",
+        "p": 0.182,
+        "o": 5.5,
+        "ev": 0.999
+       }
       },
       {
        "r": 8,
@@ -1480,38 +1804,56 @@
        "dist": 2000,
        "n": 11,
        "cls": 2,
-       "level": "base",
-       "conf": 0.171,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.097,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
+         "no": 11,
+         "waku": 8,
          "name": "ベルシュヴァル",
-         "p": 0.282,
-         "odds": null,
-         "jockey": "北村友一"
+         "p": 0.211,
+         "odds": 3.9,
+         "jockey": "松山弘平"
         },
         {
-         "no": null,
-         "waku": null,
+         "no": 9,
+         "waku": 7,
          "name": "レゼルフォート",
-         "p": 0.202,
-         "odds": null,
-         "jockey": "北村友一"
+         "p": 0.155,
+         "odds": 4.9,
+         "jockey": "西村淳也"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "ストロベリーツリー",
-         "p": 0.175,
-         "odds": null,
+         "no": 5,
+         "waku": 5,
+         "name": "ウィズクィーン",
+         "p": 0.152,
+         "odds": 5.4,
          "jockey": "北村友一"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        5,
+        9,
+        11
+       ],
+       "umaren": {
+        "k": "9-11",
+        "p": 0.0739
+       },
+       "sanpuku": {
+        "k": "5-9-11",
+        "p": 0.0469
+       },
+       "rank": "A",
+       "best": {
+        "kind": "単勝",
+        "k": "1",
+        "p": 0.082,
+        "o": 13.7,
+        "ev": 1.119
+       }
       },
       {
        "r": 9,
@@ -1522,38 +1864,56 @@
        "dist": 1800,
        "n": 12,
        "cls": 3,
-       "level": "base",
-       "conf": 0.117,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.232,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
+         "no": 12,
+         "waku": 8,
+         "name": "テイエムサンレーヴ",
+         "p": 0.371,
+         "odds": 2.3,
+         "jockey": "鮫島良太"
+        },
+        {
+         "no": 4,
+         "waku": 4,
          "name": "ソルチェリア",
-         "p": 0.212,
-         "odds": null,
-         "jockey": "松若風馬"
+         "p": 0.176,
+         "odds": 4.8,
+         "jockey": "幸英明"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "マシン",
-         "p": 0.157,
-         "odds": null,
-         "jockey": "松若風馬"
-        },
-        {
-         "no": null,
-         "waku": null,
-         "name": "クロノスバレット",
-         "p": 0.141,
-         "odds": null,
-         "jockey": "松若風馬"
+         "no": 10,
+         "waku": 7,
+         "name": "ニホンピロデヴィン",
+         "p": 0.134,
+         "odds": 4.6,
+         "jockey": "田口貫太"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        4,
+        10,
+        12
+       ],
+       "umaren": {
+        "k": "4-12",
+        "p": 0.1606
+       },
+       "sanpuku": {
+        "k": "4-10-12",
+        "p": 0.1058
+       },
+       "rank": "C",
+       "best": {
+        "kind": "単勝",
+        "k": "12",
+        "p": 0.371,
+        "o": 2.3,
+        "ev": 0.853
+       }
       },
       {
        "r": 10,
@@ -1564,38 +1924,56 @@
        "dist": 1800,
        "n": 10,
        "cls": 3,
-       "level": "base",
-       "conf": 0.177,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.287,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
+         "no": 5,
+         "waku": 5,
          "name": "アクセス",
-         "p": 0.298,
-         "odds": null,
+         "p": 0.409,
+         "odds": 1.9,
          "jockey": "北村友一"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "キシダンチョウ",
-         "p": 0.215,
-         "odds": null,
-         "jockey": "北村友一"
-        },
-        {
-         "no": null,
-         "waku": null,
+         "no": 2,
+         "waku": 2,
          "name": "カムアップローゼス",
-         "p": 0.14,
-         "odds": null,
-         "jockey": "北村友一"
+         "p": 0.214,
+         "odds": 4,
+         "jockey": "西村淳也"
+        },
+        {
+         "no": 9,
+         "waku": 8,
+         "name": "ミリタリータトゥー",
+         "p": 0.148,
+         "odds": 5.5,
+         "jockey": "西塚洸二"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        2,
+        5,
+        9
+       ],
+       "umaren": {
+        "k": "2-5",
+        "p": 0.2324
+       },
+       "sanpuku": {
+        "k": "2-5-9",
+        "p": 0.1966
+       },
+       "rank": "C",
+       "best": {
+        "kind": "単勝",
+        "k": "2",
+        "p": 0.214,
+        "o": 4,
+        "ev": 0.857
+       }
       },
       {
        "r": 11,
@@ -1606,50 +1984,56 @@
        "dist": 1400,
        "n": 18,
        "cls": 7,
-       "level": "base",
-       "conf": 0.163,
+       "level": "joint",
+       "conf": 0.15,
        "gates": true,
        "top": [
+        {
+         "no": 9,
+         "waku": 5,
+         "name": "オフトレイル",
+         "p": 0.23,
+         "odds": 3.9,
+         "jockey": "菅原明良"
+        },
+        {
+         "no": 1,
+         "waku": 1,
+         "name": "ダイヤモンドノット",
+         "p": 0.138,
+         "odds": 6.1,
+         "jockey": "横山武史"
+        },
         {
          "no": 15,
          "waku": 7,
          "name": "ジョイフルニュース",
-         "p": 0.181,
-         "odds": null,
+         "p": 0.119,
+         "odds": 6.8,
          "jockey": "大野拓弥"
-        },
-        {
-         "no": 18,
-         "waku": 8,
-         "name": "エリカエクスプレス",
-         "p": 0.17,
-         "odds": null,
-         "jockey": "武豊"
-        },
-        {
-         "no": 17,
-         "waku": 8,
-         "name": "ミニトランザット",
-         "p": 0.135,
-         "odds": null,
-         "jockey": "西村淳也"
         }
        ],
        "box3": [
-        15,
-        17,
-        18
+        1,
+        9,
+        15
        ],
        "umaren": {
-        "k": "15-18",
-        "p": 0.0673
+        "k": "1-9",
+        "p": 0.068
        },
        "sanpuku": {
-        "k": "15-17-18",
-        "p": 0.0361
+        "k": "1-9-15",
+        "p": 0.0314
        },
-       "rank": null,
-       "best": null
+       "rank": "A",
+       "best": {
+        "kind": "単勝",
+        "k": "8",
+        "p": 0.032,
+        "o": 32.7,
+        "ev": 1.04
+       }
       },
       {
        "r": 12,
@@ -1660,38 +2044,56 @@
        "dist": 1200,
        "n": 16,
        "cls": 2,
-       "level": "base",
-       "conf": 0.117,
-       "gates": false,
+       "level": "joint",
+       "conf": 0.138,
+       "gates": true,
        "top": [
         {
-         "no": null,
-         "waku": null,
+         "no": 14,
+         "waku": 7,
          "name": "ビスケットアソート",
-         "p": 0.13,
-         "odds": null,
+         "p": 0.175,
+         "odds": 5.4,
+         "jockey": "富田暁"
+        },
+        {
+         "no": 3,
+         "waku": 2,
+         "name": "ウェルカムソング",
+         "p": 0.138,
+         "odds": 5.2,
          "jockey": "河原田菜々"
         },
         {
-         "no": null,
-         "waku": null,
-         "name": "ビービーシナジー",
-         "p": 0.126,
-         "odds": null,
-         "jockey": "河原田菜々"
-        },
-        {
-         "no": null,
-         "waku": null,
-         "name": "メリフルアス",
-         "p": 0.119,
-         "odds": null,
-         "jockey": "河原田菜々"
+         "no": 8,
+         "waku": 4,
+         "name": "ザングウィル",
+         "p": 0.11,
+         "odds": 8.9,
+         "jockey": "原優介"
         }
        ],
-       "box3": [],
-       "rank": null,
-       "best": null
+       "box3": [
+        3,
+        8,
+        14
+       ],
+       "umaren": {
+        "k": "3-14",
+        "p": 0.0521
+       },
+       "sanpuku": {
+        "k": "3-8-14",
+        "p": 0.022
+       },
+       "rank": "B",
+       "best": {
+        "kind": "単勝",
+        "k": "8",
+        "p": 0.11,
+        "o": 8.9,
+        "ev": 0.979
+       }
       }
      ]
     }
