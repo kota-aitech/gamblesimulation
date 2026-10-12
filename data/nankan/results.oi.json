@@ -1,7 +1,7 @@
 {
  "track": "大井",
  "meta": {
-  "builtAt": "2026-10-12T10:03:20.010Z",
+  "builtAt": "2026-10-12T10:05:55.340Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -54,13 +54,13 @@
     },
     "ev_sanpuku": {
      "races": 107,
-     "cost": 49800,
+     "cost": 49700,
      "ret": 13530,
      "hits": 5,
-     "pts": 498,
-     "roi": 0.2717,
+     "pts": 497,
+     "roi": 0.2722,
      "hitRate": 0.0467,
-     "avgPts": 4.7
+     "avgPts": 4.6
     },
     "box3_umaren": {
      "races": 112,
@@ -712,13 +712,13 @@
       },
       "ev_sanpuku": {
        "races": 11,
-       "cost": 2900,
+       "cost": 2800,
        "ret": 1760,
        "hits": 1,
-       "pts": 29,
-       "roi": 0.6069,
+       "pts": 28,
+       "roi": 0.6286,
        "hitRate": 0.0909,
-       "avgPts": 2.6
+       "avgPts": 2.5
       },
       "box3_umaren": {
        "races": 12,
@@ -18361,9 +18361,9 @@
     "grade": "C",
     "ev": {
      "umaren": 0.88,
-     "sanpuku": 1
+     "sanpuku": 0.99
     },
-    "conf": 0.118,
+    "conf": 0.117,
     "oddsSrc": "締切前(発走8分前)",
     "hit": {
      "win": false,
@@ -18379,13 +18379,11 @@
       "buy": []
      },
      "sanpuku": {
-      "pts": 1,
-      "cost": 100,
+      "pts": 0,
+      "cost": 0,
       "ret": 0,
       "hit": false,
-      "buy": [
-       "5-8-13"
-      ]
+      "buy": []
      },
      "box3": {
       "umaren": {
@@ -23019,7 +23017,7 @@
     "jockey": "石川倭",
     "trainer": "的場直",
     "mark": "○",
-    "win": 0.173,
+    "win": 0.172,
     "odds": 5,
     "pop": 1,
     "pos": 4,
@@ -36431,7 +36429,7 @@
     "jockey": "中山遥人",
     "trainer": "佐宗応",
     "mark": "",
-    "win": 0.048,
+    "win": 0.049,
     "odds": 26.8,
     "pop": null,
     "pos": null,
