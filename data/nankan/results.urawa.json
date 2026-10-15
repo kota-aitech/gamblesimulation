@@ -1,7 +1,7 @@
 {
  "track": "浦和",
  "meta": {
-  "builtAt": "2026-10-15T14:00:12.679Z",
+  "builtAt": "2026-10-15T21:31:20.551Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -54,11 +54,11 @@
     },
     "ev_sanpuku": {
      "races": 113,
-     "cost": 56800,
+     "cost": 56700,
      "ret": 45950,
      "hits": 9,
-     "pts": 568,
-     "roi": 0.809,
+     "pts": 567,
+     "roi": 0.8104,
      "hitRate": 0.0796,
      "avgPts": 5
     },
@@ -781,13 +781,13 @@
       },
       "ev_sanpuku": {
        "races": 9,
-       "cost": 3400,
+       "cost": 3300,
        "ret": 0,
        "hits": 0,
-       "pts": 34,
+       "pts": 33,
        "roi": 0,
        "hitRate": 0,
-       "avgPts": 3.8
+       "avgPts": 3.7
       },
       "box3_umaren": {
        "races": 12,
@@ -5235,7 +5235,7 @@
      "umaren": 1.14,
      "sanpuku": 1.89
     },
-    "conf": 0.273,
+    "conf": 0.272,
     "oddsSrc": "最終",
     "hit": {
      "win": true,
@@ -19705,13 +19705,12 @@
       ]
      },
      "sanpuku": {
-      "pts": 2,
-      "cost": 200,
+      "pts": 1,
+      "cost": 100,
       "ret": 0,
       "hit": false,
       "buy": [
-       "2-8-11",
-       "2-8-12"
+       "2-8-11"
       ]
      },
      "box3": {
@@ -35281,7 +35280,7 @@
     "jockey": "西啓太",
     "trainer": "秋山直",
     "mark": "△",
-    "win": 0.049,
+    "win": 0.048,
     "odds": 13.4,
     "pop": 5,
     "pos": 2,
@@ -35507,7 +35506,7 @@
     "jockey": "古岡勇樹",
     "trainer": "山崎尋",
     "mark": "",
-    "win": 0.035,
+    "win": 0.034,
     "odds": 23.1,
     "pop": null,
     "pos": null,
@@ -36089,7 +36088,7 @@
     "jockey": "野畑凌",
     "trainer": "水野貴",
     "mark": "◎",
-    "win": 0.407,
+    "win": 0.406,
     "odds": 1.5,
     "pop": 1,
     "pos": 1,
@@ -36229,7 +36228,7 @@
     "jockey": "Ｆ．ゴンサルベス",
     "trainer": "長谷忍",
     "mark": "",
-    "win": 0.023,
+    "win": 0.024,
     "odds": 41,
     "pop": null,
     "pos": null,
@@ -36259,7 +36258,7 @@
     "jockey": "保園翔也",
     "trainer": "小久智",
     "mark": "◎",
-    "win": 0.385,
+    "win": 0.384,
     "odds": 2,
     "pop": 1,
     "pos": 1,
@@ -37379,7 +37378,7 @@
     "jockey": "和田譲治",
     "trainer": "工藤伸",
     "mark": "○",
-    "win": 0.135,
+    "win": 0.134,
     "odds": 4.8,
     "pop": null,
     "pos": null,
