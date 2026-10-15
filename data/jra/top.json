@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-10-14T15:17:32.322Z",
+ "builtAt": "2026-10-15T05:30:21.597Z",
  "today": "2026-10-15",
  "model": {
   "built": "2026-10-12",
@@ -703,5 +703,58 @@
   "to": "9999-12-31",
   "kind": "単勝"
  },
- "days": []
+ "days": [
+  {
+   "date": "2026-10-18",
+   "venues": [
+    {
+     "venue": "京都",
+     "races": [
+      {
+       "r": 11,
+       "name": "秋華賞",
+       "grade": "GI",
+       "start": "15:40",
+       "surface": "芝",
+       "dist": 2000,
+       "n": 17,
+       "cls": 8,
+       "level": "base",
+       "conf": 0.086,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ドリームコア",
+         "p": 0.192,
+         "odds": null,
+         "jockey": "坂井瑠星"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "モンローウォーク",
+         "p": 0.095,
+         "odds": null,
+         "jockey": "坂井瑠星"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "カナルサンマルタン",
+         "p": 0.082,
+         "odds": null,
+         "jockey": "坂井瑠星"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      }
+     ]
+    }
+   ]
+  }
+ ]
 }
