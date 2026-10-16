@@ -1,6 +1,6 @@
 {
  "meta": {
-  "built": "2026-10-16T09:35:07.304Z",
+  "built": "2026-10-16T09:58:08.677Z",
   "today": "2026-10-16",
   "groups": [
    "近走",
@@ -1167,7 +1167,7 @@
        "weather": "晴",
        "baba": "良",
        "n": 12,
-       "level": "base",
+       "level": "joint",
        "gates": true,
        "horses": [
         {
@@ -1189,13 +1189,13 @@
          "damsire": "Milt’s Overture",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 28.5,
+         "pop": 10,
          "mark": "",
-         "p1": 0.0123,
-         "top2": 0.03,
-         "top3": 0.051,
-         "U": -1.12,
+         "p1": 0.016,
+         "top2": 0.041,
+         "top3": 0.07,
+         "U": -1.21,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -1313,13 +1313,13 @@
          "damsire": "Siyouni",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "☆",
-         "p1": 0.0761,
-         "top2": 0.161,
-         "top3": 0.25,
-         "U": 0.48,
+         "odds": 17.1,
+         "pop": 7,
+         "mark": "",
+         "p1": 0.0437,
+         "top2": 0.101,
+         "top3": 0.166,
+         "U": -0.35,
          "style": "追込",
          "styleHist": {
           "逃げ": 0,
@@ -1410,13 +1410,13 @@
          "damsire": "キングカメハメハ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 21.4,
+         "pop": 9,
          "mark": "",
-         "p1": 0.0232,
-         "top2": 0.054,
-         "top3": 0.09,
-         "U": -0.56,
+         "p1": 0.0398,
+         "top2": 0.093,
+         "top3": 0.153,
+         "U": -0.43,
          "style": "先行",
          "styleHist": {
           "逃げ": 1,
@@ -1586,13 +1586,13 @@
          "damsire": "エンパイアメーカー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "△",
-         "p1": 0.0782,
-         "top2": 0.165,
-         "top3": 0.256,
-         "U": 0.5,
+         "odds": 2.7,
+         "pop": 1,
+         "mark": "◎",
+         "p1": 0.3014,
+         "top2": 0.505,
+         "top3": 0.665,
+         "U": 1.31,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -1683,13 +1683,13 @@
          "damsire": "Minardi",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 85.6,
+         "pop": 12,
          "mark": "",
-         "p1": 0.0208,
-         "top2": 0.049,
-         "top3": 0.081,
-         "U": -0.66,
+         "p1": 0.0078,
+         "top2": 0.021,
+         "top3": 0.037,
+         "U": -1.83,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -1806,13 +1806,13 @@
          "damsire": "ハーツクライ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "",
-         "p1": 0.0655,
-         "top2": 0.14,
-         "top3": 0.221,
-         "U": 0.34,
+         "odds": 8.5,
+         "pop": 4,
+         "mark": "△",
+         "p1": 0.0788,
+         "top2": 0.171,
+         "top3": 0.269,
+         "U": 0.16,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -1930,13 +1930,13 @@
          "damsire": "Awesome Again",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 5.7,
+         "pop": 3,
          "mark": "○",
-         "p1": 0.1666,
-         "top2": 0.317,
-         "top3": 0.458,
-         "U": 1.16,
+         "p1": 0.1661,
+         "top2": 0.322,
+         "top3": 0.469,
+         "U": 0.8,
          "style": "先行",
          "styleHist": {
           "逃げ": 1,
@@ -2054,13 +2054,13 @@
          "damsire": "クロフネ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 10.7,
+         "pop": 5,
          "mark": "△",
-         "p1": 0.0839,
-         "top2": 0.175,
-         "top3": 0.271,
-         "U": 0.56,
+         "p1": 0.0921,
+         "top2": 0.195,
+         "top3": 0.304,
+         "U": 0.29,
          "style": "先行",
          "styleHist": {
           "逃げ": 0,
@@ -2151,13 +2151,13 @@
          "damsire": "Pioneerof the Nile",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "▲",
-         "p1": 0.1372,
-         "top2": 0.269,
-         "top3": 0.398,
-         "U": 0.99,
+         "odds": 17.1,
+         "pop": 8,
+         "mark": "",
+         "p1": 0.0462,
+         "top2": 0.106,
+         "top3": 0.174,
+         "U": -0.3,
          "style": "先行",
          "styleHist": {
           "逃げ": 1,
@@ -2275,13 +2275,13 @@
          "damsire": "Uncle Mo",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "◎",
-         "p1": 0.2357,
-         "top2": 0.418,
-         "top3": 0.573,
-         "U": 1.46,
+         "odds": 5.3,
+         "pop": 2,
+         "mark": "▲",
+         "p1": 0.1193,
+         "top2": 0.244,
+         "top3": 0.371,
+         "U": 0.51,
          "style": "逃げ",
          "styleHist": {
           "逃げ": 1,
@@ -2372,13 +2372,13 @@
          "damsire": "ルーラーシップ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "",
-         "p1": 0.0521,
-         "top2": 0.114,
-         "top3": 0.182,
-         "U": 0.14,
+         "odds": 12.2,
+         "pop": 6,
+         "mark": "☆",
+         "p1": 0.0746,
+         "top2": 0.163,
+         "top3": 0.257,
+         "U": 0.11,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -2522,13 +2522,13 @@
          "damsire": "リアルインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 42.8,
+         "pop": 11,
          "mark": "",
-         "p1": 0.0485,
-         "top2": 0.107,
-         "top3": 0.171,
-         "U": 0.08,
+         "p1": 0.0143,
+         "top2": 0.037,
+         "top3": 0.064,
+         "U": -1.31,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -2602,164 +2602,170 @@
         }
        ],
        "box3": [
+        4,
         7,
-        9,
         10
        ],
        "box4": [
+        4,
         7,
         8,
-        9,
         10
        ],
        "box5": [
         4,
+        6,
         7,
         8,
-        9,
         10
        ],
        "umaren": [
         {
-         "k": "7-10",
-         "p": 0.0898
-        },
-        {
-         "k": "9-10",
-         "p": 0.0739
-        },
-        {
-         "k": "7-9",
-         "p": 0.0513
-        },
-        {
-         "k": "8-10",
-         "p": 0.0456
+         "k": "4-7",
+         "p": 0.116
         },
         {
          "k": "4-10",
-         "p": 0.0426
+         "p": 0.084
         },
         {
-         "k": "2-10",
-         "p": 0.0415
+         "k": "4-8",
+         "p": 0.0656
+        },
+        {
+         "k": "4-6",
+         "p": 0.0566
+        },
+        {
+         "k": "4-11",
+         "p": 0.0538
+        },
+        {
+         "k": "7-10",
+         "p": 0.0448
         }
        ],
        "umatan": [
         {
-         "k": "10-7",
-         "p": 0.0474
+         "k": "4-7",
+         "p": 0.0644
         },
         {
-         "k": "7-10",
-         "p": 0.0424
+         "k": "7-4",
+         "p": 0.0516
         },
         {
-         "k": "10-9",
-         "p": 0.0399
+         "k": "4-10",
+         "p": 0.0486
         },
         {
-         "k": "9-10",
-         "p": 0.0339
+         "k": "4-8",
+         "p": 0.039
         },
         {
-         "k": "7-9",
-         "p": 0.0263
+         "k": "10-4",
+         "p": 0.0355
         }
        ],
        "sanpuku": [
         {
-         "k": "7-9-10",
-         "p": 0.0524
-        },
-        {
-         "k": "7-8-10",
-         "p": 0.0316
-        },
-        {
          "k": "4-7-10",
-         "p": 0.0294
+         "p": 0.0614
         },
         {
-         "k": "2-7-10",
+         "k": "4-7-8",
+         "p": 0.0474
+        },
+        {
+         "k": "4-6-7",
+         "p": 0.0407
+        },
+        {
+         "k": "4-7-11",
+         "p": 0.0386
+        },
+        {
+         "k": "4-8-10",
+         "p": 0.0334
+        },
+        {
+         "k": "4-6-10",
          "p": 0.0287
-        },
-        {
-         "k": "8-9-10",
-         "p": 0.0256
-        },
-        {
-         "k": "6-7-10",
-         "p": 0.0247
         }
        ],
        "santan": [
         {
-         "k": "10-7-9",
-         "p": 0.01
+         "k": "4-7-10",
+         "p": 0.0132
         },
         {
-         "k": "10-9-7",
-         "p": 0.0097
+         "k": "4-10-7",
+         "p": 0.0124
         },
         {
-         "k": "7-10-9",
+         "k": "7-4-10",
+         "p": 0.0106
+        },
+        {
+         "k": "4-7-8",
+         "p": 0.0106
+        },
+        {
+         "k": "4-8-7",
+         "p": 0.0096
+        },
+        {
+         "k": "4-7-6",
+         "p": 0.0093
+        },
+        {
+         "k": "10-4-7",
          "p": 0.009
         },
         {
-         "k": "9-10-7",
-         "p": 0.0082
-        },
-        {
-         "k": "7-9-10",
-         "p": 0.008
-        },
-        {
-         "k": "9-7-10",
-         "p": 0.0076
-        },
-        {
-         "k": "10-7-8",
-         "p": 0.0065
-        },
-        {
-         "k": "10-7-4",
-         "p": 0.0061
+         "k": "4-7-11",
+         "p": 0.0088
         }
        ],
        "wide": [
         {
-         "k": "7-10",
-         "p": 0.2278
-        },
-        {
-         "k": "9-10",
-         "p": 0.1942
-        },
-        {
-         "k": "7-9",
-         "p": 0.1469
-        },
-        {
-         "k": "8-10",
-         "p": 0.1269
+         "k": "4-7",
+         "p": 0.2799
         },
         {
          "k": "4-10",
-         "p": 0.1192
+         "p": 0.2154
+        },
+        {
+         "k": "4-8",
+         "p": 0.1736
+        },
+        {
+         "k": "4-6",
+         "p": 0.1521
+        },
+        {
+         "k": "4-11",
+         "p": 0.1452
         }
        ],
-       "rank": null,
-       "best": null,
-       "conf": 0.108,
+       "rank": "B",
+       "best": {
+        "kind": "単勝",
+        "k": "8",
+        "p": 0.092,
+        "o": 10.7,
+        "ev": 0.985
+       },
+       "conf": 0.155,
        "points": [
-        "本命 10 グリーンアイランド（1着 23.6%）、対抗 7 サノノファイター（16.7%）、単穴 9 クシェドゥソレイユ。",
+        "本命 4 ルージュラボルタ（1着 30.1%）、対抗 7 サノノファイター（16.6%）、単穴 10 グリーンアイランド。",
         "新潟芝コース（競馬場ガイド）：左回り・直線 358.7〜658.7m・高低差 2.2m。芝は外枠の方が3着内に来ている（7-8枠が1-2枠より 5.0pt 上）。",
         "新潟芝1600m（162レース）：脚質別の3着内率 逃げ30%・先行30%・差し19%・追込9%。枠の得失 1枠0.93 2枠0.88 3枠0.93 4枠1.01 5枠1.09 6枠1.21 7枠1.04 8枠0.88（1.00が損得なし）。",
         "馬体重：このコースの3着内馬は平均 464kg で、出走平均 462kg より +2.8kg（ほぼ中立）。勝ち馬の平均 465kg。",
         "前走のレベルが高い：2 ドラゴンドール（Lv+10・5着）、8 シャインフォード（Lv+7・4着）。出走馬の次走成績から見た相手関係で、+10 は「出走馬が次走で平均より1割上の着順」。",
         "逃げ候補 10 グリーンアイランド（単騎なら楽に運べる）。",
-        "馬連の本線 7-10（9.0%）、三連複 7-9-10（5.2%）。"
+        "馬連の本線 4-7（11.6%）、三連複 4-7-10（6.1%）。"
        ],
        "oddsSrc": null
       },
@@ -2924,8 +2930,8 @@
          "damsire": "キンシャサノキセキ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 33.6,
+         "pop": 8,
          "mark": "",
          "p1": 0.0073,
          "top2": 0.02,
@@ -3198,8 +3204,8 @@
          "damsire": "ネオユニヴァース",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 3,
+         "pop": 1,
          "mark": "△",
          "p1": 0.1489,
          "top2": 0.303,
@@ -3363,8 +3369,8 @@
          "damsire": "ルーラーシップ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 33.6,
+         "pop": 9,
          "mark": "",
          "p1": 0.0041,
          "top2": 0.012,
@@ -3487,8 +3493,8 @@
          "damsire": "ゴールドアリュール",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 16.8,
+         "pop": 6,
          "mark": "△",
          "p1": 0.0926,
          "top2": 0.201,
@@ -3584,8 +3590,8 @@
          "damsire": "ブライアンズタイム",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 16.8,
+         "pop": 7,
          "mark": "○",
          "p1": 0.1989,
          "top2": 0.384,
@@ -3734,8 +3740,8 @@
          "damsire": "ダイワメジャー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 4.8,
+         "pop": 3,
          "mark": "",
          "p1": 0.0019,
          "top2": 0.006,
@@ -3858,8 +3864,8 @@
          "damsire": "ダイワメジャー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 8.4,
+         "pop": 4,
          "mark": "▲",
          "p1": 0.1796,
          "top2": 0.354,
@@ -3955,8 +3961,8 @@
          "damsire": "ゼンノロブロイ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 8.4,
+         "pop": 5,
          "mark": "◎",
          "p1": 0.2699,
          "top2": 0.484,
@@ -4052,8 +4058,8 @@
          "damsire": "Medaglia d Oro",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 3.3,
+         "pop": 2,
          "mark": "",
          "p1": 0.0095,
          "top2": 0.025,
@@ -4279,8 +4285,14 @@
          "p": 0.2105
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "8",
+        "p": 0.199,
+        "o": 16.8,
+        "ev": 3.342
+       },
        "conf": 0.234,
        "points": [
         "本命 11 ツイストマインド（1着 27.0%）、対抗 8 クラリスバローズ（19.9%）、単穴 10 プリンシパルギフト。",
@@ -4330,8 +4342,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 24.4,
+         "pop": 5,
          "mark": "",
          "p1": 0.0284,
          "top2": 0.065,
@@ -4532,8 +4544,8 @@
          "damsire": "ナカヤマフェスタ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 4.4,
+         "pop": 2,
          "mark": "△",
          "p1": 0.1186,
          "top2": 0.235,
@@ -4734,8 +4746,8 @@
          "damsire": "Pivotal",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 48.8,
+         "pop": 10,
          "mark": "△",
          "p1": 0.1272,
          "top2": 0.25,
@@ -4936,8 +4948,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 24.4,
+         "pop": 6,
          "mark": "",
          "p1": 0.0133,
          "top2": 0.032,
@@ -5138,8 +5150,8 @@
          "damsire": "アイルハヴアナザー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 6.9,
+         "pop": 3,
          "mark": "▲",
          "p1": 0.1498,
          "top2": 0.287,
@@ -5340,8 +5352,8 @@
          "damsire": "サウスヴィグラス",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 48.8,
+         "pop": 11,
          "mark": "",
          "p1": 0.0266,
          "top2": 0.061,
@@ -5542,8 +5554,8 @@
          "damsire": "ゼンノロブロイ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 24.4,
+         "pop": 7,
          "mark": "○",
          "p1": 0.1583,
          "top2": 0.301,
@@ -5744,8 +5756,8 @@
          "damsire": "ルーラーシップ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 48.8,
+         "pop": 12,
          "mark": "",
          "p1": 0.0126,
          "top2": 0.031,
@@ -5946,8 +5958,8 @@
          "damsire": "Dubawi",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 8.1,
+         "pop": 4,
          "mark": "☆",
          "p1": 0.084,
          "top2": 0.174,
@@ -6148,8 +6160,8 @@
          "damsire": "フレンチデピュティ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 24.4,
+         "pop": 8,
          "mark": "",
          "p1": 0.0076,
          "top2": 0.019,
@@ -6350,8 +6362,8 @@
          "damsire": "キングカメハメハ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 24.4,
+         "pop": 9,
          "mark": "",
          "p1": 0.008,
          "top2": 0.02,
@@ -6552,8 +6564,8 @@
          "damsire": "ロードカナロア",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 2.1,
+         "pop": 1,
          "mark": "◎",
          "p1": 0.1851,
          "top2": 0.342,
@@ -6927,8 +6939,8 @@
          "damsire": "Pure Prize",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 48.8,
+         "pop": 13,
          "mark": "",
          "p1": 0.0499,
          "top2": 0.109,
@@ -7461,8 +7473,14 @@
          "p": 0.1374
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "3",
+        "p": 0.127,
+        "o": 48.8,
+        "ev": 6.207
+       },
        "conf": 0.16,
        "points": [
         "本命 12 マリリンバローズ（1着 18.5%）、対抗 7 スピニンググローブ（15.8%）、単穴 5 アンバサダネージュ。",
@@ -7688,8 +7706,8 @@
          "damsire": "ハーツクライ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 87.2,
+         "pop": 9,
          "mark": "",
          "p1": 0.012,
          "top2": 0.029,
@@ -8092,8 +8110,8 @@
          "damsire": "ゼンノロブロイ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 4.3,
+         "pop": 2,
          "mark": "",
          "p1": 0.0388,
          "top2": 0.086,
@@ -8216,8 +8234,8 @@
          "damsire": "Royal Anthem",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 10.9,
+         "pop": 4,
          "mark": "",
          "p1": 0.058,
          "top2": 0.125,
@@ -8366,8 +8384,8 @@
          "damsire": "ウォーエンブレム",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 87.2,
+         "pop": 10,
          "mark": "",
          "p1": 0.006,
          "top2": 0.016,
@@ -8568,8 +8586,8 @@
          "damsire": "Montjeu",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 17.4,
+         "pop": 5,
          "mark": "○",
          "p1": 0.1221,
          "top2": 0.242,
@@ -8770,8 +8788,8 @@
          "damsire": "スクリーンヒーロー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 29,
+         "pop": 6,
          "mark": "△",
          "p1": 0.0677,
          "top2": 0.143,
@@ -8972,8 +8990,8 @@
          "damsire": "キングカメハメハ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 29,
+         "pop": 7,
          "mark": "▲",
          "p1": 0.1053,
          "top2": 0.212,
@@ -9174,8 +9192,8 @@
          "damsire": "ハーツクライ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 29,
+         "pop": 8,
          "mark": "☆",
          "p1": 0.0642,
          "top2": 0.137,
@@ -9376,8 +9394,8 @@
          "damsire": "スニッツェル",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 1.6,
+         "pop": 1,
          "mark": "◎",
          "p1": 0.2804,
          "top2": 0.472,
@@ -9578,8 +9596,8 @@
          "damsire": "ルーラーシップ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 8.7,
+         "pop": 3,
          "mark": "",
          "p1": 0.0499,
          "top2": 0.109,
@@ -10106,8 +10124,8 @@
          "damsire": "タニノギムレット",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 87.2,
+         "pop": 11,
          "mark": "",
          "p1": 0.0312,
          "top2": 0.071,
@@ -10308,8 +10326,8 @@
          "damsire": "Super Saver",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 87.2,
+         "pop": 12,
          "mark": "",
          "p1": 0.0169,
          "top2": 0.04,
@@ -10640,8 +10658,14 @@
          "p": 0.1113
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "9",
+        "p": 0.105,
+        "o": 29,
+        "ev": 3.054
+       },
        "conf": 0.155,
        "points": [
         "本命 11 キアラメンテ（1着 28.0%）、対抗 7 ジーティーメティオ（12.2%）、単穴 9 シアブリス。",
@@ -10649,6 +10673,7 @@
         "新潟芝1800m（194レース）：脚質別の3着内率 逃げ30%・先行27%・差し24%・追込11%。枠の得失 1枠0.83 2枠0.98 3枠1.01 4枠1.02 5枠1.07 6枠0.94 7枠1.03 8枠1.06（1.00が損得なし）。",
         "馬体重：このコースの3着内馬は平均 465kg で、出走平均 461kg より +3.6kg（ほぼ中立）。勝ち馬の平均 466kg。",
         "前走のレベルが高い：11 キアラメンテ（Lv+13・2着）、15 ミエノフェアリー（Lv+13・13着）。出走馬の次走成績から見た相手関係で、+10 は「出走馬が次走で平均より1割上の着順」。",
+        "上位人気だが前走の相手は弱かった：4 サルワールカミーズ（2人気・前走 Lv-13）、12 ロゼフェリシア（3人気・前走 Lv-13）。",
         "明確な逃げ馬が不在。先行馬有利の流れになりやすい。",
         "馬連の本線 7-11（7.8%）、三連複 7-9-11（3.4%）。"
        ],
@@ -10691,8 +10716,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 35.2,
+         "pop": 11,
          "mark": "△",
          "p1": 0.0785,
          "top2": 0.156,
@@ -10759,8 +10784,8 @@
          "damsire": "ブラックタイド",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 17.6,
+         "pop": 3,
          "mark": "",
          "p1": 0.0565,
          "top2": 0.116,
@@ -10827,8 +10852,8 @@
          "damsire": "Hard Spun",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 1.6,
+         "pop": 1,
          "mark": "◎",
          "p1": 0.1229,
          "top2": 0.231,
@@ -10963,8 +10988,8 @@
          "damsire": "ダンカーク",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 5.8,
+         "pop": 2,
          "mark": "☆",
          "p1": 0.0648,
          "top2": 0.131,
@@ -11031,8 +11056,8 @@
          "damsire": "タイキシャトル",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 17.6,
+         "pop": 4,
          "mark": "",
          "p1": 0.0444,
          "top2": 0.093,
@@ -11099,8 +11124,8 @@
          "damsire": "リオンディーズ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 17.6,
+         "pop": 5,
          "mark": "",
          "p1": 0.0407,
          "top2": 0.086,
@@ -11167,8 +11192,8 @@
          "damsire": "クリプティックラスカル",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 17.6,
+         "pop": 6,
          "mark": "",
          "p1": 0.0584,
          "top2": 0.119,
@@ -11235,8 +11260,8 @@
          "damsire": "ネオユニヴァース",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 17.6,
+         "pop": 7,
          "mark": "",
          "p1": 0.058,
          "top2": 0.118,
@@ -11303,8 +11328,8 @@
          "damsire": "サクラバクシンオー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 17.6,
+         "pop": 8,
          "mark": "▲",
          "p1": 0.0923,
          "top2": 0.18,
@@ -11371,8 +11396,8 @@
          "damsire": "ゴールドアリュール",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 17.6,
+         "pop": 9,
          "mark": "○",
          "p1": 0.0972,
          "top2": 0.188,
@@ -11507,8 +11532,8 @@
          "damsire": "アグネスタキオン",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 17.6,
+         "pop": 10,
          "mark": "",
          "p1": 0.0546,
          "top2": 0.112,
@@ -11841,8 +11866,14 @@
          "p": 0.055
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "1",
+        "p": 0.079,
+        "o": 35.2,
+        "ev": 2.763
+       },
        "conf": 0.022,
        "points": [
         "本命 3 クリスタルシャイン（1着 12.3%）、対抗 11 セイラルレモン（9.7%）、単穴 10 タニセンファイア。",
@@ -12093,8 +12124,8 @@
          "damsire": "ハービンジャー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 19.4,
+         "pop": 5,
          "mark": "△",
          "p1": 0.1181,
          "top2": 0.233,
@@ -12295,8 +12326,8 @@
          "damsire": "Galileo",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 25.8,
+         "pop": 7,
          "mark": "▲",
          "p1": 0.1619,
          "top2": 0.304,
@@ -12497,8 +12528,8 @@
          "damsire": "Skipshot",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 25.8,
+         "pop": 8,
          "mark": "◎",
          "p1": 0.1789,
          "top2": 0.331,
@@ -12647,8 +12678,8 @@
          "damsire": "ハーツクライ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 77.6,
+         "pop": 12,
          "mark": "",
          "p1": 0.0296,
          "top2": 0.067,
@@ -12849,8 +12880,8 @@
          "damsire": "ハーツクライ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 25.8,
+         "pop": 9,
          "mark": "☆",
          "p1": 0.0624,
          "top2": 0.132,
@@ -13051,8 +13082,8 @@
          "damsire": "ダノンシャンティ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 25.8,
+         "pop": 10,
          "mark": "",
          "p1": 0.0212,
          "top2": 0.049,
@@ -13253,8 +13284,8 @@
          "damsire": "ステイゴールド",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 1.4,
+         "pop": 1,
          "mark": "",
          "p1": 0.0384,
          "top2": 0.085,
@@ -13455,8 +13486,8 @@
          "damsire": "ロサード",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 19.4,
+         "pop": 6,
          "mark": "",
          "p1": 0.0503,
          "top2": 0.109,
@@ -13657,8 +13688,8 @@
          "damsire": "キングカメハメハ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 15.5,
+         "pop": 4,
          "mark": "",
          "p1": 0.0422,
          "top2": 0.092,
@@ -13859,8 +13890,8 @@
          "damsire": "ヴィクトワールピサ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 11,
+         "pop": 3,
          "mark": "△",
          "p1": 0.0769,
          "top2": 0.159,
@@ -14263,8 +14294,8 @@
          "damsire": "ロージズインメイ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 25.8,
+         "pop": 11,
          "mark": "",
          "p1": 0.0269,
          "top2": 0.061,
@@ -14462,8 +14493,8 @@
          "damsire": "ディープブリランテ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 77.6,
+         "pop": 13,
          "mark": "",
          "p1": 0.0122,
          "top2": 0.03,
@@ -14664,8 +14695,8 @@
          "damsire": "オルフェーヴル",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 9.7,
+         "pop": 2,
          "mark": "○",
          "p1": 0.1655,
          "top2": 0.31,
@@ -14996,8 +15027,14 @@
          "p": 0.1221
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "4",
+        "p": 0.179,
+        "o": 25.8,
+        "ev": 4.616
+       },
        "conf": 0.135,
        "points": [
         "本命 4 ヴェニゼロス（1着 17.9%）、対抗 15 トラカイキャッスル（16.5%）、単穴 3 ダーリンダーリン。",
@@ -15249,8 +15286,8 @@
          "damsire": "ハーツクライ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 36.8,
+         "pop": 7,
          "mark": "",
          "p1": 0.0523,
          "top2": 0.114,
@@ -15627,8 +15664,8 @@
          "damsire": "First Samurai",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 36.8,
+         "pop": 8,
          "mark": "",
          "p1": 0.0173,
          "top2": 0.041,
@@ -16031,8 +16068,8 @@
          "damsire": "Roman Ruler",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 18.4,
+         "pop": 4,
          "mark": "☆",
          "p1": 0.0736,
          "top2": 0.155,
@@ -16207,8 +16244,8 @@
          "damsire": "Manduro",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 18.4,
+         "pop": 5,
          "mark": "△",
          "p1": 0.0906,
          "top2": 0.187,
@@ -16409,8 +16446,8 @@
          "damsire": "ボーナスフィーバー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 12.2,
+         "pop": 3,
          "mark": "▲",
          "p1": 0.0949,
          "top2": 0.194,
@@ -16608,8 +16645,8 @@
          "damsire": "キングカメハメハ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 36.8,
+         "pop": 9,
          "mark": "",
          "p1": 0.0344,
          "top2": 0.078,
@@ -16807,8 +16844,8 @@
          "damsire": "Creative Cause",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 18.4,
+         "pop": 6,
          "mark": "",
          "p1": 0.0429,
          "top2": 0.095,
@@ -17009,8 +17046,8 @@
          "damsire": "ゴールドアリュール",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 4.6,
+         "pop": 2,
          "mark": "",
          "p1": 0.0103,
          "top2": 0.026,
@@ -17211,8 +17248,8 @@
          "damsire": "ゴールドアリュール",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 36.8,
+         "pop": 10,
          "mark": "",
          "p1": 0.0019,
          "top2": 0.005,
@@ -17615,8 +17652,8 @@
          "damsire": "Fastnet Rock",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 1.5,
+         "pop": 1,
          "mark": "○",
          "p1": 0.1622,
          "top2": 0.309,
@@ -17765,8 +17802,8 @@
          "damsire": "アーネストリー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 36.8,
+         "pop": 11,
          "mark": "",
          "p1": 0.0234,
          "top2": 0.055,
@@ -18097,14 +18134,21 @@
          "p": 0.1198
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "2",
+        "p": 0.052,
+        "o": 36.8,
+        "ev": 1.925
+       },
        "conf": 0.156,
        "points": [
         "本命 1 クリムゾンリーフ（1着 25.9%）、対抗 14 サトノクラシカル（16.2%）、単穴 8 ブルージャイアント。",
         "新潟ダコース（競馬場ガイド）：左回り・直線 353.9m・高低差 0.6m。ダートは1番人気が強い（1着率 35%）。",
         "新潟ダ1800m（449レース）：脚質別の3着内率 逃げ38%・先行27%・差し16%・追込11%。枠の得失 1枠0.73 2枠0.90 3枠1.03 4枠0.99 5枠1.15 6枠1.03 7枠0.99 8枠1.04（1.00が損得なし）。",
         "馬体重：このコースの3着内馬は平均 479kg で、出走平均 478kg より +1.1kg（ほぼ中立）。勝ち馬の平均 480kg。",
+        "上位人気だが前走の相手は弱かった：11 コスモシェルベット（2人気・前走 Lv-9）。",
         "逃げ候補 1 クリムゾンリーフ、3 ダノンヴェステル（競り合えばペースが上がり差しが届く）。",
         "馬連の本線 1-14（9.5%）、三連複 1-8-14（3.8%）。"
        ],
@@ -18349,8 +18393,8 @@
          "damsire": "Dalakhani",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 14.4,
+         "pop": 7,
          "mark": "",
          "p1": 0.011,
          "top2": 0.026,
@@ -18753,8 +18797,8 @@
          "damsire": "キングカメハメハ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 28.8,
+         "pop": 11,
          "mark": "○",
          "p1": 0.1076,
          "top2": 0.205,
@@ -18955,8 +18999,8 @@
          "damsire": "Liaison",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 14.4,
+         "pop": 8,
          "mark": "△",
          "p1": 0.0854,
          "top2": 0.167,
@@ -19154,8 +19198,8 @@
          "damsire": "カコイーシーズ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 28.8,
+         "pop": 12,
          "mark": "",
          "p1": 0.0329,
          "top2": 0.07,
@@ -19356,8 +19400,8 @@
          "damsire": "ステイゴールド",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 9.6,
+         "pop": 4,
          "mark": "◎",
          "p1": 0.1187,
          "top2": 0.223,
@@ -19558,8 +19602,8 @@
          "damsire": "ヴィクトワールピサ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 28.8,
+         "pop": 13,
          "mark": "△",
          "p1": 0.0878,
          "top2": 0.171,
@@ -19760,8 +19804,8 @@
          "damsire": "アドマイヤベガ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 9.6,
+         "pop": 5,
          "mark": "",
          "p1": 0.013,
          "top2": 0.03,
@@ -19959,8 +20003,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 5.7,
+         "pop": 1,
          "mark": "",
          "p1": 0.0533,
          "top2": 0.109,
@@ -20161,8 +20205,8 @@
          "damsire": "ハードスパン",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 7.2,
+         "pop": 3,
          "mark": "",
          "p1": 0.0437,
          "top2": 0.091,
@@ -20363,8 +20407,8 @@
          "damsire": "グラスワンダー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 28.8,
+         "pop": 14,
          "mark": "",
          "p1": 0.0687,
          "top2": 0.137,
@@ -20565,8 +20609,8 @@
          "damsire": "ハーツクライ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 28.8,
+         "pop": 15,
          "mark": "",
          "p1": 0.0479,
          "top2": 0.099,
@@ -20767,8 +20811,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 14.4,
+         "pop": 9,
          "mark": "▲",
          "p1": 0.1025,
          "top2": 0.196,
@@ -21171,8 +21215,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 9.6,
+         "pop": 6,
          "mark": "☆",
          "p1": 0.0696,
          "top2": 0.139,
@@ -21373,8 +21417,8 @@
          "damsire": "ハーツクライ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 14.4,
+         "pop": 10,
          "mark": "",
          "p1": 0.0144,
          "top2": 0.033,
@@ -21575,8 +21619,8 @@
          "damsire": "ハービンジャー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 5.7,
+         "pop": 2,
          "mark": "",
          "p1": 0.0293,
          "top2": 0.063,
@@ -21907,8 +21951,14 @@
          "p": 0.0606
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "4",
+        "p": 0.108,
+        "o": 28.8,
+        "ev": 3.099
+       },
        "conf": 0.062,
        "points": [
         "本命 7 セシルブリュネ（1着 11.9%）、対抗 4 モティスフォント（10.8%）、単穴 14 ベイリークロア。",
@@ -21916,6 +21966,7 @@
         "新潟芝1600m（162レース）：脚質別の3着内率 逃げ30%・先行30%・差し19%・追込9%。枠の得失 1枠0.93 2枠0.88 3枠0.93 4枠1.01 5枠1.09 6枠1.21 7枠1.04 8枠0.88（1.00が損得なし）。",
         "馬体重：このコースの3着内馬は平均 464kg で、出走平均 462kg より +2.8kg（ほぼ中立）。勝ち馬の平均 465kg。",
         "前走のレベルが高い：4 モティスフォント（Lv+10・8着）、1 ロンティケチャップ（Lv+7・12着）、2 ランドプリメーロ（Lv+6・15着）。出走馬の次走成績から見た相手関係で、+10 は「出走馬が次走で平均より1割上の着順」。",
+        "上位人気だが前走の相手は弱かった：11 ゼットエイト（3人気・前走 Lv-8）。",
         "逃げ候補 5 ルートサーティーン（単騎なら楽に運べる）。",
         "馬連の本線 4-7（2.7%）、三連複 4-7-14（1.0%）。"
        ],
@@ -21958,8 +22009,8 @@
          "damsire": "ファルブラヴ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 42.4,
+         "pop": 8,
          "mark": "○",
          "p1": 0.1659,
          "top2": 0.31,
@@ -22160,8 +22211,8 @@
          "damsire": "ダイワメジャー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 7,
+         "pop": 3,
          "mark": "",
          "p1": 0.002,
          "top2": 0.005,
@@ -22362,8 +22413,8 @@
          "damsire": "ロージズインメイ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 7,
+         "pop": 4,
          "mark": "△",
          "p1": 0.0895,
          "top2": 0.182,
@@ -22564,8 +22615,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 1.9,
+         "pop": 1,
          "mark": "▲",
          "p1": 0.1101,
          "top2": 0.218,
@@ -22766,8 +22817,8 @@
          "damsire": "Southern Image",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 42.4,
+         "pop": 9,
          "mark": "△",
          "p1": 0.1085,
          "top2": 0.216,
@@ -22968,8 +23019,8 @@
          "damsire": "ファルブラヴ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 42.4,
+         "pop": 10,
          "mark": "",
          "p1": 0.0186,
          "top2": 0.043,
@@ -23167,8 +23218,8 @@
          "damsire": "ルールオブロー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 21.2,
+         "pop": 5,
          "mark": "",
          "p1": 0.0303,
          "top2": 0.068,
@@ -23369,8 +23420,8 @@
          "damsire": "Blame",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 21.2,
+         "pop": 6,
          "mark": "",
          "p1": 0.0528,
          "top2": 0.113,
@@ -23519,8 +23570,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 42.4,
+         "pop": 11,
          "mark": "◎",
          "p1": 0.1982,
          "top2": 0.358,
@@ -23721,8 +23772,8 @@
          "damsire": "アドマイヤコジーン",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 4.7,
+         "pop": 2,
          "mark": "",
          "p1": 0.0367,
          "top2": 0.081,
@@ -23923,8 +23974,8 @@
          "damsire": "ストーミングホーム",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 21.2,
+         "pop": 7,
          "mark": "☆",
          "p1": 0.0644,
          "top2": 0.135,
@@ -24861,8 +24912,14 @@
          "p": 0.1129
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "9",
+        "p": 0.198,
+        "o": 42.4,
+        "ev": 8.404
+       },
        "conf": 0.11,
        "points": [
         "本命 9 エルナト（1着 19.8%）、対抗 1 ディアアズール（16.6%）、単穴 4 ヴィジョンメーカー。",
@@ -24912,8 +24969,8 @@
          "damsire": "Medaglia d Oro",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 7.3,
+         "pop": 4,
          "mark": "",
          "p1": 0.0233,
          "top2": 0.053,
@@ -25114,8 +25171,8 @@
          "damsire": "スタチューオブリバティ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 36.8,
+         "pop": 9,
          "mark": "△",
          "p1": 0.0894,
          "top2": 0.178,
@@ -25316,8 +25373,8 @@
          "damsire": "Dubawi",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 2.4,
+         "pop": 1,
          "mark": "○",
          "p1": 0.1529,
          "top2": 0.285,
@@ -25518,8 +25575,8 @@
          "damsire": "アドマイヤマックス",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 18.4,
+         "pop": 7,
          "mark": "",
          "p1": 0.0588,
          "top2": 0.123,
@@ -25720,8 +25777,8 @@
          "damsire": "Majestic Warrior",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 12.2,
+         "pop": 5,
          "mark": "▲",
          "p1": 0.144,
          "top2": 0.27,
@@ -25922,8 +25979,8 @@
          "damsire": "Tapit",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 18.4,
+         "pop": 8,
          "mark": "",
          "p1": 0.0307,
          "top2": 0.068,
@@ -26124,8 +26181,8 @@
          "damsire": "Forest Camp",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 6.1,
+         "pop": 3,
          "mark": "",
          "p1": 0.0417,
          "top2": 0.09,
@@ -26326,8 +26383,8 @@
          "damsire": "マンハッタンカフェ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 36.8,
+         "pop": 10,
          "mark": "",
          "p1": 0.0385,
          "top2": 0.083,
@@ -26528,8 +26585,8 @@
          "damsire": "Forestry",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 36.8,
+         "pop": 11,
          "mark": "△",
          "p1": 0.0741,
          "top2": 0.151,
@@ -26730,8 +26787,8 @@
          "damsire": "キングカメハメハ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 5.2,
+         "pop": 2,
          "mark": "",
          "p1": 0.0288,
          "top2": 0.064,
@@ -26932,8 +26989,8 @@
          "damsire": "ロードアルティマ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 12.2,
+         "pop": 6,
          "mark": "☆",
          "p1": 0.0604,
          "top2": 0.126,
@@ -28072,8 +28129,14 @@
          "p": 0.0844
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "2",
+        "p": 0.089,
+        "o": 36.8,
+        "ev": 3.29
+       },
        "conf": 0.08,
        "points": [
         "本命 14 ロイヤルスパイア（1着 15.4%）、対抗 3 ダノンモンテローザ（15.3%）、単穴 5 シルフズミスチーフ。",
@@ -28122,8 +28185,8 @@
          "damsire": "パイロ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 7.2,
+         "pop": 4,
          "mark": "",
          "p1": 0.0159,
          "top2": 0.037,
@@ -28324,8 +28387,8 @@
          "damsire": "ジャングルポケット",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 6.1,
+         "pop": 2,
          "mark": "",
          "p1": 0.0307,
          "top2": 0.069,
@@ -28930,8 +28993,8 @@
          "damsire": "Hurricane Run",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 43.2,
+         "pop": 11,
          "mark": "",
          "p1": 0.0481,
          "top2": 0.103,
@@ -29129,8 +29192,8 @@
          "damsire": "フサイチコンコルド",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 43.2,
+         "pop": 12,
          "mark": "△",
          "p1": 0.0687,
          "top2": 0.143,
@@ -29331,8 +29394,8 @@
          "damsire": "サンデーサイレンス",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 21.6,
+         "pop": 9,
          "mark": "",
          "p1": 0.008,
          "top2": 0.02,
@@ -29533,8 +29596,8 @@
          "damsire": "スウェプトオーヴァーボード",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 4.8,
+         "pop": 1,
          "mark": "▲",
          "p1": 0.1183,
          "top2": 0.231,
@@ -29735,8 +29798,8 @@
          "damsire": "クロフネ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 14.4,
+         "pop": 7,
          "mark": "",
          "p1": 0.0132,
          "top2": 0.031,
@@ -29937,8 +30000,8 @@
          "damsire": "ダイワメジャー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 14.4,
+         "pop": 8,
          "mark": "",
          "p1": 0.035,
          "top2": 0.077,
@@ -30139,8 +30202,8 @@
          "damsire": "Woodman",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 21.6,
+         "pop": 10,
          "mark": "",
          "p1": 0.0084,
          "top2": 0.021,
@@ -30341,8 +30404,8 @@
          "damsire": "スクリーンヒーロー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 43.2,
+         "pop": 13,
          "mark": "☆",
          "p1": 0.05,
          "top2": 0.107,
@@ -30543,8 +30606,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 43.2,
+         "pop": 14,
          "mark": "",
          "p1": 0.033,
          "top2": 0.073,
@@ -30745,8 +30808,8 @@
          "damsire": "オルフェーヴル",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 43.2,
+         "pop": 15,
          "mark": "",
          "p1": 0.043,
          "top2": 0.093,
@@ -30947,8 +31010,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 6.1,
+         "pop": 3,
          "mark": "◎",
          "p1": 0.2554,
          "top2": 0.434,
@@ -31149,8 +31212,8 @@
          "damsire": "スマートファルコン",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 7.2,
+         "pop": 5,
          "mark": "",
          "p1": 0.0455,
          "top2": 0.098,
@@ -31351,8 +31414,8 @@
          "damsire": "Multiplex",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 10.8,
+         "pop": 6,
          "mark": "○",
          "p1": 0.1257,
          "top2": 0.243,
@@ -31882,8 +31945,14 @@
          "p": 0.0849
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "6",
+        "p": 0.069,
+        "o": 43.2,
+        "ev": 2.968
+       },
        "conf": 0.141,
        "points": [
         "本命 15 サトノワーグナー（1着 25.5%）、対抗 17 ポッドロワール（12.6%）、単穴 8 ハッピーエンジェル。",
@@ -31891,6 +31960,7 @@
         "新潟芝1200m（99レース）：脚質別の3着内率 逃げ33%・先行24%・差し15%・追込6%。枠の得失 1枠0.73 2枠0.88 3枠0.63 4枠0.86 5枠1.18 6枠1.30 7枠1.28 8枠1.02（1.00が損得なし）。",
         "馬体重：このコースの3着内馬は平均 461kg で、出走平均 458kg より +3.7kg（ほぼ中立）。勝ち馬の平均 464kg。",
         "前走のレベルが高い：15 サトノワーグナー（Lv+10・1着）。出走馬の次走成績から見た相手関係で、+10 は「出走馬が次走で平均より1割上の着順」。",
+        "上位人気だが前走の相手は弱かった：2 ロードマイライフ（2人気・前走 Lv-7）。",
         "逃げ候補 6 ベイビーキッス、8 ハッピーエンジェル、15 サトノワーグナー（競り合えばペースが上がり差しが届く）。",
         "馬連の本線 15-17（7.1%）、三連複 8-15-17（3.3%）。"
        ],
@@ -32135,8 +32205,8 @@
          "damsire": "ホワイトマズル",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 10.6,
+         "pop": 2,
          "mark": "△",
          "p1": 0.0818,
          "top2": 0.164,
@@ -32337,8 +32407,8 @@
          "damsire": "ウォーニング",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 53.2,
+         "pop": 5,
          "mark": "",
          "p1": 0.0391,
          "top2": 0.084,
@@ -32539,8 +32609,8 @@
          "damsire": "ヴィクトワールピサ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 106.4,
+         "pop": 8,
          "mark": "",
          "p1": 0.0182,
          "top2": 0.041,
@@ -32943,8 +33013,8 @@
          "damsire": "フレンチデピュティ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 53.2,
+         "pop": 6,
          "mark": "",
          "p1": 0.0044,
          "top2": 0.011,
@@ -33067,8 +33137,8 @@
          "damsire": "スウィフトカレント",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 106.4,
+         "pop": 9,
          "mark": "",
          "p1": 0.0023,
          "top2": 0.006,
@@ -33269,8 +33339,8 @@
          "damsire": "Rossini",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 1.1,
+         "pop": 1,
          "mark": "",
          "p1": 0.0673,
          "top2": 0.137,
@@ -33471,8 +33541,8 @@
          "damsire": "ロードカナロア",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 53.2,
+         "pop": 7,
          "mark": "",
          "p1": 0.0144,
          "top2": 0.033,
@@ -33673,8 +33743,8 @@
          "damsire": "アンライバルド",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 26.6,
+         "pop": 3,
          "mark": "◎",
          "p1": 0.1733,
          "top2": 0.313,
@@ -33875,8 +33945,8 @@
          "damsire": "ダンスインザダーク",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 35.4,
+         "pop": 4,
          "mark": "",
          "p1": 0.0298,
          "top2": 0.065,
@@ -34077,8 +34147,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 106.4,
+         "pop": 10,
          "mark": "○",
          "p1": 0.1378,
          "top2": 0.258,
@@ -34279,8 +34349,8 @@
          "damsire": "コロナドズクエスト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 106.4,
+         "pop": 11,
          "mark": "",
          "p1": 0.0518,
          "top2": 0.108,
@@ -34481,8 +34551,8 @@
          "damsire": "オース",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 106.4,
+         "pop": 12,
          "mark": "",
          "p1": 0.0252,
          "top2": 0.056,
@@ -34683,8 +34753,8 @@
          "damsire": "War Front",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 106.4,
+         "pop": 13,
          "mark": "",
          "p1": 0.0506,
          "top2": 0.106,
@@ -34885,8 +34955,8 @@
          "damsire": "ブラックホーク",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 106.4,
+         "pop": 14,
          "mark": "▲",
          "p1": 0.0874,
          "top2": 0.173,
@@ -35087,8 +35157,8 @@
          "damsire": "キングカメハメハ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 106.4,
+         "pop": 15,
          "mark": "☆",
          "p1": 0.0796,
          "top2": 0.16,
@@ -35621,8 +35691,14 @@
          "p": 0.0829
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "10",
+        "p": 0.173,
+        "o": 26.6,
+        "ev": 4.61
+       },
        "conf": 0.111,
        "points": [
         "本命 10 ヨドノティアラ（1着 17.3%）、対抗 12 イングラム（13.8%）、単穴 16 ラインピクシー。",
@@ -35630,6 +35706,7 @@
         "新潟芝1000m（130レース）：脚質別の3着内率 逃げ41%・先行22%・差し11%・追込6%。枠の得失 1枠0.30 2枠0.62 3枠0.53 4枠0.66 5枠0.75 6枠1.33 7枠1.35 8枠2.02（1.00が損得なし）。",
         "馬体重：このコースの3着内馬は平均 465kg で、出走平均 462kg より +3.9kg（ほぼ中立）。勝ち馬の平均 467kg。",
         "前走のレベルが高い：15 ミヤフロント（Lv+11・11着）、5 セイラダンサー（Lv+8・13着）、11 レモンバーム（Lv+8・11着）、18 オタルイーグル（Lv+8・16着）。出走馬の次走成績から見た相手関係で、+10 は「出走馬が次走で平均より1割上の着順」。",
+        "上位人気だが前走の相手は弱かった：2 ベルタソ（2人気・前走 Lv-9）、8 ミエノブラボー（1人気・前走 Lv-9）、10 ヨドノティアラ（3人気・前走 Lv-9）。",
         "逃げ候補 2 ベルタソ、11 レモンバーム、18 オタルイーグル（競り合えばペースが上がり差しが届く）。",
         "馬連の本線 10-12（5.1%）、三連複 10-12-16（1.7%）。"
        ],
@@ -35677,8 +35754,8 @@
          "damsire": "ハーツクライ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 70.4,
+         "pop": 8,
          "mark": "☆",
          "p1": 0.0106,
          "top2": 0.041,
@@ -35774,8 +35851,8 @@
          "damsire": "エンパイアメーカー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 2,
+         "pop": 1,
          "mark": "◎",
          "p1": 0.6458,
          "top2": 0.883,
@@ -35924,8 +36001,8 @@
          "damsire": "オルフェーヴル",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 23.4,
+         "pop": 6,
          "mark": "○",
          "p1": 0.1835,
          "top2": 0.517,
@@ -36048,8 +36125,8 @@
          "damsire": "ドリームジャーニー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 2.9,
+         "pop": 2,
          "mark": "△",
          "p1": 0.0202,
          "top2": 0.074,
@@ -36242,8 +36319,8 @@
          "damsire": "フレンチデピュティ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 17.6,
+         "pop": 5,
          "mark": "△",
          "p1": 0.0438,
          "top2": 0.148,
@@ -36339,8 +36416,8 @@
          "damsire": "ゼンノロブロイ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 70.4,
+         "pop": 9,
          "mark": "",
          "p1": 0.0082,
          "top2": 0.032,
@@ -36436,8 +36513,8 @@
          "damsire": "Bernardini",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 7,
+         "pop": 3,
          "mark": "▲",
          "p1": 0.0644,
          "top2": 0.209,
@@ -36612,8 +36689,8 @@
          "damsire": "チチカステナンゴ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 23.4,
+         "pop": 7,
          "mark": "",
          "p1": 0.0014,
          "top2": 0.006,
@@ -36762,8 +36839,8 @@
          "damsire": "トゥザワールド",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 70.4,
+         "pop": 10,
          "mark": "",
          "p1": 0.0008,
          "top2": 0.004,
@@ -36859,8 +36936,8 @@
          "damsire": "バトルプラン",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 11.7,
+         "pop": 4,
          "mark": "",
          "p1": 0.0051,
          "top2": 0.021,
@@ -37289,8 +37366,14 @@
          "p": 0.1936
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "3",
+        "p": 0.183,
+        "o": 23.4,
+        "ev": 4.294
+       },
        "conf": 0.52,
        "points": [
         "本命 2 ワレモコウ（1着 64.6%）、対抗 3 アフィーリア（18.4%）、単穴 8 パルセノスミハ。",
@@ -37608,8 +37691,8 @@
          "damsire": "クロフネ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 39.6,
+         "pop": 3,
          "mark": "△",
          "p1": 0.0413,
          "top2": 0.116,
@@ -37705,8 +37788,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 2.3,
+         "pop": 2,
          "mark": "▲",
          "p1": 0.0971,
          "top2": 0.249,
@@ -37802,8 +37885,8 @@
          "damsire": "スクリーンヒーロー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 79.2,
+         "pop": 7,
          "mark": "",
          "p1": 0.0065,
          "top2": 0.022,
@@ -37952,8 +38035,8 @@
          "damsire": "Medaglia d Oro",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 39.6,
+         "pop": 4,
          "mark": "◎",
          "p1": 0.4525,
          "top2": 0.76,
@@ -38049,8 +38132,8 @@
          "damsire": "ルーラーシップ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 79.2,
+         "pop": 8,
          "mark": "",
          "p1": 0.0018,
          "top2": 0.007,
@@ -38146,8 +38229,8 @@
          "damsire": "キングカメハメハ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 39.6,
+         "pop": 5,
          "mark": "",
          "p1": 0.0022,
          "top2": 0.008,
@@ -38243,8 +38326,8 @@
          "damsire": "War Front",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 1.4,
+         "pop": 1,
          "mark": "○",
          "p1": 0.341,
          "top2": 0.671,
@@ -38340,8 +38423,8 @@
          "damsire": "マンハッタンカフェ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 39.6,
+         "pop": 6,
          "mark": "△",
          "p1": 0.0446,
          "top2": 0.125,
@@ -38646,8 +38729,14 @@
          "p": 0.2136
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "6",
+        "p": 0.453,
+        "o": 39.6,
+        "ev": 17.919
+       },
        "conf": 0.416,
        "points": [
         "本命 6 ジーフォーリア（1着 45.2%）、対抗 9 スワーヴバシレウス（34.1%）、単穴 4 ガヤーズアモーレ。",
@@ -38718,8 +38807,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 61.6,
+         "pop": 6,
          "mark": "",
          "p1": 0.0068,
          "top2": 0.027,
@@ -39014,8 +39103,8 @@
          "damsire": "ゴールドアリュール",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 2.8,
+         "pop": 2,
          "mark": "☆",
          "p1": 0.0137,
          "top2": 0.05,
@@ -39111,8 +39200,8 @@
          "damsire": "Rock of Gibraltar",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 61.6,
+         "pop": 7,
          "mark": "",
          "p1": 0.0063,
          "top2": 0.025,
@@ -39284,8 +39373,8 @@
          "damsire": "チーフベアハート",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 61.6,
+         "pop": 8,
          "mark": "",
          "p1": 0.0099,
          "top2": 0.037,
@@ -39381,8 +39470,8 @@
          "damsire": "Kitten s Joy",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 5.1,
+         "pop": 3,
          "mark": "▲",
          "p1": 0.1063,
          "top2": 0.315,
@@ -39478,8 +39567,8 @@
          "damsire": "アグネスデジタル",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 61.6,
+         "pop": 9,
          "mark": "",
          "p1": 0.0009,
          "top2": 0.004,
@@ -39571,8 +39660,8 @@
          "damsire": "カジノドライヴ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 1.8,
+         "pop": 1,
          "mark": "◎",
          "p1": 0.6299,
          "top2": 0.869,
@@ -39695,8 +39784,8 @@
          "damsire": "リーチザクラウン",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 30.8,
+         "pop": 5,
          "mark": "",
          "p1": 0.0005,
          "top2": 0.002,
@@ -39792,8 +39881,8 @@
          "damsire": "ヴィクトワールピサ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 61.6,
+         "pop": 10,
          "mark": "△",
          "p1": 0.0445,
          "top2": 0.145,
@@ -39889,8 +39978,8 @@
          "damsire": "Circular Quay",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 20.5,
+         "pop": 4,
          "mark": "○",
          "p1": 0.1602,
          "top2": 0.447,
@@ -40293,8 +40382,14 @@
          "p": 0.1516
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "11",
+        "p": 0.16,
+        "o": 20.5,
+        "ev": 3.284
+       },
        "conf": 0.503,
        "points": [
         "本命 8 レッドマウロア（1着 63.0%）、対抗 11 ニューロファイター（16.0%）、単穴 6 センチュリースカイ。",
@@ -40365,8 +40460,8 @@
          "damsire": "クロフネ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 8.3,
+         "pop": 4,
          "mark": "",
          "p1": 0.0372,
          "top2": 0.079,
@@ -40433,8 +40528,8 @@
          "damsire": "スペシャルウィーク",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 19.4,
+         "pop": 6,
          "mark": "",
          "p1": 0.0236,
          "top2": 0.052,
@@ -40501,8 +40596,8 @@
          "damsire": "ハイアーゲーム",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 58.4,
+         "pop": 10,
          "mark": "",
          "p1": 0.0166,
          "top2": 0.038,
@@ -40637,8 +40732,8 @@
          "damsire": "Elusive City",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 58.4,
+         "pop": 11,
          "mark": "○",
          "p1": 0.1217,
          "top2": 0.23,
@@ -40705,8 +40800,8 @@
          "damsire": "タイキシャトル",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 58.4,
+         "pop": 12,
          "mark": "",
          "p1": 0.0397,
          "top2": 0.084,
@@ -40773,8 +40868,8 @@
          "damsire": "カジノドライヴ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 58.4,
+         "pop": 13,
          "mark": "",
          "p1": 0.0164,
          "top2": 0.037,
@@ -40841,8 +40936,8 @@
          "damsire": "ロードカナロア",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 29.2,
+         "pop": 7,
          "mark": "",
          "p1": 0.0361,
          "top2": 0.077,
@@ -40909,8 +41004,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 58.4,
+         "pop": 14,
          "mark": "▲",
          "p1": 0.0971,
          "top2": 0.188,
@@ -40977,8 +41072,8 @@
          "damsire": "サクラバクシンオー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 2.3,
+         "pop": 1,
          "mark": "☆",
          "p1": 0.0777,
          "top2": 0.154,
@@ -41045,8 +41140,8 @@
          "damsire": "マンハッタンカフェ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 29.2,
+         "pop": 8,
          "mark": "△",
          "p1": 0.0957,
          "top2": 0.186,
@@ -41113,8 +41208,8 @@
          "damsire": "ダンディコマンド",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 58.4,
+         "pop": 15,
          "mark": "",
          "p1": 0.058,
          "top2": 0.119,
@@ -41181,8 +41276,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 7.3,
+         "pop": 3,
          "mark": "◎",
          "p1": 0.1483,
          "top2": 0.272,
@@ -41249,8 +41344,8 @@
          "damsire": "Henrythenavigator",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 29.2,
+         "pop": 9,
          "mark": "",
          "p1": 0.0131,
          "top2": 0.03,
@@ -41317,8 +41412,8 @@
          "damsire": "キングカメハメハ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 5.8,
+         "pop": 2,
          "mark": "△",
          "p1": 0.0851,
          "top2": 0.168,
@@ -41385,8 +41480,8 @@
          "damsire": "キングズベスト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 9.7,
+         "pop": 5,
          "mark": "",
          "p1": 0.0179,
          "top2": 0.04,
@@ -41453,8 +41548,8 @@
          "damsire": "トーセンブライト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 58.4,
+         "pop": 16,
          "mark": "",
          "p1": 0.0414,
          "top2": 0.087,
@@ -41521,8 +41616,8 @@
          "damsire": "タイキシャトル",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 58.4,
+         "pop": 17,
          "mark": "",
          "p1": 0.0389,
          "top2": 0.082,
@@ -41719,8 +41814,14 @@
          "p": 0.0706
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "5",
+        "p": 0.122,
+        "o": 58.4,
+        "ev": 7.107
+       },
        "conf": 0.078,
        "points": [
         "本命 13 ハリペオ（1着 14.8%）、対抗 5 ジルファノーガ（12.2%）、単穴 9 シリアスドラマ。",
@@ -41790,8 +41891,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 2.4,
+         "pop": 1,
          "mark": "",
          "p1": 0.0398,
          "top2": 0.093,
@@ -41858,8 +41959,8 @@
          "damsire": "クロフネ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 33.6,
+         "pop": 7,
          "mark": "△",
          "p1": 0.0641,
          "top2": 0.143,
@@ -41926,8 +42027,8 @@
          "damsire": "Sageburg",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 8.4,
+         "pop": 3,
          "mark": "▲",
          "p1": 0.1887,
          "top2": 0.364,
@@ -41994,8 +42095,8 @@
          "damsire": "Jeremy",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 33.6,
+         "pop": 8,
          "mark": "",
          "p1": 0.0282,
          "top2": 0.068,
@@ -42130,8 +42231,8 @@
          "damsire": "タニノギムレット",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 16.8,
+         "pop": 5,
          "mark": "☆",
          "p1": 0.0548,
          "top2": 0.124,
@@ -42198,8 +42299,8 @@
          "damsire": "Sir Prancealot",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 8.4,
+         "pop": 4,
          "mark": "○",
          "p1": 0.1902,
          "top2": 0.366,
@@ -42266,8 +42367,8 @@
          "damsire": "ローエングリン",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 16.8,
+         "pop": 6,
          "mark": "",
          "p1": 0.0313,
          "top2": 0.075,
@@ -42334,8 +42435,8 @@
          "damsire": "キズナ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 2.4,
+         "pop": 2,
          "mark": "◎",
          "p1": 0.2206,
          "top2": 0.412,
@@ -42532,8 +42633,14 @@
          "p": 0.2321
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "2",
+        "p": 0.064,
+        "o": 33.6,
+        "ev": 2.154
+       },
        "conf": 0.114,
        "points": [
         "本命 9 ソーロブスト（1着 22.1%）、対抗 7 トナリティ（19.0%）、単穴 3 サトノエスパーダ。",
@@ -42603,8 +42710,8 @@
          "damsire": "ダンディコマンド",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 6,
+         "pop": 2,
          "mark": "",
          "p1": 0.0117,
          "top2": 0.029,
@@ -42805,8 +42912,8 @@
          "damsire": "Daiwa Major",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 60.8,
+         "pop": 6,
          "mark": "▲",
          "p1": 0.1624,
          "top2": 0.308,
@@ -42955,8 +43062,8 @@
          "damsire": "エンパイアメーカー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 20.2,
+         "pop": 5,
          "mark": "",
          "p1": 0.0149,
          "top2": 0.036,
@@ -43157,8 +43264,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 15.2,
+         "pop": 4,
          "mark": "☆",
          "p1": 0.0515,
          "top2": 0.112,
@@ -43359,8 +43466,8 @@
          "damsire": "デヒア",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 60.8,
+         "pop": 7,
          "mark": "",
          "p1": 0.0026,
          "top2": 0.007,
@@ -43535,8 +43642,8 @@
          "damsire": "ネオユニヴァース",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 60.8,
+         "pop": 8,
          "mark": "",
          "p1": 0.0045,
          "top2": 0.012,
@@ -43737,8 +43844,8 @@
          "damsire": "Candy Ride",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 60.8,
+         "pop": 9,
          "mark": "◎",
          "p1": 0.2003,
          "top2": 0.365,
@@ -43939,8 +44046,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 60.8,
+         "pop": 10,
          "mark": "",
          "p1": 0.008,
          "top2": 0.02,
@@ -44141,8 +44248,8 @@
          "damsire": "War Front",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 60.8,
+         "pop": 11,
          "mark": "△",
          "p1": 0.1109,
          "top2": 0.222,
@@ -44343,8 +44450,8 @@
          "damsire": "Harlan s Holiday",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 60.8,
+         "pop": 12,
          "mark": "",
          "p1": 0.0191,
          "top2": 0.045,
@@ -44545,8 +44652,8 @@
          "damsire": "マイネルラヴ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 7.6,
+         "pop": 3,
          "mark": "△",
          "p1": 0.1112,
          "top2": 0.223,
@@ -44747,8 +44854,8 @@
          "damsire": "マツリダゴッホ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 60.8,
+         "pop": 13,
          "mark": "",
          "p1": 0.0486,
          "top2": 0.106,
@@ -45151,8 +45258,8 @@
          "damsire": "アドマイヤムーン",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 60.8,
+         "pop": 14,
          "mark": "",
          "p1": 0.033,
          "top2": 0.075,
@@ -45757,8 +45864,8 @@
          "damsire": "フレンチデピュティ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 1.4,
+         "pop": 1,
          "mark": "○",
          "p1": 0.1665,
          "top2": 0.314,
@@ -46291,8 +46398,14 @@
          "p": 0.1391
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "7",
+        "p": 0.2,
+        "o": 60.8,
+        "ev": 12.178
+       },
        "conf": 0.212,
        "points": [
         "本命 7 タイセイフレッサ（1着 20.0%）、対抗 17 アイアンパイク（16.6%）、単穴 2 シヴィータス。",
@@ -61336,7 +61449,7 @@
        "weather": "曇",
        "baba": "良",
        "n": 10,
-       "level": "base",
+       "level": "joint",
        "gates": true,
        "horses": [
         {
@@ -61358,13 +61471,13 @@
          "damsire": "スピルバーグ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "☆",
-         "p1": 0.052,
-         "top2": 0.136,
-         "top3": 0.24,
-         "U": -0.39,
+         "odds": 18.6,
+         "pop": 7,
+         "mark": "",
+         "p1": 0.0443,
+         "top2": 0.105,
+         "top3": 0.176,
+         "U": -0.45,
          "style": "追込",
          "styleHist": {
           "逃げ": 0,
@@ -61482,13 +61595,13 @@
          "damsire": "ルーラーシップ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "○",
-         "p1": 0.1602,
-         "top2": 0.363,
-         "top3": 0.562,
-         "U": 0.6,
+         "odds": 9.3,
+         "pop": 4,
+         "mark": "△",
+         "p1": 0.0848,
+         "top2": 0.186,
+         "top3": 0.298,
+         "U": 0.1,
          "style": "逃げ",
          "styleHist": {
           "逃げ": 2,
@@ -61606,13 +61719,13 @@
          "damsire": "ルーラーシップ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "◎",
-         "p1": 0.4846,
-         "top2": 0.736,
-         "top3": 0.881,
-         "U": 1.56,
+         "odds": 3.2,
+         "pop": 2,
+         "mark": "○",
+         "p1": 0.2202,
+         "top2": 0.411,
+         "top3": 0.581,
+         "U": 0.92,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -61703,13 +61816,13 @@
          "damsire": "サウスヴィグラス",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "△",
-         "p1": 0.0717,
-         "top2": 0.181,
-         "top3": 0.313,
-         "U": -0.11,
+         "odds": 2.8,
+         "pop": 1,
+         "mark": "◎",
+         "p1": 0.2994,
+         "top2": 0.513,
+         "top3": 0.682,
+         "U": 1.19,
          "style": "先行",
          "styleHist": {
           "逃げ": 0,
@@ -61824,13 +61937,13 @@
          "damsire": "スズカマンボ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 56,
+         "pop": 10,
          "mark": "",
-         "p1": 0.0035,
-         "top2": 0.012,
-         "top3": 0.023,
-         "U": -2.74,
+         "p1": 0.0104,
+         "top2": 0.029,
+         "top3": 0.051,
+         "U": -1.7,
          "style": "逃げ",
          "styleHist": {
           "逃げ": 1,
@@ -61921,13 +62034,13 @@
          "damsire": "ジャスタウェイ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 28,
+         "pop": 9,
          "mark": "",
-         "p1": 0.0081,
-         "top2": 0.025,
-         "top3": 0.047,
-         "U": -2.01,
+         "p1": 0.0202,
+         "top2": 0.052,
+         "top3": 0.09,
+         "U": -1.13,
          "style": "追込",
          "styleHist": {
           "逃げ": 0,
@@ -62018,13 +62131,13 @@
          "damsire": "アグネスタキオン",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "△",
-         "p1": 0.0887,
-         "top2": 0.218,
-         "top3": 0.371,
-         "U": 0.08,
+         "odds": 7,
+         "pop": 3,
+         "mark": "▲",
+         "p1": 0.1079,
+         "top2": 0.229,
+         "top3": 0.358,
+         "U": 0.31,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -62115,13 +62228,13 @@
          "damsire": "キンシャサノキセキ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "",
-         "p1": 0.0194,
-         "top2": 0.055,
-         "top3": 0.103,
-         "U": -1.25,
+         "odds": 18.6,
+         "pop": 8,
+         "mark": "☆",
+         "p1": 0.0564,
+         "top2": 0.13,
+         "top3": 0.214,
+         "U": -0.25,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -62265,13 +62378,13 @@
          "damsire": "ダイワメジャー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "▲",
-         "p1": 0.106,
-         "top2": 0.255,
-         "top3": 0.424,
-         "U": 0.24,
+         "odds": 9.3,
+         "pop": 5,
+         "mark": "△",
+         "p1": 0.1024,
+         "top2": 0.219,
+         "top3": 0.344,
+         "U": 0.26,
          "style": "追込",
          "styleHist": {
           "逃げ": 0,
@@ -62415,13 +62528,13 @@
          "damsire": "シンボリクリスエス",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 14,
+         "pop": 6,
          "mark": "",
-         "p1": 0.0059,
-         "top2": 0.018,
-         "top3": 0.036,
-         "U": -2.3,
+         "p1": 0.054,
+         "top2": 0.125,
+         "top3": 0.207,
+         "U": -0.28,
          "style": "追込",
          "styleHist": {
           "逃げ": 0,
@@ -62495,13 +62608,13 @@
         }
        ],
        "box3": [
-        2,
         3,
-        9
+        4,
+        7
        ],
        "box4": [
-        2,
         3,
+        4,
         7,
         9
        ],
@@ -62514,144 +62627,150 @@
        ],
        "umaren": [
         {
-         "k": "2-3",
-         "p": 0.2226
+         "k": "3-4",
+         "p": 0.1572
         },
         {
-         "k": "3-9",
-         "p": 0.1489
+         "k": "4-7",
+         "p": 0.0778
+        },
+        {
+         "k": "4-9",
+         "p": 0.074
+        },
+        {
+         "k": "2-4",
+         "p": 0.0619
         },
         {
          "k": "3-7",
-         "p": 0.1255
+         "p": 0.0558
         },
         {
-         "k": "3-4",
-         "p": 0.1026
-        },
-        {
-         "k": "1-3",
-         "p": 0.0758
-        },
-        {
-         "k": "2-9",
-         "p": 0.0413
+         "k": "3-9",
+         "p": 0.053
         }
        ],
        "umatan": [
         {
-         "k": "3-2",
-         "p": 0.1397
-        },
-        {
-         "k": "3-9",
-         "p": 0.0971
-        },
-        {
-         "k": "3-7",
-         "p": 0.083
-        },
-        {
-         "k": "2-3",
-         "p": 0.083
+         "k": "4-3",
+         "p": 0.0835
         },
         {
          "k": "3-4",
-         "p": 0.0688
+         "p": 0.0737
+        },
+        {
+         "k": "4-7",
+         "p": 0.0455
+        },
+        {
+         "k": "4-9",
+         "p": 0.0435
+        },
+        {
+         "k": "4-2",
+         "p": 0.037
         }
        ],
        "sanpuku": [
         {
-         "k": "2-3-9",
-         "p": 0.1411
-        },
-        {
-         "k": "2-3-7",
-         "p": 0.1175
-        },
-        {
-         "k": "2-3-4",
-         "p": 0.095
-        },
-        {
-         "k": "3-7-9",
-         "p": 0.0747
-        },
-        {
-         "k": "1-2-3",
-         "p": 0.0694
+         "k": "3-4-7",
+         "p": 0.0804
         },
         {
          "k": "3-4-9",
-         "p": 0.0603
+         "p": 0.0763
+        },
+        {
+         "k": "2-3-4",
+         "p": 0.0634
+        },
+        {
+         "k": "3-4-8",
+         "p": 0.0429
+        },
+        {
+         "k": "3-4-10",
+         "p": 0.0412
+        },
+        {
+         "k": "4-7-9",
+         "p": 0.0352
         }
        ],
        "santan": [
         {
-         "k": "3-2-9",
-         "p": 0.0393
+         "k": "4-3-7",
+         "p": 0.0176
         },
         {
-         "k": "3-9-2",
-         "p": 0.035
+         "k": "4-3-9",
+         "p": 0.0168
         },
         {
-         "k": "3-2-7",
-         "p": 0.0336
+         "k": "3-4-7",
+         "p": 0.0155
         },
         {
-         "k": "3-7-2",
-         "p": 0.0289
+         "k": "4-7-3",
+         "p": 0.015
         },
         {
-         "k": "3-2-4",
-         "p": 0.0279
+         "k": "3-4-9",
+         "p": 0.0148
         },
         {
-         "k": "2-3-9",
-         "p": 0.0234
+         "k": "4-3-2",
+         "p": 0.0143
+        },
+        {
+         "k": "4-9-3",
+         "p": 0.0142
         },
         {
          "k": "3-4-2",
-         "p": 0.0231
-        },
-        {
-         "k": "3-2-1",
-         "p": 0.021
+         "p": 0.0126
         }
        ],
        "wide": [
         {
-         "k": "2-3",
-         "p": 0.4781
+         "k": "3-4",
+         "p": 0.3644
         },
         {
-         "k": "3-9",
-         "p": 0.3549
+         "k": "4-7",
+         "p": 0.2111
+        },
+        {
+         "k": "4-9",
+         "p": 0.202
+        },
+        {
+         "k": "2-4",
+         "p": 0.1723
         },
         {
          "k": "3-7",
-         "p": 0.3077
-        },
-        {
-         "k": "3-4",
-         "p": 0.2581
-        },
-        {
-         "k": "1-3",
-         "p": 0.1962
+         "p": 0.1694
         }
        ],
-       "rank": null,
-       "best": null,
-       "conf": 0.303,
+       "rank": "A",
+       "best": {
+        "kind": "単勝",
+        "k": "8",
+        "p": 0.056,
+        "o": 18.6,
+        "ev": 1.049
+       },
+       "conf": 0.148,
        "points": [
-        "本命 3 バルチックアンバー（1着 48.5%）、対抗 2 ヴェルヴィエ（16.0%）、単穴 9 ユイリノベーション。",
+        "本命 4 バトゥル（1着 29.9%）、対抗 3 バルチックアンバー（22.0%）、単穴 7 リアルハーン。",
         "京都ダコース（競馬場ガイド）：右回り・直線 329.1m・高低差 3m。ダートは差し・追込が届く（勝ち馬の4角が後ろ半分 11%）。",
         "京都ダ1400m（266レース）：脚質別の3着内率 逃げ37%・先行26%・差し15%・追込8%。枠の得失 1枠1.03 2枠0.92 3枠0.84 4枠1.05 5枠1.17 6枠0.91 7枠1.00 8枠1.06（1.00が損得なし）。",
         "馬体重：このコースの3着内馬は平均 480kg で、出走平均 476kg より +3.9kg（ほぼ中立）。勝ち馬の平均 482kg。",
         "逃げ候補 2 ヴェルヴィエ、5 ウィナーズクロノ（競り合えばペースが上がり差しが届く）。",
-        "馬連の本線 2-3（22.3%）、三連複 2-3-9（14.1%）。",
+        "馬連の本線 3-4（15.7%）、三連複 3-4-7（8.0%）。",
         "含水率 ダート 4.5%（ゴール前）／5.2%（4コーナー）（10/12 の測定値）。この帯（4〜6%）の過去 1,745レースでは、勝ち時計が平均より 0.17秒 かかる、勝ち馬の4角位置は 前寄り（0.181）、1番人気の勝率 33.3%。",
         "京都のこの馬場（4〜6%）で実測される傾向（28,004頭ぶん・3着内率の対数オッズ差を100倍）：脚質は 逃げ（+6）が有利で 追込（-26）は不利、枠は 1枠（+14）が良く 6枠（-12）が悪い。予想にも馬場ごとの得失を効かせている。"
        ],
@@ -62713,8 +62832,8 @@
          "damsire": "Tapit",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 4.4,
+         "pop": 1,
          "mark": "◎",
          "p1": 0.358,
          "top2": 0.622,
@@ -62889,8 +63008,8 @@
          "damsire": "マンハッタンカフェ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 17.6,
+         "pop": 9,
          "mark": "",
          "p1": 0.0091,
          "top2": 0.026,
@@ -63083,8 +63202,8 @@
          "damsire": "タガノロックオン",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 17.6,
+         "pop": 10,
          "mark": "",
          "p1": 0.016,
          "top2": 0.044,
@@ -63230,8 +63349,8 @@
          "damsire": "Medaglia d Oro",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 8.8,
+         "pop": 3,
          "mark": "▲",
          "p1": 0.1407,
          "top2": 0.311,
@@ -63354,8 +63473,8 @@
          "damsire": "ダイワメジャー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 8.8,
+         "pop": 4,
          "mark": "○",
          "p1": 0.2977,
          "top2": 0.556,
@@ -63451,8 +63570,8 @@
          "damsire": "ハービンジャー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 8.8,
+         "pop": 5,
          "mark": "△",
          "p1": 0.0428,
          "top2": 0.108,
@@ -63548,8 +63667,8 @@
          "damsire": "ノヴェリスト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 8.8,
+         "pop": 6,
          "mark": "",
          "p1": 0.0011,
          "top2": 0.004,
@@ -63645,8 +63764,8 @@
          "damsire": "ゼンノロブロイ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 4.4,
+         "pop": 2,
          "mark": "△",
          "p1": 0.0963,
          "top2": 0.224,
@@ -63795,8 +63914,8 @@
          "damsire": "Pure Prize",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 8.8,
+         "pop": 7,
          "mark": "",
          "p1": 0.0141,
          "top2": 0.039,
@@ -63892,8 +64011,8 @@
          "damsire": "ブラックタイド",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 8.8,
+         "pop": 8,
          "mark": "☆",
          "p1": 0.0236,
          "top2": 0.063,
@@ -64146,8 +64265,14 @@
          "p": 0.25
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "6",
+        "p": 0.298,
+        "o": 8.8,
+        "ev": 2.62
+       },
        "conf": 0.319,
        "points": [
         "本命 1 バクソウシャチョウ（1着 35.8%）、対抗 6 コルベータ（29.8%）、単穴 5 ココモフィーバー。",
@@ -64196,7 +64321,7 @@
        "weather": "曇",
        "baba": "良",
        "n": 8,
-       "level": "base",
+       "level": "joint",
        "gates": true,
        "horses": [
         {
@@ -64218,13 +64343,13 @@
          "damsire": "キングカメハメハ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "",
-         "p1": 0.0114,
-         "top2": 0.031,
-         "top3": 0.056,
-         "U": -1.87,
+         "odds": 31.2,
+         "pop": 4,
+         "mark": "△",
+         "p1": 0.0358,
+         "top2": 0.164,
+         "top3": 0.312,
+         "U": -0.44,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -64311,13 +64436,13 @@
          "damsire": "スクリーンヒーロー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "△",
-         "p1": 0.1548,
-         "top2": 0.322,
-         "top3": 0.498,
-         "U": 0.41,
+         "odds": 1.1,
+         "pop": 1,
+         "mark": "◎",
+         "p1": 0.7679,
+         "top2": 0.934,
+         "top3": 0.984,
+         "U": 2.18,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -64408,13 +64533,13 @@
          "damsire": "オルフェーヴル",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "",
-         "p1": 0.0104,
-         "top2": 0.028,
-         "top3": 0.052,
-         "U": -1.95,
+         "odds": 20.8,
+         "pop": 3,
+         "mark": "▲",
+         "p1": 0.0388,
+         "top2": 0.176,
+         "top3": 0.332,
+         "U": -0.38,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -64501,13 +64626,13 @@
          "damsire": "キングカメハメハ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 31.2,
+         "pop": 5,
          "mark": "☆",
-         "p1": 0.0492,
-         "top2": 0.117,
-         "top3": 0.201,
-         "U": -0.59,
+         "p1": 0.0264,
+         "top2": 0.126,
+         "top3": 0.246,
+         "U": -0.71,
          "style": "先行",
          "styleHist": {
           "逃げ": 0,
@@ -64598,13 +64723,13 @@
          "damsire": "Galileo",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "◎",
-         "p1": 0.2942,
-         "top2": 0.527,
-         "top3": 0.718,
-         "U": 0.97,
+         "odds": 12.4,
+         "pop": 2,
+         "mark": "○",
+         "p1": 0.0588,
+         "top2": 0.253,
+         "top3": 0.449,
+         "U": -0.02,
          "style": "追込",
          "styleHist": {
           "逃げ": 0,
@@ -64719,13 +64844,13 @@
          "damsire": "Kingman",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "△",
-         "p1": 0.0797,
-         "top2": 0.181,
-         "top3": 0.301,
-         "U": -0.17,
+         "odds": 62.4,
+         "pop": 7,
+         "mark": "",
+         "p1": 0.0199,
+         "top2": 0.098,
+         "top3": 0.195,
+         "U": -0.95,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -64816,13 +64941,13 @@
          "damsire": "Indygo Shiner",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "▲",
-         "p1": 0.1919,
-         "top2": 0.384,
-         "top3": 0.573,
-         "U": 0.6,
+         "odds": 62.4,
+         "pop": 8,
+         "mark": "",
+         "p1": 0.0189,
+         "top2": 0.094,
+         "top3": 0.187,
+         "U": -1,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -64909,13 +65034,13 @@
          "damsire": "キングカメハメハ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "○",
-         "p1": 0.2085,
-         "top2": 0.41,
-         "top3": 0.602,
-         "U": 0.67,
+         "odds": 31.2,
+         "pop": 6,
+         "mark": "△",
+         "p1": 0.0334,
+         "top2": 0.155,
+         "top3": 0.296,
+         "U": -0.5,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -64989,163 +65114,169 @@
         }
        ],
        "box3": [
-        5,
-        7,
-        8
+        2,
+        3,
+        5
        ],
        "box4": [
+        1,
         2,
-        5,
-        7,
-        8
+        3,
+        5
        ],
        "box5": [
+        1,
         2,
+        3,
         5,
-        6,
-        7,
         8
        ],
        "umaren": [
         {
-         "k": "5-8",
-         "p": 0.1549
-        },
-        {
-         "k": "5-7",
-         "p": 0.1422
-        },
-        {
          "k": "2-5",
-         "p": 0.1143
+         "p": 0.2234
         },
         {
-         "k": "7-8",
-         "p": 0.0977
+         "k": "2-3",
+         "p": 0.1543
+        },
+        {
+         "k": "1-2",
+         "p": 0.1438
         },
         {
          "k": "2-8",
-         "p": 0.0784
+         "p": 0.1352
         },
         {
-         "k": "2-7",
-         "p": 0.0718
+         "k": "2-4",
+         "p": 0.1098
+        },
+        {
+         "k": "2-6",
+         "p": 0.0855
         }
        ],
        "umatan": [
         {
-         "k": "5-8",
-         "p": 0.0827
+         "k": "2-5",
+         "p": 0.1803
         },
         {
-         "k": "5-7",
-         "p": 0.0769
+         "k": "2-3",
+         "p": 0.1265
         },
         {
-         "k": "8-5",
-         "p": 0.0722
+         "k": "2-1",
+         "p": 0.1183
         },
         {
-         "k": "7-5",
-         "p": 0.0653
+         "k": "2-8",
+         "p": 0.1115
         },
         {
-         "k": "5-2",
-         "p": 0.0637
+         "k": "2-4",
+         "p": 0.0912
         }
        ],
        "sanpuku": [
         {
-         "k": "5-7-8",
-         "p": 0.1549
+         "k": "2-3-5",
+         "p": 0.0965
+        },
+        {
+         "k": "1-2-5",
+         "p": 0.0895
         },
         {
          "k": "2-5-8",
-         "p": 0.1215
+         "p": 0.0839
         },
         {
-         "k": "2-5-7",
-         "p": 0.1101
+         "k": "2-4-5",
+         "p": 0.0674
         },
         {
-         "k": "2-7-8",
-         "p": 0.0708
+         "k": "1-2-3",
+         "p": 0.0595
         },
         {
-         "k": "5-6-8",
-         "p": 0.0608
-        },
-        {
-         "k": "5-6-7",
-         "p": 0.0551
+         "k": "2-3-8",
+         "p": 0.0557
         }
        ],
        "santan": [
         {
-         "k": "5-8-7",
-         "p": 0.0301
+         "k": "2-5-3",
+         "p": 0.0388
         },
         {
-         "k": "5-7-8",
-         "p": 0.0293
+         "k": "2-5-1",
+         "p": 0.0363
         },
         {
-         "k": "8-5-7",
-         "p": 0.0263
+         "k": "2-3-5",
+         "p": 0.0356
         },
         {
-         "k": "5-8-2",
-         "p": 0.0249
+         "k": "2-5-8",
+         "p": 0.0342
         },
         {
-         "k": "7-5-8",
-         "p": 0.0249
+         "k": "2-1-5",
+         "p": 0.0328
         },
         {
-         "k": "5-2-8",
-         "p": 0.0228
+         "k": "2-8-5",
+         "p": 0.0306
         },
         {
-         "k": "5-7-2",
-         "p": 0.0225
+         "k": "2-5-4",
+         "p": 0.028
         },
         {
-         "k": "8-7-5",
-         "p": 0.0225
+         "k": "2-4-5",
+         "p": 0.0243
         }
        ],
        "wide": [
         {
-         "k": "5-8",
-         "p": 0.3938
-        },
-        {
-         "k": "5-7",
-         "p": 0.3713
-        },
-        {
          "k": "2-5",
-         "p": 0.3146
+         "p": 0.4389
         },
         {
-         "k": "7-8",
-         "p": 0.2939
+         "k": "2-3",
+         "p": 0.3239
+        },
+        {
+         "k": "1-2",
+         "p": 0.3046
         },
         {
          "k": "2-8",
-         "p": 0.2456
+         "p": 0.2886
+        },
+        {
+         "k": "2-4",
+         "p": 0.2392
         }
        ],
-       "rank": null,
-       "best": null,
-       "conf": 0.163,
+       "rank": "A",
+       "best": {
+        "kind": "単勝",
+        "k": "1",
+        "p": 0.036,
+        "o": 31.2,
+        "ev": 1.117
+       },
+       "conf": 0.53,
        "points": [
-        "本命 5 ハナナ（1着 29.4%）、対抗 8 ペプチドデバイス（20.8%）、単穴 7 ザキノシュガー。",
+        "本命 2 ベニールラヴニール（1着 76.8%）、対抗 5 ハナナ（5.9%）、単穴 3 タナオルフォーリア。",
         "京都芝コース（競馬場ガイド）：右回り・直線 323.4〜403.7m・高低差 4.3m。。",
         "京都芝2000m（168レース）：脚質別の3着内率 逃げ32%・先行30%・差し26%・追込18%。枠の得失 1枠1.01 2枠1.02 3枠1.00 4枠1.09 5枠0.94 6枠0.86 7枠1.05 8枠1.03（1.00が損得なし）。",
         "馬体重：このコースの3着内馬は平均 474kg で、出走平均 471kg より +3.4kg（ほぼ中立）。勝ち馬の平均 479kg。",
         "明確な逃げ馬が不在。先行馬有利の流れになりやすい。",
-        "馬連の本線 5-8（15.5%）、三連複 5-7-8（15.5%）。",
+        "馬連の本線 2-5（22.3%）、三連複 2-3-5（9.7%）。",
         "含水率 芝 7.9%（ゴール前）／8.5%（4コーナー）（10/12 の測定値）。この帯（〜10%（乾））の過去 1,695レースでは、勝ち時計が平均より 0.20秒 速い、勝ち馬の4角位置は 標準（0.244）、1番人気の勝率 32.3%。",
         "京都のこの馬場（〜10%（乾））で実測される傾向（30,519頭ぶん・3着内率の対数オッズ差を100倍）：脚質は 追込（+12）が有利で 逃げ（-5）は不利、枠は 8枠（+14）が良く 6枠（-11）が悪い。予想にも馬場ごとの得失を効かせている。"
        ],
@@ -65185,7 +65316,7 @@
        "weather": "曇",
        "baba": "良",
        "n": 8,
-       "level": "base",
+       "level": "joint",
        "gates": true,
        "horses": [
         {
@@ -65207,13 +65338,13 @@
          "damsire": "Lord of England",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "▲",
-         "p1": 0.138,
-         "top2": 0.281,
-         "top3": 0.426,
-         "U": 0.39,
+         "odds": 2.3,
+         "pop": 1,
+         "mark": "◎",
+         "p1": 0.3529,
+         "top2": 0.586,
+         "top3": 0.759,
+         "U": 0.84,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -65275,13 +65406,13 @@
          "damsire": "City Zip",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "◎",
-         "p1": 0.2502,
-         "top2": 0.452,
-         "top3": 0.625,
-         "U": 0.91,
+         "odds": 6.4,
+         "pop": 3,
+         "mark": "△",
+         "p1": 0.1198,
+         "top2": 0.26,
+         "top3": 0.411,
+         "U": -0.09,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -65343,13 +65474,13 @@
          "damsire": "Big Brown",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "☆",
-         "p1": 0.0842,
-         "top2": 0.183,
-         "top3": 0.291,
-         "U": -0.04,
+         "odds": 6.4,
+         "pop": 4,
+         "mark": "△",
+         "p1": 0.1046,
+         "top2": 0.232,
+         "top3": 0.372,
+         "U": -0.21,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -65411,13 +65542,13 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "△",
-         "p1": 0.1115,
-         "top2": 0.234,
-         "top3": 0.363,
-         "U": 0.21,
+         "odds": 6.4,
+         "pop": 5,
+         "mark": "▲",
+         "p1": 0.1261,
+         "top2": 0.271,
+         "top3": 0.426,
+         "U": -0.04,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -65479,13 +65610,13 @@
          "damsire": "ダンスインザダーク",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 25.6,
+         "pop": 7,
          "mark": "",
-         "p1": 0.0728,
-         "top2": 0.16,
-         "top3": 0.258,
-         "U": -0.16,
+         "p1": 0.029,
+         "top2": 0.075,
+         "top3": 0.131,
+         "U": -1.31,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -65547,13 +65678,13 @@
          "damsire": "キングカメハメハ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "△",
-         "p1": 0.0901,
-         "top2": 0.194,
-         "top3": 0.307,
-         "U": 0.02,
+         "odds": 25.6,
+         "pop": 8,
+         "mark": "",
+         "p1": 0.0301,
+         "top2": 0.077,
+         "top3": 0.135,
+         "U": -1.27,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -65615,13 +65746,13 @@
          "damsire": "キズナ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "",
-         "p1": 0.0435,
-         "top2": 0.101,
-         "top3": 0.167,
-         "U": -0.61,
+         "odds": 12.8,
+         "pop": 6,
+         "mark": "☆",
+         "p1": 0.0522,
+         "top2": 0.126,
+         "top3": 0.214,
+         "U": -0.8,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -65683,13 +65814,13 @@
          "damsire": "Galileo",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 5.1,
+         "pop": 2,
          "mark": "○",
-         "p1": 0.2099,
-         "top2": 0.396,
-         "top3": 0.564,
-         "U": 0.76,
+         "p1": 0.1853,
+         "top2": 0.372,
+         "top3": 0.551,
+         "U": 0.29,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -65735,7 +65866,7 @@
        ],
        "box3": [
         1,
-        2,
+        4,
         8
        ],
        "box4": [
@@ -65747,150 +65878,156 @@
        "box5": [
         1,
         2,
+        3,
         4,
-        6,
         8
        ],
        "umaren": [
         {
-         "k": "2-8",
-         "p": 0.1267
+         "k": "1-8",
+         "p": 0.1643
+        },
+        {
+         "k": "1-4",
+         "p": 0.1127
         },
         {
          "k": "1-2",
-         "p": 0.0826
+         "p": 0.1073
         },
         {
-         "k": "1-8",
-         "p": 0.0683
-        },
-        {
-         "k": "2-4",
-         "p": 0.0668
+         "k": "1-3",
+         "p": 0.0942
         },
         {
          "k": "4-8",
-         "p": 0.0553
+         "p": 0.0559
         },
         {
-         "k": "2-6",
-         "p": 0.0543
+         "k": "2-8",
+         "p": 0.0532
         }
        ],
        "umatan": [
         {
-         "k": "2-8",
-         "p": 0.0654
+         "k": "1-8",
+         "p": 0.0933
         },
         {
-         "k": "8-2",
-         "p": 0.0613
+         "k": "8-1",
+         "p": 0.0711
         },
         {
-         "k": "2-1",
-         "p": 0.0452
-        },
-        {
-         "k": "2-4",
-         "p": 0.0374
+         "k": "1-4",
+         "p": 0.0672
         },
         {
          "k": "1-2",
-         "p": 0.0374
+         "p": 0.0643
+        },
+        {
+         "k": "1-3",
+         "p": 0.0573
         }
        ],
        "sanpuku": [
         {
+         "k": "1-4-8",
+         "p": 0.1048
+        },
+        {
          "k": "1-2-8",
-         "p": 0.0814
+         "p": 0.0995
         },
         {
-         "k": "2-4-8",
-         "p": 0.065
-        },
-        {
-         "k": "2-6-8",
-         "p": 0.0523
-        },
-        {
-         "k": "2-3-8",
-         "p": 0.0489
-        },
-        {
-         "k": "2-5-8",
-         "p": 0.0423
+         "k": "1-3-8",
+         "p": 0.0866
         },
         {
          "k": "1-2-4",
-         "p": 0.0404
+         "p": 0.0656
+        },
+        {
+         "k": "1-3-4",
+         "p": 0.0571
+        },
+        {
+         "k": "1-2-3",
+         "p": 0.0541
         }
        ],
        "santan": [
         {
-         "k": "2-8-1",
-         "p": 0.016
+         "k": "1-8-4",
+         "p": 0.0241
         },
         {
-         "k": "8-2-1",
-         "p": 0.015
+         "k": "1-8-2",
+         "p": 0.0231
         },
         {
-         "k": "2-1-8",
-         "p": 0.0144
-        },
-        {
-         "k": "2-8-4",
-         "p": 0.0132
-        },
-        {
-         "k": "8-1-2",
-         "p": 0.0128
-        },
-        {
-         "k": "8-2-4",
-         "p": 0.0124
+         "k": "1-4-8",
+         "p": 0.0219
         },
         {
          "k": "1-2-8",
-         "p": 0.0119
+         "p": 0.0208
         },
         {
-         "k": "2-4-8",
-         "p": 0.0115
+         "k": "1-8-3",
+         "p": 0.0206
+        },
+        {
+         "k": "8-1-4",
+         "p": 0.0184
+        },
+        {
+         "k": "1-3-8",
+         "p": 0.0181
+        },
+        {
+         "k": "8-1-2",
+         "p": 0.0176
         }
        ],
        "wide": [
         {
-         "k": "2-8",
-         "p": 0.3156
+         "k": "1-8",
+         "p": 0.3877
+        },
+        {
+         "k": "1-4",
+         "p": 0.291
         },
         {
          "k": "1-2",
-         "p": 0.2269
+         "p": 0.2794
         },
         {
-         "k": "1-8",
-         "p": 0.1986
-        },
-        {
-         "k": "2-4",
-         "p": 0.1892
+         "k": "1-3",
+         "p": 0.2501
         },
         {
          "k": "4-8",
-         "p": 0.1651
+         "p": 0.1869
         }
        ],
-       "rank": null,
-       "best": null,
-       "conf": 0.065,
+       "rank": "C",
+       "best": {
+        "kind": "単勝",
+        "k": "8",
+        "p": 0.185,
+        "o": 5.1,
+        "ev": 0.945
+       },
+       "conf": 0.137,
        "points": [
-        "本命 2 オールドリーキー（1着 25.0%）、対抗 8 エルゴスフィア（21.0%）、単穴 1 マルキア。",
+        "本命 1 マルキア（1着 35.3%）、対抗 8 エルゴスフィア（18.5%）、単穴 4 エフティヒア。",
         "京都芝コース（競馬場ガイド）：右回り・直線 323.4〜403.7m・高低差 4.3m。。",
         "京都芝1800m（153レース）：脚質別の3着内率 逃げ34%・先行34%・差し23%・追込11%。枠の得失 1枠0.96 2枠1.06 3枠1.04 4枠1.00 5枠1.17 6枠0.85 7枠0.94 8枠1.01（1.00が損得なし）。",
         "馬体重：このコースの3着内馬は平均 471kg で、出走平均 467kg より +4.1kg（大型馬が有利）。勝ち馬の平均 473kg。",
         "明確な逃げ馬が不在。先行馬有利の流れになりやすい。",
-        "馬連の本線 2-8（12.7%）、三連複 1-2-8（8.1%）。",
+        "馬連の本線 1-8（16.4%）、三連複 1-4-8（10.5%）。",
         "含水率 芝 7.9%（ゴール前）／8.5%（4コーナー）（10/12 の測定値）。この帯（〜10%（乾））の過去 1,695レースでは、勝ち時計が平均より 0.20秒 速い、勝ち馬の4角位置は 標準（0.244）、1番人気の勝率 32.3%。",
         "京都のこの馬場（〜10%（乾））で実測される傾向（30,519頭ぶん・3着内率の対数オッズ差を100倍）：脚質は 追込（+12）が有利で 逃げ（-5）は不利、枠は 8枠（+14）が良く 6枠（-11）が悪い。予想にも馬場ごとの得失を効かせている。"
        ],
@@ -66020,8 +66157,8 @@
          "damsire": "エンパイアメーカー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 41.6,
+         "pop": 12,
          "mark": "▲",
          "p1": 0.0895,
          "top2": 0.175,
@@ -66224,8 +66361,8 @@
          "damsire": "サウスヴィグラス",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 20.8,
+         "pop": 9,
          "mark": "",
          "p1": 0.0381,
          "top2": 0.081,
@@ -66292,8 +66429,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 13.8,
+         "pop": 7,
          "mark": "◎",
          "p1": 0.1388,
          "top2": 0.257,
@@ -66360,8 +66497,8 @@
          "damsire": "Scat Daddy",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 3.7,
+         "pop": 1,
          "mark": "",
          "p1": 0.0485,
          "top2": 0.101,
@@ -66428,8 +66565,8 @@
          "damsire": "エンパイアメーカー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 8.3,
+         "pop": 3,
          "mark": "",
          "p1": 0.0622,
          "top2": 0.126,
@@ -66496,8 +66633,8 @@
          "damsire": "アグネスタキオン",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 10.4,
+         "pop": 4,
          "mark": "",
          "p1": 0.0417,
          "top2": 0.088,
@@ -66564,8 +66701,8 @@
          "damsire": "ダノンシャンティ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 4.1,
+         "pop": 2,
          "mark": "",
          "p1": 0.048,
          "top2": 0.1,
@@ -66632,8 +66769,8 @@
          "damsire": "Galileo",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 20.8,
+         "pop": 10,
          "mark": "",
          "p1": 0.0318,
          "top2": 0.069,
@@ -66700,8 +66837,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 41.6,
+         "pop": 13,
          "mark": "☆",
          "p1": 0.063,
          "top2": 0.128,
@@ -66768,8 +66905,8 @@
          "damsire": "ゴールドアリュール",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 20.8,
+         "pop": 11,
          "mark": "○",
          "p1": 0.1319,
          "top2": 0.246,
@@ -66836,8 +66973,8 @@
          "damsire": "アポロキングダム",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 10.4,
+         "pop": 5,
          "mark": "",
          "p1": 0.0387,
          "top2": 0.082,
@@ -66904,8 +67041,8 @@
          "damsire": "アグネスタキオン",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 13.8,
+         "pop": 8,
          "mark": "",
          "p1": 0.0555,
          "top2": 0.114,
@@ -66972,8 +67109,8 @@
          "damsire": "ブラックタキシード",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 10.4,
+         "pop": 6,
          "mark": "",
          "p1": 0.0277,
          "top2": 0.06,
@@ -67170,8 +67307,14 @@
          "p": 0.0689
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "2",
+        "p": 0.089,
+        "o": 41.6,
+        "ev": 3.723
+       },
        "conf": 0.047,
        "points": [
         "本命 6 ライデン（1着 13.9%）、対抗 13 コックスコーム（13.2%）、単穴 2 ダルマレッド。",
@@ -67241,8 +67384,8 @@
          "damsire": "ヘニーヒューズ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 19.2,
+         "pop": 7,
          "mark": "△",
          "p1": 0.098,
          "top2": 0.229,
@@ -67443,8 +67586,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 9.6,
+         "pop": 3,
          "mark": "▲",
          "p1": 0.1172,
          "top2": 0.267,
@@ -67847,8 +67990,8 @@
          "damsire": "Bodemeister",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 9.6,
+         "pop": 4,
          "mark": "◎",
          "p1": 0.4496,
          "top2": 0.694,
@@ -68248,8 +68391,8 @@
          "damsire": "ダイワメジャー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 19.2,
+         "pop": 8,
          "mark": "☆",
          "p1": 0.0481,
          "top2": 0.121,
@@ -68450,8 +68593,8 @@
          "damsire": "アフリート",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 3.8,
+         "pop": 2,
          "mark": "",
          "p1": 0.0449,
          "top2": 0.114,
@@ -68626,8 +68769,8 @@
          "damsire": "コマンズ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 2.1,
+         "pop": 1,
          "mark": "○",
          "p1": 0.1421,
          "top2": 0.315,
@@ -68828,8 +68971,8 @@
          "damsire": "Vespone",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 9.6,
+         "pop": 5,
          "mark": "△",
          "p1": 0.0529,
          "top2": 0.132,
@@ -69030,8 +69173,8 @@
          "damsire": "フジキセキ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 9.6,
+         "pop": 6,
          "mark": "",
          "p1": 0.0025,
          "top2": 0.008,
@@ -69362,8 +69505,14 @@
          "p": 0.1614
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "4",
+        "p": 0.45,
+        "o": 9.6,
+        "ev": 4.316
+       },
        "conf": 0.245,
        "points": [
         "本命 4 ココロヅヨサ（1着 45.0%）、対抗 8 ビービーバザーク（14.2%）、単穴 2 ビズロード。",
@@ -69412,7 +69561,7 @@
        "weather": "曇",
        "baba": "良",
        "n": 7,
-       "level": "base",
+       "level": "joint",
        "gates": true,
        "horses": [
         {
@@ -69434,13 +69583,13 @@
          "damsire": "Frankel",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "▲",
-         "p1": 0.1442,
-         "top2": 0.317,
-         "top3": 0.506,
-         "U": 0.43,
+         "odds": 13,
+         "pop": 4,
+         "mark": "△",
+         "p1": 0.0582,
+         "top2": 0.239,
+         "top3": 0.444,
+         "U": -0.17,
          "style": "逃げ",
          "styleHist": {
           "逃げ": 1,
@@ -69558,13 +69707,13 @@
          "damsire": "ダイワメジャー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "△",
-         "p1": 0.1089,
-         "top2": 0.249,
-         "top3": 0.413,
-         "U": 0.19,
+         "odds": 117.6,
+         "pop": 7,
+         "mark": "",
+         "p1": 0.0056,
+         "top2": 0.031,
+         "top3": 0.066,
+         "U": -2.19,
          "style": "逃げ",
          "styleHist": {
           "逃げ": 1,
@@ -69655,13 +69804,13 @@
          "damsire": "Oasis Dream",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 1.1,
+         "pop": 1,
          "mark": "◎",
-         "p1": 0.3995,
-         "top2": 0.656,
-         "top3": 0.829,
-         "U": 1.33,
+         "p1": 0.7422,
+         "top2": 0.925,
+         "top3": 0.983,
+         "U": 2.01,
          "style": "逃げ",
          "styleHist": {
           "逃げ": 2,
@@ -69779,13 +69928,13 @@
          "damsire": "Super Saver",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "△",
-         "p1": 0.0662,
-         "top2": 0.161,
-         "top3": 0.278,
-         "U": -0.25,
+         "odds": 39.2,
+         "pop": 6,
+         "mark": "☆",
+         "p1": 0.015,
+         "top2": 0.073,
+         "top3": 0.152,
+         "U": -1.33,
          "style": "先行",
          "styleHist": {
           "逃げ": 1,
@@ -69929,13 +70078,13 @@
          "damsire": "スクリーンヒーロー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "",
-         "p1": 0.0223,
-         "top2": 0.06,
-         "top3": 0.109,
-         "U": -1.2,
+         "odds": 10.6,
+         "pop": 3,
+         "mark": "△",
+         "p1": 0.0553,
+         "top2": 0.229,
+         "top3": 0.428,
+         "U": -0.21,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -70026,13 +70175,13 @@
          "damsire": "ロードカナロア",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 13,
+         "pop": 5,
          "mark": "○",
-         "p1": 0.2038,
-         "top2": 0.421,
-         "top3": 0.626,
-         "U": 0.74,
+         "p1": 0.0638,
+         "top2": 0.259,
+         "top3": 0.473,
+         "U": -0.09,
          "style": "先行",
          "styleHist": {
           "逃げ": 1,
@@ -70176,13 +70325,13 @@
          "damsire": "Stroll",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "☆",
-         "p1": 0.0551,
-         "top2": 0.136,
-         "top3": 0.239,
-         "U": -0.41,
+         "odds": 9,
+         "pop": 2,
+         "mark": "▲",
+         "p1": 0.06,
+         "top2": 0.245,
+         "top3": 0.454,
+         "U": -0.14,
          "style": "逃げ",
          "styleHist": {
           "逃げ": 1,
@@ -70283,164 +70432,170 @@
         }
        ],
        "box3": [
-        1,
         3,
-        6
+        6,
+        7
        ],
        "box4": [
         1,
-        2,
         3,
-        6
+        6,
+        7
        ],
        "box5": [
         1,
-        2,
         3,
-        4,
-        6
+        5,
+        6,
+        7
        ],
        "umaren": [
         {
          "k": "3-6",
-         "p": 0.2205
-        },
-        {
-         "k": "1-3",
-         "p": 0.1557
-        },
-        {
-         "k": "2-3",
-         "p": 0.1182
-        },
-        {
-         "k": "3-4",
-         "p": 0.0734
-        },
-        {
-         "k": "1-6",
-         "p": 0.0723
+         "p": 0.2235
         },
         {
          "k": "3-7",
-         "p": 0.0616
+         "p": 0.2117
+        },
+        {
+         "k": "1-3",
+         "p": 0.2057
+        },
+        {
+         "k": "3-5",
+         "p": 0.1967
+        },
+        {
+         "k": "3-4",
+         "p": 0.0618
+        },
+        {
+         "k": "2-3",
+         "p": 0.0259
         }
        ],
        "umatan": [
         {
          "k": "3-6",
-         "p": 0.1272
+         "p": 0.1777
+        },
+        {
+         "k": "3-7",
+         "p": 0.1688
         },
         {
          "k": "3-1",
-         "p": 0.0938
+         "p": 0.1643
         },
         {
-         "k": "6-3",
-         "p": 0.0933
+         "k": "3-5",
+         "p": 0.1574
         },
         {
-         "k": "3-2",
-         "p": 0.0732
-        },
-        {
-         "k": "1-3",
-         "p": 0.0619
+         "k": "3-4",
+         "p": 0.0517
         }
        ],
        "sanpuku": [
         {
-         "k": "1-3-6",
-         "p": 0.1813
-        },
-        {
-         "k": "2-3-6",
-         "p": 0.1345
-        },
-        {
-         "k": "1-2-3",
-         "p": 0.0901
-        },
-        {
-         "k": "3-4-6",
-         "p": 0.0817
-        },
-        {
          "k": "3-6-7",
-         "p": 0.0683
+         "p": 0.1409
         },
         {
-         "k": "1-3-4",
-         "p": 0.0546
+         "k": "1-3-6",
+         "p": 0.1364
+        },
+        {
+         "k": "3-5-6",
+         "p": 0.1298
+        },
+        {
+         "k": "1-3-7",
+         "p": 0.1284
+        },
+        {
+         "k": "3-5-7",
+         "p": 0.1222
+        },
+        {
+         "k": "1-3-5",
+         "p": 0.1183
         }
        ],
        "santan": [
         {
+         "k": "3-6-7",
+         "p": 0.0532
+        },
+        {
+         "k": "3-7-6",
+         "p": 0.0523
+        },
+        {
          "k": "3-6-1",
-         "p": 0.0438
+         "p": 0.0517
         },
         {
          "k": "3-1-6",
-         "p": 0.039
+         "p": 0.0505
         },
         {
-         "k": "3-6-2",
-         "p": 0.0342
+         "k": "3-6-5",
+         "p": 0.0496
         },
         {
-         "k": "6-3-1",
-         "p": 0.0321
+         "k": "3-7-1",
+         "p": 0.0484
         },
         {
-         "k": "3-2-6",
-         "p": 0.0285
+         "k": "3-1-7",
+         "p": 0.048
         },
         {
-         "k": "1-3-6",
-         "p": 0.0258
-        },
-        {
-         "k": "6-3-2",
-         "p": 0.0251
-        },
-        {
-         "k": "3-1-2",
-         "p": 0.0224
+         "k": "3-5-6",
+         "p": 0.0478
         }
        ],
        "wide": [
         {
          "k": "3-6",
-         "p": 0.495
+         "p": 0.4617
+        },
+        {
+         "k": "3-7",
+         "p": 0.4427
         },
         {
          "k": "1-3",
-         "p": 0.391
+         "p": 0.4327
         },
         {
-         "k": "2-3",
-         "p": 0.3128
+         "k": "3-5",
+         "p": 0.4175
         },
         {
-         "k": "1-6",
-         "p": 0.2634
-        },
-        {
-         "k": "3-4",
-         "p": 0.2054
+         "k": "6-7",
+         "p": 0.1476
         }
        ],
-       "rank": null,
-       "best": null,
-       "conf": 0.159,
+       "rank": "C",
+       "best": {
+        "kind": "単勝",
+        "k": "6",
+        "p": 0.064,
+        "o": 13,
+        "ev": 0.829
+       },
+       "conf": 0.495,
        "points": [
-        "本命 3 アンムート（1着 39.9%）、対抗 6 カレンハウ（20.4%）、単穴 1 ノヴァーリス。",
+        "本命 3 アンムート（1着 74.2%）、対抗 6 カレンハウ（6.4%）、単穴 7 ロンドンガーズ。",
         "京都芝コース（競馬場ガイド）：右回り・直線 323.4〜403.7m・高低差 4.3m。。",
         "京都芝1400m（135レース）：脚質別の3着内率 逃げ32%・先行27%・差し18%・追込8%。枠の得失 1枠0.91 2枠0.85 3枠1.36 4枠1.09 5枠1.02 6枠0.92 7枠1.06 8枠0.83（1.00が損得なし）。",
         "馬体重：このコースの3着内馬は平均 470kg で、出走平均 465kg より +4.6kg（大型馬が有利）。勝ち馬の平均 472kg。",
         "前走のレベルが高い：2 リュウトウコヤク（Lv+13・1着）。出走馬の次走成績から見た相手関係で、+10 は「出走馬が次走で平均より1割上の着順」。",
         "逃げ候補 1 ノヴァーリス、2 リュウトウコヤク、3 アンムート、7 ロンドンガーズ（競り合えばペースが上がり差しが届く）。",
-        "馬連の本線 3-6（22.1%）、三連複 1-3-6（18.1%）。",
+        "馬連の本線 3-6（22.4%）、三連複 3-6-7（14.1%）。",
         "含水率 芝 7.9%（ゴール前）／8.5%（4コーナー）（10/12 の測定値）。この帯（〜10%（乾））の過去 1,695レースでは、勝ち時計が平均より 0.20秒 速い、勝ち馬の4角位置は 標準（0.244）、1番人気の勝率 32.3%。",
         "京都のこの馬場（〜10%（乾））で実測される傾向（30,519頭ぶん・3着内率の対数オッズ差を100倍）：脚質は 追込（+12）が有利で 逃げ（-5）は不利、枠は 8枠（+14）が良く 6枠（-11）が悪い。予想にも馬場ごとの得失を効かせている。"
        ],
@@ -70502,8 +70657,8 @@
          "damsire": "ゴールドアリュール",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 39.2,
+         "pop": 5,
          "mark": "",
          "p1": 0.0231,
          "top2": 0.055,
@@ -70704,8 +70859,8 @@
          "damsire": "キングカメハメハ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 78.4,
+         "pop": 10,
          "mark": "",
          "p1": 0.0046,
          "top2": 0.013,
@@ -71310,8 +71465,8 @@
          "damsire": "クロフネ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 39.2,
+         "pop": 6,
          "mark": "△",
          "p1": 0.1069,
          "top2": 0.221,
@@ -71509,8 +71664,8 @@
          "damsire": "メイショウボーラー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 39.2,
+         "pop": 7,
          "mark": "",
          "p1": 0.0125,
          "top2": 0.031,
@@ -71711,8 +71866,8 @@
          "damsire": "ハーツクライ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 1.3,
+         "pop": 1,
          "mark": "○",
          "p1": 0.1368,
          "top2": 0.274,
@@ -71887,8 +72042,8 @@
          "damsire": "ゴールドアリュール",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 26.1,
+         "pop": 4,
          "mark": "",
          "p1": 0.0231,
          "top2": 0.056,
@@ -72089,8 +72244,8 @@
          "damsire": "Alhaarth",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 39.2,
+         "pop": 8,
          "mark": "▲",
          "p1": 0.1133,
          "top2": 0.233,
@@ -72288,8 +72443,8 @@
          "damsire": "アイルハヴアナザー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 39.2,
+         "pop": 9,
          "mark": "",
          "p1": 0.0094,
          "top2": 0.024,
@@ -72490,8 +72645,8 @@
          "damsire": "ダイワメジャー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 6.5,
+         "pop": 3,
          "mark": "◎",
          "p1": 0.3261,
          "top2": 0.536,
@@ -72894,8 +73049,8 @@
          "damsire": "スペシャルウィーク",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 6,
+         "pop": 2,
          "mark": "",
          "p1": 0.0254,
          "top2": 0.061,
@@ -73096,8 +73251,8 @@
          "damsire": "ゴールドアリュール",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 78.4,
+         "pop": 11,
          "mark": "☆",
          "p1": 0.0608,
          "top2": 0.134,
@@ -73500,8 +73655,8 @@
          "damsire": "エンパイアメーカー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 78.4,
+         "pop": 12,
          "mark": "△",
          "p1": 0.0713,
          "top2": 0.155,
@@ -73832,8 +73987,14 @@
          "p": 0.1274
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "16",
+        "p": 0.071,
+        "o": 78.4,
+        "ev": 5.59
+       },
        "conf": 0.208,
        "points": [
         "本命 11 ルビドゥソレイユ（1着 32.6%）、対抗 7 ジャンヌドゥレーヴ（13.7%）、単穴 9 ランスオブセヘル。",
@@ -74106,8 +74267,8 @@
          "damsire": "Drosselmeyer",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 11.2,
+         "pop": 4,
          "mark": "▲",
          "p1": 0.1197,
          "top2": 0.268,
@@ -74308,8 +74469,8 @@
          "damsire": "アイルハヴアナザー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 6.7,
+         "pop": 2,
          "mark": "△",
          "p1": 0.0617,
          "top2": 0.149,
@@ -74507,8 +74668,8 @@
          "damsire": "キングカメハメハ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 101.6,
+         "pop": 6,
          "mark": "",
          "p1": 0.0085,
          "top2": 0.024,
@@ -74709,8 +74870,8 @@
          "damsire": "タニノギムレット",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 101.6,
+         "pop": 7,
          "mark": "",
          "p1": 0.0227,
          "top2": 0.06,
@@ -74908,8 +75069,8 @@
          "damsire": "キングカメハメハ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 1.1,
+         "pop": 1,
          "mark": "○",
          "p1": 0.3125,
          "top2": 0.569,
@@ -75110,8 +75271,8 @@
          "damsire": "ハーツクライ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 101.6,
+         "pop": 8,
          "mark": "◎",
          "p1": 0.3415,
          "top2": 0.601,
@@ -75312,8 +75473,8 @@
          "damsire": "ロックオブジブラルタル",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 50.8,
+         "pop": 5,
          "mark": "△",
          "p1": 0.0617,
          "top2": 0.149,
@@ -75514,8 +75675,8 @@
          "damsire": "Equal Stripes",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 8.4,
+         "pop": 3,
          "mark": "☆",
          "p1": 0.0595,
          "top2": 0.145,
@@ -75843,8 +76004,14 @@
          "p": 0.1785
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "8",
+        "p": 0.062,
+        "o": 50.8,
+        "ev": 3.134
+       },
        "conf": 0.237,
        "points": [
         "本命 7 トリニティ（1着 34.1%）、対抗 6 チェルヴァーラ（31.3%）、単穴 2 エイシンビーコン。",
@@ -76117,8 +76284,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 18.6,
+         "pop": 8,
          "mark": "",
          "p1": 0.0306,
          "top2": 0.068,
@@ -76319,8 +76486,8 @@
          "damsire": "エンパイアメーカー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 74.4,
+         "pop": 12,
          "mark": "",
          "p1": 0.0082,
          "top2": 0.02,
@@ -76723,8 +76890,8 @@
          "damsire": "Eskendereya",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 24.8,
+         "pop": 10,
          "mark": "△",
          "p1": 0.1176,
          "top2": 0.23,
@@ -76925,8 +77092,8 @@
          "damsire": "ダイワメジャー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 10.6,
+         "pop": 4,
          "mark": "▲",
          "p1": 0.1295,
          "top2": 0.25,
@@ -77127,8 +77294,8 @@
          "damsire": "クロフネ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 10.6,
+         "pop": 5,
          "mark": "☆",
          "p1": 0.0898,
          "top2": 0.181,
@@ -77329,8 +77496,8 @@
          "damsire": "ヴァーミリアン",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 14.8,
+         "pop": 6,
          "mark": "",
          "p1": 0.0253,
          "top2": 0.057,
@@ -77531,8 +77698,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 14.8,
+         "pop": 7,
          "mark": "◎",
          "p1": 0.1644,
          "top2": 0.306,
@@ -77733,8 +77900,8 @@
          "damsire": "キングカメハメハ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 2.8,
+         "pop": 1,
          "mark": "",
          "p1": 0.0873,
          "top2": 0.177,
@@ -77935,8 +78102,8 @@
          "damsire": "ダイワメジャー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 37.2,
+         "pop": 11,
          "mark": "",
          "p1": 0.04,
          "top2": 0.087,
@@ -78137,8 +78304,8 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 4.6,
+         "pop": 2,
          "mark": "△",
          "p1": 0.1057,
          "top2": 0.209,
@@ -78541,8 +78708,8 @@
          "damsire": "スペシャルウィーク",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 5.7,
+         "pop": 3,
          "mark": "○",
          "p1": 0.135,
          "top2": 0.259,
@@ -78717,8 +78884,8 @@
          "damsire": "ダンスインザダーク",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 18.6,
+         "pop": 9,
          "mark": "",
          "p1": 0.0176,
          "top2": 0.041,
@@ -79049,8 +79216,14 @@
          "p": 0.1077
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "5",
+        "p": 0.118,
+        "o": 24.8,
+        "ev": 2.916
+       },
        "conf": 0.121,
        "points": [
         "本命 9 エアトベーレ（1着 16.4%）、対抗 14 メイショウコマチ（13.5%）、単穴 6 エルフストラック。",
@@ -79058,6 +79231,7 @@
         "京都ダ1800m（419レース）：脚質別の3着内率 逃げ38%・先行26%・差し20%・追込13%。枠の得失 1枠0.92 2枠1.00 3枠0.94 4枠0.95 5枠1.05 6枠1.07 7枠1.02 8枠1.00（1.00が損得なし）。",
         "馬体重：このコースの3着内馬は平均 487kg で、出走平均 483kg より +4.4kg（大型馬が有利）。勝ち馬の平均 492kg。",
         "前走のレベルが高い：3 メイショウオーロラ（Lv+7・15着）、5 ジューンエオス（Lv+7・2着）。出走馬の次走成績から見た相手関係で、+10 は「出走馬が次走で平均より1割上の着順」。",
+        "上位人気だが前走の相手は弱かった：14 メイショウコマチ（3人気・前走 Lv-10）。",
         "逃げ候補 2 コンドゥイア、6 エルフストラック、8 スマートケープ、10 マジックローズ、13 キャットテイル（競り合えばペースが上がり差しが届く）。",
         "馬連の本線 9-14（4.9%）、三連複 6-9-14（2.5%）。",
         "含水率 ダート 4.5%（ゴール前）／5.2%（4コーナー）（10/12 の測定値）。この帯（4〜6%）の過去 1,745レースでは、勝ち時計が平均より 0.17秒 かかる、勝ち馬の4角位置は 前寄り（0.181）、1番人気の勝率 33.3%。",
@@ -79121,8 +79295,8 @@
          "damsire": "ファルブラヴ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 6.6,
+         "pop": 3,
          "mark": "○",
          "p1": 0.1268,
          "top2": 0.241,
@@ -79323,8 +79497,8 @@
          "damsire": "マンハッタンカフェ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 20,
+         "pop": 7,
          "mark": "",
          "p1": 0.013,
          "top2": 0.03,
@@ -79929,8 +80103,8 @@
          "damsire": "ソングオブウインド",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 20,
+         "pop": 8,
          "mark": "▲",
          "p1": 0.0893,
          "top2": 0.177,
@@ -80131,8 +80305,8 @@
          "damsire": "ノヴェリスト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 10,
+         "pop": 5,
          "mark": "",
          "p1": 0.0479,
          "top2": 0.101,
@@ -80333,8 +80507,8 @@
          "damsire": "Dubawi",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 6.6,
+         "pop": 4,
          "mark": "",
          "p1": 0.0531,
          "top2": 0.111,
@@ -80509,8 +80683,8 @@
          "damsire": "ハービンジャー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 5,
+         "pop": 1,
          "mark": "",
          "p1": 0.0069,
          "top2": 0.017,
@@ -80711,8 +80885,8 @@
          "damsire": "Quality Road",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 20,
+         "pop": 9,
          "mark": "",
          "p1": 0.004,
          "top2": 0.01,
@@ -80913,8 +81087,8 @@
          "damsire": "ヘニーヒューズ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 5,
+         "pop": 2,
          "mark": "",
          "p1": 0.0582,
          "top2": 0.12,
@@ -81115,8 +81289,8 @@
          "damsire": "Cape Cross",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 10,
+         "pop": 6,
          "mark": "",
          "p1": 0.0191,
          "top2": 0.043,
@@ -81317,8 +81491,8 @@
          "damsire": "Bated Breath",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 20,
+         "pop": 10,
          "mark": "",
          "p1": 0.0394,
          "top2": 0.084,
@@ -81923,8 +82097,8 @@
          "damsire": "エンパイアメーカー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 20,
+         "pop": 11,
          "mark": "◎",
          "p1": 0.2021,
          "top2": 0.356,
@@ -82327,8 +82501,8 @@
          "damsire": "ストリートセンス",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 20,
+         "pop": 12,
          "mark": "",
          "p1": 0.0331,
          "top2": 0.072,
@@ -82529,8 +82703,8 @@
          "damsire": "Cape Cross",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 20,
+         "pop": 13,
          "mark": "",
          "p1": 0.0382,
          "top2": 0.082,
@@ -82861,8 +83035,14 @@
          "p": 0.0783
         }
        ],
-       "rank": null,
-       "best": null,
+       "rank": "S",
+       "best": {
+        "kind": "単勝",
+        "k": "15",
+        "p": 0.202,
+        "o": 20,
+        "ev": 4.042
+       },
        "conf": 0.106,
        "points": [
         "本命 15 ペプチドブッドレア（1着 20.2%）、対抗 1 カルロット（12.7%）、単穴 5 タナブイハチターボ。",
@@ -148052,7 +148232,7 @@
        "weather": null,
        "baba": null,
        "n": 17,
-       "level": "base",
+       "level": "joint",
        "gates": true,
        "horses": [
         {
@@ -148074,13 +148254,13 @@
          "damsire": "Sligo Bay",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 304.4,
+         "pop": 13,
          "mark": "",
-         "p1": 0.0522,
-         "top2": 0.109,
-         "top3": 0.168,
-         "U": -0.4,
+         "p1": 0.0027,
+         "top2": 0.011,
+         "top3": 0.024,
+         "U": -1.27,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -148276,13 +148456,13 @@
          "damsire": "ノヴェリスト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 131.9,
+         "pop": 11,
          "mark": "",
-         "p1": 0.0292,
-         "top2": 0.064,
-         "top3": 0.101,
-         "U": -0.91,
+         "p1": 0.0053,
+         "top2": 0.02,
+         "top3": 0.044,
+         "U": -0.69,
          "style": "逃げ",
          "styleHist": {
           "逃げ": 4,
@@ -148478,13 +148658,13 @@
          "damsire": "ダイワメジャー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 35,
+         "pop": 6,
          "mark": "",
-         "p1": 0.0677,
-         "top2": 0.138,
-         "top3": 0.209,
-         "U": -0.17,
+         "p1": 0.0222,
+         "top2": 0.07,
+         "top3": 0.149,
+         "U": 0.53,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -148628,13 +148808,13 @@
          "damsire": "Medaglia d Oro",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "☆",
-         "p1": 0.076,
-         "top2": 0.153,
-         "top3": 0.231,
-         "U": -0.07,
+         "odds": 27.2,
+         "pop": 5,
+         "mark": "△",
+         "p1": 0.0291,
+         "top2": 0.089,
+         "top3": 0.188,
+         "U": 0.76,
          "style": "追込",
          "styleHist": {
           "逃げ": 0,
@@ -148804,13 +148984,13 @@
          "damsire": "Azamour",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 439.7,
+         "pop": 14,
          "mark": "",
-         "p1": 0.0108,
-         "top2": 0.026,
-         "top3": 0.042,
-         "U": -1.78,
+         "p1": 0.0021,
+         "top2": 0.009,
+         "top3": 0.02,
+         "U": -1.48,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -149006,13 +149186,13 @@
          "damsire": "Power",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 25.2,
+         "pop": 4,
          "mark": "△",
-         "p1": 0.0784,
-         "top2": 0.157,
-         "top3": 0.236,
-         "U": -0.04,
+         "p1": 0.0283,
+         "top2": 0.086,
+         "top3": 0.183,
+         "U": 0.74,
          "style": "先行",
          "styleHist": {
           "逃げ": 0,
@@ -149182,13 +149362,13 @@
          "damsire": "War Front",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 999.9,
+         "pop": 16,
          "mark": "",
-         "p1": 0.022,
-         "top2": 0.049,
-         "top3": 0.079,
-         "U": -1.15,
+         "p1": 0.0007,
+         "top2": 0.003,
+         "top3": 0.008,
+         "U": -2.4,
          "style": "先行",
          "styleHist": {
           "逃げ": 1,
@@ -149384,13 +149564,13 @@
          "damsire": "Sebring",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "○",
-         "p1": 0.0947,
-         "top2": 0.186,
-         "top3": 0.276,
-         "U": 0.12,
+         "odds": 1.4,
+         "pop": 1,
+         "mark": "◎",
+         "p1": 0.5166,
+         "top2": 0.792,
+         "top3": 0.922,
+         "U": 3.23,
          "style": "逃げ",
          "styleHist": {
           "逃げ": 2,
@@ -149560,13 +149740,13 @@
          "damsire": "ワークフォース",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 94.2,
+         "pop": 8,
          "mark": "",
-         "p1": 0.0248,
-         "top2": 0.055,
-         "top3": 0.088,
-         "U": -1.05,
+         "p1": 0.0117,
+         "top2": 0.039,
+         "top3": 0.086,
+         "U": -0.02,
          "style": "差し",
          "styleHist": {
           "逃げ": 1,
@@ -149762,13 +149942,13 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 999.9,
+         "pop": 17,
          "mark": "",
-         "p1": 0.0187,
-         "top2": 0.042,
-         "top3": 0.068,
-         "U": -1.3,
+         "p1": 0.0009,
+         "top2": 0.004,
+         "top3": 0.009,
+         "U": -2.24,
          "style": "先行",
          "styleHist": {
           "逃げ": 3,
@@ -149964,13 +150144,13 @@
          "damsire": "ディープインパクト",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 109.9,
+         "pop": 9,
          "mark": "",
-         "p1": 0.0446,
-         "top2": 0.094,
-         "top3": 0.146,
-         "U": -0.54,
+         "p1": 0.0052,
+         "top2": 0.019,
+         "top3": 0.043,
+         "U": -0.71,
          "style": "逃げ",
          "styleHist": {
           "逃げ": 4,
@@ -150166,13 +150346,13 @@
          "damsire": "Distorted Humor",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "▲",
-         "p1": 0.0829,
-         "top2": 0.165,
-         "top3": 0.248,
-         "U": 0,
+         "odds": 179.8,
+         "pop": 12,
+         "mark": "",
+         "p1": 0.0036,
+         "top2": 0.014,
+         "top3": 0.032,
+         "U": -1.02,
          "style": "先行",
          "styleHist": {
           "逃げ": 2,
@@ -150316,13 +150496,13 @@
          "damsire": "ハービンジャー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "◎",
-         "p1": 0.1946,
-         "top2": 0.344,
-         "top3": 0.475,
-         "U": 0.75,
+         "odds": 3.1,
+         "pop": 2,
+         "mark": "○",
+         "p1": 0.2995,
+         "top2": 0.622,
+         "top3": 0.82,
+         "U": 2.76,
          "style": "先行",
          "styleHist": {
           "逃げ": 1,
@@ -150518,13 +150698,13 @@
          "damsire": "ヴィクトワールピサ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "",
-         "p1": 0.074,
-         "top2": 0.149,
-         "top3": 0.225,
-         "U": -0.09,
+         "odds": 21.9,
+         "pop": 3,
+         "mark": "▲",
+         "p1": 0.0397,
+         "top2": 0.117,
+         "top3": 0.243,
+         "U": 1.03,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -150720,13 +150900,13 @@
          "damsire": "ハーツクライ",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
+         "odds": 659.6,
+         "pop": 15,
          "mark": "",
-         "p1": 0.0091,
-         "top2": 0.022,
-         "top3": 0.036,
-         "U": -1.93,
+         "p1": 0.0013,
+         "top2": 0.006,
+         "top3": 0.013,
+         "U": -1.92,
          "style": "差し",
          "styleHist": {
           "逃げ": 0,
@@ -150922,13 +151102,13 @@
          "damsire": "ハービンジャー",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "△",
-         "p1": 0.0817,
-         "top2": 0.163,
-         "top3": 0.245,
-         "U": -0.01,
+         "odds": 119.9,
+         "pop": 10,
+         "mark": "",
+         "p1": 0.007,
+         "top2": 0.025,
+         "top3": 0.056,
+         "U": -0.46,
          "style": "先行",
          "styleHist": {
           "逃げ": 2,
@@ -151124,13 +151304,13 @@
          "damsire": "オルフェーヴル",
          "bw": null,
          "bwDiff": null,
-         "odds": null,
-         "pop": null,
-         "mark": "",
-         "p1": 0.0385,
-         "top2": 0.082,
-         "top3": 0.129,
-         "U": -0.67,
+         "odds": 39.5,
+         "pop": 7,
+         "mark": "☆",
+         "p1": 0.0242,
+         "top2": 0.075,
+         "top3": 0.16,
+         "U": 0.61,
          "style": "先行",
          "styleHist": {
           "逃げ": 1,
@@ -151310,162 +151490,168 @@
        ],
        "box3": [
         8,
-        12,
-        13
+        13,
+        14
        ],
        "box4": [
+        4,
         8,
-        12,
         13,
-        16
+        14
        ],
        "box5": [
+        4,
         6,
         8,
-        12,
         13,
-        16
+        14
        ],
        "umaren": [
         {
          "k": "8-13",
-         "p": 0.0397
+         "p": 0.4581
         },
         {
-         "k": "12-13",
-         "p": 0.0349
+         "k": "8-14",
+         "p": 0.067
         },
         {
-         "k": "13-16",
-         "p": 0.0344
+         "k": "4-8",
+         "p": 0.0506
         },
         {
-         "k": "6-13",
-         "p": 0.033
+         "k": "6-8",
+         "p": 0.0493
         },
         {
-         "k": "4-13",
-         "p": 0.0321
+         "k": "8-17",
+         "p": 0.0428
         },
         {
-         "k": "13-14",
-         "p": 0.0312
+         "k": "3-8",
+         "p": 0.0396
         }
        ],
        "umatan": [
         {
-         "k": "13-8",
-         "p": 0.0216
-        },
-        {
-         "k": "13-12",
-         "p": 0.0192
-        },
-        {
-         "k": "13-16",
-         "p": 0.019
-        },
-        {
-         "k": "13-6",
-         "p": 0.0183
-        },
-        {
          "k": "8-13",
-         "p": 0.0181
+         "p": 0.2686
+        },
+        {
+         "k": "13-8",
+         "p": 0.1895
+        },
+        {
+         "k": "8-14",
+         "p": 0.048
+        },
+        {
+         "k": "8-4",
+         "p": 0.0369
+        },
+        {
+         "k": "8-6",
+         "p": 0.036
         }
        ],
        "sanpuku": [
         {
-         "k": "8-12-13",
-         "p": 0.0122
-        },
-        {
-         "k": "8-13-16",
-         "p": 0.0121
-        },
-        {
-         "k": "6-8-13",
-         "p": 0.0116
+         "k": "8-13-14",
+         "p": 0.1497
         },
         {
          "k": "4-8-13",
-         "p": 0.0112
+         "p": 0.1133
         },
         {
-         "k": "8-13-14",
-         "p": 0.0109
+         "k": "6-8-13",
+         "p": 0.1103
         },
         {
-         "k": "12-13-16",
-         "p": 0.0105
+         "k": "8-13-17",
+         "p": 0.0959
+        },
+        {
+         "k": "3-8-13",
+         "p": 0.0888
+        },
+        {
+         "k": "8-9-13",
+         "p": 0.0504
         }
        ],
        "santan": [
         {
-         "k": "13-8-12",
-         "p": 0.0024
+         "k": "8-13-14",
+         "p": 0.052
         },
         {
-         "k": "13-8-16",
-         "p": 0.0024
+         "k": "8-13-4",
+         "p": 0.04
         },
         {
-         "k": "13-12-8",
-         "p": 0.0024
+         "k": "8-13-6",
+         "p": 0.039
         },
         {
-         "k": "13-16-8",
-         "p": 0.0023
+         "k": "13-8-14",
+         "p": 0.0367
         },
         {
-         "k": "13-8-6",
-         "p": 0.0023
+         "k": "8-13-17",
+         "p": 0.0341
         },
         {
-         "k": "13-6-8",
-         "p": 0.0022
+         "k": "8-13-3",
+         "p": 0.0317
         },
         {
          "k": "13-8-4",
-         "p": 0.0022
+         "p": 0.0282
         },
         {
-         "k": "13-4-8",
-         "p": 0.0022
+         "k": "8-14-13",
+         "p": 0.0275
         }
        ],
        "wide": [
         {
          "k": "8-13",
-         "p": 0.1063
+         "p": 0.7518
         },
         {
-         "k": "12-13",
-         "p": 0.0945
+         "k": "8-14",
+         "p": 0.2126
         },
         {
-         "k": "13-16",
-         "p": 0.0933
+         "k": "13-14",
+         "p": 0.1751
         },
         {
-         "k": "6-13",
-         "p": 0.0899
+         "k": "4-8",
+         "p": 0.1635
         },
         {
-         "k": "4-13",
-         "p": 0.0875
+         "k": "6-8",
+         "p": 0.1593
         }
        ],
-       "rank": null,
-       "best": null,
-       "conf": 0.087,
+       "rank": "C",
+       "best": {
+        "kind": "単勝",
+        "k": "13",
+        "p": 0.299,
+        "o": 3.1,
+        "ev": 0.928
+       },
+       "conf": 0.499,
        "points": [
-        "本命 13 ドリームコア（1着 19.5%）、対抗 8 モンローウォーク（9.5%）、単穴 12 カナルサンマルタン。",
+        "本命 8 モンローウォーク（1着 51.7%）、対抗 13 ドリームコア（29.9%）、単穴 14 サムシングスイート。",
         "京都芝コース（競馬場ガイド）：右回り・直線 323.4〜403.7m・高低差 4.3m。。",
         "京都芝2000m（168レース）：脚質別の3着内率 逃げ32%・先行30%・差し26%・追込18%。枠の得失 1枠1.01 2枠1.02 3枠1.00 4枠1.09 5枠0.94 6枠0.86 7枠1.05 8枠1.03（1.00が損得なし）。",
         "馬体重：このコースの3着内馬は平均 474kg で、出走平均 471kg より +3.4kg（ほぼ中立）。勝ち馬の平均 479kg。",
         "逃げ候補 2 テイエムアイラン、8 モンローウォーク、11 ガーネットフレア（競り合えばペースが上がり差しが届く）。",
-        "馬連の本線 8-13（4.0%）、三連複 8-12-13（1.2%）。"
+        "馬連の本線 8-13（45.8%）、三連複 8-13-14（15.0%）。"
        ],
        "oddsSrc": null
       },
