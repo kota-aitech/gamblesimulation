@@ -68,31 +68,53 @@ if (dow === 1 && hour >= 20 && prev.fitWeek !== `${today}`) {
   if (run('jra_fit.mjs', { JRA_FIT_EPOCH: '300' })) { run('jra_backtest.mjs'); run('jra_baba_stats.mjs'); prev.fitWeek = today; changed = true; }
 }
 fs.writeFileSync(stampFile, JSON.stringify(prev));
-if (!changed && !hasUpcoming()) { process.exit(0); }
-if (!changed && prev.builtAt && Date.now() - prev.builtAt < 6 * 3600000) process.exit(0);   // 変化なしなら6時間に1回だけ作り直す
-
-const t0 = Date.now();
-run('jra_build_results.mjs');                                   // 記録済みの予想 × 最新の結果（preds が無い初日は何もしない）
-if (!run('jra_build_races.mjs')) process.exit(1);
-if (!run('embed_db.mjs', { NK_EMBED_ONLY: 'jra' })) process.exit(1);
-prev.builtAt = Date.now(); fs.writeFileSync(stampFile, JSON.stringify(prev));
-const secs = ((Date.now() - t0) / 1000).toFixed(0);
-if (process.env.NK_REFRESH_NOPUSH) { console.error(`${stamp()} 反映完了（${secs}秒・push なし）`); process.exit(0); }
 
 const git = (args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 const TARGETS = ['jra.html', 'top.html', 'picks.html', 'bbank.html', 'hbank.html', 'kbank.html', 'data/boat/guide.json', 'data/guide_horse.json', 'data/jra/course.json', 'data/nankan/course.json', 'data/banei/course.json', 'data/jra/races.json', 'data/jra/top.json', 'data/jra/index.json', 'data/jra/model.json', 'data/jra/backtest.json', 'data/jra/baba.jsonl', 'data/jra/baba_stats.json',
   'data/jra/preds.jsonl', 'data/jra/results.json', 'data/jra/horses.jsonl'];
-try {
-  if (git(['rev-parse', '--abbrev-ref', 'HEAD']) !== 'main') { console.error(`${stamp()} main ではないので push しない`); process.exit(0); }
-  git(['add', '--', ...TARGETS.filter(f => fs.existsSync(path.join(ROOT, f)))]);
-  const staged = git(['diff', '--cached', '--name-only']);
-  if (!staged) { console.error(`${stamp()} 反映完了（${secs}秒）／差分なし`); process.exit(0); }
-  /* パスを明示（索引にある他の作業ファイルを巻き込まないため。tools/refresh.mjs の注記を参照） */
-  git(['commit', '-q', '-m', `chore(jra): ${stamp()} 時点の出馬表と予想を反映`, '-m', 'tools/refresh_jra.mjs による自動コミット', '--', ...TARGETS.filter(f => fs.existsSync(path.join(ROOT, f)))]);
-  /* push はしない。publish.mjs（launchd 15分おき）がまとめて押す＝Render のデプロイ回数を抑える。NK_PUSH_NOW=1 でその場で push */
-  if (process.env.NK_PUSH_NOW) { try { git(['push', 'origin', 'main']); } catch { git(['fetch', '-q', 'origin', 'main']); git(['rebase', '-q', '--autostash', 'origin/main']); git(['push', 'origin', 'main']); } }
-  console.error(`${stamp()} 反映＋commit 完了（${secs}秒・${staged.split('\n').length}ファイル）`);
-} catch (e) {
-  console.error(`${stamp()} git で失敗: ${String(e.stderr || e.message).split('\n').filter(Boolean).slice(-2).join(' ')}`);
-  process.exit(1);
+/* 作り直して埋め込み、commit する。push は publish.mjs（launchd 15分おき）がまとめて押す。NK_PUSH_NOW=1 でその場で push */
+function buildAndCommit(what) {
+  const t0 = Date.now();
+  run('jra_build_results.mjs');                                   // 記録済みの予想 × 最新の結果（preds が無い初日は何もしない）
+  if (!run('jra_build_races.mjs')) return false;
+  if (!run('embed_db.mjs', { NK_EMBED_ONLY: 'jra' })) return false;
+  prev.builtAt = Date.now(); fs.writeFileSync(stampFile, JSON.stringify(prev));
+  const secs = ((Date.now() - t0) / 1000).toFixed(0);
+  if (process.env.NK_REFRESH_NOPUSH) { console.error(`${stamp()} ${what}完了（${secs}秒・push なし）`); return true; }
+  try {
+    if (git(['rev-parse', '--abbrev-ref', 'HEAD']) !== 'main') { console.error(`${stamp()} main ではないので push しない`); return true; }
+    const files = TARGETS.filter(f => fs.existsSync(path.join(ROOT, f)));
+    git(['add', '--', ...files]);
+    const staged = git(['diff', '--cached', '--name-only', '--', ...files]);
+    if (!staged) { console.error(`${stamp()} ${what}完了（${secs}秒）／差分なし`); return true; }
+    /* パスを明示（索引にある他の作業ファイルを巻き込まないため。tools/refresh.mjs の注記を参照） */
+    git(['commit', '-q', '-m', `chore(jra): ${stamp()} 時点の出馬表と予想を反映`, '-m', 'tools/refresh_jra.mjs による自動コミット', '--', ...files]);
+    if (process.env.NK_PUSH_NOW) { try { git(['push', 'origin', 'main']); } catch { git(['fetch', '-q', 'origin', 'main']); git(['rebase', '-q', '--autostash', 'origin/main']); git(['push', 'origin', 'main']); } }
+    console.error(`${stamp()} ${what}＋commit 完了（${secs}秒・${staged.split('\n').length}ファイル）`);
+  } catch (e) { console.error(`${stamp()} git で失敗: ${String(e.stderr || e.message).split('\n').filter(Boolean).slice(-2).join(' ')}`); }
+  return true;
+}
+
+if (changed || (hasUpcoming() && !(prev.builtAt && Date.now() - prev.builtAt < 6 * 3600000))) {   // 変化なしなら6時間に1回だけ作り直す
+  if (!buildAndCommit('反映')) process.exit(1);
+}
+
+/* 4) 発走前の記録（2026-10-16 追加）。この回は20分おきにしか起きないので、予想の記録が発走の16〜24分後になっていた。
+   この回のうちに「発走10分前」を迎える今日のレースがあれば、その時刻まで待って
+   そのレースだけ出馬表（オッズ）を取り直し、作り直して記録する（jra_build_races は発走12分前から記録する）。
+   次の回（20分後）と重ならないよう、起動から LOOP_MIN 分までに迎えるレースだけを扱う */
+const LOOP_MIN = Number(process.env.JRA_RECORD_LOOP || 17);
+const startedAt = now.getTime();
+const recordedIds = () => { const s = new Set(); try { for (const l of fs.readFileSync(path.join(D, 'preds.jsonl'), 'utf8').split('\n')) { const m = l.match(/"raceId":"(\d+)"/); if (m) s.add(m[1]); } } catch { } return s; };
+const todayRaces = () => { const out = []; try { for (const l of fs.readFileSync(cardsFile, 'utf8').split('\n')) { if (!l.includes(`"date":"${today}"`)) continue; const c = JSON.parse(l); if (c.start && c.surface !== '障') out.push({ raceId: c.raceId, t: new Date(`${c.date}T${c.start.padStart(5, '0')}:00`).getTime() }); } } catch { } return out.sort((a, b) => a.t - b.t); };
+for (let guard = 0; guard < 20; guard++) {
+  const done = recordedIds();
+  const next = todayRaces().find(r => !done.has(r.raceId) && r.t > Date.now() - 60000);
+  if (!next) break;
+  const wake = next.t - 10 * 60000;
+  if (wake > startedAt + LOOP_MIN * 60000) break;                 // 次の回に任せる
+  if (wake > Date.now()) await new Promise(res => setTimeout(res, wake - Date.now()));
+  run('jra_fetch_cards.mjs', { JRA_SOON: '12' });                 // 発走12分以内のレースだけ、キャッシュを使わずに
+  buildAndCommit('発走前の記録');
+  if (recordedIds().size === done.size) break;                    // 記録できなかった（枠順なし等）なら打ち切る
 }

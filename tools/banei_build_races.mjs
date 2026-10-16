@@ -54,7 +54,7 @@ function recordPred(race, date) {
   fs.appendFileSync(PREDS, JSON.stringify({
     raceId: race.raceId, date, r: race.r, at: nowJ.toISOString(), late: RECORD_PAST ? 9999 : Math.round(late), level: race.level,
     top: top.map(h => h.no), p1: Object.fromEntries(top.map(h => [h.no, h.p1])), pop1,
-    rank: race.rank || null, evBest: race.best?.ev ?? null, bestK: race.best?.k ?? null, bestO: race.best?.o ?? null,
+    rank: race.rank || null, evBest: race.best?.ev ?? null, bestK: race.best?.k ?? null, bestO: race.best?.o ?? null, bestP: race.best?.p ?? null,
     ai: { umaren3: race.umaren.slice(0, 3).map(x => x.k), sanpuku3: race.sanpuku.slice(0, 3).map(x => x.k), santan5: race.santan.slice(0, 5).map(x => x.k) },
   }) + '\n');
   recorded.add(race.raceId);

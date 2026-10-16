@@ -12,6 +12,7 @@
      CO_MINUTES=320 node tools/cloud_odds.mjs --sport=boat    320分ループ（Actions 向き）
    環境変数
      CO_LEAD   … 締切の何分前を「締切前」として残すか（既定 8）
+     CO_LATE   … ボートだけ、締切直前のもう1枚を締切の何分前に残すか（既定 1。0 で取らない）
      CO_TICK   … 見回りの間隔（秒。既定 30。締切が遠い時間帯は自動で伸ばす）
      CO_PUSH   … 0 なら commit / push しない（手元の試し用）
      CO_DAYS   … 何日先まで見るか（既定 1＝今日と明日）
@@ -35,6 +36,9 @@ const BRANCH = process.env.CO_BRANCH || (OUT_ROOT === ROOT ? 'main' : 'odds-clou
 const arg = k => (process.argv.find(a => a.startsWith(`--${k}=`)) || '').split('=')[1];
 const SPORT = arg('sport') || process.env.CO_SPORT;
 const LEAD = Number(process.env.CO_LEAD || 8);
+/* 締切直前のもう1枚（ボートだけ、2026-10-16〜）。締切8分前から確定までに、モデルが市場より高く見る組ほどオッズが下がることが分かった
+   （lib/calib.mjs の fitDrift）。どの情報が締切までに市場に織り込まれ、どれが最後まで織り込まれないかを測るため、締切 LATE 分前（既定1）にも残す */
+const LATE = Number(process.env.CO_LATE ?? 1);
 const MINUTES = Number(process.env.CO_MINUTES || 0);
 const TICK = Number(process.env.CO_TICK || 30) * 1000;
 const DAYS = Number(process.env.CO_DAYS || 1);
@@ -299,6 +303,7 @@ async function tick() {
     if (left > 0) nearest = Math.min(nearest, left);
     /* 締切 LEAD 分前（少し過ぎても拾う）と、レース後の最終オッズ */
     const tag = (left <= LEAD + 0.6 && left >= LEAD - 4) ? 'pre'
+      : (SPORT === 'boat' && LATE > 0 && left <= LATE + 0.6 && left >= 0.15) ? 'late'
       : (SPORT !== 'boat' && SPORT !== 'keirin' && left <= -22 && left >= -90) ? 'final' : null;   // 競輪の確定オッズは結果ページに残るので取らない
     if (!tag || seen.has(`${r.date}|${r.key}|${tag}`)) continue;
     try {

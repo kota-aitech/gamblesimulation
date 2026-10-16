@@ -11,8 +11,12 @@ import { parseCalendar, parseRaceList, parseShutubaPast } from './lib/jrapage.mj
 import { YAHOO, parseMonthly, parseList, parseDenma, toId10 } from './lib/yahoo.mjs';
 
 const d0 = new Date(), d1 = new Date(); d1.setDate(d1.getDate() + 3);
-const FROM = process.env.JRA_FROM || ymdOf(d0);
-const TO = process.env.JRA_TO || ymdOf(d1);
+/* JRA_SOON=<分> … 今日の、発走が SOON 分以内に迫ったレースだけをキャッシュを使わずに取る（refresh_jra が発走前の記録の直前に呼ぶ。
+   全レースを取り直すと3日ぶんで約5分かかり、そのぶん記録が遅れる） */
+const SOON = process.env.JRA_SOON ? Number(process.env.JRA_SOON) : null;
+const FROM = SOON != null ? ymdOf(d0) : process.env.JRA_FROM || ymdOf(d0);
+const TO = SOON != null ? ymdOf(d0) : process.env.JRA_TO || ymdOf(d1);
+const minsTo = (date, hm) => (new Date(`${date}T${hm.padStart(5, '0')}:00`) - Date.now()) / 60000;
 const SRC = process.env.JRA_SRC || 'yahoo';
 
 /* 結果DBから馬ごとの履歴（新しい順）を引く */
@@ -43,13 +47,15 @@ if (SRC === 'yahoo') {
   for (const ym of months) {
     const ks = parseMonthly(await get(`${YAHOO}/keiba/schedule/monthly?year=${+ym.slice(0, 4)}&month=${+ym.slice(4, 6)}`, { ttlDays: 0.5, referer: YAHOO + '/keiba/' }));
     for (const k of ks) {
-      const list = parseList(await get(`${YAHOO}/keiba/race/list/${k}`, { ttlDays: 0.02, referer: YAHOO + '/keiba/' }), k);
+      const list = parseList(await get(`${YAHOO}/keiba/race/list/${k}`, { ttlDays: SOON != null ? 0.5 : 0.02,   // SOON のときは発走時刻が分かれば足りるので一覧はキャッシュでよい（月の全開催ぶん取り直すと1分半かかる）
+        referer: YAHOO + '/keiba/' }), k);
       if (!list.date) continue;
       const ymd = list.date.replace(/-/g, '');
       if (ymd < FROM || ymd > TO) continue;
       for (const r of list.races) {
+        if (SOON != null && !(r.start && (m => m >= -3 && m <= SOON)(minsTo(list.date, r.start)))) continue;
         try {
-          const card = parseDenma(await get(`${YAHOO}/keiba/race/denma/${toId10(r.raceId)}`, { ttlDays: 0.02, referer: `${YAHOO}/keiba/race/list/${k}` }), r.raceId);
+          const card = parseDenma(await get(`${YAHOO}/keiba/race/denma/${toId10(r.raceId)}`, { ttlDays: SOON != null ? 0 : 0.02, referer: `${YAHOO}/keiba/race/list/${k}` }), r.raceId);
           if (!card.entries.length) continue;
           for (const e of card.entries) e.past = pastOf(e.horseId, list.date);
           buf.push({ ...card, date: list.date });

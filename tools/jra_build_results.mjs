@@ -67,16 +67,16 @@ for (const date of dates) {
     /* 段位ごと（実戦）：最良の単勝1点と、本命3頭BOX 三連複 */
     if (p.late !== 9999) LG.add(p, p.raceId, p.bestK ? payOf(k, 'win', p.bestK) : 0, '本命3頭BOX 三連複', S.bets['3頭BOX三連複']);
     let V = byV.get(p.venue); if (!V) byV.set(p.venue, V = { S: mk(), late: 0, mix: 0 });
-    merge(V.S, S); merge(DAY, S); merge(TOTAL, S); if (p.late > 60) V.late++; if (p.level === 'mix') V.mix++;
+    merge(V.S, S); merge(DAY, S); merge(TOTAL, S); if (p.late > 60 && p.oddsSrc !== 'T-8') V.late++; if (p.level === 'mix') V.mix++;
     let W = VEN.get(p.venue); if (!W) VEN.set(p.venue, W = { S: mk(), days: new Set(), late: 0 });
-    merge(W.S, S); W.days.add(date); if (p.late > 60) W.late++;
+    merge(W.S, S); W.days.add(date); if (p.late > 60 && p.oddsSrc !== 'T-8') W.late++;
   }
   out.days.push({ date, venues: [...byV].map(([venue, v]) => ({ venue, late: v.late, mix: v.mix, ...fin(v.S) })), ...fin(DAY) });
 }
 out.byVenue = [...VEN.keys()].sort().map(venue => ({ venue, days: VEN.get(venue).days.size, late: VEN.get(venue).late, ...fin(VEN.get(venue).S) }));
 out.total = fin(TOTAL);
 out.byGrade = LG.finish();   // 段位ごとの実戦の回収率（記録に段位が残っているレース。2026-09-28〜）
-out.note = '予想は発走後に記録したもの（late＝発走から60分以上あとに記録したレース数。再現＝後から同じ入力で作り直したもの）。払戻は Yahoo!スポーツの結果ページ。';
+out.note = '予想は発走12分前〜発走に記録したもの（2026-10-16 以前は発走後。late＝発走から60分以上あとに記録したレース数で、締切8分前のオッズに差し替えて記録したものは数えない。再現＝後から同じ入力で作り直したもの）。払戻は Yahoo!スポーツの結果ページ。';
 writeJSON('data/jra/results.json', out);
 const T = out.total;
 console.error(`${dates.length}日 ${matched}R を精算（未確定 ${pending}R）。◎的中 ${T.hit1 != null ? (T.hit1 * 100).toFixed(1) : '—'}%／◎単勝 回収 ${T.bets['◎単勝'].roi != null ? (T.bets['◎単勝'].roi * 100).toFixed(1) : '—'}%／3頭BOX三連複 ${T.bets['3頭BOX三連複'].roi != null ? (T.bets['3頭BOX三連複'].roi * 100).toFixed(1) : '—'}% -> data/jra/results.json`);

@@ -54,9 +54,11 @@ for (const f of files) {
       add.nankan.push({ raceId: o.key, date: o.date, track: TRACK[o.key.slice(8, 10)] || '', R: Number(o.key.slice(14, 16)),
         tag, post: o.post, capturedAt: o.capturedAt, minsToPost: o.minsToClose + 1, updated: o.updated, tan: o.tan, fuku: o.fuku, src: 'cloud' });
     } else if (sport === 'boat') {
-      const ymd = o.date.replace(/-/g, ''), k = `${ymd}|${o.jcd}|${o.r}|T-8`;
+      /* tag 'late' は締切直前（1分前前後）のもう1枚。kind は 'T-1' として残す（calib_boat は T-8 だけを読む） */
+      const kind = o.tag === 'late' ? 'T-1' : 'T-8';
+      const ymd = o.date.replace(/-/g, ''), k = `${ymd}|${o.jcd}|${o.r}|${kind}`;
       if (keys.boat.has(k)) continue; keys.boat.add(k);
-      add.boat.push({ date: ymd, jcd: o.jcd, r: o.r, kind: 'T-8', win: o.win, place: o.place, ex3: o.tri, at: o.capturedAt, left: o.minsToClose, src: 'cloud' });
+      add.boat.push({ date: ymd, jcd: o.jcd, r: o.r, kind, win: o.win, place: o.place, ex3: o.tri, at: o.capturedAt, left: o.minsToClose, src: 'cloud' });
     } else if (sport === 'keirin') {
       /* 競輪：締切前の3連単などのオッズ。keirin_build_races が、Mac が寝ていて締切前に予想を記録できなかったレースに使う */
       const k = `${o.key}|T-8`; if (keys.keirin.has(k)) continue; keys.keirin.add(k);

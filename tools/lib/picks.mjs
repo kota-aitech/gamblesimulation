@@ -87,10 +87,13 @@ export function buildPicks(ROOT) {
   /* 各競技の閾値（画面の説明用）。段位が1本も付いていない競技だけ、その日の相対順位で代用する */
   for (const sp of Object.keys(sports)) {
     if (sp === 'nankan') { sports[sp].thresholds = NK.thresholds?.evUmaren ? { S: NK.thresholds.evUmaren.p10, A: NK.thresholds.evUmaren.p25, B: NK.thresholds.evUmaren.p50 } : null; continue; }
-    const G = readGrade(ROOT, sp);
+    let G = readGrade(ROOT, sp);
+    /* ボート・競輪は市場と合成した期待値の閾値（calib.json）で段位を付けている（keirin の grade.json は検証の確定オッズの閾値のまま） */
+    const CAL = (sp === 'boat' || sp === 'keirin') ? load(ROOT, `data/${sp}/calib.json`) : null;
+    if (CAL?.thresholds && (sp === 'keirin' || G?.src === 'calib')) G = { ...G, thresholds: CAL.thresholds, src: 'calib', kind: '3連単', from: CAL.from, to: CAL.to, byGrade: G?.src === 'calib' ? G.byGrade : null };
     if (G?.thresholds && (rows.some(r => r.sport === sp && r.grade) || !rows.some(r => r.sport === sp))) {   // レースが無い日も閾値は出す
       sports[sp].thresholds = { S: G.thresholds.p10, A: G.thresholds.p25, B: G.thresholds.p50, n: G.thresholds.n };
-      sports[sp].gradeBy = G.src === 'backtest' ? `検証期間（${G.from}〜）の確定オッズでの${G.kind}の期待値の分布` : G.src === 'rolling' ? `直近14日の締切時点の${G.kind}の期待値の分布` : `${G.kind}の期待値の分布（記録が貯まるまでの暫定）`;
+      sports[sp].gradeBy = G.src === 'calib' ? `締切8分前のオッズがあるレース（${G.from}〜${G.to}）の、市場と合成し確定までのオッズの動きを織り込んだ${G.kind}の期待値の分布` : G.src === 'backtest' ? `検証期間（${G.from}〜）の確定オッズでの${G.kind}の期待値の分布` : G.src === 'rolling' ? `直近14日の締切時点の${G.kind}の期待値の分布` : `${G.kind}の期待値の分布（記録が貯まるまでの暫定）`;
       sports[sp].byGrade = G.byGrade || null;
       continue;
     }
@@ -104,7 +107,7 @@ export function buildPicks(ROOT) {
   rows.sort((a, b) => (a.date + (a.close || '')).localeCompare(b.date + (b.close || '')));
   /* 実戦の段位ごとの回収率：各競技の日別成績（締切前後に記録した予想を払戻で精算）の byGrade。形は {段位: {races, bets: {買い方: {n, hit, roi, bet, ret}}}} */
   const actual = {};
-  for (const [sp, rel] of [['boat', 'data/boat/results.json'], ['keirin', 'data/keirin/results.json'], ['jra', 'data/jra/results.json'], ['banei', 'data/banei/results.json']]) { const R = load(ROOT, rel); if (R?.byGrade && Object.keys(R.byGrade).length) actual[sp] = R.byGrade; }
+  for (const [sp, rel] of [['boat', 'data/boat/results.json'], ['keirin', 'data/keirin/results.json'], ['jra', 'data/jra/results.json'], ['banei', 'data/banei/results.json']]) { const R = load(ROOT, rel); if (R?.byGrade && Object.keys(R.byGrade).length) actual[sp] = R.byGrade; if (R?.byGradeOld && Object.keys(R.byGradeOld).length) (actual._old ||= {})[sp] = R.byGradeOld; }
   { /* 南関：results.<場>.json の summary.byGrade（当時の入力で予想を再現したもの。締切前オッズで予想した数 pre を添える）を4場ぶん足す */
     const acc = {};
     for (const key of ['oi', 'kawasaki', 'funabashi', 'urawa']) {

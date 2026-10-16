@@ -8,7 +8,7 @@
    「前回の取得から KR_STALE 分（既定30）」たっていれば取り直す。 */
 import fs from 'node:fs';
 import path from 'node:path';
-import { ROOT, get, freshTtl, ymdOf, addDays, dayUrl, raceUrl, upsertJsonl, stats, dateRange, eachLine } from './lib/kr.mjs';
+import { ROOT, get, freshTtl, ymdOf, addDays, dayUrl, raceUrl, upsertJsonl, stats, dateRange, eachLine, own } from './lib/kr.mjs';
 import { parseDay, parseRace } from './lib/krpage.mjs';
 
 const TODAY = ymdOf(new Date());
@@ -24,7 +24,7 @@ const done = new Set(), pending = new Map(), closeOf = new Map();
 {
   const f = path.join(ROOT, REL);
   eachLine(f, l => {
-    const m = l.match(/^\{"raceId":"(\d{16})"/); if (!m) return;
+    const m0 = l.match(/^\{"raceId":"(\d{16})"/); if (!m0) return; const m = [, own(m0[1])];
     if (/"result":\{/.test(l)) done.add(m[1]);
     else { pending.set(m[1], Number((l.match(/"fetchedAt":(\d+)/) || [])[1] || 0)); const c = l.match(/"date":"(\d{8})"[\s\S]*?"close":"(\d{1,2}:\d{2})"/); if (c) closeOf.set(m[1], new Date(`${c[1].slice(0, 4)}-${c[1].slice(4, 6)}-${c[1].slice(6, 8)}T${c[2].padStart(5, '0')}:00`).getTime()); }
   });
@@ -42,7 +42,11 @@ process.on('SIGINT', () => { flush(); process.exit(0); });
 
 for (const d of dateRange(FROM, TO, DESC ? -1 : 1)) {
   let list;
-  try { list = parseDay(await get(dayUrl(d), { ttlDays: freshTtl(d) })); }
+  try {
+    list = parseDay(await get(dayUrl(d), { ttlDays: freshTtl(d) }));
+    /* 一覧が空のまま長期キャッシュに残った日（10/2 がそうなっていた）は取り直す。本当に開催の無い日は1回ぶん余計に叩くだけ */
+    if (!list.length && d < TODAY) list = parseDay(await get(dayUrl(d), { ttlDays: 0 }));
+  }
   catch (e) { console.error(`  ! ${d} 一覧 ${e.message}`); if (stats.blocked >= 3) stop(); continue; }
   const races = list.filter(x => !ONLY || ONLY.has(x.slug));
   let got = 0;
@@ -55,8 +59,11 @@ for (const d of dateRange(FROM, TO, DESC ? -1 : 1)) {
       if (age < every * 60000) continue;
     }
     try {
-      const html = await get(raceUrl(slug, raceId), { ttlDays: freshTtl(d) });
-      const r = parseRace(html, slug, raceId);
+      let html = await get(raceUrl(slug, raceId), { ttlDays: freshTtl(d) });
+      let r = parseRace(html, slug, raceId);
+      /* 5日以上前の日はキャッシュが長期扱いになる。開催中に取った「結果の出る前」のページを抱えていたら取り直す
+         （2026-10-08：取得が10/2〜10/7 落ちていた間に溜まった結果なしのページを、復旧後もそのまま使い続けていた） */
+      if (!r.result && d < TODAY) { html = await get(raceUrl(slug, raceId), { ttlDays: 0 }); r = parseRace(html, slug, raceId); }
       if (!r.riders.length) { nBad++; continue; }
       r.date ||= d; r.fetchedAt = Date.now();
       buf.push(r); nNew++; got++;

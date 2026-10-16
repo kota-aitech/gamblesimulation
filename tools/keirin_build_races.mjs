@@ -9,8 +9,16 @@ import path from 'node:path';
 import { ROOT, readJSON, writeJSON, ymdOf, venueByName, eachLine } from './lib/kr.mjs';
 import { FEATURES, NF, slim, buildAsOf, makeFeaturizer, stageCtx, combos, raceOf, lineInfo, TIP, bankCls, BANKS } from './lib/krfeat.mjs';
 import { utilities } from './lib/bpl.mjs';
-import { bestCombo, gradeOf, readGrade } from './lib/grade.mjs';
-const GRADE = readGrade(ROOT, 'keirin');   // 段位の閾値（keirin_backtest が検証期間から決める。南関の racepick と同じ）
+import { bestCombo, bestComboCal, gradeOf, readGrade } from './lib/grade.mjs';
+import { mixProbs, marketOf, adjOdds } from './lib/calib.mjs';
+/* 3連単の確率の市場との合成（tools/calib_keirin.mjs → data/keirin/calib.json。2026-10-16〜）。
+   モデルのままの確率だと市場と食い違う大穴ほど期待値が膨らみ、実戦で段位 S の最良の1点が169Rで的中0だった。
+   期待値・最良の買い目・段位・期待値の組はこの合成確率で出し、段位の閾値も calib.json（締切8分前のオッズでの合成期待値の分布）を使う */
+let CAL = null; try { CAL = readJSON('data/keirin/calib.json'); } catch { }
+const GRADE0 = readGrade(ROOT, 'keirin');   // 段位の閾値（keirin_backtest が検証期間から決める。南関の racepick と同じ）
+/* 段位ごとの表（keirin.html）は検証の形 {races, bets:{買い方:{roi}}} で渡す。中身は calib の検証（締切8分前のオッズのレース、合成確率の段位） */
+const calByGrade = g => g && Object.fromEntries(Object.entries(g).map(([k, v]) => [k, { races: v.n, bets: { '期待値最良の3連単1点': { n: v.n, hit: +(v.hit / v.n).toFixed(3), roi: v.roi, hits: v.hit, expHits: v.expHit ?? null, expRoi: v.expRoi ?? null } } }]));
+const GRADE = CAL?.thresholds ? { ...GRADE0, thresholds: CAL.thresholds, byGrade: calByGrade(CAL.check?.after?.grades), src: 'calib', cal: true, from: CAL.from, to: CAL.to } : GRADE0;
 
 const TODAY = process.env.KR_TODAY || ymdOf(new Date());
 const YESTERDAY = (() => { const d = new Date(`${TODAY.slice(0, 4)}-${TODAY.slice(4, 6)}-${TODAY.slice(6, 8)}T00:00:00`); d.setDate(d.getDate() - 1); return ymdOf(d); })();
@@ -75,7 +83,7 @@ function recordPred(race, date) {
     top: top.map(h => h.no), p1: Object.fromEntries(top.map(h => [h.no, h.p1])), mkt: race.mktOrder || null, mktE3: race.mktE3 || null,
     ai: { e3: race.e3.slice(0, 10).map(x => x.k), q3: race.q3.slice(0, 5).map(x => x.k), e2: race.e2.slice(0, 5).map(x => x.k), q2: race.q2.slice(0, 3).map(x => x.k), wide: race.wide.slice(0, 3).map(x => x.k),
       ev: race.ev.map(x => x.k), line: race.lineBet || null },
-    grade: race.grade || null, evBest: race.best?.ev ?? null, bestK: race.best?.k ?? null, bestO: race.best?.o ?? null,
+    grade: race.grade || null, evBest: race.best?.ev ?? null, bestK: race.best?.k ?? null, bestO: race.best?.o ?? null, bestP: race.best?.p ?? null, cal: race.best?.cal || undefined,
     oddsSrc: race.oddsSrc || 'live', oddsAt: race.oddsAt || null,   // live＝その時点の最新（締切10分前〜）、T-8＝締切8分前のスナップショット（クラウド）
   }) + '\n');
   recorded.add(race.raceId);
@@ -150,12 +158,23 @@ for (const r0 of races) {
     };
   });
   /* 3連単の期待値（モデル確率×オッズ）。極端な低確率の組は外す（買えない買い目で期待値が決まらないように。南関の LIMIT と同じ考え） */
+  const mkt = CAL && odds.e3 ? marketOf(Object.fromEntries(Object.entries(odds.e3).filter(([, o]) => o > 0 && o < 9999))) : null;
+  const pcOf = (() => {
+    if (!mkt) return null;
+    const mix = mixProbs(C.e3.map(([, p]) => p), C.e3.map(([k]) => mkt[k] || 0), CAL);
+    return new Map(C.e3.map(([k], i) => [k, mix[i]]));
+  })();
+  /* 期待値＝合成確率 × 見込みの確定オッズ（calib.json の drift。締切8分前から確定までのオッズの動きを織り込む） */
+  const oaOf = (k, o, pc) => pcOf && CAL?.drift ? adjOdds(o, pc, mkt[k], CAL.drift) : o;
   const ev = [];
-  if (odds.e3) for (const [k, p] of C.e3.slice(0, 60)) { const o = odds.e3[k]; if (o && o < 9999 && p >= 0.01 && o <= 300) ev.push({ k, p: round(p, 4), o, ev: round(p * o, 2) }); }
+  if (odds.e3) for (const [k, p0] of C.e3.slice(0, 80)) { const p = pcOf ? pcOf.get(k) : p0, o = odds.e3[k]; if (o && o < 9999 && p >= 0.01 && o <= 300) ev.push({ k, p: round(p, 4), o, ev: round(p * oaOf(k, o, p), 2) }); }
   ev.sort((a, b) => b.ev - a.ev);
   const evPick = ev.filter(x => x.ev >= 1.0).slice(0, 6);
-  /* 段位：最良の3連単の期待値（確率1%未満・300倍超は除く）を検証期間の閾値に当てる */
-  const best = odds.e3 ? bestCombo(C.e3.slice(0, 80).map(([k, p]) => ({ k, p, o: odds.e3[k] })), '3連単') : null;
+  /* 段位：最良の3連単の期待値を閾値に当てる。合成があれば「合成確率の上位10組から見込みの確定オッズでの期待値が最大」（2026-10-16 夕〜） */
+  const best = !odds.e3 ? null : pcOf && CAL?.drift
+    ? bestComboCal(C.e3.map(([k]) => { const o = odds.e3[k], pc = pcOf.get(k); return { k, p: pc, o, oa: oaOf(k, o, pc) }; }), '3連単', CAL.topN || 10)
+    : bestCombo(C.e3.slice(0, 80).map(([k, p]) => ({ k, p: pcOf ? pcOf.get(k) : p, o: odds.e3[k] })), '3連単');
+  if (best) best.cal = pcOf ? (CAL?.drift ? 2 : true) : false;
   const grade = gradeOf(best?.ev ?? null, GRADE?.thresholds);
   const top = i => riders[order[i]];
   const nn = h => `${h.no} ${h.name}`;
@@ -244,7 +263,7 @@ const out = {
     model: { built: M.meta.built, split: M.meta.split, train: M.meta.train, test: M.meta.test, from: M.meta.from, to: M.meta.to, base: M.base.test, joint: M.joint?.test || null, mktOnly: M.mktOnly, baseSame: M.baseSame,
       coef: M.base.coef.slice(0, 14), jointCoef: M.joint?.coef?.slice(0, 14) || null, homeMult: M.homeMult, stage: M.base.stage },
     index: DB.meta ? { from: DB.meta.from, to: DB.meta.to, races: DB.meta.races, slots: DB.slots, lineOneTwo: DB.lineOneTwo, home: DB.home, kimarite: DB.kimarite, venues: DB.venues } : null,
-    grade: GRADE ? { thresholds: GRADE.thresholds, byGrade: GRADE.byGrade, from: GRADE.from, to: GRADE.to, kind: GRADE.kind } : null,
+    grade: GRADE ? { thresholds: GRADE.thresholds, byGrade: GRADE.byGrade, from: GRADE.from, to: GRADE.to, kind: GRADE.kind, cal: GRADE.cal || false } : null,
     backtest: BT ? { level: BT.meta.level, from: BT.meta.from, to: BT.meta.to, races: BT.meta.races, table: BT.table, note: BT.meta.note, byVenue: BT.byVenue } : null,
   },
   days: [...days].sort((a, b) => a[0].localeCompare(b[0])).map(([date, vs]) => ({ date, venues: [...vs.values()].sort((a, b) => (a.races[0]?.post || '').localeCompare(b.races[0]?.post || '')).map(v => ({ ...v, races: v.races.sort((a, b) => a.r - b.r) })) })),

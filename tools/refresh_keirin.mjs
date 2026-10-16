@@ -71,6 +71,13 @@ if (grown) { console.error(`${stamp()} データが増えたのでモデルを�
 if (dow === 1 && hour >= 22 && prev.fitWeek !== today) {
   if (run('keirin_fit.mjs', {}, 6000)) { run('keirin_backtest.mjs', {}, 6000); prev.fitWeek = today; changed = true; }
 }
+/* 3連単の確率を市場と合成する a・b（calib_keirin → calib.json）。モデルを当て直したら必ず、そうでなくても週1回当て直す（約1分） */
+{
+  let calAge = Infinity; try { calAge = (Date.now() - fs.statSync(path.join(D, 'calib.json')).mtimeMs) / 86400000; } catch { }
+  const md = (() => { try { return fs.statSync(path.join(D, 'model.json')).mtimeMs; } catch { return 0; } })();
+  const cm = (() => { try { return fs.statSync(path.join(D, 'calib.json')).mtimeMs; } catch { return 0; } })();
+  if ((calAge > 7 || md > cm) && run('calib_keirin.mjs', {}, 6000)) changed = true;
+}
 fs.writeFileSync(stampFile, JSON.stringify(prev));
 /* 開催時間中は毎回作り直す。予想の記録は「締切10分前〜締切」の窓で行うので、データが変わった時だけにすると
    （結果の無いレースの取り直しは25分おき）窓を逃すレースが出る（2026-09-28 の初日に1時間で5件しか記録できなかった） */
@@ -87,7 +94,7 @@ const secs = ((Date.now() - t0) / 1000).toFixed(0);
 if (process.env.NK_REFRESH_NOPUSH) { console.error(`${stamp()} 反映完了（${secs}秒・commit なし）`); process.exit(0); }
 
 const git = (args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
-const TARGETS = ['keirin.html', 'kbank.html', 'data/keirin/venues.json', 'top.html', 'picks.html', 'bbank.html', 'hbank.html', 'kbank.html', 'data/boat/guide.json', 'data/guide_horse.json', 'data/jra/course.json', 'data/nankan/course.json', 'data/banei/course.json', 'data/keirin/banks.json', 'data/keirin/races.json', 'data/keirin/top.json', 'data/keirin/index.json', 'data/keirin/model.json', 'data/keirin/backtest.json', 'data/keirin/preds.jsonl', 'data/keirin/results.json'];
+const TARGETS = ['keirin.html', 'kbank.html', 'data/keirin/venues.json', 'data/keirin/calib.json', 'top.html', 'picks.html', 'bbank.html', 'hbank.html', 'kbank.html', 'data/boat/guide.json', 'data/guide_horse.json', 'data/jra/course.json', 'data/nankan/course.json', 'data/banei/course.json', 'data/keirin/banks.json', 'data/keirin/races.json', 'data/keirin/top.json', 'data/keirin/index.json', 'data/keirin/model.json', 'data/keirin/backtest.json', 'data/keirin/preds.jsonl', 'data/keirin/results.json'];
 try {
   if (git(['rev-parse', '--abbrev-ref', 'HEAD']) !== 'main') { console.error(`${stamp()} main ではないので commit しない`); process.exit(0); }
   const files = TARGETS.filter(f => fs.existsSync(path.join(ROOT, f)));

@@ -59,6 +59,15 @@ let tideAge = Infinity;
 try { tideAge = (Date.now() - fs.statSync(TIDESTAMP).mtimeMs) / 3600000; } catch { }
 if (tideAge > 24 || !fs.existsSync(path.join(D, 'tide.json'))) { run('fetch_tide.mjs'); fs.writeFileSync(TIDESTAMP, String(Date.now())); }
 
+/* 1c) 3連単の確率を市場と合成する a・b（tools/calib_boat.mjs → calib.json）を週1回当て直す。
+   締切8分前のオッズの標本が増えるほど安定する。メモリを食うので node の上限を上げて呼ぶ（数十秒） */
+let calAge = Infinity;
+try { calAge = (Date.now() - fs.statSync(path.join(D, 'calib.json')).mtimeMs) / 86400000; } catch { }
+if (calAge > 7) {
+  try { execFileSync(process.execPath, ['--max-old-space-size=6144', path.join(ROOT, 'tools', 'calib_boat.mjs')], { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'], timeout: STEP_TIMEOUT, killSignal: 'SIGKILL' }); }
+  catch (e) { console.error(`! calib_boat.mjs 失敗: ${String(e.stderr || e.message).split('\n').filter(Boolean).slice(-3).join(' ')}`); }
+}
+
 /* 2) 変化があるときだけ作り直す */
 /* 節間の結果は昨日以前の K と live からも作るので、results.jsonl（K の取り直し）と昨日の live も見る */
 const watch = [`live.${addDays(TODAY, -1)}.json`, `live.${TODAY}.json`, `live.${addDays(TODAY, 1)}.json`, 'programs.jsonl', 'results.jsonl', 'model.json', 'index.json', 'tide.json'].map(f => path.join(D, f));
@@ -90,7 +99,7 @@ const gitRetry = (args, n = 4) => {
 };
 const stamp = new Date().toLocaleString('ja-JP', { hour12: false }).replace(/\//g, '-');
 if (process.env.NK_REFRESH_NOPUSH) { console.error(`${stamp} 反映完了（${secs}秒・push なし）`); process.exit(0); }
-const TARGETS = ['boat.html', 'top.html', 'picks.html', 'bbank.html', 'hbank.html', 'kbank.html', 'data/boat/guide.json', 'data/guide_horse.json', 'data/jra/course.json', 'data/nankan/course.json', 'data/banei/course.json', 'data/boat/today.json', 'data/boat/top.json', 'data/boat/odds_live.jsonl', 'data/boat/tide.json',
+const TARGETS = ['boat.html', 'top.html', 'picks.html', 'bbank.html', 'hbank.html', 'kbank.html', 'data/boat/guide.json', 'data/guide_horse.json', 'data/jra/course.json', 'data/nankan/course.json', 'data/banei/course.json', 'data/boat/today.json', 'data/boat/top.json', 'data/boat/odds_live.jsonl', 'data/boat/tide.json', 'data/boat/calib.json',
   'data/boat/preds.jsonl', 'data/boat/results.json',
   `data/boat/live.${TODAY}.json`, `data/boat/live.${addDays(TODAY, 1)}.json`];
 try {

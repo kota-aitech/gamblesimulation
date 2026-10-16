@@ -90,7 +90,10 @@ if (fs.existsSync(OUT)) for (const l of fs.readFileSync(OUT, 'utf8').split('\n')
 
 let added = 0;
 for (const [dayId, meta] of [...days].sort()) {
-  const html = await get(`${BASE}/repay/${dayId}.do`, { ttlDays: freshTtl(meta.date) });
+  /* 開催前（当日の1R より前）は払戻ページが 404 を返す。落とさずに次の日へ（以前は refresh が夜中に8分おきに「失敗」を出していた） */
+  let html;
+  try { html = await get(`${BASE}/repay/${dayId}.do`, { ttlDays: freshTtl(meta.date) }); }
+  catch (e) { console.error(`  ! ${meta.date} ${meta.track} 払戻ページ ${e.message}（開催前ならまだ無い）`); continue; }
   const rs = parseDay(html);
   if (!rs.length) { console.error(`  ! ${meta.date} ${meta.track} 払戻が読めない`); continue; }
   for (const r of rs) {

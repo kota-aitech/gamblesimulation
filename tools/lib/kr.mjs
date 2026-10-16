@@ -158,6 +158,10 @@ export function eachLine(file, fn) {
     if (rest) fn(rest);
   } finally { fs.closeSync(fd); }
 }
+/* eachLine の行から切り出した文字列を長く持つときは必ず own() を通す。V8 は13文字以上の切り出しを「元の文字列への参照」で持つので、
+   16桁の raceId を Set に入れるだけで 16MB の読み込み単位がまるごと残り、races.jsonl（1.1GB）全体を抱えてヒープが溢れた
+   （2026-10-02〜10-08、keirin_fetch が毎回 heap out of memory で落ち、当日の出走表・オッズ・結果が1件も入らなかった） */
+export const own = s => s.split('').join('');
 export function readJSON(rel) { return JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8')); }
 /* jsonl に差し替え追記（同じ raceId は新しいもので置き換える）。全行数を返す。
    ファイルは1年で数百MBになるので、**新しい raceId だけなら追記で済ませる**（全体の読み直しは差し替えがあるときだけ）。
@@ -166,7 +170,7 @@ const idCache = new Map();
 function idsOf(f) {
   if (idCache.has(f)) return idCache.get(f);
   const s = new Set();
-  eachLine(f, l => { const m = l.match(/^\{"raceId":"(\d+)"/); if (m) s.add(m[1]); });
+  eachLine(f, l => { const m = l.match(/^\{"raceId":"(\d+)"/); if (m) s.add(own(m[1])); });
   idCache.set(f, s); return s;
 }
 export function upsertJsonl(rel, rows, keyOf = o => o.raceId) {

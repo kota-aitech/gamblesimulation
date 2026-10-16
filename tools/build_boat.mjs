@@ -21,7 +21,13 @@ import { windCompass } from './lib/web.mjs';
 import { raceProbs, packTri } from './lib/bpl.mjs';
 import { settle, finishOf, payOf } from './lib/bsettle.mjs';
 import { ORIGEX } from './lib/origex.mjs';
-import { bestCombo, thresholdsOf, gradeOf, readGrade } from './lib/grade.mjs';
+import { bestCombo, bestComboCal, thresholdsOf, gradeOf, readGrade } from './lib/grade.mjs';
+import { mixProbs, marketOf, adjOdds } from './lib/calib.mjs';
+/* 3連単の確率の市場との合成（tools/calib_boat.mjs → data/boat/calib.json。2026-10-16〜）。
+   モデルのままの確率で期待値を出すと、市場と食い違う大穴ほど期待値が膨らみ、段位 S が「当たらない大穴」になっていた
+   （実戦で S の最良の買い目1点は198Rで的中0）。期待値・最良の買い目・段位・AI の期待値組はこの合成確率で出す。
+   表の「確率」はモデルのまま（予想そのもの）。無ければ従来どおりモデルの確率で出す */
+let CAL = null; try { CAL = readJSON('data/boat/calib.json'); } catch { }
 /* 段位（南関と同じ S/A/B/C）。閾値は data/boat/grade.json：締切時に記録した「最良の3連単の期待値」が直近14日で500R 貯まればその分布、
    それまではこの回に作った全レースの分布で代用（src='today'）。過去のオッズが無いので検証期間からは決められない */
 const GRADE0 = readGrade(ROOT, 'boat');
@@ -189,13 +195,27 @@ function buildRace(date, jcd, prog, live, venueWeather) {
     odds = { win: lv.odds.win, place: lv.odds.place, at: lv.odds.at, left: lv.odds.left, kind: lv.snapAt ? 'snap' : 'pre', ex3 };
   }
   const lanes = boats.map(b => b.lane);
+  /* 合成確率（組 → p）と市場の確率（組 → q）。オッズが120通りそろっていて calib.json があるときだけ */
+  const mkt = CAL && odds?.ex3?.size >= 100 ? marketOf(lv.odds.ex3) : null;
+  const pcOf = (() => {
+    if (!mkt) return null;
+    const ks = use.tri.map(([a, b, c]) => `${lanes[a]}-${lanes[b]}-${lanes[c]}`);
+    const mix = mixProbs(use.tri.map(t => t[3]), ks.map(k => mkt[k] || 0), CAL);
+    return new Map(ks.map((k, i) => [k, mix[i]]));
+  })();
+  /* 期待値＝合成確率 × 見込みの確定オッズ（calib.json の drift。締切8分前から確定までに、モデルが市場より高く見る組ほどオッズが下がるぶんを織り込む） */
+  const oaOf = (k, o, pc) => pcOf && CAL?.drift ? adjOdds(o, pc, mkt[k], CAL.drift) : o;
   const tri = use.tri.slice(0, 12).map(([a, b, c, p]) => {
     const k = `${lanes[a]}-${lanes[b]}-${lanes[c]}`;
-    const o = odds?.ex3.get(k) ?? null;
-    return { k, p: round(p, 4), o, ev: o ? round(p * o, 2) : null };
+    const o = odds?.ex3.get(k) ?? null, pc = pcOf ? pcOf.get(k) : p;
+    return { k, p: round(p, 4), pc: pcOf ? round(pc, 4) : undefined, o, ev: o ? round(pc * oaOf(k, o, pc), 2) : null };
   });
-  /* 期待値が最良の3連単（120通りすべてから。確率1%未満・300倍超は除く）→ 段位 */
-  const best = odds?.ex3?.size ? bestCombo(use.tri.map(([a, b, c, p]) => { const k = `${lanes[a]}-${lanes[b]}-${lanes[c]}`; return { k, p, o: odds.ex3.get(k) ?? null }; }), '3連単') : null;
+  /* 期待値が最良の3連単 → 段位。合成があれば「合成確率の上位10組から、見込みの確定オッズでの期待値が最大」（2026-10-16 夕〜）、
+     無ければ120通りから確率×オッズ最大（確率1%未満・300倍超は除く） */
+  const best = !odds?.ex3?.size ? null : pcOf && CAL?.drift
+    ? bestComboCal(use.tri.map(([a, b, c]) => { const k = `${lanes[a]}-${lanes[b]}-${lanes[c]}`, o = odds.ex3.get(k) ?? null, pc = pcOf.get(k); return { k, p: pc, o, oa: oaOf(k, o, pc) }; }), '3連単', CAL.topN || 10)
+    : bestCombo(use.tri.map(([a, b, c, p]) => { const k = `${lanes[a]}-${lanes[b]}-${lanes[c]}`; return { k, p: pcOf ? pcOf.get(k) : p, o: odds.ex3.get(k) ?? null }; }), '3連単');
+  if (best) best.cal = pcOf ? (CAL?.drift ? 2 : true) : false;   // 2＝オッズの動きまで織り込んだもの
   /* 3連複（同じ3艇の並び6通りの和）上位 */
   const trioMap = new Map();
   for (const [a, b, c, p] of use.tri) { const k = [lanes[a], lanes[b], lanes[c]].sort().join('-'); trioMap.set(k, (trioMap.get(k) || 0) + p); }
@@ -405,7 +425,7 @@ function recordPred(date, jcd, race) {
     tri1: race.tri[0]?.k || null, tri1p: race.tri[0]?.p ?? null, tri1o: race.tri[0]?.o ?? null,
     win1o: race.odds?.win?.[order[0]] ?? null,
     ai: race.ai,                                            // AI の買い目（締切時点）
-    evBest: race.best?.ev ?? null, bestK: race.best?.k ?? null, bestO: race.best?.o ?? null, grade: race.grade || null,   // 段位（締切時点のオッズ）
+    evBest: race.best?.ev ?? null, bestK: race.best?.k ?? null, bestO: race.best?.o ?? null, bestP: race.best?.p ?? null, grade: race.grade || null, cal: race.best?.cal || undefined,   // 段位（締切時点のオッズ）
   };
   fs.appendFileSync(PREDS, JSON.stringify(rec) + '\n');
   recorded.set(key, rec);
@@ -664,9 +684,11 @@ for (const date of dates) {
 /* ---- 段位の閾値を更新し、全レースに段位を付け直す ---- */
 {
   const since = (() => { const d = new Date(); d.setDate(d.getDate() - 14); return ymdOf(d); })();
-  const evs = [...recorded.values()].filter(o => o.date >= since && o.evBest != null).map(o => o.evBest);
+  /* 合成確率の期待値と、それ以前のモデルのままの期待値は水準がまるで違う（3連単で 1.0〜1.5 と 2〜5）ので、合成で記録したもの（cal）だけで閾値を作る */
+  const evs = [...recorded.values()].filter(o => o.date >= since && o.evBest != null && (!CAL || o.cal === (CAL.drift ? 2 : true))).map(o => o.evBest);
   let G = null;
-  if (evs.length >= 500) G = { sport: 'boat', kind: '3連単', thresholds: thresholdsOf(evs), src: 'rolling', since, note: '閾値は直近14日に締切時点で記録した最良の3連単の期待値の分布（上位1割 S／1/4 A／半分 B）' };
+  if (evs.length >= 500) G = { sport: 'boat', kind: '3連単', thresholds: thresholdsOf(evs), src: 'rolling', since, cal: !!CAL, note: `閾値は直近14日に締切時点で記録した最良の3連単の期待値の分布（上位1割 S／1/4 A／半分 B）${CAL ? '。確率は市場と合成したもの' : ''}` };
+  else if (CAL?.thresholds) G = { sport: 'boat', kind: '3連単', thresholds: CAL.thresholds, src: 'calib', cal: true, byGrade: CAL.check?.after?.grades ? Object.fromEntries(Object.entries(CAL.check.after.grades).map(([g, v]) => [g, { races: v.n, bets: { '期待値最良の3連単1点': { n: v.n, hit: +(v.hit / v.n).toFixed(3), roi: v.roi, hits: v.hit, expHits: v.expHit ?? null, expRoi: v.expRoi ?? null } } }])) : undefined, note: `閾値は締切8分前のオッズがある ${CAL.n}R（${CAL.from}〜${CAL.to}）の、市場と合成した確率での最良の3連単の期待値の分布。合成で記録した予想が直近14日で500R を超えたらその分布に切り替わる（いま ${evs.length}R）` };
   else if (!GRADE0 || GRADE0.src === 'today') {
     const cur = out.days.flatMap(d => d.venues.flatMap(v => v.races.map(r => r.best?.ev))).filter(v => v != null);
     if (cur.length >= 30) G = { sport: 'boat', kind: '3連単', thresholds: thresholdsOf(cur), src: 'today', note: `記録が貯まるまでの暫定：この回の全レース（${cur.length}R）の最良の3連単の期待値の分布。記録が直近14日で500R を超えたら記録の分布に切り替わる（いま ${evs.length}R）` };
@@ -730,7 +752,7 @@ for (const d of out.days) for (const v of d.venues) for (const r of v.races) {
     return BOAT_COLS.map(k => { const v = flat[k]; return v === undefined ? null : (Array.isArray(v) && !v.length ? 0 : v); });
   });
   r.pre = packPred(r.pre); r.ex = packPred(r.ex);
-  r.tri = r.tri.map(t => ({ k: t.k, p: r3(t.p), o: t.o, ev: t.ev }));
+  r.tri = r.tri.map(t => ({ k: t.k, p: r3(t.p), ...(t.pc != null ? { pc: r3(t.pc) } : {}), o: t.o, ev: t.ev }));   // pc＝市場と合成した確率（期待値はこちら×オッズ）
   r.trio = r.trio.map(t => ({ k: t.k, p: r3(t.p) }));
   r.ex2 = r.ex2.map(t => ({ k: t.k, p: r3(t.p) }));
   if (r.cond) r.cond = r.cond.map(r2);

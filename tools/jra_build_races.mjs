@@ -55,18 +55,25 @@ const recorded = new Set();
 if (fs.existsSync(PREDS)) for (const l of fs.readFileSync(PREDS, 'utf8').split('\n')) if (l) { try { recorded.add(JSON.parse(l).raceId); } catch { } }
 const nowJ = new Date();
 const RECORD_PAST = !!process.env.JRA_RECORD_PAST;
+const RECORD_LEAD = 12;   // 発走の何分前から記録するか
+/* 締切前オッズのスナップショット（発走8分前。クラウドが取り、merge_cloud_odds が odds_live.jsonl に入れる）。
+   Mac が寝ていて発走後に記録することになったレースは、確定に近いオッズで予想しないようこちらに差し替える（競輪と同じ） */
+const SNAP = new Map();
+try { for (const l of fs.readFileSync(path.join(ROOT, 'data/jra/odds_live.jsonl'), 'utf8').split('\n')) { if (!l) continue; try { const o = JSON.parse(l); if (o.tag === 'T-8' && o.tan) SNAP.set(o.raceId, o); } catch { } } } catch { }
 function recordPred(race, date, venue) {
   if (recorded.has(race.raceId) || !race.gates) return;
   const start = race.start ? new Date(`${date}T${race.start.padStart(5, '0')}:00`) : null;
   const late = start ? (nowJ - start) / 60000 : null;
-  if (!RECORD_PAST) { if (process.env.JRA_TODAY || !start || late < -1) return; }
+  /* 発走12分前から記録する（2026-10-16 に変更。以前は発走1分前からで、20分おきの反映だと記録の中央値が発走の16〜24分後になっていた）。
+     JRA の発売締切は発走2分前なので、この時点のオッズは締切前のもの */
+  if (!RECORD_PAST) { if (process.env.JRA_TODAY || !start || late < -RECORD_LEAD) return; }
   else if (date >= TODAY) return;
   const top = race.horses.slice().sort((a, b) => b.p1 - a.p1);
   const pop1 = race.horses.find(h => h.pop === 1)?.no || null;
   fs.appendFileSync(PREDS, JSON.stringify({
-    raceId: race.raceId, date, venue, r: race.r, at: nowJ.toISOString(), late: RECORD_PAST ? 9999 : Math.round(late), level: race.level,
+    raceId: race.raceId, date, venue, r: race.r, at: nowJ.toISOString(), late: RECORD_PAST ? 9999 : Math.round(late), level: race.level, oddsSrc: race.oddsSrc || 'live',
     top: top.map(h => h.no), p1: Object.fromEntries(top.map(h => [h.no, h.p1])), pop1,
-    rank: race.rank || null, evBest: race.best?.ev ?? null, bestK: race.best?.k ?? null, bestO: race.best?.o ?? null,
+    rank: race.rank || null, evBest: race.best?.ev ?? null, bestK: race.best?.k ?? null, bestO: race.best?.o ?? null, bestP: race.best?.p ?? null,
     ai: { umaren3: race.umaren.slice(0, 3).map(x => x.k), sanpuku3: race.sanpuku.slice(0, 3).map(x => x.k), santan5: race.santan.slice(0, 5).map(x => x.k) },
   }) + '\n');
   recorded.add(race.raceId);
@@ -95,6 +102,13 @@ const contrib = x => { const g = Object.fromEntries(GROUPS.map(k => [k, 0])); fo
 const days = new Map();
 let nR = 0, nMix = 0;
 for (const c of cards) {
+  /* 発走後にまだ記録していないレース：T-8 のスナップショットがあればオッズを差し替えてから予想する */
+  let oddsSrc = null;
+  if (!RECORD_PAST && !recorded.has(c.raceId) && c.start && SNAP.has(c.raceId) && nowJ > new Date(`${c.date}T${c.start.padStart(5, '0')}:00`)) {
+    const t = SNAP.get(c.raceId).tan;
+    c.entries = c.entries.map(e => { const o = t[String(e.no).padStart(2, '0')]; return o ? { ...e, odds: o.odds, pop: o.pop } : e; });
+    oddsSrc = 'T-8';
+  }
   const race = raceFromCard(c, H);
   const f = featurize(race);
   if (!f) continue;
@@ -178,7 +192,7 @@ for (const c of cards) {
     sanpuku: C.sanpuku.slice(0, 6).map(([k, p]) => ({ k, p: round(p, 4) })), santan: C.santan.slice(0, 8).map(([k, p]) => ({ k, p: round(p, 4) })), wide: C.wide.slice(0, 5).map(([k, p]) => ({ k, p: round(p, 4) })),
     ...(() => { const best = bestWin(horses.map(h => ({ no: h.no, p: h.p1, odds: h.odds }))); return { rank: gradeOf(best?.ev ?? null, GRADE?.thresholds), best }; })(),
     conf: round(1 - (-C.p1.reduce((a, p) => a + (p > 0 ? p * Math.log(p) : 0), 0)) / Math.log(C.p1.length), 3),
-    points: pts,
+    points: pts, oddsSrc,
   };
   recordPred(race1, c.date, c.venue);
   if (c.date < TODAY) continue;                       // 過去日は記録だけ（ページには載せない）
