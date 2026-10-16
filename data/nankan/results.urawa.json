@@ -1,7 +1,7 @@
 {
  "track": "浦和",
  "meta": {
-  "builtAt": "2026-10-16T07:11:43.852Z",
+  "builtAt": "2026-10-16T08:06:51.424Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -54,11 +54,11 @@
     },
     "ev_sanpuku": {
      "races": 113,
-     "cost": 56800,
+     "cost": 56700,
      "ret": 45950,
      "hits": 9,
-     "pts": 568,
-     "roi": 0.809,
+     "pts": 567,
+     "roi": 0.8104,
      "hitRate": 0.0796,
      "avgPts": 5
     },
@@ -781,13 +781,13 @@
       },
       "ev_sanpuku": {
        "races": 9,
-       "cost": 3400,
+       "cost": 3300,
        "ret": 0,
        "hits": 0,
-       "pts": 34,
+       "pts": 33,
        "roi": 0,
        "hitRate": 0,
-       "avgPts": 3.8
+       "avgPts": 3.7
       },
       "box3_umaren": {
        "races": 12,
@@ -19705,13 +19705,12 @@
       ]
      },
      "sanpuku": {
-      "pts": 2,
-      "cost": 200,
+      "pts": 1,
+      "cost": 100,
       "ret": 0,
       "hit": false,
       "buy": [
-       "2-8-11",
-       "2-8-12"
+       "2-8-11"
       ]
      },
      "box3": {
@@ -21189,7 +21188,7 @@
     "weather": "曇",
     "grade": null,
     "ev": null,
-    "conf": 0.163,
+    "conf": 0.162,
     "oddsSrc": "締切前(発走8分前)",
     "hit": {
      "win": true,
@@ -37960,7 +37959,7 @@
     "style": "先行",
     "jockey": "中島良美",
     "trainer": "川島豊",
-    "mark": "",
+    "mark": "☆",
     "win": 0.05,
     "odds": 22.8,
     "pop": 8,
@@ -38086,7 +38085,7 @@
     "style": "先行",
     "jockey": "野畑凌",
     "trainer": "水野貴",
-    "mark": "☆",
+    "mark": "",
     "win": 0.05,
     "odds": 24.7,
     "pop": null,
