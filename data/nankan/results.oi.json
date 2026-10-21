@@ -1,7 +1,7 @@
 {
  "track": "大井",
  "meta": {
-  "builtAt": "2026-10-21T06:58:37.427Z",
+  "builtAt": "2026-10-21T07:16:14.641Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -44,11 +44,11 @@
    "tally": {
     "ev_umaren": {
      "races": 107,
-     "cost": 18200,
+     "cost": 18300,
      "ret": 11470,
      "hits": 4,
-     "pts": 182,
-     "roi": 0.6302,
+     "pts": 183,
+     "roi": 0.6268,
      "hitRate": 0.0374,
      "avgPts": 1.7
     },
@@ -481,13 +481,13 @@
      "tally": {
       "ev_umaren": {
        "races": 9,
-       "cost": 1800,
+       "cost": 1900,
        "ret": 0,
        "hits": 0,
-       "pts": 18,
+       "pts": 19,
        "roi": 0,
        "hitRate": 0,
-       "avgPts": 2
+       "avgPts": 2.1
       },
       "ev_sanpuku": {
        "races": 9,
@@ -976,13 +976,13 @@
       },
       "ev_umaren": {
        "races": 13,
-       "cost": 3300,
+       "cost": 3400,
        "ret": 2180,
        "hits": 1,
-       "pts": 33,
-       "roi": 0.6606,
+       "pts": 34,
+       "roi": 0.6412,
        "hitRate": 0.0769,
-       "avgPts": 2.5
+       "avgPts": 2.6
       }
      }
     }
@@ -11697,14 +11697,15 @@
     },
     "betResult": {
      "umaren": {
-      "pts": 3,
-      "cost": 300,
+      "pts": 4,
+      "cost": 400,
       "ret": 0,
       "hit": false,
       "buy": [
        "6-10",
        "4-5",
-       "2-10"
+       "2-10",
+       "6-7"
       ]
      },
      "sanpuku": {
@@ -29983,7 +29984,7 @@
     "jockey": "本田正重",
     "trainer": "蛯名雄",
     "mark": "○",
-    "win": 0.208,
+    "win": 0.207,
     "odds": 3.8,
     "pop": null,
     "pos": null,
@@ -31657,7 +31658,7 @@
     "jockey": "高橋優",
     "trainer": "高橋清",
     "mark": "△",
-    "win": 0.063,
+    "win": 0.062,
     "odds": 11.6,
     "pop": 5,
     "pos": 2,
@@ -32039,7 +32040,7 @@
     "jockey": "矢野貴之",
     "trainer": "渡邉和",
     "mark": "◎",
-    "win": 0.371,
+    "win": 0.37,
     "odds": 3.6,
     "pop": 2,
     "pos": 2,
