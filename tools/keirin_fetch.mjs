@@ -75,3 +75,5 @@ for (const d of dateRange(FROM, TO, DESC ? -1 : 1)) {
 }
 flush();
 console.error(`完了: ${nNew}R（空・失敗 ${nBad}）取得 ${stats.fetched}ページ`);
+/* メンテナンスに当たったら失敗で終える（反映係のログに残り、取りこぼしを埋める段も翌日まで待たずに次の回でやり直す） */
+if (stats.maint) { console.error(`! Kドリームスがメンテナンス中（${stats.maint}ページ）。開催なしではない`); process.exit(3); }

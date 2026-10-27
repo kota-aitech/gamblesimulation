@@ -22,7 +22,7 @@ const WAIT = Number(process.env.KR_WAIT || 1500);
 const BLOCK_WAIT = Number(process.env.KR_BLOCK_WAIT || 600000);
 const NET_WAIT = Number(process.env.KR_NET_WAIT || 60000);
 const NET_MAX = Number(process.env.KR_NET_MAX || 360) * 60000;
-export const stats = { blocked: 0, fetched: 0 };
+export const stats = { blocked: 0, fetched: 0, maint: 0 };
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128 Safari/537.36';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const isNetError = e => /fetch failed|ENOTFOUND|ECONNRESET|ETIMEDOUT|ECONNREFUSED|EAI_AGAIN|ENETUNREACH|EHOSTUNREACH|aborted|TimeoutError/i.test(String(e && (e.cause?.code || e.cause?.message || e.name + ' ' + e.message)));
@@ -106,6 +106,9 @@ export async function get(url, { ttlDays = 3650, tries = 3 } = {}) {
       if (!res.ok) throw new Error('HTTP ' + res.status);
       body = await res.text();
       if (body.length < 2000) throw new Error('空ページ');
+      /* 緊急メンテナンス中は 200 で「MAINTENANCE」の4KBページが返る（2026-10-22夜〜10-27朝）。キャッシュせず、
+         呼び出し側には「開催なし」ではなく失敗として返す（一覧が0件のまま何日も黙って成功扱いになっていた） */
+      if (/MAINTENANCE|メンテナンス中のため/.test(body) && !/racedetail|racecard\/\d/.test(body)) { stats.maint++; throw new Error('Kドリームスがメンテナンス中'); }
       stats.blocked = 0;
       break;
     } catch (e) {
@@ -115,7 +118,7 @@ export async function get(url, { ttlDays = 3650, tries = 3 } = {}) {
         await sleep(NET_WAIT); a--; continue;
       }
       if (offlineSince) { console.error(`  ネット復帰（${Math.round((Date.now() - offlineSince) / 60000)}分）`); offlineSince = 0; }
-      if (a === tries - 1) throw e;
+      if (a === tries - 1 || /メンテナンス/.test(e.message)) throw e;
       if (!/HTTP (403|429|503)/.test(e.message)) await sleep(3000 * (a + 1));
     }
   }
@@ -164,28 +167,81 @@ export function eachLine(file, fn) {
 export const own = s => s.split('').join('');
 export function readJSON(rel) { return JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8')); }
 /* jsonl に差し替え追記（同じ raceId は新しいもので置き換える）。全行数を返す。
-   ファイルは1年で数百MBになるので、**新しい raceId だけなら追記で済ませる**（全体の読み直しは差し替えがあるときだけ）。
+   ファイルは1年で数百MBになるので、**新しい raceId だけなら追記で済ませる**。
+   差し替えがあるときも全体は書き直さず、**差し替える行のうち最も前の位置から後ろだけ**を書き直す。
+   差し替えは開催中のレース（＝末尾に追記したばかりの行）がほとんどなので、書き直すのは末尾の数MBで済む
+   （以前は1.1GBを毎回丸ごと書き直していて、開催中は10分おきに1回18秒かかっていた。2026-10-27）。
    行の並びは保証しない（読む側 loadRaces が日付順に並べ直す） */
 const idCache = new Map();
+/* 行頭の raceId と、その行の先頭のバイト位置。文字列に直さずにバイトで改行を探す（1.1GB を UTF-8 で読み直さない）。
+   同じ raceId が2行あるときは前のほうの位置を持つ（後ろだけ書き直すときに両方とも範囲に入る） */
 function idsOf(f) {
   if (idCache.has(f)) return idCache.get(f);
-  const s = new Set();
-  eachLine(f, l => { const m = l.match(/^\{"raceId":"(\d+)"/); if (m) s.add(own(m[1])); });
-  idCache.set(f, s); return s;
+  recoverTail(f);
+  const m = new Map();
+  if (fs.existsSync(f)) {
+    const fd = fs.openSync(f, 'r'), size = fs.fstatSync(fd).size, buf = Buffer.alloc(16 << 20), head = Buffer.alloc(40);
+    const take = at => { const k = fs.readSync(fd, head, 0, 40, at); const r = head.toString('latin1', 0, k).match(/^\{"raceId":"(\d+)"/); if (r && !m.has(r[1])) m.set(r[1], at); };
+    try {
+      let base = 0, start = 0, n;
+      while (base < size && (n = fs.readSync(fd, buf, 0, buf.length, base)) > 0) {
+        const b = buf.subarray(0, n);
+        for (let i = b.indexOf(10); i !== -1; i = b.indexOf(10, i + 1)) { if (base + i > start) take(start); start = base + i + 1; }
+        base += n;
+      }
+      if (start < size) take(start);
+    } finally { fs.closeSync(fd); }
+  }
+  idCache.set(f, m); return m;
 }
+/* 末尾の書き直しは「新しい末尾を .tail に書き切る → 位置を .tail.at に書く → 本体を切り詰めて足す → 両方消す」の順。
+   途中で落ちたら次に開いたときにここで続きをやる（.tail.at が無ければ .tail は書きかけなので捨てる） */
+function recoverTail(f) {
+  const t = f + '.tail', at = t + '.at';
+  if (fs.existsSync(at) && fs.existsSync(t)) {
+    const off = Number(fs.readFileSync(at, 'utf8'));
+    fs.truncateSync(f, off); fs.appendFileSync(f, fs.readFileSync(t));
+    console.error(`  （前回の書き直しが途中だったので ${f} の末尾を戻した）`);
+  }
+  for (const x of [t, at]) try { fs.unlinkSync(x); } catch { }
+}
+const TAIL_MAX = 256 << 20;
 export function upsertJsonl(rel, rows, keyOf = o => o.raceId) {
   const f = path.join(ROOT, rel);
   fs.mkdirSync(path.dirname(f), { recursive: true });
-  const ids = idsOf(f);
+  let ids = idsOf(f);
   const fresh = rows.filter(o => !ids.has(keyOf(o))), repl = rows.filter(o => ids.has(keyOf(o)));
   if (repl.length) {
     const rep = new Map(repl.map(o => [keyOf(o), JSON.stringify(o)]));
-    const tmp = f + '.tmp', out = fs.openSync(tmp, 'w');
-    eachLine(f, l => { const m = l.match(/^\{"raceId":"(\d+)"/); fs.writeSync(out, (m && rep.has(m[1]) ? rep.get(m[1]) : l) + '\n'); });
-    fs.closeSync(out); fs.renameSync(tmp, f);
+    const from = Math.min(...repl.map(o => ids.get(keyOf(o)))), size = fs.statSync(f).size;
+    if (size - from <= TAIL_MAX) {
+      const fd = fs.openSync(f, 'r'), old = Buffer.alloc(size - from);
+      fs.readSync(fd, old, 0, old.length, from); fs.closeSync(fd);
+      let pos = from; const out = [], seen = new Set();
+      for (const l of old.toString('utf8').split('\n')) {
+        if (!l) continue;
+        const m = l.match(/^\{"raceId":"(\d+)"/), line = (m && rep.has(m[1]) ? rep.get(m[1]) : l) + '\n';
+        if (m && !seen.has(m[1])) { seen.add(m[1]); if (!(ids.get(m[1]) < from)) ids.set(own(m[1]), pos); }
+        out.push(line); pos += Buffer.byteLength(line);
+      }
+      const t = f + '.tail';
+      fs.writeFileSync(t, out.join('')); fs.writeFileSync(t + '.at', String(from));
+      fs.truncateSync(f, from); fs.appendFileSync(f, fs.readFileSync(t));
+      for (const x of [t, t + '.at']) try { fs.unlinkSync(x); } catch { }
+    } else {
+      /* 古い行の差し替え（遡りの取り直しなど）は従来どおり全体を書き直す。位置は読み直す */
+      const tmp = f + '.tmp', out = fs.openSync(tmp, 'w');
+      eachLine(f, l => { const m = l.match(/^\{"raceId":"(\d+)"/); fs.writeSync(out, (m && rep.has(m[1]) ? rep.get(m[1]) : l) + '\n'); });
+      fs.closeSync(out); fs.renameSync(tmp, f);
+      idCache.delete(f); ids = idsOf(f);
+    }
   }
-  if (fresh.length) fs.appendFileSync(f, fresh.map(o => JSON.stringify(o)).join('\n') + '\n');
-  for (const o of fresh) ids.add(keyOf(o));
+  if (fresh.length) {
+    let pos = fs.existsSync(f) ? fs.statSync(f).size : 0;
+    const lines = fresh.map(o => JSON.stringify(o) + '\n');
+    fs.appendFileSync(f, lines.join(''));
+    fresh.forEach((o, i) => { ids.set(keyOf(o), pos); pos += Buffer.byteLength(lines[i]); });
+  }
   return ids.size;
 }
 export function readJsonl(rel, filter) {

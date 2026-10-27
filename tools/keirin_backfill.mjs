@@ -14,6 +14,10 @@ const MIN = Number(process.env.KR_BACKFILL_MINUTES || 25);
 const stamp = () => new Date().toLocaleString('ja-JP', { hour12: false });
 setTimeout(() => { console.error(`${stamp()} 時間切れで打ち切り`); process.exit(0); }, (MIN + 3) * 60000).unref();
 
+/* 取り込み終わったら印を残し、以後は 1.1GB の races.jsonl を読まずに即終わる（5分おきに毎回全体を読んでいた。2026-10-27）。
+   KR_BACKFILL_FROM をさらに古くしたときは印の中身と食い違うので、もう一度読む */
+const DONE = path.join(ROOT, 'data/keirin/.backfill-done');
+try { if (fs.readFileSync(DONE, 'utf8').trim() === FROM) process.exit(0); } catch { }
 try {
   const ps = execSync('ps -ax -o command', { encoding: 'utf8' }).split('\n').filter(l => /tools\/keirin_fetch\.mjs/.test(l));
   if (ps.length) { console.error(`${stamp()} keirin_fetch が動作中なので見送り`); process.exit(0); }
@@ -22,7 +26,7 @@ try {
 let oldest = null;
 const rf = path.join(ROOT, 'data/keirin/races.jsonl');
 eachLine(rf, l => { const m = l.match(/"date":"(\d{8})"/); if (m && /"result":\{/.test(l) && (!oldest || m[1] < oldest)) oldest = m[1]; });
-if (oldest && oldest <= FROM) { console.error(`${stamp()} ${FROM} まで取り込み済み（最古 ${oldest}）`); process.exit(0); }
+if (oldest && oldest <= FROM) { console.error(`${stamp()} ${FROM} まで取り込み済み（最古 ${oldest}）。以後は見送る`); fs.writeFileSync(DONE, FROM); process.exit(0); }
 /* 途中で切れた日を取りこぼさないよう、最古の日の2日後から遡る */
 const to = oldest ? addDays(oldest, 2) : ymdOf(new Date());
 console.error(`${stamp()} ${to} から ${FROM} へ遡る（最大 ${MIN}分）`);
