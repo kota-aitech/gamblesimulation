@@ -1,7 +1,7 @@
 {
  "track": "川崎",
  "meta": {
-  "builtAt": "2026-10-27T09:03:22.362Z",
+  "builtAt": "2026-10-27T09:38:57.731Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -44,11 +44,11 @@
    "tally": {
     "ev_umaren": {
      "races": 115,
-     "cost": 24300,
+     "cost": 24400,
      "ret": 23390,
      "hits": 5,
-     "pts": 243,
-     "roi": 0.9626,
+     "pts": 244,
+     "roi": 0.9586,
      "hitRate": 0.0435,
      "avgPts": 2.1
     },
@@ -704,13 +704,13 @@
      "tally": {
       "ev_umaren": {
        "races": 11,
-       "cost": 2100,
+       "cost": 2200,
        "ret": 0,
        "hits": 0,
-       "pts": 21,
+       "pts": 22,
        "roi": 0,
        "hitRate": 0,
-       "avgPts": 1.9
+       "avgPts": 2
       },
       "ev_sanpuku": {
        "races": 11,
@@ -870,10 +870,10 @@
       },
       "ev_umaren": {
        "races": 62,
-       "cost": 6000,
+       "cost": 6100,
        "ret": 0,
        "hits": 0,
-       "pts": 60,
+       "pts": 61,
        "roi": 0,
        "hitRate": 0,
        "avgPts": 1
@@ -19419,7 +19419,7 @@
     "weather": "晴",
     "grade": "C",
     "ev": {
-     "umaren": 0.99,
+     "umaren": 1,
      "sanpuku": 0.68
     },
     "conf": 0.053,
@@ -19431,11 +19431,13 @@
     },
     "betResult": {
      "umaren": {
-      "pts": 0,
-      "cost": 0,
+      "pts": 1,
+      "cost": 100,
       "ret": 0,
       "hit": false,
-      "buy": []
+      "buy": [
+       "1-5"
+      ]
      },
      "sanpuku": {
       "pts": 0,
@@ -32830,7 +32832,7 @@
     "jockey": "神尾香澄",
     "trainer": "山田質",
     "mark": "☆",
-    "win": 0.077,
+    "win": 0.078,
     "odds": 14.5,
     "pop": null,
     "pos": null,
@@ -37976,7 +37978,7 @@
     "jockey": "土田真翔",
     "trainer": "河津裕",
     "mark": "",
-    "win": 0.021,
+    "win": 0.022,
     "odds": 50.1,
     "pop": null,
     "pos": null,
@@ -38032,7 +38034,7 @@
     "jockey": "高橋優",
     "trainer": "村田六",
     "mark": "",
-    "win": 0.025,
+    "win": 0.024,
     "odds": 24,
     "pop": null,
     "pos": null,
