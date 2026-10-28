@@ -1,6 +1,6 @@
 {
  "track": "大井",
- "builtAt": "2026-10-27T21:31:29.485Z",
+ "builtAt": "2026-10-28T19:41:09.664Z",
  "source": "nankankeiba.com 出馬表の前5走欄＋レース傾向",
  "trendRef": {
   "1200": {
@@ -282,23 +282,16 @@
  },
  "calib": {
   "frontMid": 0.747,
-  "meetMid": 0.795,
-  "frontSd": 0.054,
+  "meetMid": 0.797,
+  "frontSd": 0.052,
   "gateMid": -0.033,
   "gateSd": 0.228
  },
  "meet": {
   "track": "大井",
   "source": "nankankeiba.com レース傾向（3着内回数ベスト3枠 / 1〜3着馬の3角位置）",
-  "name": "9/4(金)〜10/27(火) の14日",
+  "name": "9/14(月)〜10/28(水) の14日",
   "days": [
-   {
-    "d": "9/4(金)",
-    "front": 26,
-    "back": 10,
-    "best": [],
-    "partial": "12レース終了時"
-   },
    {
     "d": "9/14(月)",
     "front": 30,
@@ -387,6 +380,13 @@
     "d": "10/27(火)",
     "front": 29,
     "back": 7,
+    "best": [],
+    "partial": "12レース終了時"
+   },
+   {
+    "d": "10/28(水)",
+    "front": 27,
+    "back": 9,
     "best": [],
     "partial": "12レース終了時"
    }
