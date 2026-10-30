@@ -1,7 +1,7 @@
 {
  "track": "川崎",
  "meta": {
-  "builtAt": "2026-10-30T14:02:13.931Z",
+  "builtAt": "2026-10-30T21:30:24.996Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -54,11 +54,11 @@
     },
     "ev_sanpuku": {
      "races": 115,
-     "cost": 56100,
+     "cost": 55800,
      "ret": 55990,
      "hits": 12,
-     "pts": 561,
-     "roi": 0.998,
+     "pts": 558,
+     "roi": 1.0034,
      "hitRate": 0.1043,
      "avgPts": 4.9
     },
@@ -640,13 +640,13 @@
       },
       "ev_sanpuku": {
        "races": 12,
-       "cost": 6700,
+       "cost": 6400,
        "ret": 4170,
        "hits": 1,
-       "pts": 67,
-       "roi": 0.6224,
+       "pts": 64,
+       "roi": 0.6516,
        "hitRate": 0.0833,
-       "avgPts": 5.6
+       "avgPts": 5.3
       },
       "box3_umaren": {
        "races": 12,
@@ -3094,9 +3094,9 @@
     "grade": "A",
     "ev": {
      "umaren": 1.32,
-     "sanpuku": 2.25
+     "sanpuku": 2.23
     },
-    "conf": 0.26,
+    "conf": 0.262,
     "oddsSrc": "最終",
     "hit": {
      "win": false,
@@ -3124,8 +3124,8 @@
       "buy": [
        "3-4-8",
        "2-3-7",
-       "3-5-6",
        "2-4-6",
+       "3-5-6",
        "3-4-5",
        "2-6-8",
        "1-2-3",
@@ -4791,7 +4791,7 @@
     "grade": "B",
     "ev": {
      "umaren": 1.27,
-     "sanpuku": 1.29
+     "sanpuku": 1.3
     },
     "conf": 0.082,
     "oddsSrc": "暫定(発走51分前)",
@@ -12874,9 +12874,9 @@
     "grade": "B",
     "ev": {
      "umaren": 1.2,
-     "sanpuku": 1.36
+     "sanpuku": 1.35
     },
-    "conf": 0.483,
+    "conf": 0.482,
     "oddsSrc": "締切前(発走8分前)",
     "hit": {
      "win": true,
@@ -13234,7 +13234,7 @@
      "umaren": 0.98,
      "sanpuku": 1.03
     },
-    "conf": 0.115,
+    "conf": 0.116,
     "oddsSrc": "締切前(発走9分前)",
     "hit": {
      "win": false,
@@ -14110,7 +14110,7 @@
     "grade": "C",
     "ev": {
      "umaren": 1.09,
-     "sanpuku": 0.87
+     "sanpuku": 0.86
     },
     "conf": 0.114,
     "oddsSrc": "締切前(発走9分前)",
@@ -14637,7 +14637,7 @@
     "grade": "B",
     "ev": {
      "umaren": 1.25,
-     "sanpuku": 1.9
+     "sanpuku": 1.91
     },
     "conf": 0.179,
     "oddsSrc": "締切前(発走8分前)",
@@ -14667,9 +14667,9 @@
        "2-8-11",
        "2-6-8",
        "2-3-5",
-       "2-7-8",
        "1-2-3",
-       "4-5-8"
+       "2-7-8",
+       "2-7-11"
       ]
      },
      "box3": {
@@ -14813,8 +14813,8 @@
     "weather": "曇",
     "grade": "A",
     "ev": {
-     "umaren": 1.34,
-     "sanpuku": 1.72
+     "umaren": 1.33,
+     "sanpuku": 1.71
     },
     "conf": 0.173,
     "oddsSrc": "締切前(発走8分前)",
@@ -15201,10 +15201,10 @@
        "buy": [
         "10-11",
         "10-4",
-        "10-9",
+        "10-6",
         "11-4",
-        "11-9",
-        "4-9"
+        "11-6",
+        "4-6"
        ]
       },
       "sanpuku": {
@@ -15214,9 +15214,9 @@
        "hit": false,
        "buy": [
         "10-11-4",
-        "10-11-9",
-        "10-4-9",
-        "11-4-9"
+        "10-11-6",
+        "10-4-6",
+        "11-4-6"
        ]
       }
      }
@@ -15311,7 +15311,7 @@
     "weather": "曇",
     "grade": null,
     "ev": null,
-    "conf": 0.176,
+    "conf": 0.177,
     "oddsSrc": "暫定(発走62分前)",
     "hit": {
      "win": true,
@@ -16360,8 +16360,8 @@
       "buy": [
        "1-3-6",
        "2-3-5",
-       "3-6-9",
        "1-6-9",
+       "3-6-9",
        "2-6-8",
        "1-3-7",
        "2-5-6",
@@ -16689,7 +16689,7 @@
      "umaren": 1.17,
      "sanpuku": 1.12
     },
-    "conf": 0.183,
+    "conf": 0.184,
     "oddsSrc": "締切前(発走8分前)",
     "hit": {
      "win": false,
@@ -16861,7 +16861,7 @@
     "weather": "曇",
     "grade": "S",
     "ev": {
-     "umaren": 1.54,
+     "umaren": 1.55,
      "sanpuku": 1.99
     },
     "conf": 0.182,
@@ -16886,16 +16886,15 @@
       ]
      },
      "sanpuku": {
-      "pts": 5,
-      "cost": 500,
+      "pts": 4,
+      "cost": 400,
       "ret": 0,
       "hit": false,
       "buy": [
        "1-6-14",
        "1-8-14",
        "1-9-14",
-       "1-11-14",
-       "5-6-8"
+       "1-11-14"
       ]
      },
      "box3": {
@@ -17039,10 +17038,10 @@
     "weather": "曇",
     "grade": "A",
     "ev": {
-     "umaren": 1.36,
-     "sanpuku": 1.4
+     "umaren": 1.35,
+     "sanpuku": 1.39
     },
-    "conf": 0.163,
+    "conf": 0.162,
     "oddsSrc": "締切前(発走9分前)",
     "hit": {
      "win": false,
@@ -17064,8 +17063,8 @@
       ]
      },
      "sanpuku": {
-      "pts": 8,
-      "cost": 800,
+      "pts": 6,
+      "cost": 600,
       "ret": 0,
       "hit": false,
       "buy": [
@@ -17073,10 +17072,8 @@
        "3-7-11",
        "3-6-9",
        "3-10-11",
-       "1-3-8",
        "2-3-11",
-       "3-4-11",
-       "3-5-11"
+       "3-4-11"
       ]
      },
      "box3": {
@@ -18399,7 +18396,7 @@
     "weather": "晴",
     "grade": "C",
     "ev": {
-     "umaren": 0.88,
+     "umaren": 0.89,
      "sanpuku": 0.81
     },
     "conf": 0.104,
@@ -19424,7 +19421,7 @@
      "umaren": 0.99,
      "sanpuku": 0.67
     },
-    "conf": 0.053,
+    "conf": 0.052,
     "oddsSrc": "締切前(発走0分前)",
     "hit": {
      "win": false,
@@ -19939,7 +19936,7 @@
     "grade": "S",
     "ev": {
      "umaren": 1.97,
-     "sanpuku": 2.18
+     "sanpuku": 2.19
     },
     "conf": 0.133,
     "oddsSrc": "締切前(発走8分前)",
@@ -20282,7 +20279,7 @@
     "grade": "B",
     "ev": {
      "umaren": 1.28,
-     "sanpuku": 1.12
+     "sanpuku": 1.11
     },
     "conf": 0.246,
     "oddsSrc": "締切前(発走9分前)",
@@ -20453,7 +20450,7 @@
     "weather": "晴",
     "grade": "C",
     "ev": {
-     "umaren": 1.12,
+     "umaren": 1.13,
      "sanpuku": 1.21
     },
     "conf": 0.213,
@@ -22054,7 +22051,7 @@
     "jockey": "笹川翼",
     "trainer": "高月賢",
     "mark": "△",
-    "win": 0.045,
+    "win": 0.046,
     "odds": 10.3,
     "pop": 3,
     "pos": null,
@@ -23432,7 +23429,7 @@
     "jockey": "野畑凌",
     "trainer": "佐藤博",
     "mark": "◎",
-    "win": 0.411,
+    "win": 0.414,
     "odds": 1.7,
     "pop": null,
     "pos": null,
@@ -23446,7 +23443,7 @@
     "jockey": "藤江渉",
     "trainer": "甲田悟",
     "mark": "△",
-    "win": 0.059,
+    "win": 0.058,
     "odds": 21.8,
     "pop": null,
     "pos": null,
@@ -23474,7 +23471,7 @@
     "jockey": "達城龍次",
     "trainer": "山崎尋",
     "mark": "△",
-    "win": 0.056,
+    "win": 0.055,
     "odds": 16.4,
     "pop": null,
     "pos": null,
@@ -24978,7 +24975,7 @@
     "jockey": "Ｆ．ゴンサルベス",
     "trainer": "小久智",
     "mark": "◎",
-    "win": 0.203,
+    "win": 0.202,
     "odds": 5,
     "pop": 2,
     "pos": 3,
@@ -25076,7 +25073,7 @@
     "jockey": "笹川翼",
     "trainer": "加藤誠",
     "mark": "△",
-    "win": 0.08,
+    "win": 0.081,
     "odds": 16.2,
     "pop": 8,
     "pos": null,
@@ -27032,7 +27029,7 @@
     "jockey": "鷹見陸",
     "trainer": "山下之",
     "mark": "",
-    "win": 0.026,
+    "win": 0.025,
     "odds": 35.6,
     "pop": 10,
     "pos": 4,
@@ -27172,7 +27169,7 @@
     "jockey": "笹川翼",
     "trainer": "米谷康",
     "mark": "☆",
-    "win": 0.08,
+    "win": 0.081,
     "odds": 7.9,
     "pop": 5,
     "pos": null,
@@ -30804,7 +30801,7 @@
     "jockey": "矢野貴之",
     "trainer": "内田勝",
     "mark": "△",
-    "win": 0.11,
+    "win": 0.109,
     "odds": 8.1,
     "pop": 4,
     "pos": 3,
@@ -30930,7 +30927,7 @@
     "jockey": "御神本訓史",
     "trainer": "藤原智",
     "mark": "▲",
-    "win": 0.165,
+    "win": 0.166,
     "odds": 4.2,
     "pop": null,
     "pos": null,
@@ -32790,7 +32787,7 @@
     "jockey": "佐野遥久",
     "trainer": "山崎尋",
     "mark": "△",
-    "win": 0.102,
+    "win": 0.101,
     "odds": 6.8,
     "pop": null,
     "pos": null,
@@ -32846,7 +32843,7 @@
     "jockey": "野畑凌",
     "trainer": "内田勝",
     "mark": "▲",
-    "win": 0.173,
+    "win": 0.174,
     "odds": 3.6,
     "pop": null,
     "pos": null,
@@ -32860,7 +32857,7 @@
     "jockey": "山林堂信彦",
     "trainer": "平田正",
     "mark": "",
-    "win": 0.044,
+    "win": 0.043,
     "odds": 34.1,
     "pop": null,
     "pos": null,
@@ -32888,7 +32885,7 @@
     "jockey": "笹川翼",
     "trainer": "田邊陽",
     "mark": "△",
-    "win": 0.082,
+    "win": 0.083,
     "odds": 11.4,
     "pop": null,
     "pos": null,
@@ -33330,7 +33327,7 @@
     "jockey": "張田昂",
     "trainer": "内田勝",
     "mark": "◎",
-    "win": 0.435,
+    "win": 0.434,
     "odds": 1.7,
     "pop": 1,
     "pos": 1,
@@ -33442,7 +33439,7 @@
     "jockey": "和田譲治",
     "trainer": "鈴木義",
     "mark": "",
-    "win": 0.039,
+    "win": 0.04,
     "odds": 27.3,
     "pop": null,
     "pos": null,
@@ -33484,7 +33481,7 @@
     "jockey": "山中悠希",
     "trainer": "久保勇",
     "mark": "",
-    "win": 0.006,
+    "win": 0.007,
     "odds": 162.9,
     "pop": null,
     "pos": null,
@@ -33569,7 +33566,7 @@
     "style": "差し",
     "jockey": "中山遥人",
     "trainer": "小澤宏",
-    "mark": "",
+    "mark": "☆",
     "win": 0.056,
     "odds": 18.6,
     "pop": null,
@@ -33653,8 +33650,8 @@
     "style": "先行",
     "jockey": "西啓太",
     "trainer": "鈴木義",
-    "mark": "☆",
-    "win": 0.056,
+    "mark": "",
+    "win": 0.055,
     "odds": 16.4,
     "pop": null,
     "pos": null,
@@ -33982,7 +33979,7 @@
     "jockey": "Ｆ．ゴンサルベス",
     "trainer": "平田正",
     "mark": "△",
-    "win": 0.08,
+    "win": 0.081,
     "odds": 8.5,
     "pop": 3,
     "pos": 2,
@@ -33996,7 +33993,7 @@
     "jockey": "町田直希",
     "trainer": "田島寿",
     "mark": "○",
-    "win": 0.148,
+    "win": 0.149,
     "odds": 3.5,
     "pop": 2,
     "pos": 3,
@@ -34024,7 +34021,7 @@
     "jockey": "西啓太",
     "trainer": "山崎尋",
     "mark": "△",
-    "win": 0.079,
+    "win": 0.078,
     "odds": 9.7,
     "pop": null,
     "pos": null,
@@ -34066,7 +34063,7 @@
     "jockey": "古岡勇樹",
     "trainer": "山崎裕",
     "mark": "▲",
-    "win": 0.105,
+    "win": 0.106,
     "odds": 14.9,
     "pop": null,
     "pos": null,
@@ -34166,7 +34163,7 @@
     "jockey": "和田譲治",
     "trainer": "山崎尋",
     "mark": "▲",
-    "win": 0.147,
+    "win": 0.148,
     "odds": 7.6,
     "pop": null,
     "pos": null,
@@ -34180,7 +34177,7 @@
     "jockey": "西啓太",
     "trainer": "加藤誠",
     "mark": "△",
-    "win": 0.082,
+    "win": 0.081,
     "odds": 14.3,
     "pop": null,
     "pos": null,
@@ -34478,7 +34475,7 @@
     "jockey": "Ｆ．ゴンサルベス",
     "trainer": "藤田輝",
     "mark": "○",
-    "win": 0.135,
+    "win": 0.136,
     "odds": 7.2,
     "pop": 5,
     "pos": 2,
@@ -34618,7 +34615,7 @@
     "jockey": "西啓太",
     "trainer": "佐宗応",
     "mark": "△",
-    "win": 0.102,
+    "win": 0.1,
     "odds": null,
     "pop": null,
     "pos": null,
@@ -34634,7 +34631,7 @@
     "jockey": "和田譲治",
     "trainer": "古澤悟",
     "mark": "◎",
-    "win": 0.275,
+    "win": 0.274,
     "odds": 1.3,
     "pop": 1,
     "pos": 1,
@@ -34816,7 +34813,7 @@
     "jockey": "矢野貴之",
     "trainer": "内田勝",
     "mark": "○",
-    "win": 0.197,
+    "win": 0.198,
     "odds": null,
     "pop": null,
     "pos": null,
@@ -35484,7 +35481,7 @@
     "jockey": "西啓太",
     "trainer": "山崎裕",
     "mark": "",
-    "win": 0.015,
+    "win": 0.014,
     "odds": 50.7,
     "pop": null,
     "pos": null,
@@ -35584,7 +35581,7 @@
     "jockey": "笹川翼",
     "trainer": "佐々仁",
     "mark": "○",
-    "win": 0.16,
+    "win": 0.159,
     "odds": 4,
     "pop": 2,
     "pos": 1,
@@ -35682,7 +35679,7 @@
     "jockey": "野畑凌",
     "trainer": "佐藤博",
     "mark": "▲",
-    "win": 0.151,
+    "win": 0.152,
     "odds": 5.4,
     "pop": null,
     "pos": null,
@@ -35896,7 +35893,7 @@
     "jockey": "鷹見陸",
     "trainer": "佐々仁",
     "mark": "○",
-    "win": 0.176,
+    "win": 0.175,
     "odds": 4.5,
     "pop": 4,
     "pos": 2,
@@ -35910,7 +35907,7 @@
     "jockey": "池谷匠翔",
     "trainer": "酒井忍",
     "mark": "☆",
-    "win": 0.06,
+    "win": 0.059,
     "odds": 16.8,
     "pop": 5,
     "pos": 3,
@@ -35952,7 +35949,7 @@
     "jockey": "野畑凌",
     "trainer": "河津裕",
     "mark": "◎",
-    "win": 0.336,
+    "win": 0.338,
     "odds": 2,
     "pop": null,
     "pos": null,
@@ -35994,7 +35991,7 @@
     "jockey": "町田直希",
     "trainer": "平田正",
     "mark": "▲",
-    "win": 0.124,
+    "win": 0.122,
     "odds": 6.3,
     "pop": null,
     "pos": null,
@@ -36094,7 +36091,7 @@
     "jockey": "矢野貴之",
     "trainer": "加藤誠",
     "mark": "▲",
-    "win": 0.171,
+    "win": 0.173,
     "odds": 6,
     "pop": null,
     "pos": null,
@@ -36136,7 +36133,7 @@
     "jockey": "藤田凌",
     "trainer": "八木喜",
     "mark": "◎",
-    "win": 0.271,
+    "win": 0.269,
     "odds": 1.5,
     "pop": null,
     "pos": null,
@@ -36150,7 +36147,7 @@
     "jockey": "西啓太",
     "trainer": "鈴木義",
     "mark": "",
-    "win": 0.055,
+    "win": 0.054,
     "odds": 24.6,
     "pop": null,
     "pos": null,
@@ -36234,7 +36231,7 @@
     "jockey": "和田譲治",
     "trainer": "高月賢",
     "mark": "○",
-    "win": 0.172,
+    "win": 0.173,
     "odds": 5.6,
     "pop": null,
     "pos": null,
@@ -36320,7 +36317,7 @@
     "jockey": "町田直希",
     "trainer": "平田正",
     "mark": "◎",
-    "win": 0.29,
+    "win": 0.287,
     "odds": 3.9,
     "pop": null,
     "pos": null,
@@ -36334,7 +36331,7 @@
     "jockey": "矢野貴之",
     "trainer": "鈴木義",
     "mark": "",
-    "win": 0.028,
+    "win": 0.029,
     "odds": 23.4,
     "pop": null,
     "pos": null,
@@ -36362,7 +36359,7 @@
     "jockey": "和田譲治",
     "trainer": "真島大",
     "mark": "○",
-    "win": 0.227,
+    "win": 0.228,
     "odds": 2.5,
     "pop": null,
     "pos": null,
@@ -36404,7 +36401,7 @@
     "jockey": "野畑凌",
     "trainer": "佐藤博",
     "mark": "▲",
-    "win": 0.116,
+    "win": 0.117,
     "odds": 5.4,
     "pop": null,
     "pos": null,
@@ -36930,7 +36927,7 @@
     "jockey": "矢野貴之",
     "trainer": "高月賢",
     "mark": "◎",
-    "win": 0.452,
+    "win": 0.453,
     "odds": 1.2,
     "pop": 1,
     "pos": 1,
@@ -37554,7 +37551,7 @@
     "jockey": "遠藤汰月",
     "trainer": "内田勝",
     "mark": "△",
-    "win": 0.105,
+    "win": 0.104,
     "odds": 8,
     "pop": null,
     "pos": null,
@@ -37638,7 +37635,7 @@
     "jockey": "谷内貫太",
     "trainer": "田邊陽",
     "mark": "▲",
-    "win": 0.11,
+    "win": 0.111,
     "odds": 8.2,
     "pop": null,
     "pos": null,
@@ -37652,7 +37649,7 @@
     "jockey": "水沼元輝",
     "trainer": "田島寿",
     "mark": "",
-    "win": 0.046,
+    "win": 0.045,
     "odds": 18.1,
     "pop": null,
     "pos": null,
@@ -37710,7 +37707,7 @@
     "jockey": "佐藤翔馬",
     "trainer": "佐藤博",
     "mark": "○",
-    "win": 0.184,
+    "win": 0.183,
     "odds": 3.7,
     "pop": 2,
     "pos": 1,
@@ -37766,7 +37763,7 @@
     "jockey": "野畑凌",
     "trainer": "吉橋淳",
     "mark": "◎",
-    "win": 0.2,
+    "win": 0.201,
     "odds": 2.6,
     "pop": null,
     "pos": null,
@@ -37850,7 +37847,7 @@
     "jockey": "岡村裕基",
     "trainer": "安池成",
     "mark": "",
-    "win": 0.049,
+    "win": 0.048,
     "odds": 18,
     "pop": null,
     "pos": null,
@@ -37864,7 +37861,7 @@
     "jockey": "西啓太",
     "trainer": "久保秀",
     "mark": "",
-    "win": 0.034,
+    "win": 0.033,
     "odds": 32.7,
     "pop": null,
     "pos": null,
@@ -38602,7 +38599,7 @@
     "jockey": "和田譲治",
     "trainer": "高月賢",
     "mark": "",
-    "win": 0.032,
+    "win": 0.033,
     "odds": 26.2,
     "pop": null,
     "pos": null,
@@ -38616,7 +38613,7 @@
     "jockey": "御神本訓史",
     "trainer": "甲田悟",
     "mark": "",
-    "win": 0.08,
+    "win": 0.081,
     "odds": 9.2,
     "pop": null,
     "pos": null,
@@ -38672,7 +38669,7 @@
     "jockey": "西啓太",
     "trainer": "山崎尋",
     "mark": "△",
-    "win": 0.109,
+    "win": 0.107,
     "odds": 5,
     "pop": null,
     "pos": null,
@@ -38714,7 +38711,7 @@
     "jockey": "伊藤裕人",
     "trainer": "佐々仁",
     "mark": "",
-    "win": 0.039,
+    "win": 0.04,
     "odds": 25.8,
     "pop": null,
     "pos": null,
@@ -39014,7 +39011,7 @@
     "jockey": "笹川翼",
     "trainer": "加藤誠",
     "mark": "◎",
-    "win": 0.413,
+    "win": 0.412,
     "odds": 1.5,
     "pop": 1,
     "pos": 1,
@@ -39084,7 +39081,7 @@
     "jockey": "野畑凌",
     "trainer": "田邊陽",
     "mark": "△",
-    "win": 0.095,
+    "win": 0.096,
     "odds": 7.8,
     "pop": null,
     "pos": null,
@@ -39098,7 +39095,7 @@
     "jockey": "和田譲治",
     "trainer": "古澤悟",
     "mark": "○",
-    "win": 0.148,
+    "win": 0.149,
     "odds": 7.8,
     "pop": null,
     "pos": null,
@@ -39354,7 +39351,7 @@
     "jockey": "笹川翼",
     "trainer": "長友豊",
     "mark": "▲",
-    "win": 0.105,
+    "win": 0.106,
     "odds": 7.9,
     "pop": null,
     "pos": null,
@@ -39398,7 +39395,7 @@
     "jockey": "野畑凌",
     "trainer": "吉橋淳",
     "mark": "◎",
-    "win": 0.417,
+    "win": 0.416,
     "odds": 1.3,
     "pop": 1,
     "pos": 1,
@@ -39836,7 +39833,7 @@
     "jockey": "矢野貴之",
     "trainer": "内田勝",
     "mark": "▲",
-    "win": 0.145,
+    "win": 0.146,
     "odds": 3.8,
     "pop": null,
     "pos": null,
@@ -39852,7 +39849,7 @@
     "jockey": "矢野貴之",
     "trainer": "高月賢",
     "mark": "◎",
-    "win": 0.378,
+    "win": 0.377,
     "odds": 1.8,
     "pop": 1,
     "pos": 1,
@@ -39950,7 +39947,7 @@
     "jockey": "野畑凌",
     "trainer": "高月賢",
     "mark": "△",
-    "win": 0.089,
+    "win": 0.09,
     "odds": 7.7,
     "pop": null,
     "pos": null,
