@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-11-01T10:23:09.760Z",
+ "builtAt": "2026-11-01T10:26:36.623Z",
  "today": "20261101",
  "nat1": 0.5498,
  "model": {
@@ -5340,37 +5340,37 @@
          "name": "吉田慎二",
          "grade": "A2",
          "p": 0.649,
-         "o": 1.1
+         "o": 1.3
         },
         {
          "lane": 2,
          "name": "木村仁紀",
          "grade": "A1",
          "p": 0.156,
-         "o": 4.2
+         "o": 4.5
         },
         {
          "lane": 4,
          "name": "金子和之",
          "grade": "A2",
          "p": 0.075,
-         "o": 19.1
+         "o": 10.2
         }
        ],
        "tri": {
         "k": "1-2-4",
         "p": 0.1048,
-        "o": 8.1,
-        "ev": 0.82
+        "o": 7.5,
+        "ev": 0.81
        },
        "grade": "C",
        "best": {
         "kind": "3連単",
-        "k": "1-2-5",
-        "p": 0.065,
-        "o": 15.4,
-        "ev": 0.817,
-        "evNow": 0.997,
+        "k": "1-2-4",
+        "p": 0.124,
+        "o": 7.5,
+        "ev": 0.806,
+        "evNow": 0.933,
         "cal": 2
        },
        "conf": 0.368,
@@ -11305,32 +11305,40 @@
          "name": "照屋厚仁",
          "grade": "A2",
          "p": 0.632,
-         "o": null
+         "o": 1.7
         },
         {
          "lane": 3,
          "name": "中澤和志",
          "grade": "A1",
          "p": 0.231,
-         "o": null
+         "o": 1.7
         },
         {
          "lane": 2,
          "name": "阿波勝哉",
          "grade": "B1",
          "p": 0.072,
-         "o": null
+         "o": 5.2
         }
        ],
        "tri": {
         "k": "1-3-2",
         "p": 0.1328,
-        "o": null,
-        "ev": null
+        "o": 18.5,
+        "ev": 1.02
        },
-       "grade": null,
-       "best": null,
-       "conf": 0.41,
+       "grade": "S",
+       "best": {
+        "kind": "3連単",
+        "k": "1-3-2",
+        "p": 0.082,
+        "o": 18.5,
+        "ev": 1.018,
+        "evNow": 1.508,
+        "cal": 2
+       },
+       "conf": 0.411,
        "box3": "1-2-3",
        "ai": {
         "tri3": [
@@ -11344,7 +11352,10 @@
          "3-1"
         ],
         "cum3": 0.318,
-        "ev": []
+        "ev": [
+         "1-3-2",
+         "1-2-3"
+        ]
        }
       },
       {
@@ -19358,6 +19369,749 @@
          "2-3"
         ],
         "cum3": 0.147,
+        "ev": []
+       }
+      }
+     ]
+    },
+    {
+     "jcd": "15",
+     "name": "丸亀",
+     "title": "１１月２日楽天銀行賞",
+     "day": "第１日",
+     "exCount": 0,
+     "win1": 0.5642,
+     "band": "night",
+     "trend": {
+      "label": "ふつう",
+      "text": "予想の本命勝率の平均 54% → ふつう",
+      "src": "model"
+     },
+     "rec": null,
+     "meet": {
+      "days": null,
+      "dayIdx": 1,
+      "lastPrelim": false,
+      "hasSemi": false,
+      "hasFinal": false,
+      "adv": 18,
+      "dates": [
+       "20261102"
+      ]
+     },
+     "log": [
+      {
+       "date": "20261102",
+       "dayIdx": 1,
+       "n": 12,
+       "done": 0,
+       "pred": 0,
+       "c1": 0,
+       "res": 0,
+       "sum": null
+      }
+     ],
+     "tideDay": {
+      "name": "多度津",
+      "hi": [
+       [
+        213,
+        254
+       ],
+       [
+        1053,
+        321
+       ]
+      ],
+      "lo": [
+       [
+        618,
+        84
+       ]
+      ]
+     },
+     "races": [
+      {
+       "r": 1,
+       "close": "15:20",
+       "cls": "予選",
+       "level": "pre",
+       "oddsKind": null,
+       "phase": "予選",
+       "lastPrelim": false,
+       "shobu": [],
+       "top": [
+        {
+         "lane": 1,
+         "name": "中岡健人",
+         "grade": "B1",
+         "p": 0.527,
+         "o": null
+        },
+        {
+         "lane": 2,
+         "name": "丹下健",
+         "grade": "B1",
+         "p": 0.152,
+         "o": null
+        },
+        {
+         "lane": 3,
+         "name": "新出浩司",
+         "grade": "B1",
+         "p": 0.113,
+         "o": null
+        }
+       ],
+       "tri": {
+        "k": "1-2-3",
+        "p": 0.0755,
+        "o": null,
+        "ev": null
+       },
+       "grade": null,
+       "best": null,
+       "conf": 0.206,
+       "box3": "1-2-3",
+       "ai": {
+        "tri3": [
+         "1-2-3",
+         "1-3-2",
+         "1-2-5"
+        ],
+        "ex3": [
+         "1-2",
+         "1-3",
+         "2-1"
+        ],
+        "cum3": 0.178,
+        "ev": []
+       }
+      },
+      {
+       "r": 2,
+       "close": "15:45",
+       "cls": "予選",
+       "level": "pre",
+       "oddsKind": null,
+       "phase": "予選",
+       "lastPrelim": false,
+       "shobu": [],
+       "top": [
+        {
+         "lane": 1,
+         "name": "谷口佳蓮",
+         "grade": "B1",
+         "p": 0.569,
+         "o": null
+        },
+        {
+         "lane": 2,
+         "name": "下河誉史",
+         "grade": "B1",
+         "p": 0.182,
+         "o": null
+        },
+        {
+         "lane": 4,
+         "name": "坂口周",
+         "grade": "A1",
+         "p": 0.164,
+         "o": null
+        }
+       ],
+       "tri": {
+        "k": "1-2-4",
+        "p": 0.1024,
+        "o": null,
+        "ev": null
+       },
+       "grade": null,
+       "best": null,
+       "conf": 0.324,
+       "box3": "1-2-4",
+       "ai": {
+        "tri3": [
+         "1-2-4",
+         "1-4-2",
+         "1-2-5"
+        ],
+        "ex3": [
+         "1-2",
+         "1-4",
+         "2-1"
+        ],
+        "cum3": 0.232,
+        "ev": []
+       }
+      },
+      {
+       "r": 3,
+       "close": "16:10",
+       "cls": "予選",
+       "level": "pre",
+       "oddsKind": null,
+       "phase": "予選",
+       "lastPrelim": false,
+       "shobu": [],
+       "top": [
+        {
+         "lane": 1,
+         "name": "西田靖",
+         "grade": "B1",
+         "p": 0.353,
+         "o": null
+        },
+        {
+         "lane": 3,
+         "name": "渡邉英児",
+         "grade": "A2",
+         "p": 0.231,
+         "o": null
+        },
+        {
+         "lane": 2,
+         "name": "向所浩二",
+         "grade": "B1",
+         "p": 0.163,
+         "o": null
+        }
+       ],
+       "tri": {
+        "k": "1-2-3",
+        "p": 0.0438,
+        "o": null,
+        "ev": null
+       },
+       "grade": null,
+       "best": null,
+       "conf": 0.135,
+       "box3": "1-2-3",
+       "ai": {
+        "tri3": [
+         "1-2-3",
+         "1-3-2",
+         "1-2-4"
+        ],
+        "ex3": [
+         "1-2",
+         "1-3",
+         "3-1"
+        ],
+        "cum3": 0.112,
+        "ev": []
+       }
+      },
+      {
+       "r": 4,
+       "close": "16:35",
+       "cls": "予選",
+       "level": "pre",
+       "oddsKind": null,
+       "phase": "予選",
+       "lastPrelim": false,
+       "shobu": [],
+       "top": [
+        {
+         "lane": 1,
+         "name": "高橋直哉",
+         "grade": "B1",
+         "p": 0.405,
+         "o": null
+        },
+        {
+         "lane": 4,
+         "name": "前沢丈史",
+         "grade": "A1",
+         "p": 0.274,
+         "o": null
+        },
+        {
+         "lane": 2,
+         "name": "三嶌さら",
+         "grade": "B1",
+         "p": 0.131,
+         "o": null
+        }
+       ],
+       "tri": {
+        "k": "1-2-4",
+        "p": 0.0513,
+        "o": null,
+        "ev": null
+       },
+       "grade": null,
+       "best": null,
+       "conf": 0.161,
+       "box3": "1-2-4",
+       "ai": {
+        "tri3": [
+         "1-2-4",
+         "1-4-2",
+         "1-4-6"
+        ],
+        "ex3": [
+         "1-4",
+         "1-2",
+         "4-1"
+        ],
+        "cum3": 0.137,
+        "ev": []
+       }
+      },
+      {
+       "r": 5,
+       "close": "17:01",
+       "cls": "予選",
+       "level": "pre",
+       "oddsKind": null,
+       "phase": "予選",
+       "lastPrelim": false,
+       "shobu": [],
+       "top": [
+        {
+         "lane": 2,
+         "name": "竹井奈美",
+         "grade": "A1",
+         "p": 0.403,
+         "o": null
+        },
+        {
+         "lane": 1,
+         "name": "藤井徹",
+         "grade": "B1",
+         "p": 0.249,
+         "o": null
+        },
+        {
+         "lane": 3,
+         "name": "佐々木和",
+         "grade": "A2",
+         "p": 0.237,
+         "o": null
+        }
+       ],
+       "tri": {
+        "k": "1-2-3",
+        "p": 0.069,
+        "o": null,
+        "ev": null
+       },
+       "grade": null,
+       "best": null,
+       "conf": 0.209,
+       "box3": "1-2-3",
+       "ai": {
+        "tri3": [
+         "1-2-3",
+         "2-1-3",
+         "2-3-1"
+        ],
+        "ex3": [
+         "2-3",
+         "1-2",
+         "2-1"
+        ],
+        "cum3": 0.193,
+        "ev": []
+       }
+      },
+      {
+       "r": 6,
+       "close": "17:29",
+       "cls": "かけうどん6",
+       "level": "pre",
+       "oddsKind": null,
+       "phase": "予選",
+       "lastPrelim": false,
+       "shobu": [],
+       "top": [
+        {
+         "lane": 1,
+         "name": "立間充宏",
+         "grade": "A2",
+         "p": 0.556,
+         "o": null
+        },
+        {
+         "lane": 5,
+         "name": "木谷賢太",
+         "grade": "A1",
+         "p": 0.153,
+         "o": null
+        },
+        {
+         "lane": 2,
+         "name": "中村かな",
+         "grade": "B2",
+         "p": 0.122,
+         "o": null
+        }
+       ],
+       "tri": {
+        "k": "1-2-5",
+        "p": 0.0768,
+        "o": null,
+        "ev": null
+       },
+       "grade": null,
+       "best": null,
+       "conf": 0.256,
+       "box3": "1-2-5",
+       "ai": {
+        "tri3": [
+         "1-2-5",
+         "1-2-6",
+         "1-2-4"
+        ],
+        "ex3": [
+         "1-2",
+         "1-5",
+         "1-6"
+        ],
+        "cum3": 0.183,
+        "ev": []
+       }
+      },
+      {
+       "r": 7,
+       "close": "17:59",
+       "cls": "ざるうどん7",
+       "level": "pre",
+       "oddsKind": null,
+       "phase": "予選",
+       "lastPrelim": false,
+       "shobu": [],
+       "top": [
+        {
+         "lane": 1,
+         "name": "中渡修作",
+         "grade": "B1",
+         "p": 0.338,
+         "o": null
+        },
+        {
+         "lane": 4,
+         "name": "仲口博崇",
+         "grade": "A1",
+         "p": 0.247,
+         "o": null
+        },
+        {
+         "lane": 3,
+         "name": "廣中智紗",
+         "grade": "A2",
+         "p": 0.192,
+         "o": null
+        }
+       ],
+       "tri": {
+        "k": "1-3-4",
+        "p": 0.0365,
+        "o": null,
+        "ev": null
+       },
+       "grade": null,
+       "best": null,
+       "conf": 0.131,
+       "box3": "1-3-4",
+       "ai": {
+        "tri3": [
+         "1-3-4",
+         "1-4-3",
+         "1-2-4"
+        ],
+        "ex3": [
+         "1-4",
+         "1-3",
+         "1-2"
+        ],
+        "cum3": 0.104,
+        "ev": []
+       }
+      },
+      {
+       "r": 8,
+       "close": "18:26",
+       "cls": "釜揚げ8進入固定",
+       "level": "pre",
+       "oddsKind": null,
+       "phase": "予選",
+       "lastPrelim": false,
+       "shobu": [],
+       "top": [
+        {
+         "lane": 1,
+         "name": "白水勝也",
+         "grade": "A1",
+         "p": 0.659,
+         "o": null
+        },
+        {
+         "lane": 2,
+         "name": "渡邉英児",
+         "grade": "A2",
+         "p": 0.15,
+         "o": null
+        },
+        {
+         "lane": 4,
+         "name": "福田宗平",
+         "grade": "A2",
+         "p": 0.116,
+         "o": null
+        }
+       ],
+       "tri": {
+        "k": "1-2-4",
+        "p": 0.1366,
+        "o": null,
+        "ev": null
+       },
+       "grade": null,
+       "best": null,
+       "conf": 0.399,
+       "box3": "1-2-4",
+       "ai": {
+        "tri3": [
+         "1-2-4",
+         "1-4-2",
+         "1-2-3"
+        ],
+        "ex3": [
+         "1-2",
+         "1-4",
+         "2-1"
+        ],
+        "cum3": 0.297,
+        "ev": []
+       }
+      },
+      {
+       "r": 9,
+       "close": "18:55",
+       "cls": "まるがめ特賞",
+       "level": "pre",
+       "oddsKind": null,
+       "phase": "予選",
+       "lastPrelim": false,
+       "shobu": [],
+       "top": [
+        {
+         "lane": 1,
+         "name": "佐々木和",
+         "grade": "A2",
+         "p": 0.673,
+         "o": null
+        },
+        {
+         "lane": 2,
+         "name": "荒川健太",
+         "grade": "A2",
+         "p": 0.141,
+         "o": null
+        },
+        {
+         "lane": 3,
+         "name": "横澤剛治",
+         "grade": "A2",
+         "p": 0.101,
+         "o": null
+        }
+       ],
+       "tri": {
+        "k": "1-2-3",
+        "p": 0.1356,
+        "o": null,
+        "ev": null
+       },
+       "grade": null,
+       "best": null,
+       "conf": 0.403,
+       "box3": "1-2-3",
+       "ai": {
+        "tri3": [
+         "1-2-3",
+         "1-3-2",
+         "1-2-4"
+        ],
+        "ex3": [
+         "1-2",
+         "1-3",
+         "1-4"
+        ],
+        "cum3": 0.306,
+        "ev": []
+       }
+      },
+      {
+       "r": 10,
+       "close": "19:38",
+       "cls": "蒼月まるる特",
+       "level": "pre",
+       "oddsKind": null,
+       "phase": "予選",
+       "lastPrelim": false,
+       "shobu": [],
+       "top": [
+        {
+         "lane": 1,
+         "name": "大場敏",
+         "grade": "A2",
+         "p": 0.632,
+         "o": null
+        },
+        {
+         "lane": 2,
+         "name": "牧宏次",
+         "grade": "A2",
+         "p": 0.159,
+         "o": null
+        },
+        {
+         "lane": 3,
+         "name": "富永大一",
+         "grade": "B1",
+         "p": 0.083,
+         "o": null
+        }
+       ],
+       "tri": {
+        "k": "1-2-3",
+        "p": 0.0827,
+        "o": null,
+        "ev": null
+       },
+       "grade": null,
+       "best": null,
+       "conf": 0.34,
+       "box3": "1-2-3",
+       "ai": {
+        "tri3": [
+         "1-2-3",
+         "1-2-5",
+         "1-2-4"
+        ],
+        "ex3": [
+         "1-2",
+         "1-3",
+         "1-5"
+        ],
+        "cum3": 0.218,
+        "ev": []
+       }
+      },
+      {
+       "r": 11,
+       "close": "20:06",
+       "cls": "予選選抜",
+       "level": "pre",
+       "oddsKind": null,
+       "phase": "予選",
+       "lastPrelim": false,
+       "shobu": [],
+       "top": [
+        {
+         "lane": 1,
+         "name": "竹井奈美",
+         "grade": "A1",
+         "p": 0.718,
+         "o": null
+        },
+        {
+         "lane": 4,
+         "name": "大山千広",
+         "grade": "A2",
+         "p": 0.113,
+         "o": null
+        },
+        {
+         "lane": 2,
+         "name": "廣中智紗",
+         "grade": "A2",
+         "p": 0.087,
+         "o": null
+        }
+       ],
+       "tri": {
+        "k": "1-2-4",
+        "p": 0.0978,
+        "o": null,
+        "ev": null
+       },
+       "grade": null,
+       "best": null,
+       "conf": 0.452,
+       "box3": "1-2-4",
+       "ai": {
+        "tri3": [
+         "1-2-4",
+         "1-4-2",
+         "1-4-3"
+        ],
+        "ex3": [
+         "1-2",
+         "1-4",
+         "1-3"
+        ],
+        "cum3": 0.246,
+        "ev": []
+       }
+      },
+      {
+       "r": 12,
+       "close": "20:36",
+       "cls": "ドリーム",
+       "level": "pre",
+       "oddsKind": null,
+       "phase": "予選",
+       "lastPrelim": false,
+       "shobu": [],
+       "top": [
+        {
+         "lane": 1,
+         "name": "木谷賢太",
+         "grade": "A1",
+         "p": 0.661,
+         "o": null
+        },
+        {
+         "lane": 2,
+         "name": "仲口博崇",
+         "grade": "A1",
+         "p": 0.141,
+         "o": null
+        },
+        {
+         "lane": 3,
+         "name": "烏野賢太",
+         "grade": "A1",
+         "p": 0.08,
+         "o": null
+        }
+       ],
+       "tri": {
+        "k": "1-2-3",
+        "p": 0.0889,
+        "o": null,
+        "ev": null
+       },
+       "grade": null,
+       "best": null,
+       "conf": 0.371,
+       "box3": "1-2-3",
+       "ai": {
+        "tri3": [
+         "1-2-3",
+         "1-2-4",
+         "1-3-2"
+        ],
+        "ex3": [
+         "1-2",
+         "1-3",
+         "1-4"
+        ],
+        "cum3": 0.219,
         "ev": []
        }
       }
