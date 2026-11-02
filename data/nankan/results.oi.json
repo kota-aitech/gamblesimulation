@@ -1,7 +1,7 @@
 {
  "track": "大井",
  "meta": {
-  "builtAt": "2026-11-02T06:02:30.070Z",
+  "builtAt": "2026-11-02T07:16:39.823Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -44,11 +44,11 @@
    "tally": {
     "ev_umaren": {
      "races": 108,
-     "cost": 18500,
+     "cost": 18400,
      "ret": 13910,
      "hits": 7,
-     "pts": 185,
-     "roi": 0.7519,
+     "pts": 184,
+     "roi": 0.756,
      "hitRate": 0.0648,
      "avgPts": 1.7
     },
@@ -112,13 +112,13 @@
      "tally": {
       "ev_umaren": {
        "races": 9,
-       "cost": 1900,
+       "cost": 1800,
        "ret": 0,
        "hits": 0,
-       "pts": 19,
+       "pts": 18,
        "roi": 0,
        "hitRate": 0,
-       "avgPts": 2.1
+       "avgPts": 2
       },
       "ev_sanpuku": {
        "races": 9,
@@ -903,11 +903,11 @@
       },
       "ev_umaren": {
        "races": 12,
-       "cost": 3400,
+       "cost": 3300,
        "ret": 2180,
        "hits": 1,
-       "pts": 34,
-       "roi": 0.6412,
+       "pts": 33,
+       "roi": 0.6606,
        "hitRate": 0.0833,
        "avgPts": 2.8
       }
@@ -2003,9 +2003,9 @@
     "grade": "A",
     "ev": {
      "umaren": 1.36,
-     "sanpuku": 0.97
+     "sanpuku": 0.98
     },
-    "conf": 0.114,
+    "conf": 0.115,
     "oddsSrc": "締切前(発走10分前)",
     "hit": {
      "win": true,
@@ -2014,15 +2014,14 @@
     },
     "betResult": {
      "umaren": {
-      "pts": 4,
-      "cost": 400,
+      "pts": 3,
+      "cost": 300,
       "ret": 0,
       "hit": false,
       "buy": [
        "6-10",
        "4-5",
-       "2-10",
-       "6-7"
+       "2-10"
       ]
      },
      "sanpuku": {
@@ -4094,7 +4093,7 @@
      "umaren": 1.18,
      "sanpuku": 1.13
     },
-    "conf": 0.25,
+    "conf": 0.251,
     "oddsSrc": "締切前(発走8分前)",
     "hit": {
      "win": true,
@@ -12665,7 +12664,7 @@
     "weather": "曇",
     "grade": null,
     "ev": null,
-    "conf": 0.099,
+    "conf": 0.098,
     "oddsSrc": "締切前(発走8分前)",
     "hit": {
      "win": false,
@@ -21267,7 +21266,7 @@
     "jockey": "和田譲治",
     "trainer": "福永敏",
     "mark": "",
-    "win": 0.091,
+    "win": 0.092,
     "odds": null,
     "pop": null,
     "pos": null,
@@ -21849,7 +21848,7 @@
     "jockey": "本田正重",
     "trainer": "蛯名雄",
     "mark": "○",
-    "win": 0.204,
+    "win": 0.205,
     "odds": 3.8,
     "pop": null,
     "pos": null,
@@ -21863,7 +21862,7 @@
     "jockey": "西啓太",
     "trainer": "佐宗応",
     "mark": "☆",
-    "win": 0.055,
+    "win": 0.054,
     "odds": 22.3,
     "pop": null,
     "pos": null,
@@ -24087,7 +24086,7 @@
     "jockey": "野畑凌",
     "trainer": "荒井朋",
     "mark": "",
-    "win": 0.047,
+    "win": 0.046,
     "odds": 31.5,
     "pop": null,
     "pos": null,
@@ -28283,7 +28282,7 @@
     "jockey": "和田譲治",
     "trainer": "蛯名雄",
     "mark": "○",
-    "win": 0.169,
+    "win": 0.168,
     "odds": 3.1,
     "pop": null,
     "pos": null,
@@ -31885,7 +31884,7 @@
     "jockey": "西優哉",
     "trainer": "納谷和",
     "mark": "△",
-    "win": 0.155,
+    "win": 0.156,
     "odds": 19.3,
     "pop": 4,
     "pos": 2,
@@ -31899,7 +31898,7 @@
     "jockey": "達城龍次",
     "trainer": "堀千亜",
     "mark": "▲",
-    "win": 0.155,
+    "win": 0.156,
     "odds": 14.5,
     "pop": 3,
     "pos": 3,
@@ -31913,7 +31912,7 @@
     "jockey": "安藤洋一",
     "trainer": "藤田輝",
     "mark": "○",
-    "win": 0.239,
+    "win": 0.24,
     "odds": 1,
     "pop": 1,
     "pos": 4,
@@ -31941,7 +31940,7 @@
     "jockey": "西啓太",
     "trainer": "穂刈隆",
     "mark": "◎",
-    "win": 0.329,
+    "win": 0.328,
     "odds": null,
     "pop": null,
     "pos": null,
@@ -32551,7 +32550,7 @@
     "jockey": "和田譲治",
     "trainer": "松浦裕",
     "mark": "▲",
-    "win": 0.106,
+    "win": 0.105,
     "odds": 7.5,
     "pop": null,
     "pos": null,
@@ -34847,7 +34846,7 @@
     "jockey": "西啓太",
     "trainer": "佐宗応",
     "mark": "◎",
-    "win": 0.373,
+    "win": 0.374,
     "odds": 2.6,
     "pop": 1,
     "pos": 2,
@@ -39067,7 +39066,7 @@
     "jockey": "西啓太",
     "trainer": "荒井朋",
     "mark": "△",
-    "win": 0.078,
+    "win": 0.077,
     "odds": null,
     "pop": null,
     "pos": null,
