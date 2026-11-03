@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-11-03T20:49:49.290Z",
+ "builtAt": "2026-11-03T23:12:45.134Z",
  "tracks": {
   "oi": {
    "track": "大井",
@@ -3995,7 +3995,7 @@
         "gate": 8,
         "name": "メイクティアラ",
         "mark": "○",
-        "win": 0.161,
+        "win": 0.16,
         "top3": 0.291,
         "style": "逃げ",
         "jockey": "篠谷葵",
@@ -4559,7 +4559,7 @@
       "date": "2026-11-04",
       "grade": "B",
       "conf": 0.114,
-      "pTop": 0.257,
+      "pTop": 0.256,
       "ev": {
        "umaren": 1.27,
        "sanpuku": 1.17
@@ -4569,8 +4569,8 @@
        "sanpuku": 2
       },
       "pace": "H",
-      "oddsSrc": "暫定(発走1233分前)",
-      "oddsAt": "2026-11-03T14:32:18.823Z",
+      "oddsSrc": "暫定(発走757分前)",
+      "oddsAt": "2026-11-03T22:28:14.169Z",
       "oddsUpd": "2026年11月3日 21:01",
       "bets": {
        "umaren": [
@@ -4609,7 +4609,7 @@
           9,
           10
          ],
-         "p": 0.0114,
+         "p": 0.0113,
          "odds": 103,
          "ev": 1.17
         },
@@ -4738,7 +4738,7 @@
         "gate": 2,
         "name": "[北]ニュースタンダード",
         "mark": "◎",
-        "win": 0.257,
+        "win": 0.256,
         "top3": 0.562,
         "style": "差し",
         "jockey": "望月洵輝",
@@ -5332,7 +5332,7 @@
       "cls": "ユーカリデビュー ２歳 新馬ア",
       "date": "2026-11-05",
       "grade": null,
-      "conf": 0.048,
+      "conf": 0.049,
       "pTop": 0.268,
       "ev": null,
       "nPos": null,
@@ -5425,7 +5425,7 @@
         "name": "マドンナヴェル",
         "mark": "◎",
         "win": 0.268,
-        "top3": 0.579,
+        "top3": 0.58,
         "style": "先行",
         "jockey": "本田正重",
         "odds": null
@@ -5650,7 +5650,7 @@
       "cls": "サンストーン特別 ２歳(一)",
       "date": "2026-11-05",
       "grade": null,
-      "conf": 0.112,
+      "conf": 0.111,
       "pTop": 0.266,
       "ev": null,
       "nPos": null,
@@ -6145,7 +6145,7 @@
       "cls": "菊花特別 Ｂ１(二)Ｂ２(一)",
       "date": "2026-11-05",
       "grade": null,
-      "conf": 0.358,
+      "conf": 0.357,
       "pTop": 0.577,
       "ev": null,
       "nPos": null,
@@ -6488,7 +6488,7 @@
       "date": "2026-11-05",
       "grade": null,
       "conf": 0.128,
-      "pTop": 0.208,
+      "pTop": 0.207,
       "ev": null,
       "nPos": null,
       "pace": "S",
@@ -6627,7 +6627,7 @@
         "gate": 8,
         "name": "アルヴァレス",
         "mark": "◎",
-        "win": 0.208,
+        "win": 0.207,
         "top3": 0.337,
         "style": "先行",
         "jockey": "篠谷葵",
@@ -7078,6 +7078,12 @@
    "wJ": 0.8,
    "wT": 0.8,
    "c": -0.05
+  },
+  "marks": {
+   "trials": 600,
+   "model": "data/nankan/model.live.json",
+   "blended": 0,
+   "note": "印と勝率は条件付きロジット（オッズなし）。3角/4角の位置とペースはシミュレータ"
   }
  },
  "thresholds": {
@@ -8094,13 +8100,13 @@
     },
     "ev_sanpuku": {
      "races": 115,
-     "cost": 55700,
+     "cost": 55800,
      "ret": 55990,
      "hits": 12,
-     "pts": 557,
-     "roi": 1.0052,
+     "pts": 558,
+     "roi": 1.0034,
      "hitRate": 0.1043,
-     "avgPts": 4.8
+     "avgPts": 4.9
     },
     "box3_umaren": {
      "races": 120,
@@ -8606,13 +8612,13 @@
       },
       "ev_sanpuku": {
        "races": 10,
-       "cost": 7100,
+       "cost": 7200,
        "ret": 0,
        "hits": 0,
-       "pts": 71,
+       "pts": 72,
        "roi": 0,
        "hitRate": 0,
-       "avgPts": 7.1
+       "avgPts": 7.2
       },
       "box3_umaren": {
        "races": 12,
