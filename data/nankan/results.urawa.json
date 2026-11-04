@@ -1,7 +1,7 @@
 {
  "track": "浦和",
  "meta": {
-  "builtAt": "2026-11-04T09:02:08.622Z",
+  "builtAt": "2026-11-04T09:29:04.144Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -44,11 +44,11 @@
    "tally": {
     "ev_umaren": {
      "races": 111,
-     "cost": 17600,
+     "cost": 17500,
      "ret": 8270,
      "hits": 4,
-     "pts": 176,
-     "roi": 0.4699,
+     "pts": 175,
+     "roi": 0.4726,
      "hitRate": 0.036,
      "avgPts": 1.6
     },
@@ -552,13 +552,13 @@
      "tally": {
       "ev_umaren": {
        "races": 11,
-       "cost": 2700,
+       "cost": 2600,
        "ret": 0,
        "hits": 0,
-       "pts": 27,
+       "pts": 26,
        "roi": 0,
        "hitRate": 0,
-       "avgPts": 2.5
+       "avgPts": 2.4
       },
       "ev_sanpuku": {
        "races": 11,
@@ -972,13 +972,13 @@
       },
       "ev_umaren": {
        "races": 18,
-       "cost": 4800,
+       "cost": 4700,
        "ret": 2890,
        "hits": 2,
-       "pts": 48,
-       "roi": 0.6021,
+       "pts": 47,
+       "roi": 0.6149,
        "hitRate": 0.1111,
-       "avgPts": 2.7
+       "avgPts": 2.6
       }
      }
     }
@@ -10456,7 +10456,7 @@
     "weather": "曇",
     "grade": "S",
     "ev": {
-     "umaren": 2.12,
+     "umaren": 2.13,
      "sanpuku": 2.24
     },
     "conf": 0.208,
@@ -12655,7 +12655,7 @@
     "weather": "曇",
     "grade": "C",
     "ev": {
-     "umaren": 0.98,
+     "umaren": 0.99,
      "sanpuku": 1.08
     },
     "conf": 0.155,
@@ -14409,15 +14409,14 @@
     },
     "betResult": {
      "umaren": {
-      "pts": 4,
-      "cost": 400,
+      "pts": 3,
+      "cost": 300,
       "ret": 0,
       "hit": false,
       "buy": [
        "1-7",
        "1-9",
-       "1-8",
-       "1-5"
+       "1-8"
       ]
      },
      "sanpuku": {
@@ -30118,7 +30117,7 @@
     "jockey": "福原杏",
     "trainer": "野口寛",
     "mark": "○",
-    "win": 0.188,
+    "win": 0.189,
     "odds": 6.5,
     "pop": null,
     "pos": null,
@@ -31992,7 +31991,7 @@
     "jockey": "臼井健太郎",
     "trainer": "張田京",
     "mark": "△",
-    "win": 0.058,
+    "win": 0.057,
     "odds": 19.4,
     "pop": null,
     "pos": null,
@@ -36004,7 +36003,7 @@
     "jockey": "御神本訓史",
     "trainer": "藤田輝",
     "mark": "◎",
-    "win": 0.438,
+    "win": 0.439,
     "odds": 1.5,
     "pop": 1,
     "pos": 1,

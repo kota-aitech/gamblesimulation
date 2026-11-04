@@ -1,7 +1,7 @@
 {
  "track": "船橋",
  "meta": {
-  "builtAt": "2026-11-04T09:02:08.464Z",
+  "builtAt": "2026-11-04T09:29:03.992Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -878,73 +878,73 @@
      }
     },
     "C": {
-     "races": 58,
-     "pre": 36,
+     "races": 59,
+     "pre": 37,
      "tally": {
       "box4_sanpuku": {
-       "races": 58,
-       "cost": 23200,
+       "races": 59,
+       "cost": 23600,
        "ret": 11460,
        "hits": 12,
-       "pts": 232,
-       "roi": 0.494,
-       "hitRate": 0.2069,
+       "pts": 236,
+       "roi": 0.4856,
+       "hitRate": 0.2034,
        "avgPts": 4
       },
       "box3_sanpuku": {
-       "races": 58,
-       "cost": 5800,
+       "races": 59,
+       "cost": 5900,
        "ret": 1770,
        "hits": 3,
-       "pts": 58,
-       "roi": 0.3052,
-       "hitRate": 0.0517,
+       "pts": 59,
+       "roi": 0.3,
+       "hitRate": 0.0508,
        "avgPts": 1
       },
       "ev_umaren": {
-       "races": 58,
-       "cost": 5100,
+       "races": 59,
+       "cost": 5200,
        "ret": 5700,
        "hits": 3,
-       "pts": 51,
-       "roi": 1.1176,
-       "hitRate": 0.0517,
+       "pts": 52,
+       "roi": 1.0962,
+       "hitRate": 0.0508,
        "avgPts": 0.9
       }
      }
     },
     "B": {
-     "races": 31,
-     "pre": 14,
+     "races": 30,
+     "pre": 13,
      "tally": {
       "box4_sanpuku": {
-       "races": 31,
-       "cost": 12400,
+       "races": 30,
+       "cost": 12000,
        "ret": 15780,
        "hits": 12,
-       "pts": 124,
-       "roi": 1.2726,
-       "hitRate": 0.3871,
+       "pts": 120,
+       "roi": 1.315,
+       "hitRate": 0.4,
        "avgPts": 4
       },
       "box3_sanpuku": {
-       "races": 31,
-       "cost": 3100,
+       "races": 30,
+       "cost": 3000,
        "ret": 1920,
        "hits": 4,
-       "pts": 31,
-       "roi": 0.6194,
-       "hitRate": 0.129,
+       "pts": 30,
+       "roi": 0.64,
+       "hitRate": 0.1333,
        "avgPts": 1
       },
       "ev_umaren": {
-       "races": 31,
-       "cost": 8000,
+       "races": 30,
+       "cost": 7900,
        "ret": 4870,
        "hits": 3,
-       "pts": 80,
-       "roi": 0.6088,
-       "hitRate": 0.0968,
+       "pts": 79,
+       "roi": 0.6165,
+       "hitRate": 0.1,
        "avgPts": 2.6
       }
      }
@@ -7773,10 +7773,10 @@
     "date": "2026-09-29",
     "baba": "不良",
     "weather": "雨",
-    "grade": "B",
+    "grade": "C",
     "ev": {
-     "umaren": 1.16,
-     "sanpuku": 1.09
+     "umaren": 1.15,
+     "sanpuku": 1.08
     },
     "conf": 0.094,
     "oddsSrc": "締切前(発走9分前)",
@@ -35755,7 +35755,7 @@
     "jockey": "張田昂",
     "trainer": "玉井昇",
     "mark": "△",
-    "win": 0.073,
+    "win": 0.072,
     "odds": 9.9,
     "pop": null,
     "pos": null,
@@ -38701,7 +38701,7 @@
     "jockey": "張田昂",
     "trainer": "伊藤滋",
     "mark": "△",
-    "win": 0.095,
+    "win": 0.094,
     "odds": 15.4,
     "pop": null,
     "pos": null,
