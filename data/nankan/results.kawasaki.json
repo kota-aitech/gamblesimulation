@@ -1,7 +1,7 @@
 {
  "track": "川崎",
  "meta": {
-  "builtAt": "2026-11-05T07:31:31.820Z",
+  "builtAt": "2026-11-05T08:07:53.991Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -54,11 +54,11 @@
     },
     "ev_sanpuku": {
      "races": 115,
-     "cost": 56000,
+     "cost": 55900,
      "ret": 55990,
      "hits": 12,
-     "pts": 560,
-     "roi": 0.9998,
+     "pts": 559,
+     "roi": 1.0016,
      "hitRate": 0.1043,
      "avgPts": 4.9
     },
@@ -566,13 +566,13 @@
       },
       "ev_sanpuku": {
        "races": 10,
-       "cost": 7200,
+       "cost": 7100,
        "ret": 0,
        "hits": 0,
-       "pts": 72,
+       "pts": 71,
        "roi": 0,
        "hitRate": 0,
-       "avgPts": 7.2
+       "avgPts": 7.1
       },
       "box3_umaren": {
        "races": 12,
@@ -4790,7 +4790,7 @@
     "weather": "曇",
     "grade": "B",
     "ev": {
-     "umaren": 1.27,
+     "umaren": 1.26,
      "sanpuku": 1.29
     },
     "conf": 0.082,
@@ -6869,8 +6869,8 @@
       "ret": 0,
       "hit": false,
       "buy": [
-       "7-9",
-       "5-7"
+       "5-7",
+       "7-9"
       ]
      },
      "sanpuku": {
@@ -14658,8 +14658,8 @@
       ]
      },
      "sanpuku": {
-      "pts": 7,
-      "cost": 700,
+      "pts": 6,
+      "cost": 600,
       "ret": 0,
       "hit": false,
       "buy": [
@@ -14668,8 +14668,7 @@
        "2-6-8",
        "2-3-5",
        "1-2-3",
-       "2-7-8",
-       "4-5-8"
+       "2-7-8"
       ]
      },
      "box3": {
@@ -15162,7 +15161,7 @@
     "weather": "曇",
     "grade": null,
     "ev": null,
-    "conf": 0.097,
+    "conf": 0.098,
     "oddsSrc": "暫定(発走27分前)",
     "hit": {
      "win": false,
@@ -34463,7 +34462,7 @@
     "jockey": "達城龍次",
     "trainer": "宗形竹",
     "mark": "▲",
-    "win": 0.126,
+    "win": 0.127,
     "odds": 4,
     "pop": 1,
     "pos": 1,
@@ -34519,7 +34518,7 @@
     "jockey": "岡村健司",
     "trainer": "佐藤太",
     "mark": "◎",
-    "win": 0.244,
+    "win": 0.245,
     "odds": 4.1,
     "pop": 3,
     "pos": 5,
@@ -34589,7 +34588,7 @@
     "jockey": "池谷匠翔",
     "trainer": "林隆之",
     "mark": "",
-    "win": 0.042,
+    "win": 0.043,
     "odds": 23.9,
     "pop": 7,
     "pos": 10,
@@ -34617,7 +34616,7 @@
     "jockey": "西啓太",
     "trainer": "佐宗応",
     "mark": "△",
-    "win": 0.1,
+    "win": 0.099,
     "odds": null,
     "pop": null,
     "pos": null,
