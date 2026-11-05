@@ -1,7 +1,7 @@
 {
  "track": "船橋",
  "meta": {
-  "builtAt": "2026-11-05T05:57:20.594Z",
+  "builtAt": "2026-11-05T06:25:33.710Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -54,11 +54,11 @@
     },
     "ev_sanpuku": {
      "races": 107,
-     "cost": 45800,
+     "cost": 45900,
      "ret": 47020,
      "hits": 11,
-     "pts": 458,
-     "roi": 1.0266,
+     "pts": 459,
+     "roi": 1.0244,
      "hitRate": 0.1028,
      "avgPts": 4.3
     },
@@ -711,13 +711,13 @@
       },
       "ev_sanpuku": {
        "races": 12,
-       "cost": 5200,
+       "cost": 5300,
        "ret": 0,
        "hits": 0,
-       "pts": 52,
+       "pts": 53,
        "roi": 0,
        "hitRate": 0,
-       "avgPts": 4.3
+       "avgPts": 4.4
       },
       "box3_umaren": {
        "races": 12,
@@ -17542,12 +17542,13 @@
       ]
      },
      "sanpuku": {
-      "pts": 4,
-      "cost": 400,
+      "pts": 5,
+      "cost": 500,
       "ret": 0,
       "hit": false,
       "buy": [
        "3-8-11",
+       "5-8-11",
        "8-11-12",
        "6-8-11",
        "7-8-11"
@@ -34922,7 +34923,7 @@
     "jockey": "沖響主",
     "trainer": "山本学",
     "mark": "◎",
-    "win": 0.26,
+    "win": 0.261,
     "odds": 1.9,
     "pop": 1,
     "pos": 1,
@@ -34978,7 +34979,7 @@
     "jockey": "岡村健司",
     "trainer": "佐藤太",
     "mark": "",
-    "win": 0.049,
+    "win": 0.05,
     "odds": 22.8,
     "pop": null,
     "pos": null,
@@ -35034,7 +35035,7 @@
     "jockey": "佐野遥久",
     "trainer": "藤原智",
     "mark": "△",
-    "win": 0.091,
+    "win": 0.09,
     "odds": 8.4,
     "pop": null,
     "pos": null,
