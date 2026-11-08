@@ -1,7 +1,7 @@
 {
  "track": "川崎",
  "meta": {
-  "builtAt": "2026-11-07T12:34:37.228Z",
+  "builtAt": "2026-11-08T12:32:03.802Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -85,11 +85,11 @@
     "box4_umaren": {
      "races": 120,
      "cost": 72000,
-     "ret": 65030,
-     "hits": 66,
+     "ret": 64510,
+     "hits": 65,
      "pts": 720,
-     "roi": 0.9032,
-     "hitRate": 0.55,
+     "roi": 0.896,
+     "hitRate": 0.5417,
      "avgPts": 6
     },
     "box4_sanpuku": {
@@ -671,11 +671,11 @@
       "box4_umaren": {
        "races": 12,
        "cost": 7200,
-       "ret": 4900,
-       "hits": 6,
+       "ret": 4380,
+       "hits": 5,
        "pts": 72,
-       "roi": 0.6806,
-       "hitRate": 0.5,
+       "roi": 0.6083,
+       "hitRate": 0.4167,
        "avgPts": 6
       },
       "box4_sanpuku": {
@@ -13925,7 +13925,7 @@
     "weather": "曇",
     "grade": "S",
     "ev": {
-     "umaren": 1.53,
+     "umaren": 1.54,
      "sanpuku": 1.96
     },
     "conf": 0.275,
@@ -14636,7 +14636,7 @@
     "grade": "B",
     "ev": {
      "umaren": 1.25,
-     "sanpuku": 1.92
+     "sanpuku": 1.91
     },
     "conf": 0.179,
     "oddsSrc": "締切前(発走8分前)",
@@ -14666,8 +14666,8 @@
        "2-8-11",
        "2-6-8",
        "2-3-5",
-       "1-2-3",
        "2-7-8",
+       "1-2-3",
        "4-5-8"
       ]
      },
@@ -14813,7 +14813,7 @@
     "grade": "A",
     "ev": {
      "umaren": 1.35,
-     "sanpuku": 1.7
+     "sanpuku": 1.71
     },
     "conf": 0.175,
     "oddsSrc": "締切前(発走8分前)",
@@ -16747,15 +16747,15 @@
       "umaren": {
        "pts": 6,
        "cost": 600,
-       "ret": 520,
-       "hit": true,
+       "ret": 0,
+       "hit": false,
        "buy": [
         "5-2",
         "5-8",
-        "5-1",
+        "5-6",
         "2-8",
-        "2-1",
-        "8-1"
+        "2-6",
+        "8-6"
        ]
       },
       "sanpuku": {
@@ -16765,9 +16765,9 @@
        "hit": false,
        "buy": [
         "5-2-8",
-        "5-2-1",
-        "5-8-1",
-        "2-8-1"
+        "5-2-6",
+        "5-8-6",
+        "2-8-6"
        ]
       }
      }
@@ -20283,7 +20283,7 @@
      "umaren": 1.28,
      "sanpuku": 1.12
     },
-    "conf": 0.248,
+    "conf": 0.247,
     "oddsSrc": "締切前(発走9分前)",
     "hit": {
      "win": true,
@@ -33584,7 +33584,7 @@
     "jockey": "Ｆ．ゴンサルベス",
     "trainer": "佐藤博",
     "mark": "▲",
-    "win": 0.186,
+    "win": 0.187,
     "odds": 3.3,
     "pop": null,
     "pos": null,
@@ -33982,7 +33982,7 @@
     "jockey": "Ｆ．ゴンサルベス",
     "trainer": "平田正",
     "mark": "△",
-    "win": 0.081,
+    "win": 0.08,
     "odds": 8.5,
     "pop": 3,
     "pos": 2,
@@ -33996,7 +33996,7 @@
     "jockey": "町田直希",
     "trainer": "田島寿",
     "mark": "○",
-    "win": 0.149,
+    "win": 0.148,
     "odds": 3.5,
     "pop": 2,
     "pos": 3,
@@ -36080,7 +36080,7 @@
     "jockey": "所蛍",
     "trainer": "山下之",
     "mark": "△",
-    "win": 0.066,
+    "win": 0.065,
     "odds": 24.8,
     "pop": 6,
     "pos": 3,
@@ -36094,7 +36094,7 @@
     "jockey": "矢野貴之",
     "trainer": "加藤誠",
     "mark": "▲",
-    "win": 0.169,
+    "win": 0.17,
     "odds": 6,
     "pop": null,
     "pos": null,
@@ -36136,7 +36136,7 @@
     "jockey": "藤田凌",
     "trainer": "八木喜",
     "mark": "◎",
-    "win": 0.272,
+    "win": 0.273,
     "odds": 1.5,
     "pop": null,
     "pos": null,
@@ -38672,7 +38672,7 @@
     "jockey": "西啓太",
     "trainer": "山崎尋",
     "mark": "△",
-    "win": 0.107,
+    "win": 0.108,
     "odds": 5,
     "pop": null,
     "pos": null,
@@ -39710,7 +39710,7 @@
     "jockey": "野畑凌",
     "trainer": "高月賢",
     "mark": "◎",
-    "win": 0.301,
+    "win": 0.3,
     "odds": 2.3,
     "pop": 1,
     "pos": 1,
