@@ -420,3 +420,8 @@ export function combos(U, tau, ctx, stage, nos) {
   const sorted = mp => [...mp].sort((x, y) => y[1] - x[1]);
   return { p1, top2: p1.map((v, i) => v + top2[i]), top3: p1.map((v, i) => v + top2[i] + top3[i]), e3: sorted(e3), q3: sorted(q3), e2: sorted(ex2), q2: sorted(q2), wide: sorted(wide) };
 }
+
+/* 選手ごとの「市場の項を除いた」強さ × τ1（2026-11-09、calib.json の mode:'tilt' 用）。
+   joint の効用 U から mktLog の寄与（wMkt × x[MKT]）を引く。base（市場なし）なら wMkt=0 で U × τ1 のまま。
+   calib_keirin と keirin_build_races で必ずこれを通す（式を2か所に書かない） */
+export const residualU = (U, tau1, rows, wMkt) => U.map((u, i) => tau1 * (u - (wMkt || 0) * (rows[i].x[MKT] || 0)));

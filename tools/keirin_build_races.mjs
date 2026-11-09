@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, readJSON, writeJSON, ymdOf, venueByName, eachLine } from './lib/kr.mjs';
-import { FEATURES, NF, slim, buildAsOf, makeFeaturizer, stageCtx, combos, raceOf, lineInfo, TIP, bankCls, BANKS } from './lib/krfeat.mjs';
+import { FEATURES, NF, MKT, residualU, slim, buildAsOf, makeFeaturizer, stageCtx, combos, raceOf, lineInfo, TIP, bankCls, BANKS } from './lib/krfeat.mjs';
 import { utilities } from './lib/bpl.mjs';
 import { bestCombo, bestComboCal, gradeOf, readGrade } from './lib/grade.mjs';
 import { mixProbs, marketOf, adjOdds } from './lib/calib.mjs';
@@ -161,7 +161,10 @@ for (const r0 of races) {
   const mkt = CAL && odds.e3 ? marketOf(Object.fromEntries(Object.entries(odds.e3).filter(([, o]) => o > 0 && o < 9999))) : null;
   const pcOf = (() => {
     if (!mkt) return null;
-    const mix = mixProbs(C.e3.map(([, p]) => p), C.e3.map(([k]) => mkt[k] || 0), CAL);
+    /* mode:'tilt'（2026-11-09〜）：市場の3連単を、1着の選手の「市場の項を除いた強さ」で傾ける。pm に exp(r_1着) を渡すと mixProbs が同じ式になる（calib_keirin の注記） */
+    let pm = C.e3.map(([, p]) => p);
+    if (CAL.mode === 'tilt') { const rr = residualU(U, tau[0], f.rows, level === 'joint' ? betaJ[MKT] : 0), rNo = new Map(nos.map((n, i) => [String(n), rr[i]])); pm = C.e3.map(([k]) => Math.exp(rNo.get(k.split('-')[0]) || 0)); }
+    const mix = mixProbs(pm, C.e3.map(([k]) => mkt[k] || 0), CAL);
     return new Map(C.e3.map(([k], i) => [k, mix[i]]));
   })();
   /* 期待値＝合成確率 × 見込みの確定オッズ（calib.json の drift。締切8分前から確定までのオッズの動きを織り込む） */
@@ -174,7 +177,7 @@ for (const r0 of races) {
   const best = !odds.e3 ? null : pcOf && CAL?.drift
     ? bestComboCal(C.e3.map(([k]) => { const o = odds.e3[k], pc = pcOf.get(k); return { k, p: pc, o, oa: oaOf(k, o, pc) }; }), '3連単', CAL.topN || 10)
     : bestCombo(C.e3.slice(0, 80).map(([k, p]) => ({ k, p: pcOf ? pcOf.get(k) : p, o: odds.e3[k] })), '3連単');
-  if (best) best.cal = pcOf ? (CAL?.drift ? 2 : true) : false;
+  if (best) best.cal = pcOf ? (CAL?.mode === 'tilt' ? 3 : CAL?.drift ? 2 : true) : false;   // 3＝1着で傾ける形（2026-11-09〜）
   const grade = gradeOf(best?.ev ?? null, GRADE?.thresholds);
   const top = i => riders[order[i]];
   const nn = h => `${h.no} ${h.name}`;
