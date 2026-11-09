@@ -1,7 +1,7 @@
 {
  "track": "大井",
  "meta": {
-  "builtAt": "2026-11-09T12:21:17.995Z",
+  "builtAt": "2026-11-09T12:47:31.450Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -54,11 +54,11 @@
     },
     "ev_sanpuku": {
      "races": 108,
-     "cost": 39600,
+     "cost": 39500,
      "ret": 26600,
      "hits": 6,
-     "pts": 396,
-     "roi": 0.6717,
+     "pts": 395,
+     "roi": 0.6734,
      "hitRate": 0.0556,
      "avgPts": 3.7
     },
@@ -489,11 +489,11 @@
       },
       "ev_sanpuku": {
        "races": 12,
-       "cost": 4000,
+       "cost": 3900,
        "ret": 13060,
        "hits": 1,
-       "pts": 40,
-       "roi": 3.265,
+       "pts": 39,
+       "roi": 3.3487,
        "hitRate": 0.0833,
        "avgPts": 3.3
       },
@@ -12305,9 +12305,9 @@
     "grade": "A",
     "ev": {
      "umaren": 1.47,
-     "sanpuku": 1
+     "sanpuku": 0.99
     },
-    "conf": 0.182,
+    "conf": 0.183,
     "oddsSrc": "締切前(発走9分前)",
     "hit": {
      "win": false,
@@ -12325,13 +12325,11 @@
       ]
      },
      "sanpuku": {
-      "pts": 1,
-      "cost": 100,
+      "pts": 0,
+      "cost": 0,
       "ret": 0,
       "hit": false,
-      "buy": [
-       "1-2-9"
-      ]
+      "buy": []
      },
      "box3": {
       "umaren": {
@@ -12980,7 +12978,7 @@
      "umaren": 1.04,
      "sanpuku": 1.25
     },
-    "conf": 0.228,
+    "conf": 0.227,
     "oddsSrc": "締切前(発走9分前)",
     "hit": {
      "win": false,
@@ -21266,7 +21264,7 @@
     "jockey": "和田譲治",
     "trainer": "福永敏",
     "mark": "",
-    "win": 0.093,
+    "win": 0.092,
     "odds": null,
     "pop": null,
     "pos": null,
@@ -28184,7 +28182,7 @@
     "jockey": "藤本現暉",
     "trainer": "中道啓",
     "mark": "△",
-    "win": 0.112,
+    "win": 0.113,
     "odds": 8.1,
     "pop": 3,
     "pos": 1,
@@ -28296,7 +28294,7 @@
     "jockey": "中山遥人",
     "trainer": "佐宗応",
     "mark": "",
-    "win": 0.047,
+    "win": 0.046,
     "odds": 26.8,
     "pop": null,
     "pos": null,
@@ -31656,7 +31654,7 @@
     "jockey": "矢野貴之",
     "trainer": "橋本馬",
     "mark": "◎",
-    "win": 0.324,
+    "win": 0.325,
     "odds": 1.8,
     "pop": 1,
     "pos": null,
@@ -32536,7 +32534,7 @@
     "jockey": "中山遥人",
     "trainer": "佐宗応",
     "mark": "☆",
-    "win": 0.054,
+    "win": 0.053,
     "odds": 21.6,
     "pop": null,
     "pos": null,
