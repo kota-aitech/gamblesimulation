@@ -1,7 +1,7 @@
 {
  "track": "大井",
  "meta": {
-  "builtAt": "2026-11-09T10:52:09.909Z",
+  "builtAt": "2026-11-09T11:32:21.025Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -54,11 +54,11 @@
     },
     "ev_sanpuku": {
      "races": 108,
-     "cost": 39500,
+     "cost": 39600,
      "ret": 26600,
      "hits": 6,
-     "pts": 395,
-     "roi": 0.6734,
+     "pts": 396,
+     "roi": 0.6717,
      "hitRate": 0.0556,
      "avgPts": 3.7
     },
@@ -489,11 +489,11 @@
       },
       "ev_sanpuku": {
        "races": 12,
-       "cost": 3900,
+       "cost": 4000,
        "ret": 13060,
        "hits": 1,
-       "pts": 39,
-       "roi": 3.3487,
+       "pts": 40,
+       "roi": 3.265,
        "hitRate": 0.0833,
        "avgPts": 3.3
       },
@@ -12305,9 +12305,9 @@
     "grade": "A",
     "ev": {
      "umaren": 1.47,
-     "sanpuku": 0.99
+     "sanpuku": 1
     },
-    "conf": 0.183,
+    "conf": 0.182,
     "oddsSrc": "締切前(発走9分前)",
     "hit": {
      "win": false,
@@ -12325,11 +12325,13 @@
       ]
      },
      "sanpuku": {
-      "pts": 0,
-      "cost": 0,
+      "pts": 1,
+      "cost": 100,
       "ret": 0,
       "hit": false,
-      "buy": []
+      "buy": [
+       "1-2-9"
+      ]
      },
      "box3": {
       "umaren": {
@@ -12978,7 +12980,7 @@
      "umaren": 1.04,
      "sanpuku": 1.25
     },
-    "conf": 0.227,
+    "conf": 0.228,
     "oddsSrc": "締切前(発走9分前)",
     "hit": {
      "win": false,
@@ -22682,7 +22684,7 @@
     "jockey": "笹川翼",
     "trainer": "荒井朋",
     "mark": "◎",
-    "win": 0.332,
+    "win": 0.333,
     "odds": 2.1,
     "pop": 1,
     "pos": null,
@@ -31654,7 +31656,7 @@
     "jockey": "矢野貴之",
     "trainer": "橋本馬",
     "mark": "◎",
-    "win": 0.325,
+    "win": 0.324,
     "odds": 1.8,
     "pop": 1,
     "pos": null,
@@ -31796,7 +31798,7 @@
     "jockey": "江里口裕輝",
     "trainer": "高橋清",
     "mark": "",
-    "win": 0.062,
+    "win": 0.063,
     "odds": 34.4,
     "pop": null,
     "pos": null,
