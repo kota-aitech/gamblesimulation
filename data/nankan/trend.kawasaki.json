@@ -1,6 +1,6 @@
 {
  "track": "川崎",
- "builtAt": "2026-11-08T23:17:32.632Z",
+ "builtAt": "2026-11-09T14:00:31.292Z",
  "source": "nankankeiba.com 出馬表の前5走欄＋レース傾向",
  "trendRef": {
   "900": {
@@ -281,24 +281,17 @@
   }
  },
  "calib": {
-  "frontMid": 0.76,
-  "meetMid": 0.796,
-  "frontSd": 0.08,
+  "frontMid": 0.758,
+  "meetMid": 0.79,
+  "frontSd": 0.082,
   "gateMid": -0.159,
   "gateSd": 0.099
  },
  "meet": {
   "track": "川崎",
   "source": "nankankeiba.com レース傾向（3着内回数ベスト3枠 / 1〜3着馬の3角位置）",
-  "name": "8/18(火)〜10/16(金) の14日",
+  "name": "8/19(水)〜11/9(月) の14日",
   "days": [
-   {
-    "d": "8/18(火)",
-    "front": 29,
-    "back": 7,
-    "best": [],
-    "partial": "12レース終了時"
-   },
    {
     "d": "8/19(水)",
     "front": 26,
@@ -387,6 +380,13 @@
     "d": "10/16(金)",
     "front": 29,
     "back": 7,
+    "best": [],
+    "partial": "12レース終了時"
+   },
+   {
+    "d": "11/9(月)",
+    "front": 26,
+    "back": 10,
     "best": [],
     "partial": "12レース終了時"
    }
