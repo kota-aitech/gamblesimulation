@@ -1,7 +1,7 @@
 {
  "track": "川崎",
  "meta": {
-  "builtAt": "2026-11-09T08:20:41.223Z",
+  "builtAt": "2026-11-09T08:47:27.641Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -38,68 +38,68 @@
    ]
   ],
   "summary": {
-   "races": 112,
-   "winRate": 0.4196,
-   "winInTop3": 0.7232,
+   "races": 113,
+   "winRate": 0.4248,
+   "winInTop3": 0.7257,
    "tally": {
     "ev_umaren": {
-     "races": 107,
-     "cost": 22200,
+     "races": 108,
+     "cost": 22500,
      "ret": 22800,
      "hits": 4,
-     "pts": 222,
-     "roi": 1.027,
-     "hitRate": 0.0374,
+     "pts": 225,
+     "roi": 1.0133,
+     "hitRate": 0.037,
      "avgPts": 2.1
     },
     "ev_sanpuku": {
-     "races": 107,
-     "cost": 51600,
+     "races": 108,
+     "cost": 52400,
      "ret": 51930,
      "hits": 11,
-     "pts": 516,
-     "roi": 1.0064,
-     "hitRate": 0.1028,
-     "avgPts": 4.8
+     "pts": 524,
+     "roi": 0.991,
+     "hitRate": 0.1019,
+     "avgPts": 4.9
     },
     "box3_umaren": {
-     "races": 112,
-     "cost": 33600,
+     "races": 113,
+     "cost": 33900,
      "ret": 24640,
      "hits": 38,
-     "pts": 336,
-     "roi": 0.7333,
-     "hitRate": 0.3393,
+     "pts": 339,
+     "roi": 0.7268,
+     "hitRate": 0.3363,
      "avgPts": 3
     },
     "box3_sanpuku": {
-     "races": 112,
-     "cost": 11200,
+     "races": 113,
+     "cost": 11300,
      "ret": 5400,
      "hits": 8,
-     "pts": 112,
-     "roi": 0.4821,
-     "hitRate": 0.0714,
+     "pts": 113,
+     "roi": 0.4779,
+     "hitRate": 0.0708,
      "avgPts": 1
     },
     "box4_umaren": {
-     "races": 112,
-     "cost": 67200,
+     "races": 113,
+     "cost": 67800,
      "ret": 60110,
      "hits": 60,
-     "pts": 672,
-     "roi": 0.8945,
-     "hitRate": 0.5357,
+     "pts": 678,
+     "roi": 0.8866,
+     "hitRate": 0.531,
      "avgPts": 6
     },
     "box4_sanpuku": {
-     "races": 112,
-     "cost": 44800,
+     "races": 113,
+     "cost": 45200,
      "ret": 29430,
      "hits": 26,
-     "pts": 448,
-     "roi": 0.6569,
-     "hitRate": 0.2321,
+     "pts": 452,
+     "roi": 0.6511,
+     "hitRate": 0.2301,
      "avgPts": 4
     }
    },
@@ -567,13 +567,13 @@
       },
       "ev_sanpuku": {
        "races": 12,
-       "cost": 6600,
+       "cost": 6700,
        "ret": 4170,
        "hits": 1,
-       "pts": 66,
-       "roi": 0.6318,
+       "pts": 67,
+       "roi": 0.6224,
        "hitRate": 0.0833,
-       "avgPts": 5.5
+       "avgPts": 5.6
       },
       "box3_umaren": {
        "races": 12,
@@ -771,75 +771,75 @@
     },
     "11/9(月) 第1日": {
      "date": "2026-11-09",
-     "races": 4,
-     "win": 2,
-     "top3": 4,
+     "races": 5,
+     "win": 3,
+     "top3": 5,
      "tally": {
       "ev_umaren": {
-       "races": 4,
-       "cost": 1000,
+       "races": 5,
+       "cost": 1300,
        "ret": 0,
        "hits": 0,
-       "pts": 10,
+       "pts": 13,
        "roi": 0,
        "hitRate": 0,
-       "avgPts": 2.5
+       "avgPts": 2.6
       },
       "ev_sanpuku": {
-       "races": 4,
-       "cost": 3000,
+       "races": 5,
+       "cost": 3700,
        "ret": 0,
        "hits": 0,
-       "pts": 30,
+       "pts": 37,
        "roi": 0,
        "hitRate": 0,
-       "avgPts": 7.5
+       "avgPts": 7.4
       },
       "box3_umaren": {
-       "races": 4,
-       "cost": 1200,
+       "races": 5,
+       "cost": 1500,
        "ret": 860,
        "hits": 3,
-       "pts": 12,
-       "roi": 0.7167,
-       "hitRate": 0.75,
+       "pts": 15,
+       "roi": 0.5733,
+       "hitRate": 0.6,
        "avgPts": 3
       },
       "box3_sanpuku": {
-       "races": 4,
-       "cost": 400,
+       "races": 5,
+       "cost": 500,
        "ret": 220,
        "hits": 1,
-       "pts": 4,
-       "roi": 0.55,
-       "hitRate": 0.25,
+       "pts": 5,
+       "roi": 0.44,
+       "hitRate": 0.2,
        "avgPts": 1
       },
       "box4_umaren": {
-       "races": 4,
-       "cost": 2400,
+       "races": 5,
+       "cost": 3000,
        "ret": 1490,
        "hits": 4,
-       "pts": 24,
-       "roi": 0.6208,
-       "hitRate": 1,
+       "pts": 30,
+       "roi": 0.4967,
+       "hitRate": 0.8,
        "avgPts": 6
       },
       "box4_sanpuku": {
-       "races": 4,
-       "cost": 1600,
+       "races": 5,
+       "cost": 2000,
        "ret": 650,
        "hits": 2,
-       "pts": 16,
-       "roi": 0.4063,
-       "hitRate": 0.5,
+       "pts": 20,
+       "roi": 0.325,
+       "hitRate": 0.4,
        "avgPts": 4
       }
      },
      "oddsSrc": {
-      "締切前": 4
+      "締切前": 5
      },
-     "winRate": 0.5,
+     "winRate": 0.6,
      "top3Rate": 1
     }
    },
@@ -917,38 +917,38 @@
      }
     },
     "B": {
-     "races": 25,
-     "pre": 21,
+     "races": 26,
+     "pre": 22,
      "tally": {
       "box4_sanpuku": {
-       "races": 25,
-       "cost": 10000,
+       "races": 26,
+       "cost": 10400,
        "ret": 7560,
        "hits": 8,
-       "pts": 100,
-       "roi": 0.756,
-       "hitRate": 0.32,
+       "pts": 104,
+       "roi": 0.7269,
+       "hitRate": 0.3077,
        "avgPts": 4
       },
       "box3_sanpuku": {
-       "races": 25,
-       "cost": 2500,
+       "races": 26,
+       "cost": 2600,
        "ret": 2530,
        "hits": 4,
-       "pts": 25,
-       "roi": 1.012,
-       "hitRate": 0.16,
+       "pts": 26,
+       "roi": 0.9731,
+       "hitRate": 0.1538,
        "avgPts": 1
       },
       "ev_umaren": {
-       "races": 25,
-       "cost": 6600,
+       "races": 26,
+       "cost": 6900,
        "ret": 0,
        "hits": 0,
-       "pts": 66,
+       "pts": 69,
        "roi": 0,
        "hitRate": 0,
-       "avgPts": 2.6
+       "avgPts": 2.7
       }
      }
     },
@@ -14243,9 +14243,9 @@
     "grade": "C",
     "ev": {
      "umaren": 1.02,
-     "sanpuku": 1.46
+     "sanpuku": 1.45
     },
-    "conf": 0.18,
+    "conf": 0.181,
     "oddsSrc": "締切前(発走8分前)",
     "hit": {
      "win": false,
@@ -14264,12 +14264,13 @@
       ]
      },
      "sanpuku": {
-      "pts": 10,
-      "cost": 1000,
+      "pts": 11,
+      "cost": 1100,
       "ret": 0,
       "hit": false,
       "buy": [
        "1-3-6",
+       "1-2-5",
        "2-3-5",
        "1-6-9",
        "3-6-9",
@@ -20264,6 +20265,184 @@
        "c": "2-5-3",
        "yen": 1820,
        "pop": 1
+      }
+     ]
+    }
+   },
+   {
+    "r": 5,
+    "time": "17:00",
+    "dist": 1400,
+    "n": 12,
+    "cls": "Ｃ２(一)(二)",
+    "date": "2026-11-09",
+    "baba": "重",
+    "weather": "雨",
+    "grade": "B",
+    "ev": {
+     "umaren": 1.2,
+     "sanpuku": 1.6
+    },
+    "conf": 0.191,
+    "oddsSrc": "締切前(発走8分前)",
+    "hit": {
+     "win": true,
+     "winInTop3": true,
+     "exact3": false
+    },
+    "betResult": {
+     "umaren": {
+      "pts": 3,
+      "cost": 300,
+      "ret": 0,
+      "hit": false,
+      "buy": [
+       "7-10",
+       "1-2",
+       "10-11"
+      ]
+     },
+     "sanpuku": {
+      "pts": 7,
+      "cost": 700,
+      "ret": 0,
+      "hit": false,
+      "buy": [
+       "2-7-10",
+       "2-10-11",
+       "1-7-10",
+       "2-7-12",
+       "1-10-11",
+       "2-11-12",
+       "2-3-10"
+      ]
+     },
+     "box3": {
+      "umaren": {
+       "pts": 3,
+       "cost": 300,
+       "ret": 0,
+       "hit": false,
+       "buy": [
+        "10-12",
+        "10-1",
+        "12-1"
+       ]
+      },
+      "sanpuku": {
+       "pts": 1,
+       "cost": 100,
+       "ret": 0,
+       "hit": false,
+       "buy": [
+        "10-12-1"
+       ]
+      }
+     },
+     "box4": {
+      "umaren": {
+       "pts": 6,
+       "cost": 600,
+       "ret": 0,
+       "hit": false,
+       "buy": [
+        "10-12",
+        "10-1",
+        "10-2",
+        "12-1",
+        "12-2",
+        "1-2"
+       ]
+      },
+      "sanpuku": {
+       "pts": 4,
+       "cost": 400,
+       "ret": 0,
+       "hit": false,
+       "buy": [
+        "10-12-1",
+        "10-12-2",
+        "10-1-2",
+        "12-1-2"
+       ]
+      }
+     }
+    },
+    "pay": {
+     "tan": [
+      {
+       "c": "10",
+       "yen": 200,
+       "pop": 1
+      }
+     ],
+     "fuku": [
+      {
+       "c": "10",
+       "yen": 130,
+       "pop": 1
+      },
+      {
+       "c": "6",
+       "yen": 1790,
+       "pop": 11
+      },
+      {
+       "c": "11",
+       "yen": 680,
+       "pop": 9
+      }
+     ],
+     "umaren": [
+      {
+       "c": "6-10",
+       "yen": 19420,
+       "pop": 35
+      }
+     ],
+     "wakutan": [
+      {
+       "c": "7-5",
+       "yen": 3120,
+       "pop": 16
+      }
+     ],
+     "umatan": [
+      {
+       "c": "10-6",
+       "yen": 15300,
+       "pop": 40
+      }
+     ],
+     "wide": [
+      {
+       "c": "6-10",
+       "yen": 3970,
+       "pop": 34
+      },
+      {
+       "c": "10-11",
+       "yen": 1490,
+       "pop": 16
+      },
+      {
+       "c": "6-11",
+       "yen": 33950,
+       "pop": 64
+      }
+     ],
+     "sanpuku": [
+      {
+       "c": "6-10-11",
+       "yen": 118060,
+       "pop": 135
+      }
+     ],
+     "santan": [
+      {
+       "c": "10-6-11",
+       "yen": 279820,
+       "pop": 470
       }
      ]
     }
@@ -29750,7 +29929,7 @@
     "jockey": "野畑凌",
     "trainer": "内田勝",
     "mark": "▲",
-    "win": 0.177,
+    "win": 0.176,
     "odds": 3.6,
     "pop": null,
     "pos": null,
@@ -31056,7 +31235,7 @@
     "jockey": "矢野貴之",
     "trainer": "高月賢",
     "mark": "○",
-    "win": 0.254,
+    "win": 0.255,
     "odds": 2.8,
     "pop": 2,
     "pos": 3,
@@ -31126,7 +31305,7 @@
     "jockey": "伊藤裕人",
     "trainer": "平田正",
     "mark": "",
-    "win": 0.035,
+    "win": 0.034,
     "odds": 27,
     "pop": null,
     "pos": null,
@@ -32544,7 +32723,7 @@
     "jockey": "伊藤裕人",
     "trainer": "今野忠",
     "mark": "△",
-    "win": 0.09,
+    "win": 0.088,
     "odds": 11,
     "pop": null,
     "pos": null,
@@ -36784,7 +36963,7 @@
     "jockey": "笹川翼",
     "trainer": "秋山直",
     "mark": "○",
-    "win": 0.122,
+    "win": 0.123,
     "odds": 6.4,
     "pop": 3,
     "pos": 3,
@@ -37880,6 +38059,176 @@
     "odds": 132.1,
     "pop": null,
     "pos": null,
+    "last3f": null
+   }
+  ],
+  "11/9(月) 第1日|5": [
+   {
+    "no": 10,
+    "gate": 7,
+    "name": "リコータロス",
+    "style": "先行",
+    "jockey": "藤本現暉",
+    "trainer": "今野忠",
+    "mark": "◎",
+    "win": 0.262,
+    "odds": 2.7,
+    "pop": 1,
+    "pos": 1,
+    "last3f": null
+   },
+   {
+    "no": 6,
+    "gate": 5,
+    "name": "インフェルレーヴ",
+    "style": "差し",
+    "jockey": "池谷匠翔",
+    "trainer": "田島寿",
+    "mark": "",
+    "win": 0.012,
+    "odds": 120.5,
+    "pop": 11,
+    "pos": 2,
+    "last3f": null
+   },
+   {
+    "no": 11,
+    "gate": 8,
+    "name": "スウィートドリーム",
+    "style": "追込",
+    "jockey": "矢野貴之",
+    "trainer": "高月賢",
+    "mark": "",
+    "win": 0.033,
+    "odds": 32.2,
+    "pop": 7,
+    "pos": 3,
+    "last3f": null
+   },
+   {
+    "no": 7,
+    "gate": 6,
+    "name": "エドノジェット",
+    "style": "差し",
+    "jockey": "和田譲治",
+    "trainer": "宇野博",
+    "mark": "☆",
+    "win": 0.039,
+    "odds": 37.8,
+    "pop": 9,
+    "pos": 4,
+    "last3f": null
+   },
+   {
+    "no": 1,
+    "gate": 1,
+    "name": "アルバレジェンダ",
+    "style": "逃げ",
+    "jockey": "佐野遥久",
+    "trainer": "高月賢",
+    "mark": "▲",
+    "win": 0.147,
+    "odds": 7.2,
+    "pop": 5,
+    "pos": 5,
+    "last3f": null
+   },
+   {
+    "no": 5,
+    "gate": 5,
+    "name": "ベルレオーネ",
+    "style": "先行",
+    "jockey": "西啓太",
+    "trainer": "鈴木義",
+    "mark": "",
+    "win": 0.031,
+    "odds": 48.2,
+    "pop": 6,
+    "pos": 6,
+    "last3f": null
+   },
+   {
+    "no": 9,
+    "gate": 7,
+    "name": "ストロンゲスト",
+    "style": "差し",
+    "jockey": "町田直希",
+    "trainer": "古澤悟",
+    "mark": "",
+    "win": 0.023,
+    "odds": 45.8,
+    "pop": 8,
+    "pos": 7,
+    "last3f": null
+   },
+   {
+    "no": 3,
+    "gate": 3,
+    "name": "シンエンコゲツ",
+    "style": "先行",
+    "jockey": "木間塚龍馬",
+    "trainer": "小久智",
+    "mark": "△",
+    "win": 0.05,
+    "odds": 16.9,
+    "pop": 4,
+    "pos": 8,
+    "last3f": null
+   },
+   {
+    "no": 12,
+    "gate": 8,
+    "name": "シエルライズ",
+    "style": "先行",
+    "jockey": "笹川翼",
+    "trainer": "佐々仁",
+    "mark": "○",
+    "win": 0.247,
+    "odds": 2.1,
+    "pop": 2,
+    "pos": 9,
+    "last3f": null
+   },
+   {
+    "no": 2,
+    "gate": 2,
+    "name": "ソルトアイリス",
+    "style": "差し",
+    "jockey": "野畑凌",
+    "trainer": "甲田悟",
+    "mark": "△",
+    "win": 0.122,
+    "odds": 9.2,
+    "pop": 3,
+    "pos": 10,
+    "last3f": null
+   },
+   {
+    "no": 4,
+    "gate": 4,
+    "name": "シンキングレーヴ",
+    "style": "差し",
+    "jockey": "室陽一朗",
+    "trainer": "宇野博",
+    "mark": "",
+    "win": 0.02,
+    "odds": 101.7,
+    "pop": 12,
+    "pos": 11,
+    "last3f": null
+   },
+   {
+    "no": 8,
+    "gate": 6,
+    "name": "ドンクベットコール",
+    "style": "差し",
+    "jockey": "古岡勇樹",
+    "trainer": "山崎裕",
+    "mark": "",
+    "win": 0.014,
+    "odds": 120.5,
+    "pop": 10,
+    "pos": 12,
     "last3f": null
    }
   ]
