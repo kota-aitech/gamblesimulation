@@ -42,6 +42,9 @@
 - 配信は **GitHub Pages**（main ブランチ直下、`.nojekyll` あり）。リポジトリは 2026-09-18 に `gamblesimulation` に改名。**公開 URL: https://kota-aitech.github.io/gamblesimulation/**（旧 `…/oi-keiba-3d-demo/` は 404。GitHub の転送は git/Web の URL だけで Pages には効かない）。Render は 9/16 に「パイプライン分数の上限」でデプロイが止まったため移行。
   Pages はビルド分数の制限が無い（1時間10ビルドまで）。push は `tools/publish.mjs` が15分おきにまとめる（1日最大96回）。
   Render のサービスは 9/18 に削除済み（`render.yaml` も削除）。
+- **2026-11-11 から Pages の公開は `.github/workflows/pages.yml`**（設定の Source＝GitHub Actions）。以前の自動の pages-build-deployment は
+  デプロイ待ち10分で「Timeout reached」になり、200回中26回が失敗メールになっていた。いまは追記型の `*.jsonl`（どのページも実行時に読まない）を
+  公開物から外し（168MB → 87MB）、待ちを30分にしている。**ページが実行時に `.jsonl` を読むようにするなら、この除外を外すこと**
 
 ## 自動実行と電源（**取得が止まる原因のほぼ全部がこれ**）
 取得・反映・公開はすべて macOS の launchd（`sh tools/launchd/install.sh` で登録、`StartInterval` 60〜1200秒）。
