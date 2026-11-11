@@ -1,7 +1,7 @@
 {
  "track": "船橋",
  "meta": {
-  "builtAt": "2026-11-11T14:00:16.067Z",
+  "builtAt": "2026-11-11T21:31:21.139Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -44,11 +44,11 @@
    "tally": {
     "ev_umaren": {
      "races": 114,
-     "cost": 19000,
+     "cost": 19100,
      "ret": 15070,
      "hits": 8,
-     "pts": 190,
-     "roi": 0.7932,
+     "pts": 191,
+     "roi": 0.789,
      "hitRate": 0.0702,
      "avgPts": 1.7
     },
@@ -480,13 +480,13 @@
      "tally": {
       "ev_umaren": {
        "races": 12,
-       "cost": 2400,
+       "cost": 2500,
        "ret": 2240,
        "hits": 1,
-       "pts": 24,
-       "roi": 0.9333,
+       "pts": 25,
+       "roi": 0.896,
        "hitRate": 0.0833,
-       "avgPts": 2
+       "avgPts": 2.1
       },
       "ev_sanpuku": {
        "races": 12,
@@ -977,13 +977,13 @@
       },
       "ev_umaren": {
        "races": 12,
-       "cost": 3500,
+       "cost": 3600,
        "ret": 0,
        "hits": 0,
-       "pts": 35,
+       "pts": 36,
        "roi": 0,
        "hitRate": 0,
-       "avgPts": 2.9
+       "avgPts": 3
       }
      }
     }
@@ -10944,7 +10944,7 @@
     "grade": "C",
     "ev": {
      "umaren": 1.07,
-     "sanpuku": 1.12
+     "sanpuku": 1.11
     },
     "conf": 0.189,
     "oddsSrc": "締切前(発走8分前)",
@@ -11978,13 +11978,14 @@
     },
     "betResult": {
      "umaren": {
-      "pts": 2,
-      "cost": 200,
+      "pts": 3,
+      "cost": 300,
       "ret": 0,
       "hit": false,
       "buy": [
        "3-6",
-       "1-3"
+       "1-3",
+       "3-4"
       ]
      },
      "sanpuku": {
@@ -15809,8 +15810,8 @@
       "buy": [
        "4-5",
        "5-7",
-       "5-11",
-       "1-5"
+       "1-5",
+       "5-11"
       ]
      },
      "sanpuku": {
@@ -18010,7 +18011,7 @@
     "grade": "B",
     "ev": {
      "umaren": 1.21,
-     "sanpuku": 1.32
+     "sanpuku": 1.31
     },
     "conf": 0.303,
     "oddsSrc": "締切前(発走8分前)",
@@ -24078,7 +24079,7 @@
     "style": "差し",
     "jockey": "山口達弥",
     "trainer": "米谷康",
-    "mark": "☆",
+    "mark": "",
     "win": 0.073,
     "odds": 9.9,
     "pop": 6,
@@ -24092,7 +24093,7 @@
     "style": "追込",
     "jockey": "張田昂",
     "trainer": "林隆之",
-    "mark": "",
+    "mark": "☆",
     "win": 0.073,
     "odds": 16.9,
     "pop": 8,
@@ -31639,7 +31640,7 @@
     "jockey": "本田正重",
     "trainer": "新井清",
     "mark": "○",
-    "win": 0.246,
+    "win": 0.245,
     "odds": 3.4,
     "pop": 2,
     "pos": 2,
@@ -33013,7 +33014,7 @@
     "jockey": "笠野雄大",
     "trainer": "岩崎真",
     "mark": "",
-    "win": 0.022,
+    "win": 0.023,
     "odds": 30.3,
     "pop": null,
     "pos": null,
@@ -35379,7 +35380,7 @@
     "jockey": "藤本現暉",
     "trainer": "佐々功",
     "mark": "▲",
-    "win": 0.125,
+    "win": 0.126,
     "odds": 8.6,
     "pop": null,
     "pos": null,
@@ -35973,7 +35974,7 @@
     "jockey": "Ｆ．ゴンサルベス",
     "trainer": "玉井昇",
     "mark": "△",
-    "win": 0.06,
+    "win": 0.061,
     "odds": 10.4,
     "pop": null,
     "pos": null,
@@ -36215,7 +36216,7 @@
     "jockey": "篠谷葵",
     "trainer": "矢内博",
     "mark": "△",
-    "win": 0.075,
+    "win": 0.074,
     "odds": 12.7,
     "pop": 5,
     "pos": 2,
@@ -37065,7 +37066,7 @@
     "jockey": "野畑凌",
     "trainer": "小久智",
     "mark": "◎",
-    "win": 0.264,
+    "win": 0.263,
     "odds": 4,
     "pop": 2,
     "pos": 2,
@@ -37121,7 +37122,7 @@
     "jockey": "本橋孝太",
     "trainer": "石井勝",
     "mark": "☆",
-    "win": 0.046,
+    "win": 0.045,
     "odds": 14.8,
     "pop": null,
     "pos": null,
@@ -37347,7 +37348,7 @@
     "jockey": "室陽一朗",
     "trainer": "宇野博",
     "mark": "☆",
-    "win": 0.114,
+    "win": 0.113,
     "odds": 8,
     "pop": null,
     "pos": null,
@@ -38667,7 +38668,7 @@
     "jockey": "本田正重",
     "trainer": "川島一",
     "mark": "○",
-    "win": 0.126,
+    "win": 0.127,
     "odds": 5.3,
     "pop": null,
     "pos": null,
@@ -40481,7 +40482,7 @@
     "jockey": "中山遥人",
     "trainer": "伊藤滋",
     "mark": "",
-    "win": 0.018,
+    "win": 0.017,
     "odds": 103.6,
     "pop": null,
     "pos": null,
