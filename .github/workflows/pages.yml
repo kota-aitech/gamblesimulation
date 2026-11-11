@@ -1,0 +1,39 @@
+# GitHub Pages の公開（2026-11-11 に「ブランチから自動」から切り替え）。
+# 以前の自動の公開（pages-build-deployment）は、デプロイの待ちが10分（deploy-pages の既定）を超えると
+# 「Timeout reached, aborting!」で失敗し、200回中26回が失敗メールになっていた。公開物が約168MB と大きいため。
+#  - どのページも実行時に読まない追記型の *.jsonl（約65MB）は公開物から外す（.json は直接ダウンロード用に残す）
+#  - デプロイの待ちを30分に延ばす
+#  - 同時に1本だけ。新しい push が来たら待っている古い回は捨てる（進行中のデプロイは止めない）
+name: pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: 公開物を組む（.jsonl と .git/.github を除く）
+        run: |
+          mkdir -p ../_site
+          rsync -a --exclude '.git' --exclude '.github' --exclude '*.jsonl' ./ ../_site/
+          mv ../_site ./_site
+          du -sh _site
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: _site }
+      - id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          timeout: 1800000
