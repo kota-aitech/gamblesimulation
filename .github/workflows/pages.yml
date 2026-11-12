@@ -19,10 +19,10 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 100
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deploy1.outputs.page_url || steps.deploy2.outputs.page_url || steps.deploy3.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - name: 公開物を組む（.jsonl と .git/.github を除く）
@@ -33,7 +33,27 @@ jobs:
           du -sh _site
       - uses: actions/upload-pages-artifact@v3
         with: { path: _site }
-      - id: deployment
+      # デプロイは GitHub 側の一時的な不調で落ちることがある（2026-11-12 に2回：
+      # 「No artifacts named "github-pages" were found」＝上げた直後の artifact がまだ見えない／
+      # 「Deployment failed, try again later」）。どちらも押し直せば通るので、間をあけて3回まで試す。
+      # 3回とも落ちたときだけ失敗にする（＝メールが来たら本当に壊れている）
+      - id: deploy1
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+        with:
+          timeout: 1800000
+      - if: steps.deploy1.outcome == 'failure'
+        run: sleep 60
+      - id: deploy2
+        if: steps.deploy1.outcome == 'failure'
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+        with:
+          timeout: 1800000
+      - if: steps.deploy2.outcome == 'failure'
+        run: sleep 180
+      - id: deploy3
+        if: steps.deploy2.outcome == 'failure'
         uses: actions/deploy-pages@v4
         with:
           timeout: 1800000
