@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-11-12T03:24:07.076Z",
+ "builtAt": "2026-11-12T05:08:50.490Z",
  "today": "2026-11-12",
  "model": {
   "built": "2026-11-09",
@@ -723,5 +723,58 @@
   "to": "9999-12-31",
   "kind": "単勝"
  },
- "days": []
+ "days": [
+  {
+   "date": "2026-11-15",
+   "venues": [
+    {
+     "venue": "京都",
+     "races": [
+      {
+       "r": 11,
+       "name": "エリザベス女王杯",
+       "grade": "GI",
+       "start": "15:40",
+       "surface": "芝",
+       "dist": 2200,
+       "n": 18,
+       "cls": 8,
+       "level": "base",
+       "conf": 0.068,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ジョスラン",
+         "p": 0.133,
+         "odds": null,
+         "jockey": "松山弘平"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "アクアヴァーナル",
+         "p": 0.102,
+         "odds": null,
+         "jockey": "松山弘平"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ヴーレヴー",
+         "p": 0.097,
+         "odds": null,
+         "jockey": "松山弘平"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      }
+     ]
+    }
+   ]
+  }
+ ]
 }
