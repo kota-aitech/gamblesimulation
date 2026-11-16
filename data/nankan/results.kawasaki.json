@@ -1,7 +1,7 @@
 {
  "track": "川崎",
  "meta": {
-  "builtAt": "2026-11-16T07:50:20.517Z",
+  "builtAt": "2026-11-16T08:26:11.989Z",
   "model": "data/nankan/model.live.json",
   "payLabels": [
    [
@@ -54,11 +54,11 @@
     },
     "ev_sanpuku": {
      "races": 110,
-     "cost": 52700,
+     "cost": 52600,
      "ret": 34360,
      "hits": 10,
-     "pts": 527,
-     "roi": 0.652,
+     "pts": 526,
+     "roi": 0.6532,
      "hitRate": 0.0909,
      "avgPts": 4.8
     },
@@ -122,13 +122,13 @@
       },
       "ev_sanpuku": {
        "races": 12,
-       "cost": 7800,
+       "cost": 7700,
        "ret": 0,
        "hits": 0,
-       "pts": 78,
+       "pts": 77,
        "roi": 0,
        "hitRate": 0,
-       "avgPts": 6.5
+       "avgPts": 6.4
       },
       "box3_umaren": {
        "races": 12,
@@ -2960,13 +2960,12 @@
       "buy": []
      },
      "sanpuku": {
-      "pts": 2,
-      "cost": 200,
+      "pts": 1,
+      "cost": 100,
       "ret": 0,
       "hit": false,
       "buy": [
-       "7-9-12",
-       "6-7-11"
+       "7-9-12"
       ]
      },
      "box3": {
@@ -20695,7 +20694,7 @@
     "weather": "晴",
     "grade": "B",
     "ev": {
-     "umaren": 1.2,
+     "umaren": 1.21,
      "sanpuku": 1.1
     },
     "conf": 0.095,
@@ -29704,7 +29703,7 @@
     "jockey": "池谷匠翔",
     "trainer": "内田勝",
     "mark": "○",
-    "win": 0.204,
+    "win": 0.205,
     "odds": 5.4,
     "pop": null,
     "pos": null,
@@ -34966,7 +34965,7 @@
     "jockey": "町田直希",
     "trainer": "山崎尋",
     "mark": "○",
-    "win": 0.267,
+    "win": 0.268,
     "odds": 3.3,
     "pop": 2,
     "pos": 1,
@@ -38466,7 +38465,7 @@
     "jockey": "藤江渉",
     "trainer": "山田質",
     "mark": "",
-    "win": 0.053,
+    "win": 0.054,
     "odds": 31.4,
     "pop": 11,
     "pos": 2,
@@ -39602,7 +39601,7 @@
     "jockey": "野畑凌",
     "trainer": "高月賢",
     "mark": "◎",
-    "win": 0.212,
+    "win": 0.213,
     "odds": 4,
     "pop": 2,
     "pos": 1,
@@ -39644,7 +39643,7 @@
     "jockey": "笹川翼",
     "trainer": "佐藤博",
     "mark": "▲",
-    "win": 0.119,
+    "win": 0.118,
     "odds": 9.6,
     "pop": null,
     "pos": null,
