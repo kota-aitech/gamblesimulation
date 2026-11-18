@@ -7,17 +7,24 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { watchdog } from './lib/watchdog.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const LOCK = path.join(ROOT, 'data', '.publish.lock');
 const stamp = () => new Date().toLocaleString('ja-JP', { hour12: false }).replace(/\//g, '-');
-const git = (args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+/* 必ず時間で打ち切る。2026-11-14 19:45 に git push が通信の途中で固まり、4日と2時間居座った
+   （launchd は前の実行が残っている間は次を起こさないので、その間 2,088 コミットが公開されなかった）。
+   通信が1分止まったら git 自身に諦めさせ（lowSpeed）、それでも残れば SIGKILL、最後は見張りが自分ごと落とす */
+watchdog(14);
+const NET = ['-c', 'http.lowSpeedLimit=1000', '-c', 'http.lowSpeedTime=60'];
+const git = (args) => execFileSync('git', [...NET, ...args], { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
+  timeout: (args[0] === 'push' ? 8 : 3) * 60000, killSignal: 'SIGKILL' }).trim();
 const sleep = ms => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
 /* 一時的な失敗は待って押し直す。
      index.lock … 反映ジョブの commit と重なったとき
      名前解決・接続の失敗 … **スリープから起きた直後は Wi-Fi がまだ上がっていない**（実際に 9/18 19:21 の push が
        「Could not resolve host」で落ちた）。ここで諦めると次の周回（15分後）まで公開が遅れる */
-const TRANSIENT = /index\.lock|Another git process|Could not resolve host|Could not resolve proxy|Connection (refused|reset|timed out)|Operation timed out|unable to access|Failed to connect|Recv failure|SSL_ERROR|The requested URL returned error: 5/i;
+const TRANSIENT = /index\.lock|Another git process|Could not resolve host|Could not resolve proxy|Connection (refused|reset|timed out)|Operation timed out|Operation too slow|ETIMEDOUT|unable to access|Failed to connect|Recv failure|SSL_ERROR|The requested URL returned error: 5/i;
 const gitRetry = (args, n = 5) => {
   for (let i = 0; ; i++) {
     try { return git(args); }
@@ -31,7 +38,7 @@ try {
   if (git(['rev-parse', '--abbrev-ref', 'HEAD']) !== 'main') { process.exit(0); }
   /* クラウド（GitHub Actions）が odds-cloud ブランチに貯めた締切前オッズを取り込む。
      Mac が寝ていた時間帯のオッズはここから入る。失敗しても公開は続ける */
-  try { execFileSync(process.execPath, [path.join(ROOT, 'tools', 'merge_cloud_odds.mjs')], { cwd: ROOT, stdio: ['ignore', 'inherit', 'inherit'] }); }
+  try { execFileSync(process.execPath, [path.join(ROOT, 'tools', 'merge_cloud_odds.mjs')], { cwd: ROOT, stdio: ['ignore', 'inherit', 'inherit'], timeout: 4 * 60000, killSignal: 'SIGKILL' }); }
   catch (e) { console.error(`${stamp()} クラウドのオッズ取り込みに失敗（公開は続ける）`); }
   const ahead = Number(git(['rev-list', '--count', 'origin/main..main']) || 0);
   if (!ahead) process.exit(0);                       // 出すものがない（静かに終わる）
