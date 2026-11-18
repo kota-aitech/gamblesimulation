@@ -98,6 +98,10 @@ install.sh で入れるのは LaunchAgent で、**ログインしている間し
 （`launchctl print` は `state = running`・`last exit code = 0` と出るので、ログだけ見ても気づけない）。
 - 子プロセス … `execFileSync` に `timeout`（`NK_STEP_TIMEOUT` 分）と `killSignal:'SIGKILL'`。既定は反映20分・夜の取り込み45分
 - 自分自身 … 全体が `NK_JOB_TIMEOUT` 分を超えたら `process.exit(0)`（反映25〜30分、`nightly_results` は200分）
+- **公開係（publish.mjs）にも同じ打ち切りが要る（2026-11-18）。** 11/14 19:45 に `git push` が通信の途中で固まり、**4日と2時間居座って公開が止まった**
+  （反映係は commit を続けていたので 2,088 コミットが手元に溜まっただけで、データは欠けていない）。publish だけ時間の打ち切りが入っていなかった。
+  いまは git に `http.lowSpeedLimit/Time`（1分通信が止まれば諦める）、push 8分・その他3分で SIGKILL、全体は `watchdog(14)`。
+  **「公開が古い」ときは `git status -sb` の ahead と、`ps` で publish.mjs／git push の経過時間を見る**
 - 詰まりを見つけるには `ps -ax -o pid,etime,command | grep tools/` で**経過時間**を見る。
   `node tools/health.mjs` のログ時刻だけでは「静かな日」と区別できない
 
