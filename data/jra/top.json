@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-11-19T06:18:42.136Z",
+ "builtAt": "2026-11-19T07:05:08.916Z",
  "today": "2026-11-19",
  "model": {
   "built": "2026-11-16",
@@ -725,11 +725,1879 @@
  },
  "days": [
   {
-   "date": "2026-11-22",
+   "date": "2026-11-21",
    "venues": [
+    {
+     "venue": "福島",
+     "races": [
+      {
+       "r": 1,
+       "name": "サラ系2歳未勝利",
+       "grade": null,
+       "start": "9:45",
+       "surface": "ダ",
+       "dist": 1700,
+       "n": 15,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.261,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ネージュドレーヴ",
+         "p": 0.423,
+         "odds": null,
+         "jockey": "河原田菜々"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "フィールザウィル",
+         "p": 0.116,
+         "odds": null,
+         "jockey": "河原田菜々"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "セイウンラミエル",
+         "p": 0.081,
+         "odds": null,
+         "jockey": "河原田菜々"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 2,
+       "name": "サラ系3歳上500万円以下",
+       "grade": null,
+       "start": "10:15",
+       "surface": "ダ",
+       "dist": 1150,
+       "n": 16,
+       "cls": 2,
+       "level": "base",
+       "conf": 0.138,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "コウソクルリアン",
+         "p": 0.192,
+         "odds": null,
+         "jockey": "小林美駒"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ワイドデコラシオン",
+         "p": 0.181,
+         "odds": null,
+         "jockey": "小林美駒"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ロンバスブレス",
+         "p": 0.107,
+         "odds": null,
+         "jockey": "小林美駒"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 3,
+       "name": "サラ系2歳未勝利",
+       "grade": null,
+       "start": "10:45",
+       "surface": "ダ",
+       "dist": 1700,
+       "n": 15,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.349,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ランフェザー",
+         "p": 0.447,
+         "odds": null,
+         "jockey": "丹内祐次"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "エコロガルディア",
+         "p": 0.17,
+         "odds": null,
+         "jockey": "丹内祐次"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "テンソンコウリン",
+         "p": 0.104,
+         "odds": null,
+         "jockey": "丹内祐次"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 6,
+       "name": "サラ系3歳上500万円以下",
+       "grade": null,
+       "start": "12:40",
+       "surface": "ダ",
+       "dist": 1700,
+       "n": 15,
+       "cls": 2,
+       "level": "base",
+       "conf": 0.064,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "レッドフロイデ",
+         "p": 0.165,
+         "odds": null,
+         "jockey": "丹内祐次"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ポンピエ",
+         "p": 0.101,
+         "odds": null,
+         "jockey": "丹内祐次"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "リュウカルネ",
+         "p": 0.099,
+         "odds": null,
+         "jockey": "丹内祐次"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 7,
+       "name": "サラ系2歳未勝利",
+       "grade": null,
+       "start": "13:10",
+       "surface": "芝",
+       "dist": 1800,
+       "n": 16,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.127,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "コスモバルムンク",
+         "p": 0.151,
+         "odds": null,
+         "jockey": "T.マーカンド"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ジャストゴーイング",
+         "p": 0.151,
+         "odds": null,
+         "jockey": "T.マーカンド"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "スターマイン",
+         "p": 0.146,
+         "odds": null,
+         "jockey": "T.マーカンド"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 8,
+       "name": "サラ系3歳上500万円以下",
+       "grade": null,
+       "start": "13:40",
+       "surface": "芝",
+       "dist": 2000,
+       "n": 16,
+       "cls": 2,
+       "level": "base",
+       "conf": 0.115,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ピカキウイ",
+         "p": 0.273,
+         "odds": null,
+         "jockey": "丹内祐次"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "フレキシブル",
+         "p": 0.118,
+         "odds": null,
+         "jockey": "丹内祐次"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ワダツミ",
+         "p": 0.106,
+         "odds": null,
+         "jockey": "丹内祐次"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 9,
+       "name": "高湯温泉特別",
+       "grade": null,
+       "start": "14:10",
+       "surface": "芝",
+       "dist": 1800,
+       "n": 16,
+       "cls": 2,
+       "level": "base",
+       "conf": 0.213,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "バンオンタイム",
+         "p": 0.269,
+         "odds": null,
+         "jockey": "丹内祐次"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ディバインウインド",
+         "p": 0.232,
+         "odds": null,
+         "jockey": "丹内祐次"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ホールドザデイ",
+         "p": 0.127,
+         "odds": null,
+         "jockey": "丹内祐次"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 10,
+       "name": "福島放送賞",
+       "grade": null,
+       "start": "14:45",
+       "surface": "ダ",
+       "dist": 1150,
+       "n": 16,
+       "cls": 3,
+       "level": "base",
+       "conf": 0.209,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ソニックブレイカー",
+         "p": 0.276,
+         "odds": null,
+         "jockey": "丹内祐次"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ゼファーテソーロ",
+         "p": 0.186,
+         "odds": null,
+         "jockey": "丹内祐次"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "モズオウンゴール",
+         "p": 0.139,
+         "odds": null,
+         "jockey": "丹内祐次"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 11,
+       "name": "福島記念",
+       "grade": "GIII",
+       "start": "15:20",
+       "surface": "芝",
+       "dist": 2000,
+       "n": 16,
+       "cls": 6,
+       "level": "base",
+       "conf": 0.186,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "マリアイリダータ",
+         "p": 0.289,
+         "odds": null,
+         "jockey": "大野拓弥"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "フォルテアンジェロ",
+         "p": 0.131,
+         "odds": null,
+         "jockey": "大野拓弥"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "カラマティアノス",
+         "p": 0.13,
+         "odds": null,
+         "jockey": "大野拓弥"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 12,
+       "name": "サラ系3歳上500万円以下",
+       "grade": null,
+       "start": "15:55",
+       "surface": "芝",
+       "dist": 1200,
+       "n": 16,
+       "cls": 2,
+       "level": "base",
+       "conf": 0.122,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "グロリアスマーチ",
+         "p": 0.155,
+         "odds": null,
+         "jockey": "河原田菜々"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ステキサプライズ",
+         "p": 0.155,
+         "odds": null,
+         "jockey": "河原田菜々"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ニルマーネル",
+         "p": 0.136,
+         "odds": null,
+         "jockey": "河原田菜々"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      }
+     ]
+    },
     {
      "venue": "京都",
      "races": [
+      {
+       "r": 1,
+       "name": "サラ系2歳未勝利",
+       "grade": null,
+       "start": "10:00",
+       "surface": "ダ",
+       "dist": 1400,
+       "n": 15,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.152,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ラッキーハナコ",
+         "p": 0.252,
+         "odds": null,
+         "jockey": "岩田康誠"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ドミナント",
+         "p": 0.164,
+         "odds": null,
+         "jockey": "岩田康誠"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "スターリーデー",
+         "p": 0.129,
+         "odds": null,
+         "jockey": "岩田康誠"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 2,
+       "name": "サラ系2歳未勝利",
+       "grade": null,
+       "start": "10:30",
+       "surface": "ダ",
+       "dist": 1800,
+       "n": 13,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.215,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "スタニスラス",
+         "p": 0.364,
+         "odds": null,
+         "jockey": "J.モレイラ"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "アメリカンノヴァ",
+         "p": 0.208,
+         "odds": null,
+         "jockey": "J.モレイラ"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "エボニーウイング",
+         "p": 0.097,
+         "odds": null,
+         "jockey": "J.モレイラ"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 3,
+       "name": "サラ系2歳未勝利",
+       "grade": null,
+       "start": "11:00",
+       "surface": "芝",
+       "dist": 1200,
+       "n": 18,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.164,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "カツダルマ",
+         "p": 0.226,
+         "odds": null,
+         "jockey": "坂井瑠星"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "アルテクィーン",
+         "p": 0.181,
+         "odds": null,
+         "jockey": "坂井瑠星"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ティンタアマレラ",
+         "p": 0.121,
+         "odds": null,
+         "jockey": "坂井瑠星"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 4,
+       "name": "サラ系2歳未勝利",
+       "grade": null,
+       "start": "11:30",
+       "surface": "芝",
+       "dist": 1800,
+       "n": 12,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.337,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "シホノノービレ",
+         "p": 0.414,
+         "odds": null,
+         "jockey": "中井裕二"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ゾンネシュトラール",
+         "p": 0.169,
+         "odds": null,
+         "jockey": "中井裕二"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ジャンゴッド",
+         "p": 0.167,
+         "odds": null,
+         "jockey": "中井裕二"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 5,
+       "name": "サラ系2歳新馬",
+       "grade": null,
+       "start": "12:20",
+       "surface": "芝",
+       "dist": 1600,
+       "n": 16,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.043,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "アウダチェ",
+         "p": 0.152,
+         "odds": null,
+         "jockey": "C.ルメール"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ルージュアルミーラ",
+         "p": 0.112,
+         "odds": null,
+         "jockey": "C.ルメール"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ベネヴェローチェ",
+         "p": 0.095,
+         "odds": null,
+         "jockey": "C.ルメール"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 6,
+       "name": "サラ系2歳新馬",
+       "grade": null,
+       "start": "12:55",
+       "surface": "ダ",
+       "dist": 1200,
+       "n": 7,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.032,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ロゼフレイバー",
+         "p": 0.225,
+         "odds": null,
+         "jockey": "藤懸貴志"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "サンダージョー",
+         "p": 0.217,
+         "odds": null,
+         "jockey": "藤懸貴志"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ジェルモーリオ",
+         "p": 0.14,
+         "odds": null,
+         "jockey": "藤懸貴志"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 7,
+       "name": "サラ系3歳上500万円以下",
+       "grade": null,
+       "start": "13:25",
+       "surface": "ダ",
+       "dist": 1800,
+       "n": 16,
+       "cls": 2,
+       "level": "base",
+       "conf": 0.156,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ヤエギリ",
+         "p": 0.246,
+         "odds": null,
+         "jockey": "松若風馬"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "マーチンゲール",
+         "p": 0.118,
+         "odds": null,
+         "jockey": "松若風馬"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "アメリカンバー",
+         "p": 0.105,
+         "odds": null,
+         "jockey": "松若風馬"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 8,
+       "name": "サラ系3歳上1000万円以下",
+       "grade": null,
+       "start": "13:55",
+       "surface": "ダ",
+       "dist": 1400,
+       "n": 15,
+       "cls": 3,
+       "level": "base",
+       "conf": 0.171,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ポートデラメール",
+         "p": 0.253,
+         "odds": null,
+         "jockey": "C.ルメール"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ホットシート",
+         "p": 0.158,
+         "odds": null,
+         "jockey": "C.ルメール"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ジューンアゲイン",
+         "p": 0.121,
+         "odds": null,
+         "jockey": "C.ルメール"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 9,
+       "name": "秋明菊賞",
+       "grade": null,
+       "start": "14:25",
+       "surface": "芝",
+       "dist": 1400,
+       "n": 8,
+       "cls": 2,
+       "level": "base",
+       "conf": 0.268,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "アンムート",
+         "p": 0.393,
+         "odds": null,
+         "jockey": "古川吉洋"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "カレンハウ",
+         "p": 0.225,
+         "odds": null,
+         "jockey": "古川吉洋"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "サンタンジェロ",
+         "p": 0.171,
+         "odds": null,
+         "jockey": "古川吉洋"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 10,
+       "name": "比叡ステークス",
+       "grade": null,
+       "start": "15:00",
+       "surface": "芝",
+       "dist": 2400,
+       "n": 15,
+       "cls": 4,
+       "level": "base",
+       "conf": 0.2,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "サトノパトリオット",
+         "p": 0.236,
+         "odds": null,
+         "jockey": "田口貫太"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ロードフィレール",
+         "p": 0.205,
+         "odds": null,
+         "jockey": "田口貫太"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ベトルス",
+         "p": 0.173,
+         "odds": null,
+         "jockey": "田口貫太"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 11,
+       "name": "シトリンステークス",
+       "grade": null,
+       "start": "15:40",
+       "surface": "ダ",
+       "dist": 1900,
+       "n": 16,
+       "cls": 5,
+       "level": "base",
+       "conf": 0.128,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "メルカントゥール",
+         "p": 0.19,
+         "odds": null,
+         "jockey": "岩田康誠"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "サイモンシュバリエ",
+         "p": 0.126,
+         "odds": null,
+         "jockey": "岩田康誠"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "レッドプロフェシー",
+         "p": 0.122,
+         "odds": null,
+         "jockey": "岩田康誠"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 12,
+       "name": "サラ系3歳上1000万円以下",
+       "grade": null,
+       "start": "16:20",
+       "surface": "芝",
+       "dist": 2000,
+       "n": 13,
+       "cls": 3,
+       "level": "base",
+       "conf": 0.114,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "バルティカ",
+         "p": 0.2,
+         "odds": null,
+         "jockey": "田口貫太"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ロールザダイス",
+         "p": 0.198,
+         "odds": null,
+         "jockey": "田口貫太"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "メイショウアイル",
+         "p": 0.122,
+         "odds": null,
+         "jockey": "田口貫太"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "date": "2026-11-22",
+   "venues": [
+    {
+     "venue": "東京",
+     "races": [
+      {
+       "r": 1,
+       "name": "サラ系2歳未勝利",
+       "grade": null,
+       "start": "9:50",
+       "surface": "ダ",
+       "dist": 1300,
+       "n": 16,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.397,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "サイモンオリエント",
+         "p": 0.507,
+         "odds": null,
+         "jockey": "石田拓郎"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ライヴバーボン",
+         "p": 0.135,
+         "odds": null,
+         "jockey": "石田拓郎"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "セイカタカキヤチク",
+         "p": 0.115,
+         "odds": null,
+         "jockey": "石田拓郎"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 2,
+       "name": "サラ系2歳未勝利",
+       "grade": null,
+       "start": "10:20",
+       "surface": "芝",
+       "dist": 1800,
+       "n": 13,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.302,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ペントザリス",
+         "p": 0.435,
+         "odds": null,
+         "jockey": "丸田恭介"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "リバーススイープ",
+         "p": 0.162,
+         "odds": null,
+         "jockey": "丸田恭介"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "タイセイリメンバー",
+         "p": 0.15,
+         "odds": null,
+         "jockey": "丸田恭介"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 3,
+       "name": "サラ系2歳未勝利",
+       "grade": null,
+       "start": "10:50",
+       "surface": "芝",
+       "dist": 1400,
+       "n": 18,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.149,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ディーヴァソラーレ",
+         "p": 0.278,
+         "odds": null,
+         "jockey": "横山琉人"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "スナッチアップ",
+         "p": 0.128,
+         "odds": null,
+         "jockey": "横山琉人"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ジョワリヴレ",
+         "p": 0.078,
+         "odds": null,
+         "jockey": "横山琉人"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 4,
+       "name": "サラ系2歳新馬",
+       "grade": null,
+       "start": "11:20",
+       "surface": "ダ",
+       "dist": 1600,
+       "n": 12,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.033,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "トラベルメモリーズ",
+         "p": 0.161,
+         "odds": null,
+         "jockey": "丹内祐次"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "マイレホープ",
+         "p": 0.136,
+         "odds": null,
+         "jockey": "丹内祐次"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "モンテカルロ",
+         "p": 0.091,
+         "odds": null,
+         "jockey": "丹内祐次"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 5,
+       "name": "サラ系2歳新馬",
+       "grade": null,
+       "start": "12:10",
+       "surface": "芝",
+       "dist": 2000,
+       "n": 12,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.047,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ミクニエクリプス",
+         "p": 0.159,
+         "odds": null,
+         "jockey": "横山武史"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ヴァストマーレ",
+         "p": 0.141,
+         "odds": null,
+         "jockey": "横山武史"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "エコロゼノ",
+         "p": 0.138,
+         "odds": null,
+         "jockey": "横山武史"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 6,
+       "name": "サラ系2歳新馬",
+       "grade": null,
+       "start": "12:40",
+       "surface": "ダ",
+       "dist": 1400,
+       "n": 16,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.048,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ミラージュスター",
+         "p": 0.164,
+         "odds": null,
+         "jockey": "石田拓郎"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "シャドウアリア",
+         "p": 0.092,
+         "odds": null,
+         "jockey": "石田拓郎"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ライクアストーム",
+         "p": 0.078,
+         "odds": null,
+         "jockey": "石田拓郎"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 7,
+       "name": "サラ系3歳上500万円以下",
+       "grade": null,
+       "start": "13:10",
+       "surface": "ダ",
+       "dist": 2100,
+       "n": 16,
+       "cls": 2,
+       "level": "base",
+       "conf": 0.128,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "モデレートゲイル",
+         "p": 0.239,
+         "odds": null,
+         "jockey": "岩田康誠"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ヴァレンティーニ",
+         "p": 0.155,
+         "odds": null,
+         "jockey": "岩田康誠"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ヴァルカンテソーロ",
+         "p": 0.101,
+         "odds": null,
+         "jockey": "岩田康誠"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 8,
+       "name": "サラ系3歳上1000万円以下",
+       "grade": null,
+       "start": "13:40",
+       "surface": "ダ",
+       "dist": 1600,
+       "n": 16,
+       "cls": 3,
+       "level": "base",
+       "conf": 0.204,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ヴンダーバール",
+         "p": 0.264,
+         "odds": null,
+         "jockey": "長浜鴻緒"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "タイセイジェイド",
+         "p": 0.151,
+         "odds": null,
+         "jockey": "長浜鴻緒"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ロードアルディート",
+         "p": 0.15,
+         "odds": null,
+         "jockey": "長浜鴻緒"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 9,
+       "name": "赤松賞",
+       "grade": null,
+       "start": "14:10",
+       "surface": "芝",
+       "dist": 1600,
+       "n": 9,
+       "cls": 2,
+       "level": "base",
+       "conf": 0.168,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ラプチュラス",
+         "p": 0.295,
+         "odds": null,
+         "jockey": "丹内祐次"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "シルクドマルス",
+         "p": 0.29,
+         "odds": null,
+         "jockey": "丹内祐次"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "リリカルフレア",
+         "p": 0.121,
+         "odds": null,
+         "jockey": "丹内祐次"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 10,
+       "name": "秋色ステークス",
+       "grade": null,
+       "start": "14:45",
+       "surface": "芝",
+       "dist": 1600,
+       "n": 15,
+       "cls": 4,
+       "level": "base",
+       "conf": 0.178,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "デンプシー",
+         "p": 0.231,
+         "odds": null,
+         "jockey": "小林美駒"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ウフドゥウフ",
+         "p": 0.209,
+         "odds": null,
+         "jockey": "小林美駒"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ジッピーチューン",
+         "p": 0.116,
+         "odds": null,
+         "jockey": "小林美駒"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 11,
+       "name": "霜月ステークス",
+       "grade": null,
+       "start": "15:20",
+       "surface": "ダ",
+       "dist": 1400,
+       "n": 16,
+       "cls": 5,
+       "level": "base",
+       "conf": 0.13,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "サトノボヤージュ",
+         "p": 0.194,
+         "odds": null,
+         "jockey": "津村明秀"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "メリディアンスター",
+         "p": 0.185,
+         "odds": null,
+         "jockey": "津村明秀"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "スナッピードレッサ",
+         "p": 0.142,
+         "odds": null,
+         "jockey": "津村明秀"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 12,
+       "name": "サラ系3歳上1000万円以下",
+       "grade": null,
+       "start": "16:05",
+       "surface": "芝",
+       "dist": 1400,
+       "n": 16,
+       "cls": 3,
+       "level": "base",
+       "conf": 0.167,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "スペルーチェ",
+         "p": 0.168,
+         "odds": null,
+         "jockey": "佐々木大輔"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ライネリーベ",
+         "p": 0.16,
+         "odds": null,
+         "jockey": "佐々木大輔"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "デイトナチャンプ",
+         "p": 0.151,
+         "odds": null,
+         "jockey": "佐々木大輔"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      }
+     ]
+    },
+    {
+     "venue": "京都",
+     "races": [
+      {
+       "r": 1,
+       "name": "サラ系2歳未勝利",
+       "grade": null,
+       "start": "10:05",
+       "surface": "ダ",
+       "dist": 1800,
+       "n": 12,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.297,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ポアサムシュガー",
+         "p": 0.348,
+         "odds": null,
+         "jockey": "幸英明"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "マシュマロデイズ",
+         "p": 0.234,
+         "odds": null,
+         "jockey": "幸英明"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "エイントノーウェイ",
+         "p": 0.216,
+         "odds": null,
+         "jockey": "幸英明"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 2,
+       "name": "サラ系2歳未勝利",
+       "grade": null,
+       "start": "10:35",
+       "surface": "ダ",
+       "dist": 1200,
+       "n": 13,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.303,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "スマートメモリー",
+         "p": 0.49,
+         "odds": null,
+         "jockey": "岩部純二"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "レッドガレオン",
+         "p": 0.131,
+         "odds": null,
+         "jockey": "岩部純二"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "パロディ",
+         "p": 0.075,
+         "odds": null,
+         "jockey": "岩部純二"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 3,
+       "name": "サラ系2歳未勝利",
+       "grade": null,
+       "start": "11:05",
+       "surface": "芝",
+       "dist": 2000,
+       "n": 9,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.39,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "メイショウジェード",
+         "p": 0.643,
+         "odds": null,
+         "jockey": "松若風馬"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "マハロハ",
+         "p": 0.091,
+         "odds": null,
+         "jockey": "松若風馬"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "クオーレサンライズ",
+         "p": 0.058,
+         "odds": null,
+         "jockey": "松若風馬"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 4,
+       "name": "サラ系2歳新馬",
+       "grade": null,
+       "start": "11:35",
+       "surface": "ダ",
+       "dist": 1800,
+       "n": 10,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.032,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "メイワモットキラリ",
+         "p": 0.173,
+         "odds": null,
+         "jockey": "富田暁"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ブレイヴモナーク",
+         "p": 0.142,
+         "odds": null,
+         "jockey": "富田暁"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "デュランバローズ",
+         "p": 0.133,
+         "odds": null,
+         "jockey": "富田暁"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 5,
+       "name": "サラ系2歳新馬",
+       "grade": null,
+       "start": "12:25",
+       "surface": "芝",
+       "dist": 1800,
+       "n": 12,
+       "cls": 1,
+       "level": "base",
+       "conf": 0.03,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ゼンノレガリア",
+         "p": 0.161,
+         "odds": null,
+         "jockey": "M.バルザローナ"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "サトノセブンス",
+         "p": 0.124,
+         "odds": null,
+         "jockey": "M.バルザローナ"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "アルデオリエンス",
+         "p": 0.109,
+         "odds": null,
+         "jockey": "M.バルザローナ"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 6,
+       "name": "サラ系3歳上500万円以下",
+       "grade": null,
+       "start": "12:55",
+       "surface": "ダ",
+       "dist": 1200,
+       "n": 16,
+       "cls": 2,
+       "level": "base",
+       "conf": 0.152,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "スターフュージョン",
+         "p": 0.233,
+         "odds": null,
+         "jockey": "和田陽希"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "エシェックオロワ",
+         "p": 0.143,
+         "odds": null,
+         "jockey": "和田陽希"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ダノンステート",
+         "p": 0.118,
+         "odds": null,
+         "jockey": "和田陽希"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 7,
+       "name": "サラ系3歳上500万円以下",
+       "grade": null,
+       "start": "13:25",
+       "surface": "芝",
+       "dist": 2400,
+       "n": 18,
+       "cls": 2,
+       "level": "base",
+       "conf": 0.11,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ドリームプレミア",
+         "p": 0.197,
+         "odds": null,
+         "jockey": "岩田望来"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ノブレスラブリエ",
+         "p": 0.109,
+         "odds": null,
+         "jockey": "岩田望来"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ゴールデンテティス",
+         "p": 0.089,
+         "odds": null,
+         "jockey": "岩田望来"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 8,
+       "name": "サラ系3歳上1000万円以下",
+       "grade": null,
+       "start": "13:55",
+       "surface": "ダ",
+       "dist": 1800,
+       "n": 10,
+       "cls": 3,
+       "level": "base",
+       "conf": 0.145,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ロードソルスティス",
+         "p": 0.262,
+         "odds": null,
+         "jockey": "太宰啓介"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "スカイストライプス",
+         "p": 0.187,
+         "odds": null,
+         "jockey": "太宰啓介"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ブラックレジェンド",
+         "p": 0.185,
+         "odds": null,
+         "jockey": "太宰啓介"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 9,
+       "name": "花見小路特別",
+       "grade": null,
+       "start": "14:25",
+       "surface": "芝",
+       "dist": 1600,
+       "n": 14,
+       "cls": 3,
+       "level": "base",
+       "conf": 0.109,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "バルセシート",
+         "p": 0.178,
+         "odds": null,
+         "jockey": "武豊"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ネッタイヤライ",
+         "p": 0.158,
+         "odds": null,
+         "jockey": "武豊"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "タナブイハチターボ",
+         "p": 0.144,
+         "odds": null,
+         "jockey": "武豊"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 10,
+       "name": "西陣ステークス",
+       "grade": null,
+       "start": "15:00",
+       "surface": "ダ",
+       "dist": 1400,
+       "n": 14,
+       "cls": 4,
+       "level": "base",
+       "conf": 0.169,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ニューオーリンズ",
+         "p": 0.317,
+         "odds": null,
+         "jockey": "亀田温心"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "フェンダー",
+         "p": 0.132,
+         "odds": null,
+         "jockey": "亀田温心"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "コーラルクラウン",
+         "p": 0.13,
+         "odds": null,
+         "jockey": "亀田温心"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
       {
        "r": 11,
        "name": "マイルチャンピオンシップ",
@@ -766,6 +2634,48 @@
          "p": 0.093,
          "odds": null,
          "jockey": "武豊"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      },
+      {
+       "r": 12,
+       "name": "醍醐ステークス",
+       "grade": null,
+       "start": "16:20",
+       "surface": "芝",
+       "dist": 1200,
+       "n": 13,
+       "cls": 4,
+       "level": "base",
+       "conf": 0.129,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ルージュスプリヤ",
+         "p": 0.239,
+         "odds": null,
+         "jockey": "富田暁"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ファビュラススター",
+         "p": 0.205,
+         "odds": null,
+         "jockey": "富田暁"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "ディアドコス",
+         "p": 0.107,
+         "odds": null,
+         "jockey": "富田暁"
         }
        ],
        "box3": [],
