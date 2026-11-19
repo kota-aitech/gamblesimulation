@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-11-18T15:29:13.910Z",
+ "builtAt": "2026-11-19T06:18:42.136Z",
  "today": "2026-11-19",
  "model": {
   "built": "2026-11-16",
@@ -723,5 +723,58 @@
   "to": "9999-12-31",
   "kind": "単勝"
  },
- "days": []
+ "days": [
+  {
+   "date": "2026-11-22",
+   "venues": [
+    {
+     "venue": "京都",
+     "races": [
+      {
+       "r": 11,
+       "name": "マイルチャンピオンシップ",
+       "grade": "GI",
+       "start": "15:40",
+       "surface": "芝",
+       "dist": 1600,
+       "n": 18,
+       "cls": 8,
+       "level": "base",
+       "conf": 0.084,
+       "gates": false,
+       "top": [
+        {
+         "no": null,
+         "waku": null,
+         "name": "ロデオドライブ",
+         "p": 0.189,
+         "odds": null,
+         "jockey": "武豊"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "アンパドゥ",
+         "p": 0.108,
+         "odds": null,
+         "jockey": "武豊"
+        },
+        {
+         "no": null,
+         "waku": null,
+         "name": "エンブロイダリー",
+         "p": 0.093,
+         "odds": null,
+         "jockey": "武豊"
+        }
+       ],
+       "box3": [],
+       "rank": null,
+       "best": null
+      }
+     ]
+    }
+   ]
+  }
+ ]
 }
