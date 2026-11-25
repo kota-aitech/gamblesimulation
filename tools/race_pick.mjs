@@ -116,7 +116,8 @@ const thresholds = {
   evSanpuku: { p10: q('evSanpuku', .10), p25: q('evSanpuku', .25), p50: q('evSanpuku', .50) },
 };
 console.error('\n■ 段位の閾値', JSON.stringify(thresholds));
-writeJSON('data/nankan/racepick.json', { builtAt: new Date().toISOString(), from: FROM, to: TO,
+// NK_PICK_OUT を渡すと本番の閾値（racepick.json）を書き換えずに測れる（相対パス）
+writeJSON(process.env.NK_PICK_OUT || 'data/nankan/racepick.json', { builtAt: new Date().toISOString(), from: FROM, to: TO,
   box: BOX, takeout: TAKEOUT, thresholds, races: rows });
 
 /* --- 前半で閾値を決めて後半で試す（同じデータで閾値を選ぶと甘く出るため） --- */
