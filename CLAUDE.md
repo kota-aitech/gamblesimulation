@@ -2011,6 +2011,15 @@ node tools/keirin_build_races.mjs && node tools/keirin_build_results.mjs && NK_E
 - 反映係 `tools/refresh_arc.mjs`（LaunchAgent `com.arc.refresh`、10分おき、`sh tools/launchd/install.sh com.arc.refresh` で登録）。ARC_DAY の3日後からは何もしない。
   来年使うときは `ARC_DAY`／`ARC_YEAR` と `tools/lib/arc.mjs` の `DAY`・`RACE_TIME`・`SOURCES`（netkeiba の race_id、JRA の PDF 番号）を直す
 
+## 同じ HTML を何本もの反映係が書く（2026-11-25）
+`top.html`・`picks.html` などは反映係6本が `lib/embed.mjs` の `inject()` で書く。以前は読んで→その場で上書きだったので、
+**ほかの係が書いている途中の版を読むと、途中までの中身を元に書き戻して後ろが永久に欠けた**。2026-11-11 18:22 に `top.html` が
+1.4MB → 303KB（4KB の倍数）に切れ、`<script>` が閉じないので **TOP が2週間まっ白**だった。欠けたマーカーは「スキップ」と出るだけで、
+残ったマーカーは更新され続けるので、サイズや更新時刻では気づけない。
+- いまは `inject()` が `</html>` で終わっていないファイルを書かず、書くときは別名に書いて `rename` で置き換える
+- **「ページが開かない」ときは `tail -c 20 <ページ>` が `</html>` で終わるかを見る。** 戻すときは切れる前のコミットの版を置いて `node tools/embed_db.mjs`（全マーカーを埋め直す）
+- 公開の点検は HTTP 200 やサイズでは足りない。実ブラウザで撮るか、スクリプトの構文（`node --check`）まで見る
+
 ## ジョブの見張り（2026-10-03 追加）
 `refresh_banei` が **process.exit の中で21時間固まった**（Node 24 の後片付けでワーカースレッドの join と GC 待ちがデッドロック。CPU 0・子プロセスなし。`sample <pid>` で
 `node::Environment::Exit → NodePlatform::Shutdown → uv_thread_join` が見える）。JS のタイマーは動かないので `setTimeout(process.exit)` の見張りでは救えない。
