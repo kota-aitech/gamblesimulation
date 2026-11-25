@@ -375,7 +375,9 @@ const TRACKS={
       src:'番組・出走馬・前5走は nankankeiba.com の出馬表から全レース自動取り込み（tools/fetch_cards.mjs → build_races.mjs）。出走取消馬は除外済み。脚質・能力・上がり・距離適性・道悪は前5走から機械的に算出した推定値。騎手・調教師・コンビ・馬主の指数は南関東4場の過去3年の全出走（nankankeiba.com リーディング情報）から算出。直近14日の3角位置・好走枠は nankankeiba.com「レース傾向」の実測、近1年の脚質別・枠別は出馬表の前5走欄からの集計。距離別の基準タイムは競走成績（良馬場）の勝ち時計の中央値。',
     }},
 };
-const TRACK_KEY=(()=>{const k=new URLSearchParams(location.search).get('track')||'oi';return k in TRACKS?k:'oi';})();
+// 場の指定が無いときは、実データの出馬表がある場を開く
+const TRACK_KEY=(()=>{const k=new URLSearchParams(location.search).get('track');if(k&&k in TRACKS)return k;
+  return Object.keys(TRACKS).find(x=>Object.keys(TRACKS[x].days||{}).length>0)||'oi';})();
 const TK=TRACKS[TRACK_KEY];
 const REF_TIME=TK.ref,TREND_REF=TK.trendRef,MEET=TK.meet,DAYS=TK.days,REAL=TK.real;
 /* 開催の谷間で出馬表が1日も無い場は、サンプルの1レースを置いて画面が組めるようにする（実データではない） */

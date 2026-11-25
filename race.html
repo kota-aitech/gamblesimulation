@@ -387,7 +387,9 @@ const maru=n=>(n>=1&&n<=20)?MARU[n-1]:`(${n})`;
 /* 縦組みの馬名は長さで字を詰めて、必ず柱に収める */
 const nameCls=n=>{const L=[...String(n||'')].length;return L>=13?'l13':L>=11?'l11':L>=9?'l9':'';};
 
-const TKEY=(()=>{const k=new URLSearchParams(location.search).get('track')||'oi';return NKR[k]&&NKR[k].days?k:(Object.keys(NKR).find(x=>NKR[x]&&NKR[x].days)||'oi');})();
+// 場の指定が無いときは、今日以降の出馬表がある場を開く（大井が開催の谷間だと空の画面になっていた）
+const TKEY=(()=>{const k=new URLSearchParams(location.search).get('track');const has=x=>NKR[x]&&NKR[x].days&&Object.keys(NKR[x].days).length>0;
+  if(k&&NKR[k]&&NKR[k].days)return k;return Object.keys(NKR).find(has)||Object.keys(NKR).find(x=>NKR[x]&&NKR[x].days)||'oi';})();
 const D=NKR[TKEY]||{days:{},entries:{}};
 let day=Object.keys(D.days)[0]||'',ridx=0;
 /* top.html から ?day=…&r=… で直接開けるようにする */
