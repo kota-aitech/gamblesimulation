@@ -110,7 +110,8 @@ const out = { year: YEAR, day: DAY, raceId: RACE_ID, sources: { ...SOURCES, weig
   race: { name: race.name, grade: race.grade, date: race.date, start: race.start, surface: race.surface, dist: race.dist, turn: race.turn, cond: race.cond, n: race.n, weather: race.weather, baba: race.baba, level: race.level, oddsSrc: race.oddsSrc, gates: race.gates,
     box3: race.box3, box4: race.box4, umaren: race.umaren, sanpuku: race.sanpuku, points: race.points, conf: race.conf, rank: race.rank, horses: race.horses },
   card, foreignNoPast: nPred, foreign: outF, jcPast, bwBand: BANDS.map(b => ({ band: b[2], ...rate(bwBand[b[2]] || z()) })), base: { turf: rate(base.turf), long: rate(base.long) },
-  data: { from, to, races: nRaces, horses: HORSE.size }, jcTimes, fetchedAt: F.fetchedAt };
+  data: { from, to, races: nRaces, horses: HORSE.size }, jcTimes, fetchedAt: F.fetchedAt,
+  weather: readJSON('data/jc/weather.json'), weatherView: VIEWS._weather || null };       // 天気と馬場（jc_weather）。見立ての文は手書き
 // 予想の元データ（race.horses の past など）はページでは使わないので落とす
 out.race.horses = undefined;
 const same = prevOut && JSON.stringify({ ...prevOut, builtAt: 0 }) === JSON.stringify({ ...out, builtAt: 0 });
