@@ -2024,3 +2024,20 @@ node tools/keirin_build_races.mjs && node tools/keirin_build_results.mjs && NK_E
 `refresh_banei` が **process.exit の中で21時間固まった**（Node 24 の後片付けでワーカースレッドの join と GC 待ちがデッドロック。CPU 0・子プロセスなし。`sample <pid>` で
 `node::Environment::Exit → NodePlatform::Shutdown → uv_thread_join` が見える）。JS のタイマーは動かないので `setTimeout(process.exit)` の見張りでは救えない。
 `tools/lib/watchdog.mjs` の `watchdog(分)` が起動時に別の sh を立て、時間切れに `kill -9` する（同じ PID が同じスクリプトのときだけ）。反映係7本すべてに入れた。
+
+## ジャパンカップ特設ページ（`jc.html`、2026-11-27）
+こたの依頼「外国馬のプロフィール・特筆すべき戦歴、日本の馬場に適応できるかを血統面・馬体面から」。凱旋門賞と同じく他の競技と混ぜない（`data/jc/` ＋ `tools/jc_*.mjs` ＋ `jc.html`、マーカー `JC`）。
+- `tools/jc_fetch.mjs` → `data/jc/foreign.json`。元は JRA の「ジャパンカップ外国馬情報」（`/news/gaikokuba/{年}/jc.html` と各馬 `jcNN.html`）：
+  報道室のプロフィール PDF（`pdf/jcNN.pdf`）、全成績 PDF（`pdf/jcNN_s.pdf`）、調教状況・関係者コメント（日ごとのニュース）、調教後の馬体重（G1 ページからリンクを拾う）。
+  **`pdftotext`（poppler）が要る**。JRA は Referer と Accept が無いと拒否ページを返す
+- **全成績 PDF の表は `-layout` でも `-raw` でも崩れる**（レース名が2段に折り返す行で、行がずれたりセルが落ちる）。`-tsv` で単語の座標を取り、
+  表頭の単語の x で列を決め、**単語の箱の中央の高さ（y＋h/2）がいちばん近い日付の行**にまとめる。和文は箱が高く数字は低いので、上端の y で比べると1行ずれる。
+  読めた行数が「全N戦」と合わなければ警告を出す（6頭とも勝ち数・2着数まで一致を確認済み）
+- `tools/jc_build.mjs` → `data/jc/jc.json` → `jc.html`。出馬表と印・確率は `data/jra/races.json` の該当レース（`lib/jc.mjs` の `RACE_ID`）をそのまま使う（別式を作らない）。
+  過去のジャパンカップでの外国馬の着順・上がり順位、東京芝2400m の馬体重帯ごとの好走率、父・父の父・母の父の中央での産駒成績は `results.jsonl`×`horses.jsonl` から数える。
+  `horses.jsonl` の外国の種牡馬は英字なので、JRA 資料のカタカナとの読み替え表 `KANA_EN` を持つ。外国調教馬は horseId の5〜6桁目が `19`
+- **各馬の「本紙の考察」「見立て」だけは手書き**（`data/jc/views.json`、英字馬名がキー）。事実は JRA の資料、数字はページ側が実測から出すので、ここには評価だけを書く。画面では「推定」と明記
+- **外国馬の本紙確率は当てにならない**（中央の出走が無い＝前走なしとして扱われる）。出馬表の上にその但し書きを出してある。**外さないこと**
+- 実測（2021〜2025 の5回）：勝ち馬は5回とも上がり3F最速。外国馬は延べ12頭で1勝（2025 カランダガン）、負けた11頭は勝ち馬から平均1.0秒差で上がり3位以内は1頭だけ
+- 更新は `refresh_jra.mjs` が作り直しのたびに `jc_fetch → jc_build`（レースの2日後まで。JRA のページはキャッシュ）。レース後に races.json から外れたら最後の版の出馬表を残す。
+  来年使うときは `JC_YEAR`／`JC_DAY`／`JC_RACE_ID`（または `lib/jc.mjs` の既定）と `views.json` を直す

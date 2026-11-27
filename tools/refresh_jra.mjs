@@ -11,6 +11,7 @@ import path from 'node:path';
 import { execFileSync, execSync } from 'node:child_process';
 import { ROOT } from './lib/jra.mjs';
 import { watchdog } from './lib/watchdog.mjs';
+import { DAY as JC_DAY } from './lib/jc.mjs';
 
 const D = path.join(ROOT, 'data', 'jra');
 const now = new Date();
@@ -70,7 +71,8 @@ if (dow === 1 && hour >= 20 && prev.fitWeek !== `${today}`) {
 fs.writeFileSync(stampFile, JSON.stringify(prev));
 
 const git = (args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
-const TARGETS = ['jra.html', 'top.html', 'picks.html', 'bbank.html', 'hbank.html', 'kbank.html', 'data/boat/guide.json', 'data/guide_horse.json', 'data/jra/course.json', 'data/nankan/course.json', 'data/banei/course.json', 'data/jra/races.json', 'data/jra/top.json', 'data/jra/index.json', 'data/jra/model.json', 'data/jra/backtest.json', 'data/jra/baba.jsonl', 'data/jra/baba_stats.json',
+const JC_UNTIL = new Date(new Date(JC_DAY + 'T00:00:00+09:00').getTime() + 2 * 864e5 + 9 * 36e5).toISOString().slice(0, 10);
+const TARGETS = ['jra.html', 'jc.html', 'data/jc/jc.json', 'data/jc/foreign.json', 'top.html', 'picks.html', 'bbank.html', 'hbank.html', 'kbank.html', 'data/boat/guide.json', 'data/guide_horse.json', 'data/jra/course.json', 'data/nankan/course.json', 'data/banei/course.json', 'data/jra/races.json', 'data/jra/top.json', 'data/jra/index.json', 'data/jra/model.json', 'data/jra/backtest.json', 'data/jra/baba.jsonl', 'data/jra/baba_stats.json',
   'data/jra/preds.jsonl', 'data/jra/results.json', 'data/jra/horses.jsonl'];
 /* 作り直して埋め込み、commit する。push は publish.mjs（launchd 15分おき）がまとめて押す。NK_PUSH_NOW=1 でその場で push */
 function buildAndCommit(what) {
@@ -78,6 +80,8 @@ function buildAndCommit(what) {
   run('jra_build_results.mjs');                                   // 記録済みの予想 × 最新の結果（preds が無い初日は何もしない）
   if (!run('jra_build_races.mjs')) return false;
   if (!run('embed_db.mjs', { NK_EMBED_ONLY: 'jra' })) return false;
+  // ジャパンカップ特設ページ（jc.html）。レースの2日後まで。JRA の資料はキャッシュ（一覧2時間・各馬12時間）なので毎回呼んでも叩かない。失敗しても本体は止めない
+  if (today <= JC_UNTIL) { run('jc_fetch.mjs'); run('jc_build.mjs'); }
   prev.builtAt = Date.now(); fs.writeFileSync(stampFile, JSON.stringify(prev));
   const secs = ((Date.now() - t0) / 1000).toFixed(0);
   if (process.env.NK_REFRESH_NOPUSH) { console.error(`${stamp()} ${what}完了（${secs}秒・push なし）`); return true; }
